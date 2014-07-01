@@ -64,17 +64,13 @@
     
     UILabel *label_send = [[UILabel alloc] initWithFrame: CGRectMake(2 * kHXOGridSpacing, 0.0, 100.0, footerRect.size.height)];
     label_send.text = NSLocalizedString(@"audio_attachment_list_footer_send", nil);
-    //[self.footerContainerView addSubview: label_send];
     
     self.sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
     self.sendButton.frame = CGRectMake(0.0, 0.0, 100.0, footerRect.size.height);
     self.sendButton.tintColor = [UIColor blackColor];
-    //self.playbackButton.frame = CGRectMake(2 * kHXOGridSpacing, 0.0, 100.0, footerRect.size.height);
-    //self.playbackButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
     [self.sendButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_send", nil) forState:UIControlStateNormal];
     [self.sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
     [self.footerContainerView addSubview: self.sendButton];
-
 }
 
 - (void)updateNavigationBar {
@@ -96,13 +92,9 @@
 }
 
 -(void)updateFooter {
-    
-
     if (self.tableView.isEditing) {
-        NSLog(@"update footer is editing");
         [self.tabBarController.tabBar.superview insertSubview:self.footerContainerView aboveSubview:self.tabBarController.view];
     } else {
-        NSLog(@"update footer is not editing");
         [self.footerContainerView removeFromSuperview];
     }
 }
