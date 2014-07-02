@@ -17,16 +17,14 @@
     // Work around a bug in the generated accessors for ordered relationships
     // http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
 
-    NSMutableOrderedSet *updatedAttachments = [self.attachments mutableCopy];
-    [updatedAttachments addObjectsFromArray:attachments];
-    self.attachments = updatedAttachments;
+    NSMutableOrderedSet *mutableAttachments = [self mutableOrderedSetValueForKey:@"attachments"];
+    [mutableAttachments addObjectsFromArray:attachments];
 }
 
 - (void) moveAttachmentAtIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex {
-    NSMutableOrderedSet *updatedAttachments = [self.attachments mutableCopy];
+    NSMutableOrderedSet *mutableAttachments = [self mutableOrderedSetValueForKey:@"attachments"];
     NSIndexSet *sourceIndexSet = [NSIndexSet indexSetWithIndex:sourceIndex];
-    [updatedAttachments moveObjectsAtIndexes:sourceIndexSet toIndex:destinationIndex];
-    self.attachments = updatedAttachments;
+    [mutableAttachments moveObjectsAtIndexes:sourceIndexSet toIndex:destinationIndex];
 }
 
 @end
