@@ -209,7 +209,6 @@
 "contact_unblock_btn_title_format"                    = "Entblockiere %@";
 "contact_block_btn_title_format"                      = "Blockiere %@";
 
-"contact_invite_btn_title_format"                     = "Lade als Freund ein (%@)";
 "contact_invite_btn_title_format"                     = "Als Freund einladen";
 "contact_disinvite_btn_title_format"                  = "Einladung zurückziehen";
 

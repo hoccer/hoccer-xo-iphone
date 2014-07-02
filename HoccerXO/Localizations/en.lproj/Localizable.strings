@@ -210,7 +210,7 @@
 "contact_unblock_btn_title_format"              = "Unblock %@";
 "contact_block_btn_title_format"                = "Block %@";
 
-"contact_invite_btn_title_format"               = "Invite '%@' as friend";
+"contact_invite_btn_title_format"               = "Invite as friend";
 "contact_disinvite_btn_title_format"            = "Disinvite %@";
 
 "contact_message_count_format"                  = "%@ messages";
