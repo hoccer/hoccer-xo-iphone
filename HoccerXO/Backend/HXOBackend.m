@@ -4529,12 +4529,16 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         if (success) {
             NSManagedObjectID * messageObjId = message.objectID;
             NSArray * deliveryIds = objectIds(deliveries);
-            [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+            NSArray * resultDeliveryDicts = (NSArray*)responseOrError;
+            NSDictionary * dict = resultDeliveryDicts[0];
+            NSString * messageId = dict[@"messageId"]; // for locking
+            
+            [self.delegate performWithLockingId:messageId inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 NSArray * deliveries = managedObjects(deliveryIds,context);
                 HXOMessage * message = (HXOMessage*)[context objectWithID:messageObjId];
                 
                 NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
-                if (deliveries.count == 1) {
+                if (deliveries.count == 1) { // we did send 1 delivery
                     Delivery * delivery = deliveries[0];
                     if (delivery.isGroupDelivery) {
                         int expandedGroupDeliveries = 0;
@@ -4559,7 +4563,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                                 }
                                 newDelivery.group = group;
                                 newDelivery.receiver = [self getContactByClientId:deliveryDict[@"receiverId"] inContext:context];
-                                NSLog(@"### inserted delivery for group %@ and receiver %@", newDelivery.group.clientId, newDelivery.receiver.clientId);
+                                if (DELIVERY_TRACE) NSLog(@"### inserted delivery for group %@ and receiver %@", newDelivery.group.clientId, newDelivery.receiver.clientId);
                                 [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                                     [self outgoingDeliveryUpdated:@[deliveryDict]];
                                 }];

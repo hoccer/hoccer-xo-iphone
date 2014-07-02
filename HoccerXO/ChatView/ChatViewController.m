@@ -2402,7 +2402,7 @@ ready:;
 - (void) messageCell:(MessageCell *)theCell resendMessage:(id)sender {
     //NSLog(@"resendMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-    for (int i = 0; i < 200;++i) {
+    for (int i = 0; i < 20;++i) {
         double delayInSeconds = 0.5 * i;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
