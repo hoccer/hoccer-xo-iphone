@@ -18,7 +18,7 @@
     CGRect bounds = CGRectMake(0,0,width,height);
     
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGContextRef bitmapContext = CGBitmapContextCreate(NULL, width, height, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast);
+    CGContextRef bitmapContext = CGBitmapContextCreate(NULL, width, height, 8, 0, colorSpace, (CGBitmapInfo)kCGImageAlphaPremultipliedLast);
     CGContextClipToMask(bitmapContext, bounds, maskImage);
     CGContextSetFillColorWithColor(bitmapContext, color.CGColor);
     CGContextFillRect(bitmapContext, bounds);
