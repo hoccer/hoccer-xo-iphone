@@ -269,6 +269,51 @@
     }
 }
 
+// will return localized strings of theDate depending on how long it is ago:
+// if theDate is tody, only the time will be returned
+// if theDate is this year, only day and month will be returned
+// otherwise, day, month and year in short format will be returned
+
+- (NSString*)adaptiveDateTimeString:(NSDate*)theDate {
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
+    NSDate *today = [calendar dateFromComponents:components];
+    components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit) fromDate:[NSDate date]];
+    NSDate *thisYear = [calendar dateFromComponents:components];
+    
+    components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate: theDate];
+    NSDate *latestMessageDate = [calendar dateFromComponents:components];
+    
+    components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit) fromDate: theDate];
+    NSDate *latestMessageYear = [calendar dateFromComponents:components];
+    
+    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+    if([today isEqualToDate: latestMessageDate]) {
+        // show only the time
+        [formatter setDateStyle:NSDateFormatterNoStyle];
+        [formatter setTimeStyle:NSDateFormatterShortStyle];
+    } else if([thisYear isEqualToDate: latestMessageYear]){
+        // show month and day
+        NSLocale *currentLocale = [NSLocale currentLocale];
+        
+        // the date components we want
+        NSString *dateComponents = @"Md";
+        
+        // The components will be reordered according to the locale
+        NSString *dateFormat = [NSDateFormatter dateFormatFromTemplate:dateComponents options:0 locale:currentLocale];
+        //NSLog(@"Date format for %@: %@", [currentLocale displayNameForKey:NSLocaleIdentifier value:[currentLocale localeIdentifier]], dateFormat);
+        
+        [formatter setTimeStyle:NSDateFormatterNoStyle];
+        [formatter setDateStyle:NSDateFormatterShortStyle];
+        [formatter setDateFormat:dateFormat];
+    } else {
+        [formatter setDateStyle:NSDateFormatterShortStyle];
+        [formatter setTimeStyle:NSDateFormatterNoStyle];
+    }
+    return [formatter stringFromDate: theDate];
+}
+
+
 - (void)configureCell:(ConversationCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ConversationViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
     if (cell == nil) {
@@ -304,21 +349,7 @@
     }
 
     if (latestMessageTime) {
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDateComponents *components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
-        NSDate *today = [calendar dateFromComponents:components];
-
-        components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate: latestMessageTime];
-        NSDate *latestMessageDate = [calendar dateFromComponents:components];
-        NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-        if([today isEqualToDate: latestMessageDate]) {
-            [formatter setDateStyle:NSDateFormatterNoStyle];
-            [formatter setTimeStyle:NSDateFormatterShortStyle];
-        } else {
-            [formatter setDateStyle:NSDateFormatterMediumStyle];
-            [formatter setTimeStyle:NSDateFormatterNoStyle];
-        }
-        cell.dateLabel.text = [formatter stringFromDate: latestMessageTime];
+        cell.dateLabel.text = [self adaptiveDateTimeString:latestMessageTime];
     } else {
         cell.dateLabel.text = @"";
     }
