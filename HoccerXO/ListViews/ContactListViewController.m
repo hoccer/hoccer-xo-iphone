@@ -718,27 +718,15 @@ bool almostEqual(CGFloat a, CGFloat b) {
             if (group.iAmAdmin) {
                 joinedStatus = NSLocalizedString(@"group_membership_role_admin", nil);
             }
-            if (joinedMemberCount > 0) {
-                if (joinedStatus.length>0) {
-                    joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
-                }
-                if (joinedMemberCount > 1) {
-                    joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_count_n_joined",nil), joinedStatus,joinedMemberCount];
-                } else {
-                    joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_count_one_joined",nil), joinedStatus];
-                }
-            } else {
-                if (joinedStatus.length>0) {
-                    joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
-                }
-                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_count_none_joined",nil), joinedStatus,joinedMemberCount];
-
+            if (joinedStatus.length>0) {
+                joinedStatus = [joinedStatus stringByAppendingString: @", "];
             }
+            joinedStatus =  [joinedStatus stringByAppendingString: [NSString stringWithFormat: HXOPluralocalizedString(@"group_member_count_joined", joinedMemberCount, YES), joinedMemberCount]];
             if (invitedMemberCount > 0) {
                 if (joinedStatus.length>0) {
-                    joinedStatus = [NSString stringWithFormat:@"%@, ", joinedStatus];
+                    joinedStatus = [joinedStatus stringByAppendingString: @", "];
                 }
-                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_invited_count",nil), joinedStatus,invitedMemberCount];
+                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_invited_count",nil), invitedMemberCount];
             }
 #ifdef DEBUG
             if (group.sharedKeyId != nil) {

@@ -405,10 +405,10 @@
 "group_membership_role_admin"           = "Admin";
 "group_membership_role_member"          = "Mitglied";
 
-"group_member_count_n_joined"           = "%@%d Mitglieder";
-"group_member_count_one_joined"         = "%@ein Mitglied";
-"group_member_count_none_joined"        = "%@du bist allein";
-"group_member_invited_count"            = "%@%d eingeladen";
+"group_member_count_joined"             = "%d Mitglieder";
+"group_member_count_joined (one)"       = "ein Mitglied";
+"group_member_count_joined (zero)"      = "du bist allein";
+"group_member_invited_count"            = "%d eingeladen";
 
 "group_list_placeholder"                = "Lege [Gruppen](http://hoccer.com/hoccer-xo-anleitung/#gruppen) an um mit vielen Freunden gleichzeitig zu chatten.";
 

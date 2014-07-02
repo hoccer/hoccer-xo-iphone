@@ -26,7 +26,7 @@
 #import "ContactPicker.h"
 #import "GroupInStatuNascendi.h"
 #import "KeyStatusCell.h"
-#import "HXOPluralocalizedString.h"
+#import "HXOPluralocalization.h"
 
 
 //#define SHOW_CONNECTION_STATUS

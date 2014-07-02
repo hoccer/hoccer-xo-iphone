@@ -1,3 +1,33 @@
+//==============================================================================
+// Pluralocalization:
+//
+// Application texts containing numeric values may require inflection of nouns
+// and/or grammar changes. Hoccer XO automatically appends a plural category to
+// these localization keys depending on the current numeric value.
+//
+// Plural Categories:
+//
+// - zero
+// - one   (singular)
+// - two   (dual)
+// - few   (paucal)
+// - many
+// - other (general plural form, no suffix)
+//
+// Example:
+//
+// "message_count"       = "%d Nachrichten";
+// "message_count (one)" = "%d Nachricht"; // ... or even "Eine Nachricht"
+//
+// That's enough for german, but arabic or russian translators have to provide
+// forms for other categories.
+//
+// See also:
+//   - http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html
+//   - http://cldr.unicode.org/index/cldr-spec/plural-rules
+//
+//==============================================================================
+
 "language_code" = "en";
 
 "ok"       = "Ok";
@@ -377,10 +407,10 @@
 "group_membership_role_admin"           = "admin";
 "group_membership_role_member"          = "member";
 
-"group_member_count_n_joined"           = "%@%d joined";
-"group_member_count_one_joined"         = "%@one joined";
-"group_member_count_none_joined"        = "%@you are alone";
-"group_member_invited_count"            = "%@%d invited";
+"group_member_count_joined"             = "%d joined";
+"group_member_count_joined (one)"       = "one joined";
+"group_member_count_joined (zero)"      = "you are alone";
+"group_member_invited_count"            = "%d invited";
 
 "group_list_placeholder"                = "Create [groups](http://hoccer.com/hoccer-xo-tutorial/#groups) to chat with many friends at once.";
 
