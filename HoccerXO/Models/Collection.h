@@ -14,5 +14,6 @@
 @property (nonatomic, retain) NSString     *name;
 
 - (void) appendAttachments:(NSArray *)attachments;
+- (void) moveAttachmentAtIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex;
 
 @end

@@ -331,6 +331,15 @@
     }
 }
 
+- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
+    return self.collection != nil;
+}
+
+- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    [self.collection moveAttachmentAtIndex:sourceIndexPath.row toIndex:destinationIndexPath.row];
+    [[AppDelegate instance] saveDatabase];
+}
+
 #pragma mark - Fetched results controller delegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {

@@ -22,4 +22,11 @@
     self.attachments = updatedAttachments;
 }
 
+- (void) moveAttachmentAtIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex {
+    NSMutableOrderedSet *updatedAttachments = [self.attachments mutableCopy];
+    NSIndexSet *sourceIndexSet = [NSIndexSet indexSetWithIndex:sourceIndex];
+    [updatedAttachments moveObjectsAtIndexes:sourceIndexSet toIndex:destinationIndex];
+    self.attachments = updatedAttachments;
+}
+
 @end
