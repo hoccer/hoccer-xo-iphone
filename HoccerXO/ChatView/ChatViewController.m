@@ -1720,7 +1720,10 @@ nil
         {
             //NSLog(@"NSFetchedResultsChangeUpdate");
             HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-            [self configureCell: (MessageCell*)[tableView cellForRowAtIndexPath:indexPath] forMessage: message withAttachmentPreview:YES];
+            MessageCell * cell = (MessageCell*)[tableView cellForRowAtIndexPath:indexPath]; // returns nil if cell is not visible or index path is out of range
+            if (cell != nil && message != nil) {
+                [self configureCell: cell forMessage: message withAttachmentPreview:YES];
+            }
             break;
         }
 
@@ -1775,6 +1778,7 @@ nil
 - (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message withAttachmentPreview:(BOOL)loadPreview {
     if (cell == nil) {
         NSLog(@"#WARNING: ChatViewController:configureCell called with cell = nil");
+        NSLog(@"%@", [NSThread callStackSymbols]);
         return;
     }
     if (DEBUG_TABLE_CELLS) NSLog(@"configureCell %@ withPreview=%d",cell,loadPreview);
