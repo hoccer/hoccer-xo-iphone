@@ -197,82 +197,82 @@
 // Contact - uses strings from profile
 //==============================================================================
 
-"contact_list_nav_title"                        = "Kontakte";
-"contact_nav_title"                             = "Kontakt";
+"contact_list_nav_title"                              = "Kontakte";
+"contact_nav_title"                                   = "Kontakt";
 
-"contact_alias_title"                           = "Alias:";
-"contact_alias_placeholder"                     = "Alternativer Name";
+"contact_alias_title"                                 = "Alias:";
+"contact_alias_placeholder"                           = "Alternativer Name";
 
-"contact_chat_title"                            = "Chat:";
-"contact_key_btn_title"                         = "Schlüssel:";
+"contact_chat_title"                                  = "Chat:";
+"contact_key_btn_title"                               = "Schlüssel:";
 
-"contact_unblock_btn_title_format"              = "Entblockiere %@";
-"contact_block_btn_title_format"                = "Blockiere %@";
+"contact_unblock_btn_title_format"                    = "Entblockiere %@";
+"contact_block_btn_title_format"                      = "Blockiere %@";
 
-"contact_invite_btn_title_format"               = "Lade als Freund ein (%@)";
-"contact_invite_btn_title_format"               = "Als Freund einladen";
-"contact_disinvite_btn_title_format"            = "Einladung zurückziehen";
+"contact_invite_btn_title_format"                     = "Lade als Freund ein (%@)";
+"contact_invite_btn_title_format"                     = "Als Freund einladen";
+"contact_disinvite_btn_title_format"                  = "Einladung zurückziehen";
 
-"contact_message_count_format (one)"            = "%@ Nachricht";
-"contact_message_count_format"                  = "%@ Nachrichten";
+"contact_message_count_format (one)"                  = "%@ Nachricht";
+"contact_message_count_format"                        = "%@ Nachrichten";
 
-"contact_delete_btn_title"                      = "Kontakt löschen";
-"contact_delete_safety_question"                = "Kontakt, Chat und Attachments löschen?";
+"contact_delete_btn_title"                            = "Kontakt löschen";
+"contact_delete_safety_question"                      = "Kontakt, Chat und Attachments löschen?";
 
-"contact_delete_associated_data_question"       = "Die Beziehung zu Kontakt '%@' wurde entfernt. Dazugehöriges Profil, Chats und Daten löschen?";
-"contact_deleted_title"                         = "Beziehung besteht nicht mehr";
-"contact_keep_data_button"                      = "Behalten";
-"contact_delete_data_button"                    = "Daten Löschen";
+"contact_delete_associated_data_question"             = "Die Beziehung zu Kontakt '%@' wurde entfernt. Dazugehöriges Profil, Chats und Daten löschen?";
+"contact_deleted_title"                               = "Beziehung besteht nicht mehr";
+"contact_keep_data_button"                            = "Behalten";
+"contact_delete_data_button"                          = "Daten Löschen";
 
-"contact_new_friend_title"                      = "Neuer Freund";
-"contact_new_friend_message"                    = "Kontakt '%@' ist jetzt mit dir befreundet.";
+"contact_new_friend_title"                            = "Neuer Freund";
+"contact_new_friend_message"                          = "Kontakt '%@' ist jetzt mit dir befreundet.";
 
-"contact_blocked_title"="Kontakt geblockt";
-"contact_blocked_message"                       = "Der Nachrichtenaustausch mit Kontakt '%@' ist vorübergehend geblockt.";
+"contact_blocked_title"                               = "Kontakt geblockt";
+"contact_blocked_message"                             = "Der Nachrichtenaustausch mit Kontakt '%@' ist vorübergehend geblockt.";
 
-"contact_relationship_removed_title"            = "Beziehung entfernen";
-"contact_relationship_removed_message"          = "Die Beziehung zu Kontakt '%@' wurde entfernt.";
-"contact_kept_and_relationship_removed_message" = "Eine Freundschaftsbeziehung zu Kontakt '%@' besteht nicht (mehr), aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppe(n) > %@ <.";
+"contact_relationship_removed_title"                  = "Beziehung entfernen";
+"contact_relationship_removed_message"                = "Die Beziehung zu Kontakt '%@' wurde entfernt.";
+"contact_kept_and_relationship_removed_message"       = "Eine Freundschaftsbeziehung zu Kontakt '%@' besteht nicht (mehr), aber der Kontakt besteht noch über die Mitgliedschaft in den Gruppe(n) > %@ <.";
 
 // for invitation in contact sheet
-"contact_friend_invitation_section_title"       = "Freundschaftseinladung";
+"contact_friend_invitation_section_title"             = "Freundschaftseinladung";
 
-"contact_friend_accept_button"                  ="Freundschaft annehmen";
-"contact_friend_refuse_button"                  ="Freundschaft ablehnen";
+"contact_friend_accept_button"                        = "Freundschaft annehmen";
+"contact_friend_refuse_button"                        = "Freundschaft ablehnen";
 
-"contact_friend_refuse_title"                   = "Freundschaft ablehnen?";
-"contact_friend_refuse_button_title"            = "Ablehnen";
+"contact_friend_refuse_title"                         = "Freundschaft ablehnen?";
+"contact_friend_refuse_button_title"                  = "Ablehnen";
 
 // For invitation in dialog
-"contact_invited_me_as_friend_title"            = "Freundschaftseinladung";
-"contact_invited_me_as_friend_message %@"       = "Eine Gruppenbekanntschaft namens ‘%@' hat dich eingeladen, ihr Freund zu werden.";
+"contact_invited_me_as_friend_title"                  = "Freundschaftseinladung";
+"contact_invited_me_as_friend_message %@"             = "Eine Gruppenbekanntschaft namens ‘%@' hat dich eingeladen, ihr Freund zu werden.";
 
-"contact_accept_friend_failed_message %@"      = "Das Annehmen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
-"contact_accept_friend_failed_title"           = "Freundschaft annehmen fehlgeschlagen";
+"contact_accept_friend_failed_message %@"             = "Das Annehmen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_accept_friend_failed_title"                  = "Freundschaft annehmen fehlgeschlagen";
 
-"contact_accept_friend_failed_message %@"      = "Das Ablehnen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
-"contact_accept_friend_failed_title"           = "Freundschaft ablehnen fehlgeschlagen";
+"contact_accept_friend_failed_message %@"             = "Das Ablehnen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_accept_friend_failed_title"                  = "Freundschaft ablehnen fehlgeschlagen";
 
-"contact_invite_friend_failed_message %@"      = "Die Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
-"contact_invite_friend_failed_title"           = "Freundschaftseinladung fehlgeschlagen";
+"contact_invite_friend_failed_message %@"             = "Die Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_invite_friend_failed_title"                  = "Freundschaftseinladung fehlgeschlagen";
 
-"contact_disinvite_friend_failed_message %@"      = "Das Zurückziehen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
-"contact_disinvite_friend_failed_title"           = "Freundschaft zurückziehen fehlgeschlagen";
+"contact_disinvite_friend_failed_message %@"          = "Das Zurückziehen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_disinvite_friend_failed_title"               = "Freundschaft zurückziehen fehlgeschlagen";
 
-"contact_invited_me_as_friend_accept_btn_title"         = "Annehmen";
-"contact_invited_me_as_friend_decline_btn_title"        = "Ablehnen";
-"contact_invited_me_as_friend_decide_later_btn_title"   = "Später entscheiden";
+"contact_invited_me_as_friend_accept_btn_title"       = "Annehmen";
+"contact_invited_me_as_friend_decline_btn_title"      = "Ablehnen";
+"contact_invited_me_as_friend_decide_later_btn_title" = "Später entscheiden";
 
 // relationship state display in contact list
-"contact_relationship_friend"                   = "Freund";
-"contact_relationship_groupfriend"              = "Gruppenbekanntschaft";
-"contact_relationship_kept"                     = "Keine Beziehung";
-"contact_relationship_blocked"                  = "Geblockt";
-"contact_relationship_invited"                  = "Eingeladen als Freund";
-"contact_relationship_invitedMe"                = "Hat dich als Freund eingeladen";
+"contact_relationship_friend"                         = "Freund";
+"contact_relationship_groupfriend"                    = "Gruppenbekanntschaft";
+"contact_relationship_kept"                           = "Keine Beziehung";
+"contact_relationship_blocked"                        = "Geblockt";
+"contact_relationship_invited"                        = "Eingeladen als Freund";
+"contact_relationship_invitedMe"                      = "Hat dich als Freund eingeladen";
 
-"contact_list_placeholder"                      = "[Lade Freunde ein](http://hoccer.com/hoccer-xo-anleitung/#kontakte) sicher mit dir zu chatten.";
-"contact_list_placeholder_nearby"               = "Warte auf Kontake [in der Nähe](http://hoccer.com/hoccer-xo-anleitung/#in-der-naehe)…";
+"contact_list_placeholder"                            = "[Lade Freunde ein](http://hoccer.com/hoccer-xo-anleitung/#kontakte) sicher mit dir zu chatten.";
+"contact_list_placeholder_nearby"                     = "Warte auf Kontake [in der Nähe](http://hoccer.com/hoccer-xo-anleitung/#in-der-naehe)…";
 
 //==============================================================================
 // Credentials
@@ -328,7 +328,7 @@
 "database_corrupt_deleted_title"       = "Datenbank gelöscht";
 "database_corrupt_deleted_message"     = "Die Datenbank wurde gelöscht. Bitte starte Hoccer XO neu.";
 
-"database_delete_btn_title"="Datenbank löschen";
+"database_delete_btn_title"            = "Datenbank löschen";
 
 //==============================================================================
 // Geolocations
@@ -365,8 +365,8 @@
 
 "group_join_button"                     = "Gruppe beitreten";
 "group_admin_you"                       = "Du";
-"group_admin_label (one)"                   = "Admin: ";
-"group_admin_label"                   = "Admins: ";
+"group_admin_label (one)"               = "Admin: ";
+"group_admin_label"                     = "Admins: ";
 "group_decline_invitation"              = "Einladung ablehnen";
 "group_leave"                           = "Gruppe verlassen";
 "group_decline_invitation_title"        = "Einladung ablehnen?";
