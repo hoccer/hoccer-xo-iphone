@@ -3,7 +3,7 @@
 //
 // Application texts containing numeric values may require inflection of nouns
 // and/or grammar changes. Hoccer XO automatically appends a plural category to
-// these localization keys depending on the current numeric value.
+// these localization keys depending on the current numeric value and locale.
 //
 // Plural Categories:
 //
