@@ -350,7 +350,7 @@
     if (admins.count == 0) {
         return @"No Admin";
     }
-    NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_p" : @"group_admin_label_s", nil);
+    NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label" : @"group_admin_label (one)", nil);
     return [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
 }
 

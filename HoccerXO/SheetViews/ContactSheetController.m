@@ -26,6 +26,7 @@
 #import "ContactPicker.h"
 #import "GroupInStatuNascendi.h"
 #import "KeyStatusCell.h"
+#import "HXOPluralocalizedString.h"
 
 
 //#define SHOW_CONNECTION_STATUS
@@ -297,7 +298,7 @@ static int  groupMemberContext;
 
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
-        return self.contact.messages.count == 1 ? @"contact_message_count_format_s" : @"contact_message_count_format_p";
+        return HXOPluralocalizedKey(@"contact_message_count_format", self.contact.messages.count, NO);
     }
     return nil;
 }
@@ -867,7 +868,7 @@ static int  groupMemberContext;
     if (admins.count == 0) {
         title = NSLocalizedString(@"group_no_admin", nil);
     } else {
-        NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_p" : @"group_admin_label_s", nil);
+        NSString * label = HXOPluralocalizedString(@"group_admin_label", admins.count, NO);
         title = [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
     }
     return [[NSAttributedString alloc] initWithString: title attributes: nil];
