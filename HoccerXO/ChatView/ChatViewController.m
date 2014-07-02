@@ -620,7 +620,7 @@ nil
     int makeGroupIndex = -1;
     if (membersOther.count > 0) {
         makeGroupIndex = buttonIndex++;
-        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_group_create_new_from_group %d", membersOther.count)];
+        [buttonTitles addObject: NSLocalizedString(@"chat_group_create_new_from_group", nil)];
     }
     
     if (buttonIndex == 0) {

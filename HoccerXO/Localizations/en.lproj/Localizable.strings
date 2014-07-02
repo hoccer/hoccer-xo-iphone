@@ -191,9 +191,7 @@
 "chat_group_members_disinvite %d"               = "Disinvite %d group members as friend";
 "chat_group_members_disinvite %d (one)"         = "Disinvite one group member as friend";
 
-"chat_group_create_new_from_group %d"           = "Create new group with %d chat partners";
-"chat_group_create_new_from_group %d (one)"     = "Create new group with %d chat partner";
-
+"chat_group_create_new_from_group"              = "Create permanent group";
 
 //==============================================================================
 // Contact - uses strings from profile
