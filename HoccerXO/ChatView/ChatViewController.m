@@ -1721,7 +1721,10 @@ nil
         {
             //NSLog(@"NSFetchedResultsChangeUpdate");
             HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-            [self configureCell: (MessageCell*)[tableView cellForRowAtIndexPath:indexPath] forMessage: message withAttachmentPreview:YES];
+            MessageCell * cell = (MessageCell*)[tableView cellForRowAtIndexPath:indexPath]; // returns nil if cell is not visible or index path is out of range
+            if (cell != nil && message != nil) {
+                [self configureCell: cell forMessage: message withAttachmentPreview:YES];
+            }
             break;
         }
 
@@ -1776,6 +1779,7 @@ nil
 - (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message withAttachmentPreview:(BOOL)loadPreview {
     if (cell == nil) {
         NSLog(@"#WARNING: ChatViewController:configureCell called with cell = nil");
+        NSLog(@"%@", [NSThread callStackSymbols]);
         return;
     }
     if (DEBUG_TABLE_CELLS) NSLog(@"configureCell %@ withPreview=%d",cell,loadPreview);
@@ -1960,69 +1964,193 @@ nil
     }
 }
 
+
+- (HXOBubbleColorScheme) colorSchemeForDelivery:(Delivery*) myDelivery {
+    
+    if (myDelivery.isPending) {
+        return HXOBubbleColorSchemeInProgress;
+    } else if (myDelivery.isDelivered) {
+        return HXOBubbleColorSchemeSuccess;
+    } else if (myDelivery.isFailure) {
+        return HXOBubbleColorSchemeFailed;
+    } else {
+        NSLog(@"ERROR: colorSchemeForMessage: unknown delivery state '%@'", myDelivery.state);
+    }
+    return HXOBubbleColorSchemeSuccess;
+}
+
+
 - (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
     
     if (message.isIncoming) {
         return HXOBubbleColorSchemeIncoming;
     }
     
-    if ([message.deliveries count] > 1) {
-        //NSLog(@"WARNING: colorSchemeForMessage: NOT YET IMPLEMENTED: delivery status for multiple deliveries, just chosing one color");
+    if ([message.deliveries count] == 1) {
+        return [self colorSchemeForDelivery:message.deliveries.anyObject];
+    } else {
+        //if (message.attachment == nil) {
+            // select color scheme by priority; if one message succeeded, return delivered
+            NSSet * messagesDelivered = message.deliveriesDelivered;
+            if (messagesDelivered.count > 0) {
+                return [self colorSchemeForDelivery:messagesDelivered.anyObject];
+            }
+
+            // progress is next
+            NSSet * messagesPending = message.deliveriesPending;
+            if (messagesPending.count > 0) {
+                return [self colorSchemeForDelivery:messagesPending.anyObject];
+            }
+
+            // only if all fail, we show failed
+            NSSet * messagesFailed = message.deliveriesFailed;
+            if (messagesFailed.count > 0) {
+                return [self colorSchemeForDelivery:messagesFailed.anyObject];
+            }
+        //}
     }
-    for (Delivery * myDelivery in message.deliveries) {
-        if (myDelivery.isStateNew || myDelivery.isStateDelivering) {
-            
-            return HXOBubbleColorSchemeInProgress;
-        } else if (myDelivery.isDelivered) {
-            
-            return HXOBubbleColorSchemeSuccess;
-        } else if (myDelivery.isFailure) {
-            
-            return HXOBubbleColorSchemeFailed;
-        } else {
-            NSLog(@"ERROR: colorSchemeForMessage: unknown delivery state '%@'", myDelivery.state);
-        }
-    }
+    NSLog(@"ERROR: colorSchemeForMessage: strange deliveries for message id '%@', delivery count=%d", message.messageId, message.deliveries.count);
     return HXOBubbleColorSchemeSuccess;
+}
+
+NSString * delimiter(NSString* currentString) {
+    if (currentString.length == 0) {
+        return @"";
+    } else {
+        return @",";
+    }
+}
+
+NSSet * intersectionOfSets(NSSet * a, NSSet * b) {
+    NSMutableSet * result = [NSMutableSet setWithSet:a];
+    [result intersectSet:b];
+    return result;
+}
+
+NSSet * differenceOfSets(NSSet * a, NSSet * b) {
+    NSMutableSet * result = [NSMutableSet setWithSet:a];
+    [result minusSet:b];
+    return result;
+}
+
+- (NSString*) stateStringForMessageMulti: (HXOMessage*) message {
+    NSUInteger totalDeliveries = message.deliveries.count;
+    
+    NSSet * messagesNew;
+    NSUInteger newCount = 0;
+    
+    NSSet * messagesDelivering;
+    NSUInteger deliveringCount = 0;
+    
+    NSSet * messagesFailed;
+    NSUInteger failedCount = 0;
+    
+    NSSet * messagesSeen;
+    NSUInteger seenCount = 0;
+    
+    NSSet * messagesUnseen;
+    NSUInteger unseenCount = 0;
+    
+    NSSet * messagesPrivate;
+    NSUInteger privateCount = 0;
+
+    NSUInteger accountedDeliveries = 0;
+    
+    messagesSeen = message.deliveriesSeen;
+    seenCount = messagesSeen.count;
+    accountedDeliveries += seenCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesUnseen = message.deliveriesUnseen;
+    unseenCount = messagesUnseen.count;
+    accountedDeliveries += unseenCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesPrivate = message.deliveriesPrivate;
+    privateCount = messagesPrivate.count;
+    accountedDeliveries += privateCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesNew = message.deliveriesNew;
+    newCount = messagesNew.count;
+    accountedDeliveries += newCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesDelivering = message.deliveriesDelivering;
+    deliveringCount = messagesDelivering.count;
+    accountedDeliveries += deliveringCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesFailed = message.deliveriesFailed;
+    failedCount = messagesFailed.count;
+    accountedDeliveries += failedCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+ready:;
+
+    NSString * info = @"";
+    if (newCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), newCount, [self stateStringForDelivery:messagesNew.anyObject]]];
+    }
+    if (deliveringCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), deliveringCount, [self stateStringForDelivery:messagesDelivering.anyObject]]];
+    }
+    if (failedCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), failedCount, [self stateStringForDelivery:messagesFailed.anyObject]]];
+    }
+    
+    if (message.attachment != nil) {
+        //NSSet * attachmentsMissing = message.deliveriesAttachmentsMissing;
+        //NSUInteger attachmentMissingCount = attachmentsMissing.count;
+        
+        NSSet * attachmentsPending = message.deliveriesAttachmentsPending;
+        NSUInteger attachmentPendingCount = attachmentsPending.count;
+        
+        NSSet * attachmentsFailed = message.deliveriesAttachmentsFailed;
+        NSUInteger attachmentFailedCount = attachmentsFailed.count;
+        
+        NSSet * attachmentsReceived = message.deliveriesAttachmentsReceived;
+        //NSUInteger attachmentReceivedCount = attachmentsReceived.count;
+        
+        if (attachmentFailedCount != 0) {
+            info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), attachmentFailedCount, [self stateStringForDelivery:attachmentsFailed.anyObject]]];
+        }
+        attachmentsPending = differenceOfSets(attachmentsPending, messagesDelivering);
+        attachmentsPending = differenceOfSets(attachmentsPending, messagesNew);
+        attachmentPendingCount = attachmentsPending.count;
+        
+        if (attachmentPendingCount != 0) {
+            info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), attachmentPendingCount, [self stateStringForDelivery:attachmentsPending.anyObject]]];
+        }
+        messagesSeen = intersectionOfSets(messagesSeen,attachmentsReceived);
+        seenCount = messagesSeen.count;
+        
+        messagesUnseen = intersectionOfSets(messagesUnseen,attachmentsReceived);
+        unseenCount = messagesUnseen.count;
+        
+        messagesPrivate = intersectionOfSets(messagesPrivate,attachmentsReceived);
+        privateCount = messagesPrivate.count;
+    }
+    if (seenCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), seenCount, [self stateStringForDelivery:messagesSeen.anyObject]]];
+    }
+    if (unseenCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), unseenCount, [self stateStringForDelivery:messagesUnseen.anyObject]]];
+    }
+    if (privateCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), privateCount, [self stateStringForDelivery:messagesPrivate.anyObject]]];
+    }
+    
+#ifdef DEBUG
+    info = [info stringByAppendingString:[NSString stringWithFormat:@" (%d)", totalDeliveries]];
+#endif
+    return info;
 }
 
 - (NSString*) stateStringForMessage: (HXOMessage*) message {
 
     if ([message.deliveries count] > 1) {
-        //NSUInteger deliveredCount = message.deliveriesDelivered.count;
-        NSUInteger pendingCount = message.deliveriesPending.count;
-        NSUInteger failedCount = message.deliveriesFailed.count;
-        NSUInteger seenCount = message.deliveriesSeen.count;
-        NSUInteger unseenCount = message.deliveriesUnseen.count;
-        NSUInteger privateCount = message.deliveriesPrivate.count;
-        //NSUInteger attachmentPendingCount = message.deliveriesAttachmentsPending.count;
-        //NSUInteger attachmentReceivedCount = message.deliveriesAttachmentsReceived.count;
-        NSUInteger attachmentFailedCount = message.deliveriesAttachmentsFailed.count;
-        NSUInteger totalDeliveries = message.deliveries.count;
-        
-        NSString * info = @"";
-        if (privateCount != 0) {
-            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", privateCount, [self stateStringForDelivery:message.deliveriesPrivate.anyObject]]];
-        }
-        if (pendingCount != 0) {
-            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", pendingCount, [self stateStringForDelivery:message.deliveriesPending.anyObject]]];
-        }
-        if (failedCount != 0) {
-            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", failedCount, [self stateStringForDelivery:message.deliveriesFailed.anyObject]]];
-        }
-        if (seenCount != 0) {
-            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", seenCount, [self stateStringForDelivery:message.deliveriesSeen.anyObject]]];
-        }
-        if (unseenCount != 0) {
-            info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", unseenCount, [self stateStringForDelivery:message.deliveriesUnseen.anyObject]]];
-        }
-        if (message.attachment != nil) {
-            if (attachmentFailedCount != 0) {
-                info = [info stringByAppendingString:[NSString stringWithFormat:@" %d %@", attachmentFailedCount, [self stateStringForDelivery:message.deliveriesAttachmentsFailed.anyObject]]];
-            }
-        }
-        info = [info stringByAppendingString:[NSString stringWithFormat:@" (%d)", totalDeliveries]];
-        return info;
+        return [self stateStringForMessageMulti:message];
     } else {
         Delivery * myDelivery = message.deliveries.anyObject;
         return [self stateStringForDelivery:myDelivery];
@@ -2043,7 +2171,7 @@ nil
             NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_failed_attachment", nil),
                                       NSLocalizedString(attachment_type, nil)];
             return stateString;
-        } else  if (myDelivery.isMissingAttachment) {
+        } else  if (myDelivery.isAttachmentPending) {
             NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", myDelivery.message.attachment.mediaType];
             NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_missing_attachment", nil),
                                       NSLocalizedString(attachment_type, nil)];
@@ -2279,7 +2407,7 @@ nil
 - (void) messageCell:(MessageCell *)theCell resendMessage:(id)sender {
     //NSLog(@"resendMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-    for (int i = 0; i < 200;++i) {
+    for (int i = 0; i < 20;++i) {
         double delayInSeconds = 0.5 * i;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){

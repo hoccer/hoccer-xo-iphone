@@ -1312,7 +1312,7 @@ NSArray * TransferStateName = @[@"detached",
         }
         NSLog(@"pausedTransfer transfer, cipherTransferSize=%@, cipheredSize=%@",self.cipherTransferSize,self.cipheredSize);
         self.transferPaused = [[NSDate alloc] init];
-        if (!self.outgoing) {
+        if (self.outgoing) {
             [self.chatBackend uploadPaused:self];
         }
     }
@@ -1325,10 +1325,11 @@ NSArray * TransferStateName = @[@"detached",
         if (self.outgoing) {
             [self.chatBackend uploadStarted:self];
             [self.chatBackend enqueueUploadOfAttachment:self];
+            [self.chatBackend checkUploadQueue];
         } else {
             [self.chatBackend enqueueDownloadOfAttachment:self];
+            [self.chatBackend checkDowloadQueue];
         }
-        //[self.chatBackend checkTransferQueues];
     }
 }
 

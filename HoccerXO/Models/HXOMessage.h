@@ -80,9 +80,11 @@
 - (NSSet*) deliveriesPrivate;
 - (NSSet*) deliveriesDelivered;
 - (NSSet*) deliveriesNew;
+- (NSSet*) deliveriesDelivering;
 - (NSSet*) deliveriesPending;
 - (NSSet*) deliveriesAttachmentsReceived;
 - (NSSet*) deliveriesAttachmentsFailed;
 - (NSSet*) deliveriesAttachmentsPending;
+- (NSSet*) deliveriesAttachmentsMissing;
 
 @end

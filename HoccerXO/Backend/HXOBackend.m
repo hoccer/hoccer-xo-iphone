@@ -3807,38 +3807,49 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void)checkTransferQueues {
-    if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues");
+    [self checkDowloadQueue];
+    [self checkUploadQueue];
+}
+
+- (void)checkDowloadQueue {
+    if (TRANSFER_DEBUG) NSLog(@"checkDowloadQueue");
     NSArray * da = [_attachmentDownloadsActive copy];
     for (Attachment * a in da) {
         if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
-            NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentDownloadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.remoteURL);
+            NSLog(@"#WARNING: checkDowloadQueue : attachment with bad state %@ in _attachmentDownloadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.remoteURL);
             [self dequeueDownloadOfAttachment:a];
-        }
-    }
-    da = [_attachmentUploadsActive copy];
-    for (Attachment * a in da) {
-        if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
-            NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentUploadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.uploadURL);
-            [self dequeueUploadOfAttachment:a];
         }
     }
     NSArray * pendingDownloads = [self pendingAttachmentDownloads];
     for (Attachment * a in pendingDownloads) {
         if ([_attachmentDownloadsWaiting indexOfObject:a] == NSNotFound && [_attachmentDownloadsActive indexOfObject:a] == NSNotFound) {
-            NSLog(@"#WARNING: checkTransferQueues : attachment with state %@ not in transfer queues, enqueuing download, url = %@", [Attachment getStateName:a.state], a.remoteURL);
+            NSLog(@"#WARNING: checkDowloadQueue : attachment with state %@ not in transfer queues, enqueuing download, url = %@", [Attachment getStateName:a.state], a.remoteURL);
             [self enqueueDownloadOfAttachment:a];
         }
     }
     
+    if (TRANSFER_DEBUG) NSLog(@"checkDowloadQueue ready");
+}
+
+- (void)checkUploadQueue {
+    if (TRANSFER_DEBUG) NSLog(@"checkUploadQueue");
+    NSArray * da = [_attachmentUploadsActive copy];
+    for (Attachment * a in da) {
+        if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
+            NSLog(@"#WARNING: checkUploadQueue : attachment with bad state %@ in _attachmentUploadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.uploadURL);
+            [self dequeueUploadOfAttachment:a];
+        }
+    }
     NSArray * pendingUploads = [self pendingAttachmentUploads];
     for (Attachment * a in pendingUploads) {
         if ([_attachmentUploadsWaiting indexOfObject:a] == NSNotFound && [_attachmentUploadsActive indexOfObject:a] == NSNotFound) {
-            NSLog(@"#WARNING: checkTransferQueues : attachment with state %@ not in transfer queues, enqueuing upload, url = %@", [Attachment getStateName:a.state], a.uploadURL);
+            NSLog(@"#WARNING: checkUploadQueue : attachment with state %@ not in transfer queues, enqueuing upload, url = %@", [Attachment getStateName:a.state], a.uploadURL);
             [self enqueueUploadOfAttachment:a];
         }
     }
-    if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues ready");
+    if (TRANSFER_DEBUG) NSLog(@"checkUploadQueue ready");
 }
+
 
 -(BOOL) alreadyInDowloadQueue:(Attachment*)attachment {
     return [_attachmentDownloadsWaiting indexOfObject:attachment] != NSNotFound ||
@@ -3964,12 +3975,15 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate saveDatabase];
     [self finishedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
         if (ok) {
-            if (![kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:result]) {
+            if (![kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:result] &&
+                ![kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:result]) // receiver might have been faster and has already signalled reception to server
+            {
                 NSLog(@"finishedFileUpload for file %@ returned strange attachment state %@",theAttachment.message.attachmentFileId, result);
             }
         }
     }];
     [self dequeueUploadOfAttachment:theAttachment];
+    [self checkUploadQueue];
 #ifdef DEBUG_CHECK_FINISHED_UPLOADS
     [self checkUploadStatus:theAttachment.uploadURL hasSize:[theAttachment.cipherTransferSize longLongValue]  withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
         if (!ok) {
@@ -4103,6 +4117,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     [self dequeueUploadOfAttachment:theAttachment];
     [self enqueueUploadOfAttachment:theAttachment];
+    [self checkUploadQueue];
 }
 
 - (double) transferRetryIntervalFor:(Attachment *)theAttachment {
@@ -4529,12 +4544,16 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         if (success) {
             NSManagedObjectID * messageObjId = message.objectID;
             NSArray * deliveryIds = objectIds(deliveries);
-            [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+            NSArray * resultDeliveryDicts = (NSArray*)responseOrError;
+            NSDictionary * dict = resultDeliveryDicts[0];
+            NSString * messageId = dict[@"messageId"]; // for locking
+            
+            [self.delegate performWithLockingId:messageId inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 NSArray * deliveries = managedObjects(deliveryIds,context);
                 HXOMessage * message = (HXOMessage*)[context objectWithID:messageObjId];
                 
                 NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
-                if (deliveries.count == 1) {
+                if (deliveries.count == 1) { // we did send 1 delivery
                     Delivery * delivery = deliveries[0];
                     if (delivery.isGroupDelivery) {
                         int expandedGroupDeliveries = 0;
@@ -4559,7 +4578,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                                 }
                                 newDelivery.group = group;
                                 newDelivery.receiver = [self getContactByClientId:deliveryDict[@"receiverId"] inContext:context];
-                                NSLog(@"### inserted delivery for group %@ and receiver %@", newDelivery.group.clientId, newDelivery.receiver.clientId);
+                                if (DELIVERY_TRACE) NSLog(@"### inserted delivery for group %@ and receiver %@", newDelivery.group.clientId, newDelivery.receiver.clientId);
                                 [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                                     [self outgoingDeliveryUpdated:@[deliveryDict]];
                                 }];
@@ -5515,6 +5534,37 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     }
 }
 
+- (void) outDeliveryAcknowledgeAttachmentState:(NSString*)attachmentState forDelivery:(Delivery*)myDelivery withFileId:(NSString*)myFileId forReceiver:(NSString*)receiverId {
+    
+    NSArray * myObjIds = objectIds(@[myDelivery]);
+    [self outDeliveryAcknowledgeAttachmentState:attachmentState
+                                     withFileId:myFileId
+                                    forReceiver:receiverId
+                                    withHandler:^(NSString *result, BOOL ok)
+     {
+         NSArray * myObjects = managedObjects(myObjIds, self.delegate.mainObjectContext);
+         Delivery * myDelivery = (Delivery *)myObjects[0];
+         if (DELIVERY_TRACE) NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
+         if (ok) {
+             myDelivery.attachmentState = result;
+         } else {
+             // it might happen that a delivery is gone on the server, but we still have it
+             // in these cases we will get an error with result code 0 and set the attachment delivery state to unknown so
+             // we do not try to confirm it again and again on startup
+             if ([result isKindOfClass:[NSDictionary class]]) {
+                 NSDictionary * myDict = (NSDictionary*)result;
+                 NSNumber * errorCode = myDict[@"code"];
+                 if (errorCode != nil && errorCode.intValue == 0) {
+                     NSLog(@"outDeliveryAcknowledgeAttachmentState: setting attachmentState to 'unknown'");
+                     myDelivery.attachmentState = @"unknown";
+                 }
+             }
+         }
+     }];
+}
+
+
+
 // called by server to notify us about status changes of outgoing deliveries we made
 - (void) outgoingDeliveryUpdated: (NSArray*) params {
         if (params.count != 1) {
@@ -5579,6 +5629,14 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             if (myDelivery.isInFinalState) {
                 NSLog(@"#WARNING: outgoingDelivery Notification received for delivery in final state '%@', attachmentState '%@', messageId: %@",
                       myDelivery.state, myDelivery.attachmentState, deliveryDict[@"messageId"]);
+                
+                // acknowledge the state again just to satisfy the server although we already have received a newer state
+                if (![Delivery isAcknowledgedState:deliveryDict[@"state"]]) {
+                    [self outDeliveryAcknowledgeState:deliveryDict[@"state"] withMessageId:myMessageId withReceiverId:myReceiverId];
+                }
+                if (![Delivery isAcknowledgedAttachmentState:deliveryDict[@"attachmentState"]]) {
+                    [self outDeliveryAcknowledgeAttachmentState:deliveryDict[@"attachmentState"] forDelivery:myDelivery withFileId:myMessage.attachmentFileId forReceiver:myReceiverId];
+                }
                 return;
             }
             if ([myDelivery.state isEqualToString:deliveryDict[@"state"]] && [myDelivery.attachmentState isEqualToString:deliveryDict[@"attachmentState"]]) {
@@ -5603,37 +5661,14 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                     {
                         Attachment * attachment = managedObjects[0];
                         [self enqueueUploadOfAttachment:attachment];
+                        [self checkUploadQueue];
                     }];
                 }
             }
             
             [self outDeliveryAcknowledgeState:myDelivery.state withMessageId:myMessageId withReceiverId:myReceiverId];
             
-            NSArray * myObjIds = objectIds(@[myDelivery]);
-            [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState
-                                             withFileId:myMessage.attachmentFileId
-                                            forReceiver:myReceiverId
-                                            withHandler:^(NSString *result, BOOL ok)
-            {
-                NSArray * myObjects = managedObjects(myObjIds, self.delegate.mainObjectContext);
-                Delivery * myDelivery = (Delivery *)myObjects[0];
-                if (DELIVERY_TRACE) NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
-                if (ok) {
-                    myDelivery.attachmentState = result;
-                } else {
-                    // it might happen that a delivery is gone on the server, but we still have it
-                    // in these cases we will get an error with result code 0 and set the attachment delivery state to unknown so
-                    // we do not try to confirm it again and again on startup
-                    if ([result isKindOfClass:[NSDictionary class]]) {
-                        NSDictionary * myDict = (NSDictionary*)result;
-                        NSNumber * errorCode = myDict[@"code"];
-                        if (errorCode != nil && errorCode.intValue == 0) {
-                            NSLog(@"outDeliveryAcknowledgeAttachmentState: setting attachmentState to 'unknown'");
-                            myDelivery.attachmentState = @"unknown";
-                        }
-                    }
-                }
-            }];
+            [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState forDelivery:myDelivery withFileId:myMessage.attachmentFileId forReceiver:myReceiverId];
             
         } else {
             // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user,
