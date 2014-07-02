@@ -5519,6 +5519,37 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     }
 }
 
+- (void) outDeliveryAcknowledgeAttachmentState:(NSString*)attachmentState forDelivery:(Delivery*)myDelivery withFileId:(NSString*)myFileId forReceiver:(NSString*)receiverId {
+    
+    NSArray * myObjIds = objectIds(@[myDelivery]);
+    [self outDeliveryAcknowledgeAttachmentState:attachmentState
+                                     withFileId:myFileId
+                                    forReceiver:receiverId
+                                    withHandler:^(NSString *result, BOOL ok)
+     {
+         NSArray * myObjects = managedObjects(myObjIds, self.delegate.mainObjectContext);
+         Delivery * myDelivery = (Delivery *)myObjects[0];
+         if (DELIVERY_TRACE) NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
+         if (ok) {
+             myDelivery.attachmentState = result;
+         } else {
+             // it might happen that a delivery is gone on the server, but we still have it
+             // in these cases we will get an error with result code 0 and set the attachment delivery state to unknown so
+             // we do not try to confirm it again and again on startup
+             if ([result isKindOfClass:[NSDictionary class]]) {
+                 NSDictionary * myDict = (NSDictionary*)result;
+                 NSNumber * errorCode = myDict[@"code"];
+                 if (errorCode != nil && errorCode.intValue == 0) {
+                     NSLog(@"outDeliveryAcknowledgeAttachmentState: setting attachmentState to 'unknown'");
+                     myDelivery.attachmentState = @"unknown";
+                 }
+             }
+         }
+     }];
+}
+
+
+
 // called by server to notify us about status changes of outgoing deliveries we made
 - (void) outgoingDeliveryUpdated: (NSArray*) params {
         if (params.count != 1) {
@@ -5583,6 +5614,14 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             if (myDelivery.isInFinalState) {
                 NSLog(@"#WARNING: outgoingDelivery Notification received for delivery in final state '%@', attachmentState '%@', messageId: %@",
                       myDelivery.state, myDelivery.attachmentState, deliveryDict[@"messageId"]);
+                
+                // acknowledge the state again just to satisfy the server although we already have received a newer state
+                if (![Delivery isAcknowledgedState:deliveryDict[@"state"]]) {
+                    [self outDeliveryAcknowledgeState:deliveryDict[@"state"] withMessageId:myMessageId withReceiverId:myReceiverId];
+                }
+                if (![Delivery isAcknowledgedAttachmentState:deliveryDict[@"attachmentState"]]) {
+                    [self outDeliveryAcknowledgeAttachmentState:deliveryDict[@"attachmentState"] forDelivery:myDelivery withFileId:myMessage.attachmentFileId forReceiver:myReceiverId];
+                }
                 return;
             }
             if ([myDelivery.state isEqualToString:deliveryDict[@"state"]] && [myDelivery.attachmentState isEqualToString:deliveryDict[@"attachmentState"]]) {
@@ -5613,31 +5652,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             
             [self outDeliveryAcknowledgeState:myDelivery.state withMessageId:myMessageId withReceiverId:myReceiverId];
             
-            NSArray * myObjIds = objectIds(@[myDelivery]);
-            [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState
-                                             withFileId:myMessage.attachmentFileId
-                                            forReceiver:myReceiverId
-                                            withHandler:^(NSString *result, BOOL ok)
-            {
-                NSArray * myObjects = managedObjects(myObjIds, self.delegate.mainObjectContext);
-                Delivery * myDelivery = (Delivery *)myObjects[0];
-                if (DELIVERY_TRACE) NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
-                if (ok) {
-                    myDelivery.attachmentState = result;
-                } else {
-                    // it might happen that a delivery is gone on the server, but we still have it
-                    // in these cases we will get an error with result code 0 and set the attachment delivery state to unknown so
-                    // we do not try to confirm it again and again on startup
-                    if ([result isKindOfClass:[NSDictionary class]]) {
-                        NSDictionary * myDict = (NSDictionary*)result;
-                        NSNumber * errorCode = myDict[@"code"];
-                        if (errorCode != nil && errorCode.intValue == 0) {
-                            NSLog(@"outDeliveryAcknowledgeAttachmentState: setting attachmentState to 'unknown'");
-                            myDelivery.attachmentState = @"unknown";
-                        }
-                    }
-                }
-            }];
+            [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState forDelivery:myDelivery withFileId:myMessage.attachmentFileId forReceiver:myReceiverId];
             
         } else {
             // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user,
