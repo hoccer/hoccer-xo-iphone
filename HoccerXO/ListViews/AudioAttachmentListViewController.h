@@ -8,13 +8,12 @@
 
 #import "HXOTableViewController.h"
 #import "AddToCollectionListViewControllerDelegate.h"
+#import "AudioAttachmentDataSourceDelegate.h"
 
 @class Collection;
 @class Contact;
 
-@interface AudioAttachmentListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, AddToCollectionListViewControllerDelegate>
-
-+ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact collection:(Collection *)collection managedObjectModel:(NSManagedObjectModel *)managedObjectModel;
+@interface AudioAttachmentListViewController : HXOTableViewController <AudioAttachmentDataSourceDelegate, AddToCollectionListViewControllerDelegate>
 
 @property (nonatomic, strong) Collection *collection;
 @property (nonatomic, strong) Contact *contact;

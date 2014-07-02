@@ -1134,7 +1134,6 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <connections>
-                            <outlet property="dataSource" destination="69M-9C-Zrd" id="8gt-6E-2Wn"/>
                             <outlet property="delegate" destination="69M-9C-Zrd" id="dav-kS-dMr"/>
                         </connections>
                     </tableView>

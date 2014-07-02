@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "Attachment.h"
 #import "AudioAttachmentCell.h"
+#import "AudioAttachmentDataSource.h"
 #import "AudioPlayerStateItemController.h"
 #import "Collection.h"
 #import "Contact.h"
@@ -23,11 +24,9 @@
 
 @interface AudioAttachmentListViewController ()
 
-@property (nonatomic, strong) NSFetchedResultsController     * fetchedResultsController;
 @property (nonatomic, strong) UIView                         * footerContainerView;
-@property (nonatomic, strong) NSManagedObjectContext         * managedObjectContext;
-@property (nonatomic, strong) NSManagedObjectModel           * managedObjectModel;
 @property (nonatomic, strong) AudioPlayerStateItemController * audioPlayerStateItemController;
+@property (nonatomic, strong) AudioAttachmentDataSource      * dataSource;
 
 @end
 
@@ -50,6 +49,8 @@
     [super viewDidLoad];
     
     [self registerCellClass:[AudioAttachmentCell class]];
+    [self updateDataSource];
+
     self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
@@ -131,7 +132,6 @@
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    _fetchedResultsController = nil;
 }
 
 - (void) dealloc {
@@ -141,14 +141,19 @@
 #pragma mark - Configuration
 
 - (void) setCollection:(Collection *)collection {
-    self.fetchedResultsController = nil;
     _collection = collection;
-    [self.tableView reloadData];
+    [self updateDataSource];
 }
 
 - (void) setContact:(Contact *)contact {
-    self.fetchedResultsController = nil;
     _contact = contact;
+    [self updateDataSource];
+}
+
+- (void) updateDataSource {
+    self.dataSource = [[AudioAttachmentDataSource alloc] initWithContact:self.contact collection:self.collection];
+    self.dataSource.delegate = self;
+    self.tableView.dataSource = self.dataSource;
     [self.tableView reloadData];
 }
 
@@ -193,99 +198,13 @@
     NSArray *selectedIndexPaths = [self.tableView indexPathsForSelectedRows];
     
     for (NSIndexPath *indexPath in selectedIndexPaths) {
-        [attachments addObject:[self attachmentAtIndexPath:indexPath]];
+        [attachments addObject:[self.dataSource attachmentAtIndexPath:indexPath]];
     }
     
     return [NSArray arrayWithArray:attachments];
 }
 
-#pragma mark - Core Data Stack
-
-- (NSManagedObjectContext *)managedObjectContext {
-    if (_managedObjectContext == nil) {
-        _managedObjectContext = [[AppDelegate instance] managedObjectContext];
-    }
-    return _managedObjectContext;
-}
-
-- (NSManagedObjectModel *)managedObjectModel {
-    if (_managedObjectModel == nil) {
-        _managedObjectModel = [[AppDelegate instance] managedObjectModel];
-    }
-    return _managedObjectModel;
-}
-
-+ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact collection:(Collection *)collection managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
-    NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null],
-                            @"collection" : collection ? collection : [NSNull null] };
-
-    NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestFromTemplateWithName:@"ReceivedAudioAttachments" substitutionVariables:vars];
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"message.timeReceived" ascending: NO];
-    NSArray *sortDescriptors = @[sortDescriptor];
-    [fetchRequest setSortDescriptors:sortDescriptors];
-    
-    return fetchRequest;
-}
-
-#pragma mark - Table view data source
-
-- (NSFetchedResultsController *)fetchedResultsController {
-    if (_fetchedResultsController == nil) {
-        NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:self.contact collection:self.collection managedObjectModel:self.managedObjectModel];
-        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
-        _fetchedResultsController.delegate = self;
-        [_fetchedResultsController performFetch:nil];
-    }
-
-    return _fetchedResultsController;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [self.fetchedResultsController.sections count];
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    id<NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
-    return [sectionInfo numberOfObjects];
-}
-
-- (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    AudioAttachmentCell *cell = [tableView dequeueReusableCellWithIdentifier:[AudioAttachmentCell reuseIdentifier] forIndexPath:indexPath];
-    [self configureCell:cell atIndexPath:indexPath];
-    return cell;
-}
-
-- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    id <NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
-    return [sectionInfo name];
-}
-
-- (UITableViewCellEditingStyle) tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewCellEditingStyleDelete;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        Attachment *attachment = [self attachmentAtIndexPath:indexPath];
-        [[AppDelegate instance] deleteObject:attachment.message];
-        [[AppDelegate instance] saveDatabase];
-    }
-}
-
-- (void) configureCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    Attachment *attachment = [self attachmentAtIndexPath:indexPath];
-    cell.attachment = attachment;
-}
-
-- (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
-    id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    
-    if ([object isKindOfClass:[Attachment class]]) {
-        return (Attachment *)object;
-    }
-    
-    return nil;
-}
+#pragma mark - Cell layout
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     self.tableView.rowHeight = [self calculateRowHeight];
@@ -304,8 +223,7 @@
     if (self.tableView.isEditing) {
         [self updateFooterButtons];
     } else {
-        // The fetchedObjects array seems to change, so we take an immutable copy
-        NSArray * playlist = [[self.fetchedResultsController fetchedObjects] copy];
+        NSArray *playlist = self.dataSource.attachments;
         
         HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
         BOOL success = [audioPlayer playWithPlaylist:playlist atTrackNumber:indexPath.row];
@@ -331,38 +249,13 @@
     }
 }
 
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    return self.collection != nil;
-}
+#pragma mark - Audio Attachment Data Source Delegate
 
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    [self.collection moveAttachmentAtIndex:sourceIndexPath.row toIndex:destinationIndexPath.row];
-    [[AppDelegate instance] saveDatabase];
-}
-
-#pragma mark - Fetched results controller delegate
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
+- (void)dataSourceWillChangeContent:(AudioAttachmentDataSource *)dataSource {
     [self.tableView beginUpdates];
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    
-    switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
-}
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath {
+- (void)dataSource:(AudioAttachmentDataSource *)dataSource didChangeAttachment:(Attachment *)attachment atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
     UITableView *tableView = self.tableView;
     
@@ -387,7 +280,7 @@
     }
 }
 
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+- (void)dataSourceDidChangeContent:(AudioAttachmentDataSource *)dataSource {
     [self.tableView endUpdates];
 }
 

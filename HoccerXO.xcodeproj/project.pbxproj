@@ -256,6 +256,7 @@
 		C576EC761934CD2E00C0D254 /* tab_attachments.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC731934CD2E00C0D254 /* tab_attachments.svg */; };
 		C576EC791934CDD900C0D254 /* MessageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC781934CDD900C0D254 /* MessageItem.m */; };
 		C5B167D01962B982004D3A28 /* AddToCollectionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */; };
+		C5B167E21963ECF6004D3A28 /* AudioAttachmentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E11963ECF6004D3A28 /* AudioAttachmentDataSource.m */; };
 		C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C3BD17194065100072AE5F /* AttachmentMigration.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
@@ -908,6 +909,9 @@
 		C5B167CE1962B982004D3A28 /* AddToCollectionListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddToCollectionListViewController.h; sourceTree = "<group>"; };
 		C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddToCollectionListViewController.m; sourceTree = "<group>"; };
 		C5B167DF1962BE07004D3A28 /* AddToCollectionListViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddToCollectionListViewControllerDelegate.h; sourceTree = "<group>"; };
+		C5B167E01963ECF6004D3A28 /* AudioAttachmentDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentDataSource.h; sourceTree = "<group>"; };
+		C5B167E11963ECF6004D3A28 /* AudioAttachmentDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentDataSource.m; sourceTree = "<group>"; };
+		C5B167E31963FFD7004D3A28 /* AudioAttachmentDataSourceDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentDataSourceDelegate.h; sourceTree = "<group>"; };
 		C5C3BD07193F5F9B0072AE5F /* HoccerXO-40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-40.xcdatamodel"; sourceTree = "<group>"; };
 		C5C3BD16194065100072AE5F /* AttachmentMigration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentMigration.h; sourceTree = "<group>"; };
 		C5C3BD17194065100072AE5F /* AttachmentMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentMigration.m; sourceTree = "<group>"; };
@@ -1603,6 +1607,9 @@
 				C5B167DF1962BE07004D3A28 /* AddToCollectionListViewControllerDelegate.h */,
 				C576EBD81934CC9E00C0D254 /* AudioAttachmentCell.h */,
 				C576EBD91934CC9E00C0D254 /* AudioAttachmentCell.m */,
+				C5B167E01963ECF6004D3A28 /* AudioAttachmentDataSource.h */,
+				C5B167E11963ECF6004D3A28 /* AudioAttachmentDataSource.m */,
+				C5B167E31963FFD7004D3A28 /* AudioAttachmentDataSourceDelegate.h */,
 				C576EBDA1934CC9E00C0D254 /* AudioAttachmentListViewController.h */,
 				C576EBDB1934CC9E00C0D254 /* AudioAttachmentListViewController.m */,
 				C5395481195ABF66007DBD04 /* CollectionListViewController.h */,
@@ -2902,6 +2909,7 @@
 				63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */,
 				63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */,
 				63CA315518D272E70069A0C2 /* InvitationCodeViewController.mm in Sources */,
+				C5B167E21963ECF6004D3A28 /* AudioAttachmentDataSource.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
 				E9E92F7118733D01007B8042 /* HTTPServer.m in Sources */,
 				63CED3E018F9A24F0095110B /* KeyStatusCell.m in Sources */,
