@@ -169,7 +169,7 @@
 		63DC01511713976B00609513 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC01501713976B00609513 /* ImageViewController.m */; };
 		63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC015A17147B1600609513 /* HXOTableViewCell.m */; };
 		63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
-		63E5698C196353B0007E06BF /* HXOPluralocalizedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5698B196353B0007E06BF /* HXOPluralocalizedString.m */; };
+		63E5698C196353B0007E06BF /* HXOPluralocalization.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5698B196353B0007E06BF /* HXOPluralocalization.m */; };
 		63E9B00118F314AB00EFF829 /* disclosure_arrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9AFFD18F314AB00EFF829 /* disclosure_arrow.m */; };
 		63E9B00218F314AB00EFF829 /* ghost_busters_sign.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9AFFF18F314AB00EFF829 /* ghost_busters_sign.m */; };
 		63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */; };
@@ -678,8 +678,8 @@
 		63DC015A17147B1600609513 /* HXOTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTableViewCell.m; sourceTree = "<group>"; };
 		63E0B2151721FF75006058C6 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
-		63E5698A196353B0007E06BF /* HXOPluralocalizedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOPluralocalizedString.h; sourceTree = "<group>"; };
-		63E5698B196353B0007E06BF /* HXOPluralocalizedString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOPluralocalizedString.m; sourceTree = "<group>"; };
+		63E5698A196353B0007E06BF /* HXOPluralocalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOPluralocalization.h; sourceTree = "<group>"; };
+		63E5698B196353B0007E06BF /* HXOPluralocalization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOPluralocalization.m; sourceTree = "<group>"; };
 		63E9AFF318F313DA00EFF829 /* avatar_contact.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = avatar_contact.pcvd; sourceTree = "<group>"; };
 		63E9AFF418F313DA00EFF829 /* avatar_contact.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = avatar_contact.svg; sourceTree = "<group>"; };
 		63E9AFF518F313DA00EFF829 /* avatar_group.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = avatar_group.pcvd; sourceTree = "<group>"; };
@@ -1312,8 +1312,8 @@
 				636D4006171072CD00304EDF /* HXOUserDefaults.m */,
 				636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */,
 				6383FF751729DC2200835C91 /* Settings.bundle */,
-				63E5698A196353B0007E06BF /* HXOPluralocalizedString.h */,
-				63E5698B196353B0007E06BF /* HXOPluralocalizedString.m */,
+				63E5698A196353B0007E06BF /* HXOPluralocalization.h */,
+				63E5698B196353B0007E06BF /* HXOPluralocalization.m */,
 			);
 			path = SettingsConstantsAndEnvironment;
 			sourceTree = "<group>";
@@ -2509,7 +2509,7 @@
 				E9E92F7518733D01007B8042 /* HTTPAsyncFileResponse.m in Sources */,
 				6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */,
 				63756A9018F6434C003F7555 /* ContactPicker.m in Sources */,
-				63E5698C196353B0007E06BF /* HXOPluralocalizedString.m in Sources */,
+				63E5698C196353B0007E06BF /* HXOPluralocalization.m in Sources */,
 				E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */,
 				630CAB7818E0F6C400782507 /* ContactSheetBase.m in Sources */,
 				E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */,

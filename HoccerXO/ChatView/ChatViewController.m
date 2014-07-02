@@ -52,6 +52,7 @@
 #import "avatar_contact.h"
 #import "AttachmentButton.h"
 #import "GroupInStatuNascendi.h"
+#import "HXOPluralocalization.h"
 
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
@@ -532,7 +533,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         }
     };
     
-    NSString * title = [NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_safety_question %d", nil), messages.count];
+    NSString * title = [NSString stringWithFormat:HXOPluralocalizedString(@"chat_messages_delete_safety_question %d", messages.count, NO), messages.count];
     
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: title
                                         completionBlock: completion
@@ -589,37 +590,37 @@ nil
     int deleteAllIndex = -1;
     if (allMessagesInChat.count > 0) {
         deleteAllIndex = buttonIndex++;
-        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_all %d", nil), allMessagesInChat.count]];
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_messages_delete_all %d", allMessagesInChat.count)];
     }
     
     int deletePreviousIndex = -1;
     if (allMessagesBeforeVisible.count > 0) {
         deletePreviousIndex = buttonIndex++;
-        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_messages_delete_all_previous %d", nil), allMessagesBeforeVisible.count]];
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_messages_delete_all_previous %d", allMessagesBeforeVisible.count)];
     }
 
     int invitableIndex = -1;
     if (membersInvitable.count > 0) {
         invitableIndex = buttonIndex++;
-        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_members_invite %d", nil), membersInvitable.count]];
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_group_members_invite %d", membersInvitable.count)];
     }
 
     int inviteMeIndex = -1;
     if (membersInvitedMe.count > 0) {
         inviteMeIndex = buttonIndex++;
-        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_members_invite_accept %d", nil), membersInvitedMe.count]];
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_group_members_invite_accept %d", membersInvitedMe.count)];
     }
     
     int invitedIndex = -1;
     if (membersInvited.count > 0) {
         invitedIndex = buttonIndex++;
-        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_members_disinvite %d", nil), membersInvited.count]];
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_group_members_disinvite %d", membersInvited.count)];
     }
 
     int makeGroupIndex = -1;
     if (membersOther.count > 0) {
         makeGroupIndex = buttonIndex++;
-        [buttonTitles addObject:[NSString stringWithFormat:NSLocalizedString(@"chat_group_create_new_from_group %d", nil), membersOther.count]];
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_group_create_new_from_group %d", membersOther.count)];
     }
     
     if (buttonIndex == 0) {

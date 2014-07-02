@@ -1,3 +1,33 @@
+//==============================================================================
+// Pluralocalization:
+//
+// Application texts containing numeric values may require inflection of nouns
+// and/or grammar changes. Hoccer XO automatically appends a plural category to
+// these localization keys depending on the current numeric value.
+//
+// Plural Categories:
+//
+// - zero
+// - one   (singular)
+// - two   (dual)
+// - few   (paucal)
+// - many
+// - other (general plural form, no suffix)
+//
+// Example:
+//
+// "message_count"       = "%d Nachrichten";
+// "message_count (one)" = "%d Nachricht"; // ... or even "Eine Nachricht"
+//
+// That's enough for german, but arabic or russian translators have to provide
+// forms for other categories.
+//
+// See also:
+//   - http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html
+//   - http://cldr.unicode.org/index/cldr-spec/plural-rules
+//
+//==============================================================================
+
 "language_code" = "de";
 
 "ok"       = "Ok";
@@ -113,49 +143,55 @@
 // Chat
 //==============================================================================
 
-"chat_list_nav_title"                          = "Chats";
-"nearby_list_nav_title"                        = "In der Nähe";
+"chat_list_nav_title"                           = "Chats";
+"nearby_list_nav_title"                         = "In der Nähe";
 
 
-"chat_message_placeholder"                     = "Nachricht";
-"chat_call_phone_number_btn_title"             = "Anrufen";
+"chat_message_placeholder"                      = "Nachricht";
+"chat_call_phone_number_btn_title"              = "Anrufen";
 
-"chat_cant_send_alert_title"                   = "Nachricht kann nicht gesendet werden";
-"chat_contact_blocked_message"                 = "Der Kontakt ist geblockt.";
-"chat_relationship_removed_message"            = "Es existiert keine Beziehung zu diesem Kontakt mehr.";
-"chat_message_too_long_message"                = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
-"chat_wait_for_invitees_message"               = "Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
-"chat_group_you_are_alone_message"             = "Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
-"chat_nearby_group_you_are_alone_message"      = "Du kannst keine Nachrichten an die Gruppe verschicken niemand in der Nähe aktiv ist. Andere Nutzer müssen auch die ‘In der Nähe'-Funktion auswählen um in der Gruppe zu erscheinen.";
-"chat_no_groupkey_message"                     = "Leider kann die Nachricht nicht versendet werden, weil der Gruppenschlüssel aufgrund eines technischen Problems nicht vorhanden ist. Bitte versuchen sie es später noch einmal.";
-"chat_nearby_contact_offline"                  = "Leider kann die Nachricht nicht versendet werden, weil der Kontakt sich nicht mehr im Umfeld befindet oder abgemeldet ist und keine Freundschaftsbeziehung besteht.";
+"chat_cant_send_alert_title"                    = "Nachricht kann nicht gesendet werden";
+"chat_contact_blocked_message"                  = "Der Kontakt ist geblockt.";
+"chat_relationship_removed_message"             = "Es existiert keine Beziehung zu diesem Kontakt mehr.";
+"chat_message_too_long_message"                 = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
+"chat_wait_for_invitees_message"                = "Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
+"chat_group_you_are_alone_message"              = "Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
+"chat_nearby_group_you_are_alone_message"       = "Du kannst keine Nachrichten an die Gruppe verschicken niemand in der Nähe aktiv ist. Andere Nutzer müssen auch die ‘In der Nähe'-Funktion auswählen um in der Gruppe zu erscheinen.";
+"chat_no_groupkey_message"                      = "Die Nachricht kann nicht versendet werden, weil der Gruppenschlüssel aufgrund eines technischen Problems nicht vorhanden ist. Bitte versuchen sie es später noch einmal.";
+"chat_nearby_contact_offline"                   = "Die Nachricht kann nicht versendet werden, weil der Kontakt sich nicht mehr im Umfeld befindet oder abgemeldet ist und keine Freundschaftsbeziehung besteht.";
 
-"chat_message_pending"                         = "ausgehend";
-"chat_message_sent"                            = "gesendet";
-"chat_message_delivered"                       = "zugestellt";
-"chat_message_read"                            = "gelesen";
-"chat_message_unread"                          = "ungelesen";
-"chat_message_failed"                          = "unzustellbar";
-"chat_message_aborted"                         = "abgebrochen";
-"chat_message_rejected"                        = "zurückgewiesen";
+"chat_message_pending"                          = "ausgehend";
+"chat_message_sent"                             = "gesendet";
+"chat_message_delivered"                        = "zugestellt";
+"chat_message_read"                             = "gelesen";
+"chat_message_unread"                           = "ungelesen";
+"chat_message_failed"                           = "unzustellbar";
+"chat_message_aborted"                          = "abgebrochen";
+"chat_message_rejected"                         = "zurückgewiesen";
 
-"chat_message_delivered_missing_attachment %@" = "erwartet %@";
-"chat_message_delivered_failed_attachment %@"  = "%@ gestört";
+"chat_message_delivered_missing_attachment %@"  = "erwartet %@";
+"chat_message_delivered_failed_attachment %@"   = "%@ gestört";
 
-"chat_resend_menu_item"                        = "Senden";
-"chat_open_with_menu_item"                     = "Öffnen mit...";
-"chat_share_menu_item"                         = "Teilen";
+"chat_resend_menu_item"                         = "Senden";
+"chat_open_with_menu_item"                      = "Öffnen mit...";
+"chat_share_menu_item"                          = "Teilen";
 
-"chat_action_sheet_title"                      = "In diesem Chat:";
-"chat_messages_delete_safety_question %d"      = "Wirklich %d Nachrichten und Anhänge löschen?";
-"chat_messages_delete_all %d"                  = "Alle %d Nachrichten löschen";
-"chat_messages_delete_all_previous %d"         = "%d vorige Nachrichten löschen";
+"chat_action_sheet_title"                       = "In diesem Chat:";
+"chat_messages_delete_safety_question %d"       = "%d Nachrichten und Anhänge löschen?";
+"chat_messages_delete_safety_question %d (one)" = "Eine Nachricht mit Anhang löschen?";
+"chat_messages_delete_all %d"                   = "Alle %d Nachrichten löschen";
+"chat_messages_delete_all %d (one)"             = "Nachricht löschen";
+"chat_messages_delete_all_previous %d"          = "%d vorige Nachrichten löschen";
+"chat_messages_delete_all_previous %d (one)"    = "%d vorige Nachricht löschen";
 
-"chat_group_members_invite %d"                 = "%d Mitglieder als Freund einladen";
-"chat_group_members_invite_accept %d"          = "Einladung von %d Mitgliedern annehmen";
-"chat_group_members_disinvite %d"              = "Einladung an %d Mitglieder zurückziehen";
+"chat_group_members_invite %d"                  = "%d Mitglieder als Freunde einladen";
+"chat_group_members_invite %d (one)"            = "%d Mitglied als Freund einladen";
+"chat_group_members_invite_accept %d"           = "Einladung von %d Mitgliedern annehmen";
+"chat_group_members_invite_accept %d (one)"     = "Einladung von einem Mitglied annehmen";
+"chat_group_members_disinvite %d"               = "Einladung an %d Mitglieder zurückziehen";
 
-"chat_group_create_new_from_group %d"          = "Neue Gruppe mit %d Chatpartnern anlegen";
+"chat_group_create_new_from_group %d"           = "Neue Gruppe mit %d Chatpartnern anlegen";
+"chat_group_create_new_from_group %d (one)"     = "Neue Gruppe mit einem Chatpartner anlegen";
 
 //==============================================================================
 // Contact - uses strings from profile

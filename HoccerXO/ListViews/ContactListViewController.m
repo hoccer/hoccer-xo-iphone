@@ -29,6 +29,7 @@
 #import "GroupInStatuNascendi.h"
 #import "WebViewController.h"
 #import "tab_contacts.h"
+#import "HXOPluralocalization.h"
 
 #define HIDE_SEPARATORS
 #define FETCHED_RESULTS_DEBUG NO
@@ -700,6 +701,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
 
 - (NSString*) statusStringForContact: (Contact*) contact {
     if ([contact isKindOfClass: [Group class]]) {
+        // Man, this shit is disgusting. Needs de-monstering... I mean *really*. [agnat]
         Group * group = (Group*)contact;
         NSInteger joinedMemberCount = [group.otherJoinedMembers count];
         NSInteger invitedMemberCount = [group.otherInvitedMembers count];

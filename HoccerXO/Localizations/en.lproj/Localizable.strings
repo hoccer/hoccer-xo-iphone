@@ -114,48 +114,55 @@
 // Chat
 //==============================================================================
 
-"chat_list_nav_title"                          = "Chats";
-"nearby_list_nav_title"                        = "Nearby";
+"chat_list_nav_title"                           = "Chats";
+"nearby_list_nav_title"                         = "Nearby";
 
-"chat_message_placeholder"                     = "Message";
-"chat_call_phone_number_btn_title"             = "Call";
+"chat_message_placeholder"                      = "Message";
+"chat_call_phone_number_btn_title"              = "Call";
 
-"chat_cant_send_alert_title"                   = "Can Not Send Message";
-"chat_contact_blocked_message"                 = "Contact is blocked.";
-"chat_relationship_removed_message"            = "Relationship with this contact does no longer exist.";
-"chat_message_too_long_message"                = "Message is longer than %d bytes. Please keep it brief.";
-"chat_wait_for_invitees_message"               = "You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
-"chat_group_you_are_alone_message"             = "You can not send a message to this group because there are no members except you. Please invite friends to this group.";
-"chat_nearby_group_you_are_alone_message"      = "You can not send a message to this group because there are no other active nearby users. Other users close to you must also activate 'Nearby' to join this group.";
-"chat_no_groupkey_message"                     = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
-"chat_nearby_contact_offline"                  = "Sorry, the message can not be sent because the contact is no longer nearby or is offline and is not your friend.";
+"chat_cant_send_alert_title"                    = "Can Not Send Message";
+"chat_contact_blocked_message"                  = "Contact is blocked.";
+"chat_relationship_removed_message"             = "Relationship with this contact does no longer exist.";
+"chat_message_too_long_message"                 = "Message is longer than %d bytes. Please keep it brief.";
+"chat_wait_for_invitees_message"                = "You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
+"chat_group_you_are_alone_message"              = "You can not send a message to this group because there are no members except you. Please invite friends to this group.";
+"chat_nearby_group_you_are_alone_message"       = "You can not send a message to this group because there are no other active nearby users. Other users close to you must also activate 'Nearby' to join this group.";
+"chat_no_groupkey_message"                      = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
+"chat_nearby_contact_offline"                   = "Sorry, the message can not be sent because the contact is no longer nearby or is offline and is not your friend.";
 
-"chat_message_pending"                         = "pending";
-"chat_message_sent"                            = "sent";
-"chat_message_delivered"                       = "delivered";
-"chat_message_read"                            = "read";
-"chat_message_unread"                          = "unread";
-"chat_message_failed"                          = "undeliverable";
-"chat_message_aborted"                         = "aborted";
-"chat_message_rejected"                        = "rejected";
+"chat_message_pending"                          = "pending";
+"chat_message_sent"                             = "sent";
+"chat_message_delivered"                        = "delivered";
+"chat_message_read"                             = "read";
+"chat_message_unread"                           = "unread";
+"chat_message_failed"                           = "undeliverable";
+"chat_message_aborted"                          = "aborted";
+"chat_message_rejected"                         = "rejected";
 
-"chat_message_delivered_missing_attachment %@" = "expecting %@";
-"chat_message_delivered_failed_attachment %@"  = "undeliverable %@";
+"chat_message_delivered_missing_attachment %@"  = "expecting %@";
+"chat_message_delivered_failed_attachment %@"   = "undeliverable %@";
 
-"chat_resend_menu_item"                        = "Send";
-"chat_open_with_menu_item"                     = "Open with...";
-"chat_share_menu_item"                         = "Share";
+"chat_resend_menu_item"                         = "Send";
+"chat_open_with_menu_item"                      = "Open with...";
+"chat_share_menu_item"                          = "Share";
 
-"chat_action_sheet_title"                      = "In this Chat:";
-"chat_messages_delete_safety_question %d"      = "Really delete %d messages including all media?";
-"chat_messages_delete_all %d"                  = "Delete all %d messages";
-"chat_messages_delete_all_previous %d"         = "Delete %d previous messages";
+"chat_action_sheet_title"                       = "In this Chat:";
+"chat_messages_delete_safety_question %d"       = "Delete %d messages including all media?";
+"chat_messages_delete_safety_question %d (one)" = "Delete %d message including media?";
+"chat_messages_delete_all %d"                   = "Delete all %d messages";
+"chat_messages_delete_all %d (one)"             = "Delete the message";
+"chat_messages_delete_all_previous %d"          = "Delete %d previous messages";
+"chat_messages_delete_all_previous %d (one)"    = "Delete %d previous message";
 
-"chat_group_members_invite %d"                 = "Invite %d group members a friend";
-"chat_group_members_invite_accept %d"          = "Accept %d friendship invitations";
-"chat_group_members_disinvite %d"              = "Disinvite %d group members as friend";
+"chat_group_members_invite %d"                  = "Invite %d group members as friends";
+"chat_group_members_invite %d (one)"            = "Invite %d group member as friend";
+"chat_group_members_invite_accept %d"           = "Accept %d friendship invitations";
+"chat_group_members_invite_accept %d (one)"     = "Accept one friendship invitation";
+"chat_group_members_disinvite %d"               = "Disinvite %d group members as friend";
+"chat_group_members_disinvite %d (one)"         = "Disinvite one group member as friend";
 
-"chat_group_create_new_from_group %d"          = "Create new group with %d chat partners";
+"chat_group_create_new_from_group %d"           = "Create new group with %d chat partners";
+"chat_group_create_new_from_group %d (one)"     = "Create new group with %d chat partner";
 
 
 //==============================================================================
@@ -176,8 +183,8 @@
 "contact_invite_btn_title_format"               = "Invite '%@' as friend";
 "contact_disinvite_btn_title_format"            = "Disinvite %@";
 
-"contact_message_count_format (one)"            = "%@ message";
 "contact_message_count_format"                  = "%@ messages";
+"contact_message_count_format (one)"            = "%@ message";
 
 "contact_delete_btn_title"                      = "Delete contact";
 "contact_delete_safety_question"                = "Delete contact, chat and attachments?";
@@ -330,8 +337,8 @@
 
 "group_join_button"                     = "Join Group";
 "group_admin_you"                       = "You";
-"group_admin_label (one)"               = "Admin: ";
 "group_admin_label"                     = "Admins: ";
+"group_admin_label (one)"               = "Admin: ";
 "group_decline_invitation"              = "Decline Invitation";
 "group_leave"                           = "Leave Group";
 "group_decline_invitation_title"        = "Decline Invitation?";

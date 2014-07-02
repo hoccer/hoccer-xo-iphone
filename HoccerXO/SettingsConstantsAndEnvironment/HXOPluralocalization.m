@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "HXOPluralocalizedString.h"
+#import "HXOPluralocalization.h"
 
 // http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html
 
@@ -79,5 +79,9 @@ NSString * HXOPluralocalizedString(NSString * key, int count, BOOL explicitZero)
 NSString * HXOPluralocalizedKey(NSString * key, int count, BOOL explicitZero) {
     NSString * category = explicitZero && count == 0 ? @"zero" : categoryForCount(count);
     return category ? [NSString stringWithFormat: @"%@ (%@)", key, category] : key;
+}
+
+NSString * HXOPluralocalizeInt(NSString * key, int count) {
+    return [NSString stringWithFormat: HXOPluralocalizedString(key, count, NO)];
 }
 
