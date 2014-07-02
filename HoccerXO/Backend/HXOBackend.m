@@ -3807,38 +3807,49 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void)checkTransferQueues {
-    if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues");
+    [self checkDowloadQueue];
+    [self checkUploadQueue];
+}
+
+- (void)checkDowloadQueue {
+    if (TRANSFER_DEBUG) NSLog(@"checkDowloadQueue");
     NSArray * da = [_attachmentDownloadsActive copy];
     for (Attachment * a in da) {
         if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
-            NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentDownloadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.remoteURL);
+            NSLog(@"#WARNING: checkDowloadQueue : attachment with bad state %@ in _attachmentDownloadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.remoteURL);
             [self dequeueDownloadOfAttachment:a];
-        }
-    }
-    da = [_attachmentUploadsActive copy];
-    for (Attachment * a in da) {
-        if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
-            NSLog(@"#WARNING: checkTransferQueues : attachment with bad state %@ in _attachmentUploadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.uploadURL);
-            [self dequeueUploadOfAttachment:a];
         }
     }
     NSArray * pendingDownloads = [self pendingAttachmentDownloads];
     for (Attachment * a in pendingDownloads) {
         if ([_attachmentDownloadsWaiting indexOfObject:a] == NSNotFound && [_attachmentDownloadsActive indexOfObject:a] == NSNotFound) {
-            NSLog(@"#WARNING: checkTransferQueues : attachment with state %@ not in transfer queues, enqueuing download, url = %@", [Attachment getStateName:a.state], a.remoteURL);
+            NSLog(@"#WARNING: checkDowloadQueue : attachment with state %@ not in transfer queues, enqueuing download, url = %@", [Attachment getStateName:a.state], a.remoteURL);
             [self enqueueDownloadOfAttachment:a];
         }
     }
     
+    if (TRANSFER_DEBUG) NSLog(@"checkDowloadQueue ready");
+}
+
+- (void)checkUploadQueue {
+    if (TRANSFER_DEBUG) NSLog(@"checkUploadQueue");
+    NSArray * da = [_attachmentUploadsActive copy];
+    for (Attachment * a in da) {
+        if (a.state != kAttachmentTransfering && a.state != kAttachmentTransferScheduled) {
+            NSLog(@"#WARNING: checkUploadQueue : attachment with bad state %@ in _attachmentUploadsActive, dequeueing url = %@", [Attachment getStateName:a.state], a.uploadURL);
+            [self dequeueUploadOfAttachment:a];
+        }
+    }
     NSArray * pendingUploads = [self pendingAttachmentUploads];
     for (Attachment * a in pendingUploads) {
         if ([_attachmentUploadsWaiting indexOfObject:a] == NSNotFound && [_attachmentUploadsActive indexOfObject:a] == NSNotFound) {
-            NSLog(@"#WARNING: checkTransferQueues : attachment with state %@ not in transfer queues, enqueuing upload, url = %@", [Attachment getStateName:a.state], a.uploadURL);
+            NSLog(@"#WARNING: checkUploadQueue : attachment with state %@ not in transfer queues, enqueuing upload, url = %@", [Attachment getStateName:a.state], a.uploadURL);
             [self enqueueUploadOfAttachment:a];
         }
     }
-    if (TRANSFER_DEBUG) NSLog(@"checkTransferQueues ready");
+    if (TRANSFER_DEBUG) NSLog(@"checkUploadQueue ready");
 }
+
 
 -(BOOL) alreadyInDowloadQueue:(Attachment*)attachment {
     return [_attachmentDownloadsWaiting indexOfObject:attachment] != NSNotFound ||
@@ -3964,12 +3975,15 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate saveDatabase];
     [self finishedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
         if (ok) {
-            if (![kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:result]) {
+            if (![kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:result] &&
+                ![kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:result]) // receiver might have been faster and has already signalled reception to server
+            {
                 NSLog(@"finishedFileUpload for file %@ returned strange attachment state %@",theAttachment.message.attachmentFileId, result);
             }
         }
     }];
     [self dequeueUploadOfAttachment:theAttachment];
+    [self checkUploadQueue];
 #ifdef DEBUG_CHECK_FINISHED_UPLOADS
     [self checkUploadStatus:theAttachment.uploadURL hasSize:[theAttachment.cipherTransferSize longLongValue]  withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
         if (!ok) {
@@ -4103,6 +4117,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     [self dequeueUploadOfAttachment:theAttachment];
     [self enqueueUploadOfAttachment:theAttachment];
+    [self checkUploadQueue];
 }
 
 - (double) transferRetryIntervalFor:(Attachment *)theAttachment {
@@ -5646,6 +5661,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                     {
                         Attachment * attachment = managedObjects[0];
                         [self enqueueUploadOfAttachment:attachment];
+                        [self checkUploadQueue];
                     }];
                 }
             }

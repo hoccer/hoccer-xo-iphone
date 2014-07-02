@@ -1325,10 +1325,11 @@ NSArray * TransferStateName = @[@"detached",
         if (self.outgoing) {
             [self.chatBackend uploadStarted:self];
             [self.chatBackend enqueueUploadOfAttachment:self];
+            [self.chatBackend checkUploadQueue];
         } else {
             [self.chatBackend enqueueDownloadOfAttachment:self];
+            [self.chatBackend checkDowloadQueue];
         }
-        //[self.chatBackend checkTransferQueues];
     }
 }
 
