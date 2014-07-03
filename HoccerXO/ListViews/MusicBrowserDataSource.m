@@ -8,6 +8,7 @@
 
 #import "MusicBrowserDataSource.h"
 
+#import "Attachment.h"
 #import "Contact.h"
 
 @interface MusicBrowserDataSource ()
@@ -51,6 +52,12 @@
     } else {
         return [MusicBrowserDataSource fetchRequestWithManagedObjectModel:self.managedObjectModel];
     }
+}
+
+- (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
+    id attachment = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    NSAssert([attachment isKindOfClass:[Attachment class]], @"Expected Attachment");
+    return attachment;
 }
 
 @end

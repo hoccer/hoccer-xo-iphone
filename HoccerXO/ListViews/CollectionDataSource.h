@@ -8,6 +8,10 @@
 
 #import "AudioAttachmentDataSource.h"
 
+@class Collection;
+
 @interface CollectionDataSource : AudioAttachmentDataSource
+
+- (id) initWithCollection:(Collection *)collection;
 
 @end

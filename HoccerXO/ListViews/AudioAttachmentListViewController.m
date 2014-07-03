@@ -153,7 +153,7 @@
 
 - (void) updateDataSource {
     if (self.collection) {
-        self.dataSource = [[CollectionDataSource alloc] init];
+        self.dataSource = [[CollectionDataSource alloc] initWithCollection:self.collection];
     } else if (self.contact) {
         self.dataSource = [[MusicBrowserDataSource alloc] initWithContact:self.contact];
     } else {

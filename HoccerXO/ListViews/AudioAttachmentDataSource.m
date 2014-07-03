@@ -13,12 +13,6 @@
 #import "AudioAttachmentCell.h"
 #import "AudioAttachmentDataSourceDelegate.h"
 
-@interface AudioAttachmentDataSource ()
-
-@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-
-@end
-
 @implementation AudioAttachmentDataSource
 
 #pragma mark - Core Data Stack
@@ -67,13 +61,7 @@
 }
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
-    id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    
-    if ([object isKindOfClass:[Attachment class]]) {
-        return (Attachment *)object;
-    }
-    
-    return nil;
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"AudioAttachmentDataSource must be subclassed" userInfo:nil];
 }
 
 #pragma mark - Editing

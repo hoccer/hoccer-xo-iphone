@@ -146,6 +146,7 @@
     <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing == 0 AND transferFailures &lt; $max_retries"/>
     <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing != 0 AND transferFailures &lt; $max_retries AND message != nil"/>
     <fetchRequest name="AudioAttachmentsWithUnknownPlayability" entity="Attachment" predicateString="mediaType == &quot;audio&quot; AND playable == &quot;UNKNOWN&quot;"/>
+    <fetchRequest name="CollectionItemsForCollection" entity="CollectionItem" predicateString="collection == $collection"/>
     <fetchRequest name="Collections" entity="Collection"/>
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="ContactsLastUpdatedBefore" entity="Contact" predicateString="type == &quot;Contacts&quot; AND (lastUpdateReceived &lt; $lastUpdatedBefore OR lastUpdateReceived == nil) AND relationshipState != &quot;kept&quot;"/>

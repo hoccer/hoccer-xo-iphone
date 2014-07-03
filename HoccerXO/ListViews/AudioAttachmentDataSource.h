@@ -19,6 +19,7 @@
 @property (nonatomic, readonly) NSArray *attachments;
 @property (nonatomic, weak) id<AudioAttachmentDataSourceDelegate> delegate;
 
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, readonly) NSManagedObjectModel *managedObjectModel;
 
