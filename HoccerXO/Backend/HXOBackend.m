@@ -55,7 +55,7 @@
 #define CHECK_CERTS_DEBUG   NO
 #define DEBUG_DELETION      NO
 #define LOCKING_TRACE       NO
-
+#define SINGLE_NEARBY_DEBUG NO
 
 #ifdef DEBUG
 #define USE_VALIDATOR YES
@@ -217,42 +217,12 @@ static NSTimer * _stateNotificationDelayTimer;
     
     return self;
 }
-/*
--(NSString*)idLock:(NSString*)name {
-    @synchronized(_idLocks) {
-        id member = [_idLocks member:name];
-        if (member != nil) {
-            if (LOCKING_TRACE) NSLog(@"handing out lock %@",name);
-            return member;
-        }
-        [_idLocks addObject:name];
-        if (LOCKING_TRACE) NSLog(@"handing out new lock %@",name);
-        return [_idLocks member:name];
-    }
-}
-*/
-/*
-- (void)defaultsChanged:(NSNotification*)aNotification {
-    // NSLog(@"defaultsChanged: object %@ info %@", aNotification.object, aNotification.userInfo);
-    BOOL updateLocations = [[[HXOUserDefaults standardUserDefaults] valueForKey:@"updateLocations"] boolValue];
-    if (updateLocations) {
-        [HXOEnvironment.sharedInstance activateLocation];
-    } else {
-        [HXOEnvironment.sharedInstance deactivateLocation];
-        if (_state == kBackendReady && [HXOEnvironment sharedInstance].groupId != nil) {
-            [self destroyEnvironmentWithHandler:^(BOOL ok) {
-                NSLog(@"Enviroment destroyed = %d",ok);
-            }];
-        }
-    }
-}
-*/
 
 -(void)sendEnvironmentDestroyWithType:(NSString*)type {
     if (_state == kBackendReady && !_locationUpdatePending) {
         if (_state == kBackendReady) {
             [self destroyEnvironmentType:type withHandler:^(BOOL ok) {
-                NSLog(@"Enviroment destroyed = %d",ok);
+                if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment destroyed = %d",ok);
             }];
         }
     }
@@ -663,7 +633,6 @@ static NSTimer * _stateNotificationDelayTimer;
             if (GLITCH_TRACE) {NSLog(@"#GLITCH: receiveMessage: already have message with tag %@ id %@", oldMessage.messageTag, oldMessage.messageId);}
             if (DELIVERY_TRACE) {NSLog(@"receiveMessage: confirming duplicate message & delivery with state '%@' for tag %@ id %@",oldDelivery.state, oldMessage.messageTag, oldMessage.messageId);}
             
-            [self.delegate saveContext:context];
             NSLog(@"receiveMessage: scheduling deliveryConfirm");
             [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[oldMessage, oldDelivery] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
                 NSLog(@"receiveMessage: starting deliveryConfirm on old");
@@ -802,7 +771,6 @@ static NSTimer * _stateNotificationDelayTimer;
         
         contact.latestMessageTime = message.timeAccepted;
         
-        [self.delegate saveContext:context];
         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[contact]
                                                                                   withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
         {
@@ -1362,19 +1330,23 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     // for each message collect those deliveries that have state 'new' and send them out
     for (HXOMessage * message in pendingMessages) {
-        Delivery * delivery = message.deliveries.anyObject;
-        if (delivery != nil && delivery.receiver != nil) {
-            if (message.attachment != nil && (message.attachment.uploadURL == nil || message.attachment.uploadURL.length == 0)) {
-                // get attachment transfer url in case there are none yet
-                [self createUrlsForTransferOfAttachmentOfMessage:message];
+        if (message.deliveries.count == 1) {
+            Delivery * delivery = message.deliveries.anyObject;
+            if (delivery != nil && delivery.receiver != nil) {
+                if (message.attachment != nil && (message.attachment.uploadURL == nil || message.attachment.uploadURL.length == 0)) {
+                    // get attachment transfer url in case there are none yet
+                    [self createUrlsForTransferOfAttachmentOfMessage:message];
+                } else {
+                    [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:message.attachment];
+                }
             } else {
-                [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:message.attachment];
+                NSLog(@"removing message without receiver, tag = %@", message.messageTag);
+                [self.delegate deleteObject:message];
             }
         } else {
-            NSLog(@"removing message without receiver, tag = %@", message.messageTag);
+            NSLog(@"removing message without bad number of deliveries=%d (must be 1), tag = %@",message.deliveries.count,  message.messageTag);
             [self.delegate deleteObject:message];
         }
-        
     }
 }
 
@@ -2492,15 +2464,15 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 -(Group*)singleNearbyGroupWithId:(NSString*)groupId inContext:(NSManagedObjectContext *)context {
-    NSLog(@"singleNearbyGroupWithId: %@", groupId);
+    if (SINGLE_NEARBY_DEBUG) NSLog(@"singleNearbyGroupWithId: %@", groupId);
     NSArray * groups = [self getNearbyGroupsInContext:context];
-    NSLog(@"singleNearbyGroupWithId: %@, found %d nearby groups", groupId, groups.count);
+    if (SINGLE_NEARBY_DEBUG) NSLog(@"singleNearbyGroupWithId: %@, found %d nearby groups", groupId, groups.count);
     if (groups.count > 0) {
         Group * inspectedGroup = [self findInspectedNearbyGroupInContext:context];
         if (inspectedGroup == nil) {
             inspectedGroup = groups[0];
         }
-        NSLog(@"singleNearbyGroupWithId: changing group %@ to %@", inspectedGroup.clientId, groupId);
+        if (SINGLE_NEARBY_DEBUG) NSLog(@"singleNearbyGroupWithId: changing group %@ to %@", inspectedGroup.clientId, groupId);
         [inspectedGroup changeIdTo:groupId];
         
         if (groups.count > 1) {
@@ -4519,6 +4491,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 // client calls this method to send a Talkmessage along with the intended recipients in the deliveries array
 // the return result contains an array with updated deliveries
 - (void) outDeliveryRequest: (HXOMessage*) message withDeliveries: (NSArray*) deliveries withCompletion:(GenericResultHandler)completion {
+    message.messageId = nil;
     NSMutableDictionary * messageDict = [message rpcDictionary];
     NSMutableArray * deliveryDicts = [[NSMutableArray alloc] init];
     for (Delivery * delivery in deliveries) {
@@ -4555,6 +4528,8 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                 NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
                 if (deliveries.count == 1) { // we did send 1 delivery
                     Delivery * delivery = deliveries[0];
+                    
+                    // handle group delivery
                     if (delivery.isGroupDelivery) {
                         int expandedGroupDeliveries = 0;
                         for (NSDictionary * deliveryDict in updatedDeliveryDicts) {
@@ -4563,10 +4538,13 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                             }
                         }
                         if (expandedGroupDeliveries == updatedDeliveryDicts.count) {
+                            // handle "good" return from group delivery
                             Group * group = nil;
 
                             // we received new, expanded group deliveries, so lets get rid of the old group delivery
                             [self.delegate deleteObject:delivery inContext:context];
+                            
+                            NSDate * acceptedTime = nil;
                             for (NSDictionary * deliveryDict in updatedDeliveryDicts) {
                                 Delivery * newDelivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: context];
                                 //[message.deliveries addObject: newDelivery];
@@ -4578,19 +4556,33 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                                 }
                                 newDelivery.group = group;
                                 newDelivery.receiver = [self getContactByClientId:deliveryDict[@"receiverId"] inContext:context];
+                                
                                 if (DELIVERY_TRACE) NSLog(@"### inserted delivery for group %@ and receiver %@", newDelivery.group.clientId, newDelivery.receiver.clientId);
                                 [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                                     [self outgoingDeliveryUpdated:@[deliveryDict]];
                                 }];
+                                if (acceptedTime == nil) {
+                                    acceptedTime = [HXOBackend dateFromMillis:deliveryDict[@"timeAccepted"]];
+                                }
                             }
-                            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[group] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
-                                [context refreshObject: managedObjects[0] mergeChanges: YES];
+
+                            // be aware that the following block will be probably executed
+                            // before the above outgoingDeliveryUpdated will have finished
+                            // because they run in background
+                            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[group, message] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                                Group * group = managedObjects[0];
+                                HXOMessage * message = managedObjects[1];
+                                group.latestMessageTime = acceptedTime;
+                                [self.delegate saveContext];
+                                [context refreshObject: message mergeChanges: YES];
+                                if (DELIVERY_TRACE) {NSLog(@"Delivery message time update: messageId = %@, message.timeAccepted=%@, group.latestMessageTime=%@, msgMillis=%@, groupMillis=%@",message.messageId, message.timeAccepted, group.latestMessageTime, [HXOBackend millisFromDate:message.timeAccepted], [HXOBackend millisFromDate:group.latestMessageTime] );}
                                 completion(YES);
                             }];
                             return;
                         }
                     }
                 }
+                // not a group delivery or group delivery failed to expand
                 
                 // NSLog(@"deliveryRequest() returned deliveries: %@", responseOrError);
                 int i = 0;
@@ -4598,28 +4590,32 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                     if (USE_VALIDATOR) [self validateObject: updatedDeliveryDicts[i] forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
                     if (DELIVERY_TRACE) {NSLog(@"deliveryRequest result: Delivery state '%@'->'%@' for messageTag %@ id %@",delivery.state, updatedDeliveryDicts[i][@"state"], updatedDeliveryDicts[i][@"messageTag"],updatedDeliveryDicts[i][@"messageId"] );}
                     [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
-                    if (delivery.receiver != nil) {
-                        delivery.receiver.latestMessageTime = message.timeAccepted;
-                    }
                     if (delivery.group != nil) {
                         delivery.group.latestMessageTime = message.timeAccepted;
+                    } else {
+                        // update receiver time only when not a group message
+                        if (delivery.receiver != nil) {
+                            delivery.receiver.latestMessageTime = message.timeAccepted;
+                        }
                     }
                     if (DELIVERY_TRACE) {NSLog(@"Delivery message time update: messageId = %@, message.timeAccepted=%@, delivery.receiver.latestMessageTime=%@, delivery.group.latestMessageTime=%@",message.messageId, message.timeAccepted, delivery.receiver.latestMessageTime, delivery.group.latestMessageTime);}
                 }
                 
+                [self.delegate saveContext:context]; // make sure all objects have their proper ids before passing to other context by saving the context
+                
                 for (Delivery * delivery in deliveries) {
-                    if (delivery.receiver != nil) {
-                        [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[delivery.receiver] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
-                            [context refreshObject: managedObjects[0] mergeChanges: YES];
-                        }];
-                    }
                     if (delivery.group != nil) {
                         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[delivery.group] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
                             [context refreshObject: managedObjects[0] mergeChanges: YES];
                         }];
+                    } else {
+                        if (delivery.receiver != nil) {
+                            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[delivery.receiver] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                                [context refreshObject: managedObjects[0] mergeChanges: YES];
+                            }];
+                        }
                     }
                 }
-                [self.delegate saveContext:context];
                 [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                     completion(YES);
                 }];

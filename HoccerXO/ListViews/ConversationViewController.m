@@ -313,6 +313,25 @@
     return [formatter stringFromDate: theDate];
 }
 
+/*
+- (HXOMessage*)latestMessageForContact:(Contact*)contact {
+    NSFetchRequest *fetchRequest = [NSFetchRequest new];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:[HXOMessage entityName] inManagedObjectContext:AppDelegate.instance.mainObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(contact == %@) AND (timeAccepted == contact.latestMessageTime)", contact];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"contact == %@", contact];
+    [fetchRequest setPredicate: predicate];
+    fetchRequest.sortDescriptors = [NSArray array];
+
+    NSError *error = nil;
+    NSArray *array = [AppDelegate.instance.mainObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (array.count > 0) {
+        return array[0];
+    }
+    return nil;
+}
+*/
 
 - (void)configureCell:(ConversationCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ConversationViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
@@ -322,7 +341,11 @@
     }
     [super configureCell: cell atIndexPath: indexPath];
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-
+    //NSLog(@"contact class %@ nick %@, latestCount=%d group.latestMessageTime=%@ millis=%@", contact.class, contact.nickName, contact.latestMessage.count, contact.latestMessageTime, [HXOBackend millisFromDate:contact.latestMessageTime]);
+    
+    //HXOMessage * myLatestMessage = [self latestMessageForContact:contact];
+    //NSLog(@"myLatestMessage: %@ %@, millis=%@", myLatestMessage.body, myLatestMessage.timeAccepted, [HXOBackend millisFromDate:myLatestMessage.timeAccepted]);
+    
     cell.delegate = self;
     cell.avatar.badgeText = [HXOUI messageCountBadgeText: contact.unreadMessages.count];
 
@@ -346,6 +369,7 @@
             //cell.subtitleLabel.font = [UIFont italicSystemFontOfSize: cell.subtitleLabel.font.pointSize];
         }
         latestMessageTime = message.timeAccepted;
+        //NSLog(@"--- contact class %@ nick %@, latestDate=%@", contact.class, contact.nickName, message.timeAccepted);
     }
 
     if (latestMessageTime) {

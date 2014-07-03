@@ -937,17 +937,31 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 NSArray * objectIds(NSArray* managedObjects) {
-    NSMutableArray * result = [NSMutableArray new];
-    for (NSManagedObject * obj in managedObjects) {
-        [result addObject:obj.objectID];
+    NSError * error = nil;
+    [AppDelegate.instance.currentObjectContext obtainPermanentIDsForObjects:managedObjects error:&error];
+    if (error == nil) {
+        NSMutableArray * result = [NSMutableArray new];
+        for (NSManagedObject * obj in managedObjects) {
+            [result addObject:obj.objectID];
+        }
+        return result;
+    } else {
+        NSLog(@"could not obtain permanent ids for managed objects, error=%@", error);
     }
-    return result;
+    return nil;
 }
 
 NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     NSMutableArray * result = [NSMutableArray new];
+    NSError * error = nil;
     for (NSManagedObjectID * objId in objectIds) {
-        [result addObject:[context objectWithID:objId]];
+        //NSManagedObject *  obj = [context existingObjectWithID:objId error:&error];
+        NSManagedObject *  obj = [context objectWithID:objId];
+        if (obj == nil || error != nil) {
+            NSLog(@"could not fetch managed object from id %@, error=%@", objId, error);
+            return nil;
+        }
+        [result addObject:obj];
     }
     return result;
 }
@@ -972,10 +986,16 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     if ([currentContext isEqual:self.mainObjectContext]) {
         NSLog(@"performAfterCurrentContextFinishedInMainContext called from main context, don't do that");
     }
+    //[self saveContext:currentContext];
+    //NSArray * testids = objectIds(objects);
+    //NSArray * obtained = managedObjects(testids, currentContext);
+    //[self saveContext:currentContext];
+
     [currentContext performBlock:^{
         NSArray * ids = objectIds(objects);
         NSManagedObjectContext * mainMOC = [self mainObjectContext];
         [mainMOC performBlock:^{
+            [self saveContext:mainMOC];
             contextBlock(mainMOC, managedObjects(ids, mainMOC));
         }];
     }];
