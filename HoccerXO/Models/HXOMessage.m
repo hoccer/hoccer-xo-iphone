@@ -329,6 +329,8 @@
 }
 
 - (void) setTimeAcceptedMillis:(NSNumber*) milliSecondsSince1970 {
+    //NSLog(@"message.timeAccepted=%@", milliSecondsSince1970);
+    //NSLog(@"%@", [NSThread callStackSymbols]);
     self.timeAccepted = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 

@@ -412,7 +412,7 @@
 
 "group_list_placeholder"                = "Create [groups](http://hoccer.com/hoccer-xo-tutorial/#groups) to chat with many friends at once.";
 
-"group_name_nearby_active"              = "Everyone Nearby (%d)";
+"group_name_nearby_active"              = "All Nearby (%d)";
 "group_name_nearby_kept"                = "Stored Nearby Group";
 "group_name_nearby_empty"               = "Nobody Nearby";
 
