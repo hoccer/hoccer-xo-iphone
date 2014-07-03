@@ -560,6 +560,10 @@ NSArrayObjectMaybeNil(__ARRAYNAME__, 8),\
 NSArrayObjectMaybeNil(__ARRAYNAME__, 9),\
 nil
 
+// Hmmmk... Since Objective-C got array literals variadic functions are even more
+// unattractive than before. I think we should wrap the variadics and provide versions
+// that just use arrays... someday [agnat]
+
 - (BOOL)actionButtonContainsEntries {
     //NSLog(@"actionButtonContainsEntries: %d %d %d",[[self.fetchedResultsController sections] count], self.partner.isGroup,((Group*)self.partner).otherMembers.count > 0);
     return self.partner != nil && ([[self.fetchedResultsController sections] count] > 0 || (self.partner.isGroup && ((Group*)self.partner).otherMembers.count > 0));
@@ -620,7 +624,7 @@ nil
     int makeGroupIndex = -1;
     if (membersOther.count > 0) {
         makeGroupIndex = buttonIndex++;
-        [buttonTitles addObject: NSLocalizedString(@"chat_group_create_new_from_group", nil)];
+        [buttonTitles addObject: NSLocalizedString(group.isNearby ? @"chat_group_clone_nearby" : @"chat_group_clone", nil)];
     }
     
     if (buttonIndex == 0) {

@@ -190,7 +190,8 @@
 "chat_group_members_invite_accept %d (one)"     = "Einladung von einem Mitglied annehmen";
 "chat_group_members_disinvite %d"               = "Einladung an %d Mitglieder zurückziehen";
 
-"chat_group_create_new_from_group"              = "Permanente Gruppe erstellen";
+"chat_group_clone"                              = "Gruppe klonen";
+"chat_group_clone_nearby"                       = "Permanente Gruppe erstellen";
 
 //==============================================================================
 // Contact - uses strings from profile
