@@ -151,7 +151,7 @@
 }
 
 - (void) updateDataSource {
-    self.dataSource = [[AudioAttachmentDataSource alloc] initWithContact:self.contact collection:self.collection];
+    self.dataSource = [[AudioAttachmentDataSource alloc] initWithContact:self.contact];
     self.dataSource.delegate = self;
     self.tableView.dataSource = self.dataSource;
     [self.tableView reloadData];

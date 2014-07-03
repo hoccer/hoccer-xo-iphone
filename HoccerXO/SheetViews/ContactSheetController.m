@@ -202,7 +202,7 @@ static int  groupMemberContext;
     if ([item isEqual: self.chatItem]) {
         return @(self.contact.messages.count);
     } else if ([item isEqual: self.attachmentItem]) {
-        NSFetchRequest *fetchRequest = [AudioAttachmentDataSource fetchRequestForContact:self.contact collection:nil managedObjectModel:self.managedObjectModel];
+        NSFetchRequest *fetchRequest = [AudioAttachmentDataSource fetchRequestForContact:self.contact managedObjectModel:self.managedObjectModel];
         return @([self.managedObjectContext countForFetchRequest:fetchRequest error:nil]);
     } else if ([item isEqual: self.keyItem]) {
         return [self keyItemTitle];

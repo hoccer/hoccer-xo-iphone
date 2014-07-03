@@ -8,17 +8,21 @@
 
 #import "Collection.h"
 
+#import "Attachment.h"
+#import "CollectionItem.h"
+
 @implementation Collection
 
-@dynamic attachments;
+@dynamic items;
 @dynamic name;
 
 - (void) appendAttachments:(NSArray *)attachments {
-    // Work around a bug in the generated accessors for ordered relationships
-    // http://stackoverflow.com/questions/7385439/exception-thrown-in-nsorderedset-generated-accessors
-
-    NSMutableOrderedSet *mutableAttachments = [self mutableOrderedSetValueForKey:@"attachments"];
-    [mutableAttachments addObjectsFromArray:attachments];
+    for (Attachment *attachment in attachments) {
+        CollectionItem *collectionItem = [NSEntityDescription insertNewObjectForEntityForName:@"CollectionItem" inManagedObjectContext:self.managedObjectContext];
+        collectionItem.attachment = attachment;
+        collectionItem.collection = self;
+        collectionItem.index = [self.items count];
+    }
 }
 
 - (void) moveAttachmentAtIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex {

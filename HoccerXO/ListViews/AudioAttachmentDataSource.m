@@ -12,12 +12,10 @@
 #import "Attachment.h"
 #import "AudioAttachmentCell.h"
 #import "AudioAttachmentDataSourceDelegate.h"
-#import "Collection.h"
 #import "Contact.h"
 
 @interface AudioAttachmentDataSource ()
 
-@property (nonatomic, strong) Collection *collection;
 @property (nonatomic, strong) Contact *contact;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
@@ -29,12 +27,11 @@
 
 #pragma mark - Initialization
 
-- (id) initWithContact:(Contact *)contact collection:(Collection *)collection {
+- (id) initWithContact:(Contact *)contact {
     self = [super init];
     
     if (self) {
         self.contact = contact;
-        self.collection = collection;
     }
     
     return self;
@@ -52,9 +49,8 @@
 
 #pragma mark - Fetched Results Controller
 
-+ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact collection:(Collection *)collection managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
-    NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null],
-                            @"collection" : collection ? collection : [NSNull null] };
++ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
+    NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null] };
     
     NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestFromTemplateWithName:@"ReceivedAudioAttachments" substitutionVariables:vars];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"message.timeReceived" ascending: NO];
@@ -66,7 +62,7 @@
 
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController == nil) {
-        NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:self.contact collection:self.collection managedObjectModel:self.managedObjectModel];
+        NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:self.contact managedObjectModel:self.managedObjectModel];
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _fetchedResultsController.delegate = self;
         [_fetchedResultsController performFetch:nil];
@@ -115,15 +111,6 @@
         [[AppDelegate instance] deleteObject:attachment.message];
         [[AppDelegate instance] saveDatabase];
     }
-}
-
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    return self.collection != nil;
-}
-
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
-    [self.collection moveAttachmentAtIndex:sourceIndexPath.row toIndex:destinationIndexPath.row];
-    [[AppDelegate instance] saveDatabase];
 }
 
 #pragma mark - Fetched Results Controller Delegate

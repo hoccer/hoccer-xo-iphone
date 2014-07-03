@@ -10,8 +10,8 @@
 
 @interface Collection : HXOModel
 
-@property (nonatomic, retain) NSOrderedSet *attachments;
-@property (nonatomic, retain) NSString     *name;
+@property (nonatomic, retain) NSSet *items;
+@property (nonatomic, retain) NSString *name;
 
 - (void) appendAttachments:(NSArray *)attachments;
 - (void) moveAttachmentAtIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex;
