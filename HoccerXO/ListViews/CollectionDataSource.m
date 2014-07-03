@@ -47,6 +47,18 @@
     return collectionItem.attachment;
 }
 
+- (NSArray *) attachments {
+    NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"index" ascending:YES];
+    NSArray *items = [self.collection.items sortedArrayUsingDescriptors:@[ sortDescriptor ]];
+    NSMutableArray *attachments = [NSMutableArray arrayWithCapacity:[items count]];
+
+    for (CollectionItem *item in items) {
+        [attachments addObject:item.attachment];
+    }
+    
+    return attachments;
+}
+
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }

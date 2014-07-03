@@ -97,8 +97,7 @@
 #pragma mark - Properties
 
 - (NSArray *) attachments {
-    // The fetchedObjects array seems to change, so we take an immutable copy
-    return [[self.fetchedResultsController fetchedObjects] copy];
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"AudioAttachmentDataSource must be subclassed" userInfo:nil];
 }
 
 @end

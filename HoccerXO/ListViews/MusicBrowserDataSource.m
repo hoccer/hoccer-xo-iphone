@@ -60,4 +60,9 @@
     return attachment;
 }
 
+- (NSArray *) attachments {
+    // The fetchedObjects array seems to change, so we take an immutable copy
+    return [[self.fetchedResultsController fetchedObjects] copy];
+}
+
 @end
