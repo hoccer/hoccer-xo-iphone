@@ -12,6 +12,7 @@
 
 @interface MusicBrowserDataSource : AudioAttachmentDataSource
 
++ (NSFetchRequest *)fetchRequestWithManagedObjectModel:(NSManagedObjectModel *)managedObjectModel;
 + (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel;
 
 - (id) initWithContact:(Contact *)contact;

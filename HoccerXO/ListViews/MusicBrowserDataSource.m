@@ -30,6 +30,10 @@
     return self;
 }
 
++ (NSFetchRequest *)fetchRequestWithManagedObjectModel:(NSManagedObjectModel *)managedObjectModel {
+    return [MusicBrowserDataSource fetchRequestForContact:nil managedObjectModel:managedObjectModel];
+}
+
 + (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
     NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null] };
     
@@ -42,7 +46,11 @@
 }
 
 - (NSFetchRequest *) fetchRequest {
-    return [self.class fetchRequestForContact:self.contact managedObjectModel:self.managedObjectModel];
+    if (self.contact) {
+        return [MusicBrowserDataSource fetchRequestForContact:self.contact managedObjectModel:self.managedObjectModel];
+    } else {
+        return [MusicBrowserDataSource fetchRequestWithManagedObjectModel:self.managedObjectModel];
+    }
 }
 
 @end

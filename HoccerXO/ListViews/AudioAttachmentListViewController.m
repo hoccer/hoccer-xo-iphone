@@ -14,6 +14,7 @@
 #import "AudioAttachmentCell.h"
 #import "AudioPlayerStateItemController.h"
 #import "Collection.h"
+#import "CollectionDataSource.h"
 #import "Contact.h"
 #import "HXOAudioPlayer.h"
 #import "HXOUI.h"
@@ -151,7 +152,14 @@
 }
 
 - (void) updateDataSource {
-    self.dataSource = [[MusicBrowserDataSource alloc] initWithContact:self.contact];
+    if (self.collection) {
+        self.dataSource = [[CollectionDataSource alloc] init];
+    } else if (self.contact) {
+        self.dataSource = [[MusicBrowserDataSource alloc] initWithContact:self.contact];
+    } else {
+        self.dataSource = [[MusicBrowserDataSource alloc] init];
+    }
+
     self.dataSource.delegate = self;
     self.tableView.dataSource = self.dataSource;
     [self.tableView reloadData];
