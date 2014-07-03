@@ -12,30 +12,14 @@
 #import "Attachment.h"
 #import "AudioAttachmentCell.h"
 #import "AudioAttachmentDataSourceDelegate.h"
-#import "Contact.h"
 
 @interface AudioAttachmentDataSource ()
 
-@property (nonatomic, strong) Contact *contact;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, readonly) NSManagedObjectModel *managedObjectModel;
 
 @end
 
 @implementation AudioAttachmentDataSource
-
-#pragma mark - Initialization
-
-- (id) initWithContact:(Contact *)contact {
-    self = [super init];
-    
-    if (self) {
-        self.contact = contact;
-    }
-    
-    return self;
-}
 
 #pragma mark - Core Data Stack
 
@@ -49,20 +33,13 @@
 
 #pragma mark - Fetched Results Controller
 
-+ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
-    NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null] };
-    
-    NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestFromTemplateWithName:@"ReceivedAudioAttachments" substitutionVariables:vars];
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"message.timeReceived" ascending: NO];
-    NSArray *sortDescriptors = @[sortDescriptor];
-    [fetchRequest setSortDescriptors:sortDescriptors];
-    
-    return fetchRequest;
+- (NSFetchRequest *) fetchRequest {
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"AudioAttachmentDataSource must be subclassed" userInfo:nil];
 }
 
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController == nil) {
-        NSFetchRequest *fetchRequest = [self.class fetchRequestForContact:self.contact managedObjectModel:self.managedObjectModel];
+        NSFetchRequest *fetchRequest = [self fetchRequest];
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
         _fetchedResultsController.delegate = self;
         [_fetchedResultsController performFetch:nil];

@@ -9,17 +9,17 @@
 #import <Foundation/Foundation.h>
 
 @class Attachment;
-@class Contact;
 @protocol AudioAttachmentDataSourceDelegate;
 
 @interface AudioAttachmentDataSource : NSObject <UITableViewDataSource, NSFetchedResultsControllerDelegate>
 
-+ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel;
-
-- (id) initWithContact:(Contact *)contact;
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath;
+- (NSFetchRequest *) fetchRequest;
 
 @property (nonatomic, readonly) NSArray *attachments;
 @property (nonatomic, weak) id<AudioAttachmentDataSourceDelegate> delegate;
+
+@property (nonatomic, readonly) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, readonly) NSManagedObjectModel *managedObjectModel;
 
 @end

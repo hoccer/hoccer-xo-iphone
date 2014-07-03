@@ -12,13 +12,13 @@
 #import "AppDelegate.h"
 #import "Attachment.h"
 #import "AudioAttachmentCell.h"
-#import "AudioAttachmentDataSource.h"
 #import "AudioPlayerStateItemController.h"
 #import "Collection.h"
 #import "Contact.h"
 #import "HXOAudioPlayer.h"
 #import "HXOUI.h"
 #import "HXOThemedNavigationController.h"
+#import "MusicBrowserDataSource.h"
 #import "tab_attachments.h"
 
 
@@ -151,7 +151,7 @@
 }
 
 - (void) updateDataSource {
-    self.dataSource = [[AudioAttachmentDataSource alloc] initWithContact:self.contact];
+    self.dataSource = [[MusicBrowserDataSource alloc] initWithContact:self.contact];
     self.dataSource.delegate = self;
     self.tableView.dataSource = self.dataSource;
     [self.tableView reloadData];
