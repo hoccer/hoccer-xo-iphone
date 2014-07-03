@@ -19,16 +19,54 @@
 - (void) appendAttachments:(NSArray *)attachments {
     for (Attachment *attachment in attachments) {
         CollectionItem *collectionItem = [NSEntityDescription insertNewObjectForEntityForName:@"CollectionItem" inManagedObjectContext:self.managedObjectContext];
+        collectionItem.index = [self.items count];
         collectionItem.attachment = attachment;
         collectionItem.collection = self;
-        collectionItem.index = [self.items count];
     }
 }
 
 - (void) moveAttachmentAtIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex {
-    NSMutableOrderedSet *mutableAttachments = [self mutableOrderedSetValueForKey:@"attachments"];
-    NSIndexSet *sourceIndexSet = [NSIndexSet indexSetWithIndex:sourceIndex];
-    [mutableAttachments moveObjectsAtIndexes:sourceIndexSet toIndex:destinationIndex];
+    if (sourceIndex == destinationIndex) {
+        return;
+    }
+    
+    for (CollectionItem *item in self.items) {
+        if (sourceIndex < destinationIndex) {
+            // item is moved downwards
+            if (item.index < sourceIndex) {
+                // item is above the moved item
+                // => stays in place
+            } else if (item.index == sourceIndex) {
+                // item is moved item
+                // => move to destination
+                item.index = destinationIndex;
+            } else if (item.index <= destinationIndex) {
+                // item is between moved item and destination
+                // => move up by one
+                item.index -= 1;
+            } else {
+                // item is below the destination
+                // => stays in place
+            }
+        } else {
+            // item is moved upwards
+            if (item.index > sourceIndex) {
+                // item is below the moved item
+                // => stays in place
+            } else if (item.index == sourceIndex) {
+                // item is moved item
+                // => move to destination
+                item.index = destinationIndex;
+            } else if (item.index >= destinationIndex) {
+                // item is between moved item and destination
+                // => move down by one
+                item.index += 1;
+            } else {
+                // item is above the destination
+                // => stays in place
+            }
+        }
+    }
 }
 
 @end

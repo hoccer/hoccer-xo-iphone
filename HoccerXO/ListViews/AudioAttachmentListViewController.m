@@ -173,6 +173,11 @@
 
 - (void) toggleEditMode:(id)sender {
     [self.tableView setEditing:!self.tableView.isEditing animated:YES];
+
+    if (!self.tableView.editing) {
+        [[AppDelegate instance] saveDatabase];
+    }
+    
     [self updateNavigationBar];
     [self updateFooter];
 }
