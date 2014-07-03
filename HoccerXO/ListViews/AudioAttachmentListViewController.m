@@ -111,6 +111,7 @@
     
     UIBarButtonSystemItem item = self.tableView.isEditing ? UIBarButtonSystemItemDone : UIBarButtonSystemItemEdit;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:item target:self action:@selector(toggleEditMode:)];
+    self.navigationItem.hidesBackButton = self.tableView.isEditing;
 }
 
 - (void)updateFooter {
