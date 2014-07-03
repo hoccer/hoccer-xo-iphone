@@ -1306,14 +1306,14 @@
 				636D400117106EC000304EDF /* Environment.h */,
 				636D400217106EC000304EDF /* Environment.m */,
 				636D400A171081AB00304EDF /* Environment.plist */,
+				63E5698A196353B0007E06BF /* HXOPluralocalization.h */,
+				63E5698B196353B0007E06BF /* HXOPluralocalization.m */,
 				630FD45018BCCCA7000D8C55 /* HXOUI.h */,
 				630FD45118BCCCA7000D8C55 /* HXOUI.m */,
 				636D4005171072CD00304EDF /* HXOUserDefaults.h */,
 				636D4006171072CD00304EDF /* HXOUserDefaults.m */,
 				636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */,
 				6383FF751729DC2200835C91 /* Settings.bundle */,
-				63E5698A196353B0007E06BF /* HXOPluralocalization.h */,
-				63E5698B196353B0007E06BF /* HXOPluralocalization.m */,
 			);
 			path = SettingsConstantsAndEnvironment;
 			sourceTree = "<group>";

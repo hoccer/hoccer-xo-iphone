@@ -82,6 +82,6 @@ NSString * HXOPluralocalizedKey(NSString * key, int count, BOOL explicitZero) {
 }
 
 NSString * HXOPluralocalizeInt(NSString * key, int count) {
-    return [NSString stringWithFormat: HXOPluralocalizedString(key, count, NO)];
+    return [NSString stringWithFormat: HXOPluralocalizedString(key, count, NO), count];
 }
 
