@@ -41,9 +41,6 @@
     
     self.tabBarItem.image = [[[tab_attachments alloc] init] image];
     self.tabBarItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
-    
-    self.tableView.allowsMultipleSelectionDuringEditing = YES;
-    
 }
 
 - (void)viewDidLoad {
@@ -175,7 +172,13 @@
 - (void) toggleEditMode:(id)sender {
     [self.tableView setEditing:!self.tableView.isEditing animated:YES];
 
-    if (!self.tableView.editing) {
+    if (self.tableView.editing) {
+        self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    } else {
+        // work around weird API, see http://stackoverflow.com/questions/9683516
+        self.tableView.allowsMultipleSelectionDuringEditing = NO;
+        
+        // save changes
         [[AppDelegate instance] saveDatabase];
     }
     
@@ -282,6 +285,10 @@
 }
 
 #pragma mark - Table view delegate
+
+- (UITableViewCellEditingStyle) tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return UITableViewCellEditingStyleDelete;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.tableView.isEditing) {
