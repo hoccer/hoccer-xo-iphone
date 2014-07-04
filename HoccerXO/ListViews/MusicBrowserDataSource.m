@@ -56,7 +56,7 @@
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
     id attachment = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSAssert([attachment isKindOfClass:[Attachment class]], @"Expected Attachment");
+    NSAssert(attachment == nil || [attachment isKindOfClass:[Attachment class]], @"Expected Attachment or nil");
     return attachment;
 }
 
