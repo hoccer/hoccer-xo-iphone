@@ -76,6 +76,7 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSDate   * transferAborted;       // if not nil it containes the date the transfer was aborted by the user
 @property (nonatomic, strong) NSDate   * transferFailed;        // if not nil it containes the date the transfer has failed the last time
 @property (nonatomic, strong) HXOMessage *message;
+@property (nonatomic, strong) NSSet * collectionItems;
 @property (nonatomic, strong) NSData * sourceMAC;               // Message Authentication Code computed at data source
 @property (nonatomic, strong) NSData * destinationMAC;          // Message Authentication Code computed at data destination
 @property (nonatomic, strong) NSString * origCryptedJsonString; // the original encrypted json rep. of the incoming attachment for hmac calculation

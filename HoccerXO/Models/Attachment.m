@@ -95,6 +95,7 @@
 @dynamic previewImageData;
 
 @dynamic message;
+@dynamic collectionItems;
 
 @dynamic sourceMAC;
 @dynamic destinationMAC;
