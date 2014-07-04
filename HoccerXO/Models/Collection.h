@@ -15,5 +15,6 @@
 
 - (void) appendAttachments:(NSArray *)attachments;
 - (void) moveAttachmentAtIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex;
+- (void) removeItemAtIndex:(NSUInteger)itemIndex;
 
 @end

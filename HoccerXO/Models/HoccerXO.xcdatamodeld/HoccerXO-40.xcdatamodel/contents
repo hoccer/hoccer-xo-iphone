@@ -24,7 +24,7 @@
         <attribute name="transferPaused" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="transferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
         <attribute name="uploadURL" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="collectionItems" toMany="YES" deletionRule="Cascade" destinationEntity="CollectionItem" inverseName="attachment" inverseEntity="CollectionItem" syncable="YES"/>
+        <relationship name="collectionItems" toMany="YES" deletionRule="No Action" destinationEntity="CollectionItem" inverseName="attachment" inverseEntity="CollectionItem" syncable="YES"/>
         <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="attachment" inverseEntity="HXOMessage" syncable="YES"/>
     </entity>
     <entity name="Collection" representedClassName="Collection" syncable="YES">
@@ -169,7 +169,7 @@
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="418"/>
         <element name="Collection" positionX="9" positionY="153" width="128" height="73"/>
-        <element name="CollectionItem" positionX="232" positionY="335" width="128" height="28"/>
+        <element name="CollectionItem" positionX="232" positionY="335" width="128" height="88"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="434"/>
         <element name="Delivery" positionX="0" positionY="0" width="128" height="165"/>
         <element name="Group" positionX="0" positionY="0" width="128" height="210"/>

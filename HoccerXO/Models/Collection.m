@@ -69,4 +69,14 @@
     }
 }
 
+- (void) removeItemAtIndex:(NSUInteger)itemIndex {
+    for (CollectionItem *item in self.items) {
+        if (item.index == itemIndex) {
+            [self.managedObjectContext deleteObject:item];
+        } else if (item.index > itemIndex) {
+            item.index -= 1;
+        }
+    }
+}
+
 @end

@@ -31,6 +31,8 @@
 #import "Vcard.h"
 #import "GCHTTPRequestOperation.h"
 #import "GCNetworkRequest.h"
+#import "Collection.h"
+#import "CollectionItem.h"
 #import "Contact.h"
 
 #import "HXOUI.h"
@@ -2183,9 +2185,15 @@ NSArray * TransferStateName = @[@"detached",
             }
         }        
     }
+
     // remove from transfer queues
     [self.chatBackend dequeueDownloadOfAttachment:self];
     [self.chatBackend dequeueUploadOfAttachment:self];
+    
+    // remove attachment from collections
+    for (CollectionItem *item in self.collectionItems) {
+        [item.collection removeItemAtIndex:item.index];
+    }
 }
 
 
