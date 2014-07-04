@@ -170,11 +170,14 @@
 }
 
 - (void) toggleEditMode:(id)sender {
+    if (!self.tableView.editing) {
+        // work around weird API, see http://stackoverflow.com/questions/9683516
+        self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    }
+    
     [self.tableView setEditing:!self.tableView.isEditing animated:YES];
 
-    if (self.tableView.editing) {
-        self.tableView.allowsMultipleSelectionDuringEditing = YES;
-    } else {
+    if (!self.tableView.editing) {
         // work around weird API, see http://stackoverflow.com/questions/9683516
         self.tableView.allowsMultipleSelectionDuringEditing = NO;
         
