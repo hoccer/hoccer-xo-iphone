@@ -13,7 +13,7 @@
 @class Collection;
 @class Contact;
 
-@interface AudioAttachmentListViewController : HXOTableViewController <AudioAttachmentDataSourceDelegate, AddToCollectionListViewControllerDelegate>
+@interface AudioAttachmentListViewController : HXOTableViewController <AudioAttachmentDataSourceDelegate, AddToCollectionListViewControllerDelegate, UIActionSheetDelegate>
 
 @property (nonatomic, strong) Collection *collection;
 @property (nonatomic, strong) Contact *contact;

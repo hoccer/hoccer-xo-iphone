@@ -250,6 +250,24 @@
     return [NSArray arrayWithArray:attachments];
 }
 
+#pragma mark - Action Sheet Delegate
+
+- (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+        // delete selected attachments
+        for (Attachment *attachment in [self selectedAttachments]) {
+            [[AppDelegate instance] deleteObject:attachment];
+        }
+    } else if (buttonIndex != actionSheet.cancelButtonIndex) {
+        // remove selected attachments from list only
+        NSAssert(self.collection, @"Need collection to remove attachments from");
+
+        for (Attachment *attachment in [self selectedAttachments]) {
+            [self.collection removeAttachment:attachment];
+        }
+    }
+}
+
 #pragma mark - Cell layout
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {

@@ -8,7 +8,6 @@
 
 #import "Collection.h"
 
-#import "Attachment.h"
 #import "CollectionItem.h"
 
 @implementation Collection
@@ -65,6 +64,14 @@
                 // item is above the destination
                 // => stays in place
             }
+        }
+    }
+}
+
+- (void) removeAttachment:(Attachment *)attachment {
+    for (CollectionItem *item in self.items) {
+        if (item.attachment == attachment) {
+            [self removeItemAtIndex:item.index];
         }
     }
 }

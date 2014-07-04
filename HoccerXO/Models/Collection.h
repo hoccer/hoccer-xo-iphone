@@ -8,6 +8,8 @@
 
 #import "HXOModel.h"
 
+@class Attachment;
+
 @interface Collection : HXOModel
 
 @property (nonatomic, retain) NSSet *items;
@@ -15,6 +17,7 @@
 
 - (void) appendAttachments:(NSArray *)attachments;
 - (void) moveAttachmentAtIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex;
+- (void) removeAttachment:(Attachment *)attachment;
 - (void) removeItemAtIndex:(NSUInteger)itemIndex;
 
 @end
