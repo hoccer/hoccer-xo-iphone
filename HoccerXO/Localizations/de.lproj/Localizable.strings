@@ -93,6 +93,11 @@
 "audio_attachment_list_footer_delete" = "löschen";
 "audio_attachment_list_footer_add" = "hinzufügen";
 
+"audio_attachment_list_one_attachment" = "Einen Song";
+"audio_attachment_list_multiple_attachments" = "%u Songs";
+"audio_attachment_list_confirm_delete_title" = "%@ löschen?";
+"audio_attachment_list_remove_from_collection" = "Aus Wiedergabeliste entfernen";
+
 //==============================================================================
 // Audio Player
 //==============================================================================

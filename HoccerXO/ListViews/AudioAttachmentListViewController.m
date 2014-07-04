@@ -76,7 +76,7 @@
         self.deleteButton = [self createFooterButton];
         self.deleteButton.frame = CGRectMake(x, 0.0, x, tabBarFrame.size.height);
         [self.deleteButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_delete", nil) forState:UIControlStateNormal];
-        [self.deleteButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
+        [self.deleteButton addTarget: self action:@selector(deletePressed:) forControlEvents: UIControlEventTouchUpInside];
 
         self.addToCollectionButton = [self createFooterButton];
         self.addToCollectionButton.frame = CGRectMake(2.0 * x, 0.0, x, tabBarFrame.size.height);
@@ -196,6 +196,38 @@
             addToCollectionListViewController.addToCollectionListViewControllerDelegate = self;
         }
     }
+}
+
+- (void) deletePressed:(id)sender {
+    NSArray *selectedAttachments = [self selectedAttachments];
+    NSString *attachmentCount;
+    
+    if ([selectedAttachments count] == 1) {
+        attachmentCount = NSLocalizedString(@"audio_attachment_list_one_attachment", nil);
+    } else {
+        attachmentCount = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_multiple_attachments", nil), [selectedAttachments count]];
+    }
+
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
+    actionSheet.title = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_confirm_delete_title", nil), attachmentCount];
+
+    if (self.collection) {
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"audio_attachment_list_remove_from_collection", nil)];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"delete", nil)];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"cancel", nil)];
+
+        actionSheet.destructiveButtonIndex = 1;
+        actionSheet.cancelButtonIndex = 2;
+    } else {
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"delete", nil)];
+        [actionSheet addButtonWithTitle:NSLocalizedString(@"cancel", nil)];
+        
+        actionSheet.destructiveButtonIndex = 0;
+        actionSheet.cancelButtonIndex = 1;
+    }
+
+    actionSheet.delegate = self;
+    [actionSheet showFromTabBar:self.tabBarController.tabBar];
 }
 
 #pragma mark - AddToCollectionListViewControllerDelegate
