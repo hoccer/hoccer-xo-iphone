@@ -28,6 +28,7 @@
 @property (nonatomic, strong) UIView                         * footerContainerView;
 @property (nonatomic, strong) AudioPlayerStateItemController * audioPlayerStateItemController;
 @property (nonatomic, strong) AudioAttachmentDataSource      * dataSource;
+@property (nonatomic, strong) NSArray                        * attachmentsToDelete;
 
 @end
 
@@ -205,13 +206,19 @@
 }
 
 - (void) deletePressed:(id)sender {
-    NSArray *selectedAttachments = [self selectedAttachments];
+    [self askToDeleteAttachments:[self selectedAttachments]];
+}
+
+- (void) askToDeleteAttachments:(NSArray *)attachments {
+    NSAssert(self.attachmentsToDelete == nil, @"AttachmentsToDelete not reset properly");
+
+    self.attachmentsToDelete = attachments;
     NSString *attachmentCount;
-    
-    if ([selectedAttachments count] == 1) {
+
+    if ([attachments count] == 1) {
         attachmentCount = NSLocalizedString(@"audio_attachment_list_one_attachment", nil);
     } else {
-        attachmentCount = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_multiple_attachments", nil), [selectedAttachments count]];
+        attachmentCount = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_multiple_attachments", nil), [attachments count]];
     }
 
     UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
@@ -260,18 +267,20 @@
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
-        // delete selected attachments
-        for (Attachment *attachment in [self selectedAttachments]) {
+        // delete attachments
+        for (Attachment *attachment in self.attachmentsToDelete) {
             [[AppDelegate instance] deleteObject:attachment];
         }
     } else if (buttonIndex != actionSheet.cancelButtonIndex) {
-        // remove selected attachments from list only
+        // remove attachments from list only
         NSAssert(self.collection, @"Need collection to remove attachments from");
 
-        for (Attachment *attachment in [self selectedAttachments]) {
+        for (Attachment *attachment in self.attachmentsToDelete) {
             [self.collection removeAttachment:attachment];
         }
     }
+    
+    self.attachmentsToDelete = nil;
 }
 
 #pragma mark - Cell layout
@@ -356,6 +365,12 @@
 
 - (void)dataSourceDidChangeContent:(AudioAttachmentDataSource *)dataSource {
     [self.tableView endUpdates];
+}
+
+- (void)dataSource:(AudioAttachmentDataSource *)dataSource commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forAttachment:(Attachment *)attachment {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self askToDeleteAttachments:@[ attachment ]];
+    }
 }
 
 @end

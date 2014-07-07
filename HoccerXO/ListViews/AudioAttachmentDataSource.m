@@ -64,16 +64,6 @@
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"AudioAttachmentDataSource must be subclassed" userInfo:nil];
 }
 
-#pragma mark - Editing
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        Attachment *attachment = [self attachmentAtIndexPath:indexPath];
-        [[AppDelegate instance] deleteObject:attachment.message];
-        [[AppDelegate instance] saveDatabase];
-    }
-}
-
 #pragma mark - Fetched Results Controller Delegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
@@ -88,6 +78,12 @@
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
     [self.delegate dataSourceDidChangeContent:self];
+}
+
+#pragma mark - Editing
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self.delegate dataSource:self commitEditingStyle:editingStyle forAttachment:[self attachmentAtIndexPath:indexPath]];
 }
 
 #pragma mark - Properties
