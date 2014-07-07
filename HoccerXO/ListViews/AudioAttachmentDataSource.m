@@ -73,7 +73,7 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath {
-    [self.delegate dataSource:self didChangeAttachment:[self attachmentAtIndexPath:indexPath] atIndexPath:indexPath forChangeType:type newIndexPath:newIndexPath];
+    [self.delegate dataSource:self didChangeAttachmentAtIndexPath:indexPath forChangeType:type newIndexPath:newIndexPath];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {

@@ -16,7 +16,7 @@
 - (void) dataSourceWillChangeContent:(AudioAttachmentDataSource *)dataSource;
 - (void) dataSourceDidChangeContent:(AudioAttachmentDataSource *)dataSource;
 
-- (void) dataSource:(AudioAttachmentDataSource *)dataSource didChangeAttachment:(Attachment *)attachment atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath;
+- (void) dataSource:(AudioAttachmentDataSource *)dataSource didChangeAttachmentAtIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath;
 
 - (void) dataSource:(AudioAttachmentDataSource *)dataSource commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forAttachment:(Attachment *)attachment;
 

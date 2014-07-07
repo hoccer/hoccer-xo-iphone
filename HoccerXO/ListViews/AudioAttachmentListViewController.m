@@ -344,7 +344,7 @@
     [self.tableView beginUpdates];
 }
 
-- (void)dataSource:(AudioAttachmentDataSource *)dataSource didChangeAttachment:(Attachment *)attachment atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+- (void)dataSource:(AudioAttachmentDataSource *)dataSource didChangeAttachmentAtIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
     UITableView *tableView = self.tableView;
     
