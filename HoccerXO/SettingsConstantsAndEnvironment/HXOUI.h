@@ -44,6 +44,7 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 @property (nonatomic, readonly) UIColor * avatarBadgeColor;
 @property (nonatomic, readonly) UIColor * avatarBadgeBorderColor;
 @property (nonatomic, readonly) UIColor * avatarOnlineLedColor;
+@property (nonatomic, readonly) UIColor * avatarOnlineInBackgroundLedColor;
 
 @property (nonatomic, readonly) UIFont  * messageFont;
 @property (nonatomic, readonly) UIFont  * titleFont;

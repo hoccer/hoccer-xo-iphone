@@ -17,8 +17,15 @@
 FOUNDATION_EXPORT NSString * const kRelationStateNone;
 FOUNDATION_EXPORT NSString * const kRelationStateFriend;
 FOUNDATION_EXPORT NSString * const kRelationStateBlocked;
+FOUNDATION_EXPORT NSString * const kRelationStateInvited;
+FOUNDATION_EXPORT NSString * const kRelationStateInvitedMe;
 FOUNDATION_EXPORT NSString * const kRelationStateGroupFriend;
-FOUNDATION_EXPORT NSString * const kRelationStateKept;
+FOUNDATION_EXPORT NSString * const kRelationStateInternalKept;
+
+FOUNDATION_EXPORT NSString * const kPresenceStateOnline;
+FOUNDATION_EXPORT NSString * const kPresenceStateOffline;
+FOUNDATION_EXPORT NSString * const kPresenceStateBackground;
+FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 
 
 @interface Contact : HXOModel <HXOClientProtocol>
@@ -33,7 +40,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, strong)   NSString        * nickName;
 @property (nonatomic, strong)   NSString        * alias;
 @property (nonatomic, strong)   NSString        * status;
-@property (nonatomic, strong)   NSString        * isNearbyTag; // using string as boolean because booleans totally suck in CoreData predicates;
+//@property (nonatomic, strong)   NSString        * isNearbyTag; // using string as boolean because booleans totally suck in CoreData predicates;
                                                                // values are the string "YES" for true, all other values indicate false
 
 @property (nonatomic, retain)   GroupMembership * myGroupMembership;
@@ -47,6 +54,7 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 @property (nonatomic, strong)   NSString        * connectionStatus;
 
 @property (nonatomic, retain)   NSString        * relationshipState;
+@property (nonatomic, retain)   NSString        * relationshipUnblockState;
 @property (nonatomic, retain)   NSDate          * relationshipLastChanged;
 
 // dynamic key properties
@@ -57,8 +65,12 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 // class type helper
 @property (nonatomic, readonly) BOOL              isGroup;
 
+
 // relationsShip helpers
 @property (nonatomic, readonly) BOOL              isBlocked;
+@property (nonatomic, readonly) BOOL              isInvited;
+@property (nonatomic, readonly) BOOL              invitedMe;
+@property (nonatomic, readonly) BOOL              isInvitable;
 @property (nonatomic, readonly) BOOL              isFriend;
 @property (nonatomic, readonly) BOOL              isGroupFriend;
 @property (nonatomic, readonly) BOOL              isKept;         // valid for both single contacts and groups
@@ -95,11 +107,11 @@ FOUNDATION_EXPORT NSString * const kRelationStateKept;
 
 @property (nonatomic, strong)   UIImage         * avatarImage;
 
-@property BOOL friendMessageShown;
+@property                       BOOL              deletedObject;
 
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;
-- (void) updateNearbyFlag;
+//- (void) updateNearbyFlag;
 
 
 

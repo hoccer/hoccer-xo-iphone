@@ -18,7 +18,7 @@
 #pragma mark - Core Data Stack
 
 - (NSManagedObjectContext *)managedObjectContext {
-    return [[AppDelegate instance] managedObjectContext];
+    return [[AppDelegate instance] mainObjectContext];
 }
 
 - (NSManagedObjectModel *)managedObjectModel {

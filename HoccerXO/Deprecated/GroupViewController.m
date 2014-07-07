@@ -111,7 +111,7 @@
                         _newGroupCreated = NO;
                     } else {
                         NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", self.group);
-                        [self.backend getGroupsForceAll:YES];
+                        [self.backend syncGroupsWithForce:YES];
                     }
                 }];
             } else {
@@ -120,7 +120,7 @@
                         if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
                     } else {
                         NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", self.group);
-                        [self.backend getGroupsForceAll:YES];
+                        [self.backend syncGroupsWithForce:YES];
                     }
                 }];
             }
@@ -350,7 +350,7 @@
     if (admins.count == 0) {
         return @"No Admin";
     }
-    NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_p" : @"group_admin_label_s", nil);
+    NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label" : @"group_admin_label (one)", nil);
     return [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
 }
 

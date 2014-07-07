@@ -48,7 +48,7 @@
 #pragma mark - Core Data stack
 
 - (NSManagedObjectContext *)managedObjectContext {
-    return [[AppDelegate instance] managedObjectContext];
+    return [[AppDelegate instance] mainObjectContext];
 }
 
 - (NSManagedObjectModel *)managedObjectModel {
@@ -203,7 +203,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == alertView.firstOtherButtonIndex) {
-        Collection *collection = [NSEntityDescription insertNewObjectForEntityForName:[Collection entityName] inManagedObjectContext:[[AppDelegate instance] managedObjectContext]];
+        Collection *collection = [NSEntityDescription insertNewObjectForEntityForName:[Collection entityName] inManagedObjectContext:self.managedObjectContext];
         collection.name = [self textInAlertView:alertView];
         [[AppDelegate instance] saveDatabase];
     }

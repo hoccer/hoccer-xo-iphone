@@ -1,3 +1,33 @@
+//==============================================================================
+// Pluralocalization:
+//
+// Application texts containing numeric values may require inflection of nouns
+// and/or grammar changes. Hoccer XO automatically appends a plural category to
+// these localization keys depending on the current numeric value and locale.
+//
+// Plural Categories:
+//
+// - zero
+// - one   (singular)
+// - two   (dual)
+// - few   (paucal)
+// - many
+// - other (general plural form, no suffix)
+//
+// Example:
+//
+// "message_count"       = "%d Nachrichten";
+// "message_count (one)" = "%d Nachricht"; // ... or even "Eine Nachricht"
+//
+// That's enough for german, but arabic or russian translators have to provide
+// forms for other categories.
+//
+// See also:
+//   - http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html
+//   - http://cldr.unicode.org/index/cldr-spec/plural-rules
+//
+//==============================================================================
+
 "language_code" = "en";
 
 "ok"       = "OK";
@@ -24,7 +54,13 @@
 // About
 //==============================================================================
 
-"about_prosa" = "Your free messenger app!\nUnlimted data transfer – safe, reliable and fast\n\nHoccer XO is your personal messenger service. Share text, photos, videos, audio, contacts and places. Protecting your privacy is our highest priority. Your messages are protected using end-to-end encryption. Hoccer XO is more secure than most other messaging services. Even we at Hoccer can not read your messages. Your contacts and phone numbers stay with you. We don't need or want them.";
+"about_prosa"             = "Hoccer XO - your secure multimedia messenger\n\nSecurity, data protection and the protection of privacy are of extreme importance to us. Hoccer sets new standards in mobile data transmission and puts mobile privacy to a whole new level, due to latest encryption and transmission technologies. Hoccer XO provides an easy and unlimited exchange of data between smartphones and tablets, without constraining users to register and enter confidential data.\n\nShare hugs & kisses";
+
+"about_team_heading"      = "Team";
+"about_client_developers" = "Client Developers:";
+"about_server_developers" = "Server Developers:";
+"about_designers"         = "Design:";
+"about_operators"         = "Operations:";
 
 //==============================================================================
 // Apple Push Notifications
@@ -61,6 +97,7 @@
 "attachment_type_audio_recording"        = "Voice Recording";
 "attachment_type_vcard"                  = "Adress";
 "attachment_type_geolocation"            = "Location";
+"attachment_type_data"                   = "Document";
 
 "attachment_overlimit_title"             = "Really send Message?";
 "attachment_overlimit_upload_question"   = "Attachment size is %@. Do you really want to send this message?";
@@ -131,31 +168,55 @@
 // Chat
 //==============================================================================
 
-"chat_list_nav_title"               = "Chats";
-"nearby_list_nav_title"             = "Nearby";
+"chat_list_nav_title"                           = "Chats";
+"nearby_list_nav_title"                         = "Nearby";
 
-"chat_message_placeholder"          = "Message";
-"chat_call_phone_number_btn_title"  = "Call";
+"chat_message_placeholder"                      = "Message";
+"chat_call_phone_number_btn_title"              = "Call";
 
-"chat_cant_send_alert_title"        = "Can Not Send Message";
-"chat_contact_blocked_message"      = "Contact is blocked.";
-"chat_relationship_removed_message" = "Relationship with this contact does no longer exist.";
-"chat_message_too_long_message"     = "Message is longer than %d bytes. Please keep it brief.";
-"chat_wait_for_invitees_message"    = "You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
-"chat_group_you_are_alone_message"  = "You can not send a message to this group because there are no members except you. Please invite friends to this group.";
-"chat_nearby_group_you_are_alone_message"  = "You can not send a message to this group because there are no other active nearby users. Other users close to you must also activate 'Nearby' to join this group.";
-"chat_no_groupkey_message"          = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
-"chat_nearby_contact_offline"       = "Sorry, the message can not be sent because the contact is no longer nearby or is offline and is not your friend.";
+"chat_cant_send_alert_title"                    = "Can Not Send Message";
+"chat_contact_blocked_message"                  = "Contact is blocked.";
+"chat_relationship_removed_message"             = "Relationship with this contact does no longer exist.";
+"chat_message_too_long_message"                 = "Message is longer than %d bytes. Please keep it brief.";
+"chat_wait_for_invitees_message"                = "You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
+"chat_group_you_are_alone_message"              = "You can not send a message to this group because there are no members except you. Please invite friends to this group.";
+"chat_nearby_group_you_are_alone_message"       = "You can not send a message to this group because there are no other active nearby users. Other users close to you must also activate 'Nearby' to join this group.";
+"chat_no_groupkey_message"                      = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
+"chat_nearby_contact_offline"                   = "Sorry, the message can not be sent because the contact is no longer nearby or is offline and is not your friend.";
 
-"chat_message_pending"              = "pending";
-"chat_message_sent"                 = "sent";
-"chat_message_delivered"            = "delivered";
-"chat_message_read"                 = "read";
-"chat_message_failed"               = "failed";
+"chat_message_pending"                          = "pending";
+"chat_message_sent"                             = "sent";
+"chat_message_delivered"                        = "delivered";
+"chat_message_read"                             = "read";
+"chat_message_unread"                           = "unread";
+"chat_message_failed"                           = "undeliverable";
+"chat_message_aborted"                          = "aborted";
+"chat_message_rejected"                         = "rejected";
 
-"chat_resend_menu_item"             = "Send";
-"chat_open_with_menu_item"          = "Open with...";
-"chat_share_menu_item"              = "Share";
+"chat_message_delivered_missing_attachment %@"  = "expecting %@";
+"chat_message_delivered_failed_attachment %@"   = "undeliverable %@";
+
+"chat_resend_menu_item"                         = "Send";
+"chat_open_with_menu_item"                      = "Open with...";
+"chat_share_menu_item"                          = "Share";
+
+"chat_action_sheet_title"                       = "In this Chat:";
+"chat_messages_delete_safety_question %d"       = "Delete %d messages including all media?";
+"chat_messages_delete_safety_question %d (one)" = "Delete %d message including media?";
+"chat_messages_delete_all %d"                   = "Delete all %d messages";
+"chat_messages_delete_all %d (one)"             = "Delete the message";
+"chat_messages_delete_all_previous %d"          = "Delete %d previous messages";
+"chat_messages_delete_all_previous %d (one)"    = "Delete %d previous message";
+
+"chat_group_members_invite %d"                  = "Invite %d group members as friends";
+"chat_group_members_invite %d (one)"            = "Invite %d group member as friend";
+"chat_group_members_invite_accept %d"           = "Accept %d friendship invitations";
+"chat_group_members_invite_accept %d (one)"     = "Accept one friendship invitation";
+"chat_group_members_disinvite %d"               = "Disinvite %d group members as friend";
+"chat_group_members_disinvite %d (one)"         = "Disinvite one group member as friend";
+
+"chat_group_clone"                              = "Clone group";
+"chat_group_clone_nearby"                       = "Create permanent group";
 
 //==============================================================================
 // Collection
@@ -181,10 +242,13 @@
 "contact_unblock_btn_title_format"              = "Unblock %@";
 "contact_block_btn_title_format"                = "Block %@";
 
-"contact_message_count_format_s"                = "%@ message";
-"contact_message_count_format_p"                = "%@ messages";
-"contact_audio_attachment_count_format_s"       = "%@ song";
-"contact_audio_attachment_count_format_p"       = "%@ songs";
+"contact_invite_btn_title_format"               = "Invite as friend";
+"contact_disinvite_btn_title_format"            = "Disinvite %@";
+
+"contact_message_count_format"                  = "%@ messages";
+"contact_message_count_format (one)"            = "%@ message";
+"contact_audio_attachment_count_format"         = "%@ songs";
+"contact_audio_attachment_count_format (one)"   = "%@ song";
 
 "contact_delete_btn_title"                      = "Delete contact";
 "contact_delete_safety_question"                = "Delete contact, chat and attachments?";
@@ -204,14 +268,47 @@
 "contact_relationship_removed_message"          = "Relationship with contact '%@' has been removed.";
 "contact_kept_and_relationship_removed_message" = "No Friend relationship with contact '%@' exists, but contact is still acquainted because of memberships in group(s) > %@ <.";
 
+// for invitation in contact sheet
+"contact_friend_invitation_section_title"       = "You are invited as friend";
+
+"contact_friend_accept_button"                  = "Accept as friend";
+"contact_friend_refuse_button"                  = "Refuse friendship";
+
+"contact_friend_refuse_title"                   = "Refuse friendship?";
+"contact_friend_refuse_button_title"            = "Refuse";
+
+// For invitation in dialog
+"contact_invited_me_as_friend_title"            = "Friendship Invitation";
+"contact_invited_me_as_friend_message %@"       = "A contact named ‘%@' known via a group invited you to become a friend. ";
+
+"contact_accept_friend_failed_message %@"      = "Accepting friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
+"contact_accept_friend_failed_title"           = "Accepting Friendship Failed";
+
+"contact_accept_friend_failed_message %@"      = "Refusing friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
+"contact_accept_friend_failed_title"           = "Refusing Friendship Failed";
+
+"contact_invite_friend_failed_message %@"      = "Friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
+"contact_invite_friend_failed_title"           = "Friendship Invitation Failed";
+
+"contact_disinvite_friend_failed_message %@"   = "Friendship disinvitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
+"contact_disinvite_friend_failed_title"         = "Friendship Disnvitation Failed";
+
+"contact_invited_me_as_friend_accept_btn_title"         = "Accept";
+"contact_invited_me_as_friend_decline_btn_title"        = "Refuse";
+"contact_invited_me_as_friend_decide_later_btn_title"   = "Decide Later";
+
+// relationship state display in contact list
 "contact_relationship_none"                     = "None";
 "contact_relationship_friend"                   = "Friend";
 "contact_relationship_groupfriend"              = "Acquaintance by group";
 "contact_relationship_kept"                     = "No Relationship";
 "contact_relationship_blocked"                  = "Blocked";
+"contact_relationship_invited"                  = "Invited as Friend";
+"contact_relationship_invitedMe"                = "Invited you as Friend";
 
-"contact_list_placeholder"                      = "[Invite friends](http://hoccer.com/xo/help/invitations) to chat with.";
-"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://hoccer.com/xo/help/nearby)…";
+"contact_list_placeholder"                      = "[Invite friends](http://hoccer.com/hoccer-xo-tutorial/#contacts) to chat with.";
+"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://hoccer.com/hoccer-xo-tutorial/#nearby)…";
+
 
 //==============================================================================
 // Credentials
@@ -296,10 +393,16 @@
 "group_invite_dismissed_message_format" = "'%@' is no longer invited to group '%@'";
 "group_invite_removed_title"            = "The invitation for group '%@' has been removed.";
 
+"group_invite_failed_message %@ %@"     = "Invitation of contact '%@' to group '%@' failed. Check your connection and eventually try again later.";
+"group_invite_friend_failed_title"      = "Group Invitation Failed";
+
+"group_disinvite_failed_message %@ %@"  = "Disinvitation of contact '%@' from group '%@' failed. Check your connection and eventually try again later.";
+"group_disinvite_friend_failed_title"   = "Group Invitation Failed";
+
 "group_join_button"                     = "Join Group";
 "group_admin_you"                       = "You";
-"group_admin_label_s"                   = "Admin: ";
-"group_admin_label_p"                   = "Admins: ";
+"group_admin_label"                     = "Admins: ";
+"group_admin_label (one)"               = "Admin: ";
 "group_decline_invitation"              = "Decline Invitation";
 "group_leave"                           = "Leave Group";
 "group_decline_invitation_title"        = "Decline Invitation?";
@@ -338,12 +441,16 @@
 "group_membership_role_admin"           = "admin";
 "group_membership_role_member"          = "member";
 
-"group_member_count_n_joined"           = "%@%d joined";
-"group_member_count_one_joined"         = "%@one joined";
-"group_member_count_none_joined"        = "%@you are alone";
-"group_member_invited_count"            = "%@%d invited";
+"group_member_count_joined"             = "%d joined";
+"group_member_count_joined (one)"       = "one joined";
+"group_member_count_joined (zero)"      = "you are alone";
+"group_member_invited_count"            = "%d invited";
 
-"group_list_placeholder"                = "Create [groups](http://hoccer.com/xo/help/groups) to chat with many friends at once.";
+"group_list_placeholder"                = "Create [groups](http://hoccer.com/hoccer-xo-tutorial/#groups) to chat with many friends at once.";
+
+"group_name_nearby_active"              = "All Nearby (%d)";
+"group_name_nearby_kept"                = "Stored Nearby Group";
+"group_name_nearby_empty"               = "Nobody Nearby";
 
 //==============================================================================
 // Invitations
@@ -381,7 +488,8 @@
 "key_state_mistrusted"                           = "Mistrusted";
 
 "key_fingerprint_title"                          = "Id:";
-"key_fingerprint_info"                           = "For extra security compare this fingerprint with the fingerprint seen by your friends in your contact card.";
+"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://hoccer.com/hoccer-xo-tutorial/#key_verification) of your friends. Ask them for their key ids and compare.";
+"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://hoccer.com/hoccer-xo-tutorial/#key_verification).";
 "key_length_item"                                = "Key Length:";
 "key_length_unit_format"                         = "%@ bit";
 

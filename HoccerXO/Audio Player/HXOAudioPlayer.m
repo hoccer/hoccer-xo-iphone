@@ -55,14 +55,14 @@
         self.isShuffled = NO;
         self.repeatState = HXOAudioPlayerRepeatStateOff;
         
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(objectsDidChange:) name:NSManagedObjectContextObjectsDidChangeNotification object:[[AppDelegate instance] managedObjectContext]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(objectsDidChange:) name:NSManagedObjectContextObjectsDidChangeNotification object:[[AppDelegate instance] mainObjectContext]];
     }
     
     return self;
 }
 
 - (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextObjectsDidChangeNotification object:[[AppDelegate instance] managedObjectContext]];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextObjectsDidChangeNotification object:[[AppDelegate instance] mainObjectContext]];
 }
 
 #pragma mark - Public interface

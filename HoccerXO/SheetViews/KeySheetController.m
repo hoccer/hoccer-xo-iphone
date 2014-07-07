@@ -87,7 +87,6 @@
     if ( ! _fingerprintSection) {
         _fingerprintSection = [DatasheetSection datasheetSectionWithIdentifier: @"fingerprint_section"];
         _fingerprintSection.items = @[self.fingerprintItem, self.keyLengthItem];
-        _fingerprintSection.footerText = HXOLocalizedStringWithLinks(@"key_fingerprint_info", nil);
     }
     return _fingerprintSection;
 }
@@ -118,6 +117,7 @@
     NSArray * common = @[self.fingerprintItem, self.keyLengthItem];
     [self removeObjectObservers];
     self.fingerprintSection.items = self.contact ? [common arrayByAddingObject: self.verificationItem] : common;
+    self.fingerprintSection.footerText = HXOLocalizedStringWithLinks(self.userProfile ? @"key_fingerprint_yours_info" : @"key_fingerprint_info", nil);
     [self addObjectObservers];
     [super inspectedObjectDidChange];
 }
