@@ -2288,4 +2288,18 @@ NSArray * TransferStateName = @[@"detached",
     return self.contentURL;
 }
 
+#pragma mark - Clone
+
+- (Attachment *) clone {
+    Attachment *attachment = [NSEntityDescription insertNewObjectForEntityForName:[[self class] entityName] inManagedObjectContext:self.managedObjectContext];
+    
+    attachment.mediaType = self.mediaType;
+    attachment.mimeType = self.mimeType;
+    attachment.humanReadableFileName = self.humanReadableFileName;
+    
+    [attachment useURLs:self.localURL anOtherURL:self.assetURL];
+    
+    return attachment;
+}
+
 @end

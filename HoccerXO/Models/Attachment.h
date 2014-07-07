@@ -165,6 +165,8 @@ typedef enum AttachmentStates {
 - (void) trySaveToAlbum;
 - (void) determinePlayability;
 
+- (Attachment *) clone;
+
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString;

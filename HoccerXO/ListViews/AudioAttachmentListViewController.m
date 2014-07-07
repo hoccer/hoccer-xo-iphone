@@ -241,11 +241,15 @@
 
 - (void) sendPressed:(id)sender {
     ContactPickerCompletion completion = ^(NSArray *contacts) {
-        for (Contact *contact in contacts) {
-            NSLog(@"SENDING ATTACHMENTS TO: %@", contact.displayName);
-        }
-        
         if (contacts != nil) {
+            NSArray *selectedAttachments = [self selectedAttachments];
+
+            for (Contact *contact in contacts) {
+                for (Attachment *attachment in selectedAttachments) {
+                    [[[AppDelegate instance] chatBackend] sendMessage:nil toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:[attachment clone]];
+                }
+            }
+        
             [self toggleEditMode:nil];
         }
     };
