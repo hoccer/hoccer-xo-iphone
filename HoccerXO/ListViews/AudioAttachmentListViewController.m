@@ -271,7 +271,14 @@
         for (Attachment *attachment in self.attachmentsToDelete) {
             [[AppDelegate instance] deleteObject:attachment];
         }
-    } else if (buttonIndex != actionSheet.cancelButtonIndex) {
+    } else if (buttonIndex == actionSheet.cancelButtonIndex) {
+        BOOL usedSwipeToDelete = !self.tableView.allowsMultipleSelectionDuringEditing;
+
+        if (usedSwipeToDelete) {
+            // hide delete button when canceling swipe-to-delete
+            self.tableView.editing = NO;
+        }
+    } else {
         // remove attachments from list only
         NSAssert(self.collection, @"Need collection to remove attachments from");
 
