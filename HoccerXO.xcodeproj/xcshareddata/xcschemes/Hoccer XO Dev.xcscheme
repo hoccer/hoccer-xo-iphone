@@ -163,7 +163,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-environment development"
+            argument = "-environment production"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>

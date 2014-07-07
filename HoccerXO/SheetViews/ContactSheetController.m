@@ -956,7 +956,9 @@ static int  groupMemberContext;
 - (void) removeGroupMemberItem: (NSUInteger) index contact: (Contact*) contact {
     if (GROUPVIEW_DEBUG) NSLog(@"removeGroupMemberItem %d for contact %@", index, contact.nickName);
     [self removeContactObservers: contact];
-    [self.groupMemberItems removeObjectAtIndex: index];
+    if (index < self.groupMemberItems.count) {
+        [self.groupMemberItems removeObjectAtIndex: index];
+    }
 }
 
 - (void) addContactObservers: (Contact*) contact {
@@ -1163,13 +1165,20 @@ static int  groupMemberContext;
             NSLog(@"ERROR: item not found");
         } else {
             [self removeGroupMemberItem: index contact: contact];
-            [self.groupInStatuNascendi.members removeObjectAtIndex: index];
+            if (index < self.groupInStatuNascendi.members.count) {
+                [self.groupInStatuNascendi.members removeObjectAtIndex: index];
+            }
         }
         [self updateCurrentItems];
     } else {
-        [self.chatBackend removeGroupMember: [self membershipOfContact: contact] onDeletion:^(GroupMembership *member) {
-            // yeah... absolutely
-        }];
+        GroupMembership * member = [self membershipOfContact: contact];
+        if (member != nil) {
+            [self.chatBackend removeGroupMember: member onDeletion:^(GroupMembership *member) {
+                // yeah... absolutely
+            }];
+        } else {
+            NSLog(@"#ERROR: editRemoveItem: trying to remove nil member");
+        }
     }
 }
 
