@@ -261,14 +261,14 @@
 #pragma mark - Action Sheet Delegate
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
+    BOOL usedSwipeToDelete = !self.tableView.allowsMultipleSelectionDuringEditing;
+
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         // delete attachments
         for (Attachment *attachment in self.attachmentsToDelete) {
             [[AppDelegate instance] deleteObject:attachment.message];
         }
     } else if (buttonIndex == actionSheet.cancelButtonIndex) {
-        BOOL usedSwipeToDelete = !self.tableView.allowsMultipleSelectionDuringEditing;
-
         if (usedSwipeToDelete) {
             // hide delete button when canceling swipe-to-delete
             self.tableView.editing = NO;
@@ -280,6 +280,10 @@
         for (Attachment *attachment in self.attachmentsToDelete) {
             [self.collection removeAttachment:attachment];
         }
+    }
+    
+    if (usedSwipeToDelete) {
+        [[AppDelegate instance] saveDatabase];
     }
     
     self.attachmentsToDelete = nil;
