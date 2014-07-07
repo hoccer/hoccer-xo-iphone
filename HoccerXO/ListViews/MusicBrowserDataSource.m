@@ -31,6 +31,8 @@
     return self;
 }
 
+#pragma mark - Fetch Request
+
 + (NSFetchRequest *)fetchRequestWithManagedObjectModel:(NSManagedObjectModel *)managedObjectModel {
     return [MusicBrowserDataSource fetchRequestForContact:nil managedObjectModel:managedObjectModel];
 }
@@ -53,6 +55,8 @@
         return [MusicBrowserDataSource fetchRequestWithManagedObjectModel:self.managedObjectModel];
     }
 }
+
+#pragma mark - Data Accessors
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
     id attachment = [self.fetchedResultsController objectAtIndexPath:indexPath];

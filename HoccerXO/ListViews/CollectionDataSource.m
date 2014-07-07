@@ -19,6 +19,8 @@
 
 @implementation CollectionDataSource
 
+#pragma mark - Initialization
+
 - (id) initWithCollection:(Collection *)collection {
     self = [super init];
     
@@ -28,6 +30,8 @@
     
     return self;
 }
+
+#pragma mark - Fetch Request
 
 - (NSFetchRequest *) fetchRequest {
     NSDictionary *vars = @{ @"collection" : self.collection };
@@ -39,6 +43,8 @@
     
     return fetchRequest;
 }
+
+#pragma mark - Data Accessors
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
     id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
@@ -58,6 +64,8 @@
     
     return attachments;
 }
+
+#pragma mark - Editing
 
 - (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
