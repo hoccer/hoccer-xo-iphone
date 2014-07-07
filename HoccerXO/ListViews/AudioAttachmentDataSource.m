@@ -17,7 +17,7 @@
 
 #pragma mark - Core Data Stack
 
-- (NSManagedObjectContext *)managedObjectContext {
+- (NSManagedObjectContext *)mainObjectContext {
     return [[AppDelegate instance] mainObjectContext];
 }
 
@@ -34,7 +34,7 @@
 - (NSFetchedResultsController *)fetchedResultsController {
     if (_fetchedResultsController == nil) {
         NSFetchRequest *fetchRequest = [self fetchRequest];
-        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.mainObjectContext sectionNameKeyPath:nil cacheName:nil];
         _fetchedResultsController.delegate = self;
         [_fetchedResultsController performFetch:nil];
     }

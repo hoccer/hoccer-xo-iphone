@@ -19,10 +19,10 @@
     AppDelegate *delegate = [AppDelegate instance];
 
     NSManagedObjectModel *managedObjectModel = delegate.managedObjectModel;
-    NSManagedObjectContext *managedObjectContext = delegate.mainObjectContext;
+    NSManagedObjectContext *mainObjectContext = delegate.mainObjectContext;
 
     NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestTemplateForName:@"AudioAttachmentsWithUnknownPlayability"];
-    NSArray *attachments = [managedObjectContext executeFetchRequest:fetchRequest error:nil];
+    NSArray *attachments = [mainObjectContext executeFetchRequest:fetchRequest error:nil];
     
     for (Attachment *attachment in attachments) {
         [attachment determinePlayability];

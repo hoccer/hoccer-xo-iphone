@@ -15,7 +15,7 @@
 @interface CollectionListViewController ()
 
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
-@property (nonatomic, readonly) NSManagedObjectContext   *managedObjectContext;
+@property (nonatomic, readonly) NSManagedObjectContext   *mainObjectContext;
 @property (nonatomic, readonly) NSManagedObjectModel     *managedObjectModel;
 
 @end
@@ -47,7 +47,7 @@
 
 #pragma mark - Core Data stack
 
-- (NSManagedObjectContext *)managedObjectContext {
+- (NSManagedObjectContext *)mainObjectContext {
     return [[AppDelegate instance] mainObjectContext];
 }
 
@@ -64,7 +64,7 @@
         [fetchRequest setSortDescriptors:sortDescriptors];
 
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-                                                                        managedObjectContext:self.managedObjectContext
+                                                                        managedObjectContext:self.mainObjectContext
                                                                           sectionNameKeyPath:nil
                                                                                    cacheName:nil];
 
@@ -203,7 +203,7 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == alertView.firstOtherButtonIndex) {
-        Collection *collection = [NSEntityDescription insertNewObjectForEntityForName:[Collection entityName] inManagedObjectContext:self.managedObjectContext];
+        Collection *collection = [NSEntityDescription insertNewObjectForEntityForName:[Collection entityName] inManagedObjectContext:self.mainObjectContext];
         collection.name = [self textInAlertView:alertView];
         [[AppDelegate instance] saveDatabase];
     }
