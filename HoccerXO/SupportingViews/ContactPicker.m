@@ -23,6 +23,7 @@
 @implementation ContactPicker
 
 + (id) contactPickerWithTitle: (NSString*)               title
+                        types: (NSUInteger)              typeMask
                         style: (ContactPickerStyle)      style
                     predicate: (NSPredicate *)           predicate
                    completion: (ContactPickerCompletion) completion
@@ -33,6 +34,10 @@
     picker.completion = completion;
     picker.title = title;
     picker.predicate = predicate;
+    
+    if ((typeMask & ContactPickerTypeContact) && (typeMask & ContactPickerTypeGroup)) {
+        picker.hasGroupContactToggle = YES;
+    }
 
     UINavigationController * modalPresentationHelper = [[HXOThemedNavigationController alloc] initWithRootViewController: picker];
 
@@ -78,6 +83,8 @@
 }
 
 - (void) addPredicates:(NSMutableArray *)predicates {
+    [super addPredicates: predicates];
+
     if (self.predicate) {
         [predicates addObject: self.predicate];
     }

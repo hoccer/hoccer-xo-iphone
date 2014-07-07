@@ -1172,8 +1172,8 @@ static int  groupMemberContext;
         predicate = [NSPredicate predicateWithFormat:@"(type == %@) AND SUBQUERY(groupMemberships, $g, $g.group == %@).@count == 0", [Contact entityName], self.group];
     }
 
-
     id picker = [ContactPicker contactPickerWithTitle: NSLocalizedString(@"Invite:", nil)
+                                                types: ContactPickerTypeContact
                                                 style: ContactPickerStyleMulti
                                             predicate: predicate
                                            completion: completion];

@@ -254,11 +254,10 @@
         }
     };
 
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(type == %@)", [Contact entityName]];
-
     id picker = [ContactPicker contactPickerWithTitle:NSLocalizedString(@"contact_list_nav_title", nil)
+                                                types:ContactPickerTypeContact | ContactPickerTypeGroup
                                                 style:ContactPickerStyleMulti
-                                            predicate:predicate
+                                            predicate:nil
                                            completion:completion];
     
     [self presentViewController:picker animated:YES completion:nil];
