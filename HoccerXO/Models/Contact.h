@@ -77,6 +77,7 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 @property (nonatomic, readonly) BOOL              isKeptRelation; // only valid for non-group contacts
 @property (nonatomic, readonly) BOOL              isKeptGroup;    // only valid for groups
 @property (nonatomic, readonly) BOOL              isNotRelated;
+@property (nonatomic, readonly) BOOL              isDirectlyRelated;
 
 // presence state helpers
 @property (nonatomic, readonly) BOOL              isOffline;

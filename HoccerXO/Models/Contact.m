@@ -248,6 +248,10 @@ NSString * const kPresenceStateTyping = @"typing";
     return [kRelationStateFriend isEqualToString: self.relationshipState];
 }
 
+- (BOOL) isDirectlyRelated {
+    return self.isFriend || self.isInvited || self.invitedMe || self.isBlocked;
+}
+
 - (BOOL) isGroupFriend {
     return [kRelationStateGroupFriend isEqualToString: self.relationshipState];
 }

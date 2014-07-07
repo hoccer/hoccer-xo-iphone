@@ -3126,7 +3126,7 @@ static NSTimer * _stateNotificationDelayTimer;
             }
         }
         if (memberContact.relationshipState == nil ||
-            (!memberContact.isFriend && !memberContact.isBlocked && memberContact.groupMemberships.count == 1))
+            (!memberContact.isDirectlyRelated && memberContact.groupMemberships.count == 1))
         {
             if (memberContact.messages.count > 0 || memberContact.deliveriesSent.count > 0 || [self.delegate isInspecting:memberContact]) {
                 if (!group.isNearbyGroup) {
@@ -3371,12 +3371,11 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void)deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group inContext:(NSManagedObjectContext*) context {
     if (GROUP_DEBUG  || DEBUG_DELETION) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup id %@ nick %@", group.clientId, group.nickName);
     // NSManagedObjectContext * moc = self.delegate.managedObjectContext;
-    NSSet * groupMembers = group.members;
+    NSSet * groupMembers = [NSSet setWithSet:group.members];
     if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup found %d members", groupMembers.count);
     for (GroupMembership * member in groupMembers) {
         if (member.contact != nil && ![group isEqual:member.contact]) {
-            if (!member.contact.isFriend &&
-                !member.contact.isBlocked &&
+            if (!member.contact.isDirectlyRelated &&
                 !member.contact.isKept &&
                 member.contact.groupMemberships.count == 1)
             {
@@ -4013,8 +4012,8 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) updateAttachmentInDeliveryStateIfNecessary:(Attachment *)theAttachment {
     NSString * fileId = theAttachment.message.attachmentFileId;
     if ([_pendingAttachmentDeliveryUpdates containsObject:fileId]) {
-        if (DELIVERY_TRACE) NSLog(@"updateAttachmentInDeliveryStateIfNecessary: postponing attachment state update  for fileId '%@'", fileId);
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 1.0 * NSEC_PER_SEC);
+        if (DELIVERY_TRACE) NSLog(@"updateAttachmentInDeliveryStateIfNecessary: postponing attachment state update for fileId '%@'", fileId);
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self updateAttachmentInDeliveryStateIfNecessary:theAttachment];
         });
