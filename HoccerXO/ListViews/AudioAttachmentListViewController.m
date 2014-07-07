@@ -16,6 +16,7 @@
 #import "Collection.h"
 #import "CollectionDataSource.h"
 #import "Contact.h"
+#import "ContactPicker.h"
 #import "HXOAudioPlayer.h"
 #import "HXOPluralocalization.h"
 #import "HXOThemedNavigationController.h"
@@ -70,17 +71,17 @@
         self.sendButton = [self createFooterButton];
         self.sendButton.frame = CGRectMake(0.0, 0.0, x, tabBarFrame.size.height);
         [self.sendButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_send", nil) forState:UIControlStateNormal];
-        [self.sendButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
+        [self.sendButton addTarget:self action:@selector(sendPressed:) forControlEvents:UIControlEventTouchUpInside];
 
         self.deleteButton = [self createFooterButton];
         self.deleteButton.frame = CGRectMake(x, 0.0, x, tabBarFrame.size.height);
         [self.deleteButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_delete", nil) forState:UIControlStateNormal];
-        [self.deleteButton addTarget: self action:@selector(deletePressed:) forControlEvents: UIControlEventTouchUpInside];
+        [self.deleteButton addTarget:self action:@selector(deletePressed:) forControlEvents:UIControlEventTouchUpInside];
 
         self.addToCollectionButton = [self createFooterButton];
         self.addToCollectionButton.frame = CGRectMake(2.0 * x, 0.0, x, tabBarFrame.size.height);
         [self.addToCollectionButton setTitle:NSLocalizedString(@"audio_attachment_list_footer_add", nil) forState:UIControlStateNormal];
-        [self.addToCollectionButton addTarget: self action:@selector(addToCollectionPressed:) forControlEvents: UIControlEventTouchUpInside];
+        [self.addToCollectionButton addTarget:self action:@selector(addToCollectionPressed:) forControlEvents:UIControlEventTouchUpInside];
     }
 
     [self updateNavigationBar];
@@ -236,6 +237,27 @@
 
     actionSheet.delegate = self;
     [actionSheet showFromTabBar:self.tabBarController.tabBar];
+}
+
+- (void) sendPressed:(id)sender {
+    ContactPickerCompletion completion = ^(NSArray *contacts) {
+        for (Contact *contact in contacts) {
+            NSLog(@"SENDING ATTACHMENTS TO: %@", contact.displayName);
+        }
+        
+        if (contacts != nil) {
+            [self toggleEditMode:nil];
+        }
+    };
+
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(type == %@)", [Contact entityName]];
+
+    id picker = [ContactPicker contactPickerWithTitle:NSLocalizedString(@"contact_list_nav_title", nil)
+                                                style:ContactPickerStyleMulti
+                                            predicate:predicate
+                                           completion:completion];
+    
+    [self presentViewController:picker animated:YES completion:nil];
 }
 
 #pragma mark - AddToCollectionListViewControllerDelegate
