@@ -30,6 +30,7 @@
 #import "Vcard.h"
 #import "NSData+Base64.h"
 #import "Group.h"
+#import "GroupMembership.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "TextMessageCell.h"
 #import "ImageAttachmentMessageCell.h"
@@ -55,6 +56,8 @@
 #import "AvatarView.h"
 #import "avatar_contact.h"
 #import "AttachmentButton.h"
+#import "GroupInStatuNascendi.h"
+#import "HXOPluralocalization.h"
 #import "HXOAudioPlaybackButtonController.h"
 #import "NSString+FromTimeInterval.h"
 #import "AudioPlayerStateItemController.h"
@@ -62,9 +65,14 @@
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
 #define DEBUG_NOTIFICATIONS NO
+#define DEBUG_APPEAR NO
+#define READ_DEBUG NO
+#define DEBUG_OBSERVERS NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
+
+static int ChatViewObserverContext = 0;
 
 typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
@@ -91,15 +99,23 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (nonatomic, strong)   NSTimer                        * typingTimer;
 @property (nonatomic, strong)   AudioPlayerStateItemController * audioPlayerStateItemController;
 
+@property  BOOL                                                keyboardShown;
+
+@property (strong) UIBarButtonItem * actionButton;
+
 @property (strong) id throwObserver;
 @property (strong) id catchObserver;
 @property (strong) id loginObserver;
 
+@property (nonatomic, readonly) NSMutableSet * observedContacts;
+@property (nonatomic, readonly) NSMutableSet * observedMembersGroups;
+
 @end
+
 
 @implementation ChatViewController
 
-@synthesize managedObjectContext = _managedObjectContext;
+//@synthesize managedObjectContext = _managedObjectContext;
 @synthesize chatBackend = _chatBackend;
 @synthesize attachmentPicker = _attachmentPicker;
 @synthesize moviePlayerViewController = _moviePlayerViewController;
@@ -111,16 +127,36 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @synthesize messageItems = _messageItems;
 @synthesize dateFormatter = _dateFormatter;
 @synthesize byteCountFormatter = _byteCountFormatter;
+@synthesize observedContacts = _observedContacts;
+@synthesize observedMembersGroups = _observedMembersGroups;
+
+-(NSMutableSet *)observedContacts {
+    if (_observedContacts == nil) {
+        _observedContacts = [NSMutableSet new];
+    }
+    return _observedContacts;
+}
+
+-(NSMutableSet *)observedMembersGroups {
+    if (_observedMembersGroups == nil) {
+        _observedMembersGroups = [NSMutableSet new];
+    }
+    return _observedMembersGroups;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    if (DEBUG_APPEAR) NSLog(@"ChatViewController:viewDidLoad");
+ 
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 
     [self setupChatbar];
+    
+    self.actionButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemAction target: self action: @selector(actionButtonPressed:)];
 
     [HXOBackend registerConnectionInfoObserverFor:self];
     
@@ -146,6 +182,19 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
     
     [self configureView];
+}
+
+- (void)checkActionButtonVisible {
+    //NSLog(@"partner %d, button %@, entries %d",self.partner != nil, self.navigationItem.rightBarButtonItem , [self actionButtonContainsEntries]);
+    if (self.partner != nil && [self actionButtonContainsEntries]) {
+        if (self.navigationItem.rightBarButtonItem == nil) {
+            //NSLog(@"checkActionButtonVisible: on");
+            self.navigationItem.rightBarButtonItem = self.actionButton;
+        }
+    } else if (self.navigationItem.rightBarButtonItem != nil) {
+        // NSLog(@"checkActionButtonVisible: off");
+        self.navigationItem.rightBarButtonItem = nil;
+    }
 }
 
 - (void) setupChatbar {
@@ -256,7 +305,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 
 - (void) viewWillAppear:(BOOL)animated {
-    // NSLog(@"ChatViewController:viewWillAppear");
+    if (DEBUG_APPEAR) NSLog(@"ChatViewController:viewWillAppear");
     self.fetchedResultsController.delegate = self;
     [super viewWillAppear: animated];
 
@@ -322,13 +371,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear: animated];
-    NSLog(@"ChatViewController:viewDidDisappear");
+    if (DEBUG_APPEAR) NSLog(@"ChatViewController:viewDidDisappear");
     if ([self isMovingFromParentViewController]) {
-        NSLog(@"isMovingFromParentViewController");
+        if (DEBUG_APPEAR) NSLog(@"isMovingFromParentViewController");
         [AppDelegate.instance endInspecting:self.partner withInspector:self];
+        self.inspectedObject = nil;
     }
     if ([self isBeingDismissed]) {
-        NSLog(@"isBeingDismissed");
+        if (DEBUG_APPEAR) NSLog(@"isBeingDismissed");
     }
     self.fetchedResultsController.delegate = nil;
 }
@@ -344,12 +394,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void)configureView {
     if (self.partner) {
         [self configureTitle];
+        [self checkActionButtonVisible];
     }
 }
 
 - (void) configureTitle {
     self.titleLabel.text = self.partner.nickNameWithStatus;
-    self.titleLabel.ledOn = self.partner.isPresent;
+    self.titleLabel.ledOn = self.partner.isConnected;
+    self.titleLabel.ledColor = self.partner.isBackground ? HXOUI.theme.avatarOnlineInBackgroundLedColor : HXOUI.theme.avatarOnlineLedColor;
     [self.titleLabel sizeToFit];
 }
 
@@ -415,6 +467,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         [self.view layoutIfNeeded];
     } completion: nil];
     
+    self.keyboardShown = YES;
 }
 
 - (void)keyboardWillHide:(NSNotification*) notification {
@@ -425,10 +478,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         self.keyboardHeight.constant = 0;
         [self.view layoutIfNeeded];
     } completion: nil];
+    self.keyboardShown = NO;
 }
 
 - (void) hideKeyboard {
-    [self.view endEditing: NO];
+    if (self.keyboardShown) {
+        [self.view endEditing: NO];
+    }
 }
 
 #pragma mark - Typing State Handling
@@ -450,13 +506,200 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 #pragma mark - Actions
 
+- (NSArray*) allMessagesInChat {
+    NSDictionary * vars = @{ @"contact" : self.partner };
+    NSFetchRequest *fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByContact" substitutionVariables: vars];
+    NSError * error;
+    NSArray *messages = [AppDelegate.instance.mainObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (messages == nil) {
+        NSLog(@"Fetch request failed: %@", error);
+        abort();
+    }
+    return messages;
+}
+
+- (NSArray*) allMessagesInChatBeforeTime:(NSDate *)beforeTime {
+    NSDate * since = [NSDate dateWithTimeIntervalSince1970:0];
+    return [HXOBackend messagesByContact:self.partner inIntervalSinceTime:since beforeTime:beforeTime];
+}
+
+- (NSArray*) allMessagesBeforeVisible {
+    NSArray * indexPaths = [self.tableView indexPathsForVisibleRows];
+    if (indexPaths.count) {
+        HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath:indexPaths[0]];
+        NSDate * referenceDate = message.timeAccepted;
+        return [self allMessagesInChatBeforeTime:referenceDate];
+    }
+    return @[];
+}
+
+- (void) askDeleteMessages:(NSArray*)messages {
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            NSArray * ids = objectIds(messages);
+            [AppDelegate.instance performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+                NSArray * messages = managedObjects(ids, context);
+                for (HXOMessage * message in messages) {
+                    [AppDelegate.instance deleteObject:message inContext:context];
+                }
+            }];
+        }
+    };
+    
+    NSString * title = [NSString stringWithFormat:HXOPluralocalizedString(@"chat_messages_delete_safety_question %d", messages.count, NO), messages.count];
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: title
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"delete", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: self.view];
+}
+
+// Return nil when __INDEX__ is beyond the bounds of the array
+#define NSArrayObjectMaybeNil(__ARRAY__, __INDEX__) ((__INDEX__ >= [__ARRAY__ count]) ? nil : [__ARRAY__ objectAtIndex:__INDEX__])
+
+// Manually expand an array into an argument list
+#define NSArrayToVariableArgumentsList(__ARRAYNAME__)\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 0),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 1),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 2),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 3),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 4),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 5),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 6),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 7),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 8),\
+NSArrayObjectMaybeNil(__ARRAYNAME__, 9),\
+nil
+
+// Hmmmk... Since Objective-C got array literals variadic functions are even more
+// unattractive than before. I think we should wrap the variadics and provide versions
+// that just use arrays... someday [agnat]
+
+- (BOOL)actionButtonContainsEntries {
+    //NSLog(@"actionButtonContainsEntries: %d %d %d",[[self.fetchedResultsController sections] count], self.partner.isGroup,((Group*)self.partner).otherMembers.count > 0);
+    return self.partner != nil && ([[self.fetchedResultsController sections] count] > 0 || (self.partner.isGroup && ((Group*)self.partner).otherMembers.count > 0));
+}
+
+- (void) actionButtonPressed: (id) sender {
+    
+    NSArray * allMessagesInChat = [self allMessagesInChat];
+    NSArray * allMessagesBeforeVisible = [self allMessagesBeforeVisible];
+    
+    NSSet * membersInvitable = nil;
+    NSSet * membersInvitedMe = nil;
+    NSSet * membersInvited = nil;
+    NSSet * membersOther = nil;
+    Group * group = nil;
+    
+    if (self.partner.isGroup) {
+        group = (Group*)self.partner;
+        membersInvitable = group.membersInvitable;
+        membersInvitedMe = group.membersInvitedMeAsFriend;
+        membersInvited = group.membersInvitedAsFriend;
+        membersOther = group.otherMembers;
+    }
+    
+    int buttonIndex = 0;
+    NSMutableArray * buttonTitles = [NSMutableArray new];
+    
+    int deleteAllIndex = -1;
+    if (allMessagesInChat.count > 0) {
+        deleteAllIndex = buttonIndex++;
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_messages_delete_all %d", allMessagesInChat.count)];
+    }
+    
+    int deletePreviousIndex = -1;
+    if (allMessagesBeforeVisible.count > 0) {
+        deletePreviousIndex = buttonIndex++;
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_messages_delete_all_previous %d", allMessagesBeforeVisible.count)];
+    }
+
+    int invitableIndex = -1;
+    if (membersInvitable.count > 0) {
+        invitableIndex = buttonIndex++;
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_group_members_invite %d", membersInvitable.count)];
+    }
+
+    int inviteMeIndex = -1;
+    if (membersInvitedMe.count > 0) {
+        inviteMeIndex = buttonIndex++;
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_group_members_invite_accept %d", membersInvitedMe.count)];
+    }
+    
+    int invitedIndex = -1;
+    if (membersInvited.count > 0) {
+        invitedIndex = buttonIndex++;
+        [buttonTitles addObject: HXOPluralocalizeInt(@"chat_group_members_disinvite %d", membersInvited.count)];
+    }
+
+    int makeGroupIndex = -1;
+    if (membersOther.count > 0) {
+        makeGroupIndex = buttonIndex++;
+        [buttonTitles addObject: NSLocalizedString(group.isNearby ? @"chat_group_clone_nearby" : @"chat_group_clone", nil)];
+    }
+    
+    if (buttonIndex == 0) {
+        // return when nothing can be shown
+        return;
+    }
+    
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        
+        if (buttonIndex == deleteAllIndex) {
+            [self askDeleteMessages:allMessagesInChat];
+            
+        } else if (buttonIndex == deletePreviousIndex) {
+            [self askDeleteMessages:allMessagesBeforeVisible];
+            
+        } else if (buttonIndex == invitableIndex) {
+            for (GroupMembership* member in membersInvitable) {
+                [self.chatBackend inviteFriend:member.contact.clientId handler:^(BOOL ok) {
+                    if (!ok) {
+                        [self.chatBackend inviteFriendFailedAlertForContact:member.contact];
+                    }
+                }];
+            }
+            
+        } else if (buttonIndex == inviteMeIndex) {
+            for (GroupMembership* member in membersInvitedMe) {
+                [self.chatBackend acceptFriend:member.contact.clientId handler:^(BOOL ok) {
+                    if (!ok) {
+                        [self.chatBackend acceptFriendFailedAlertForContact:member.contact];
+                    }
+                }];
+            }
+            
+        } else if (buttonIndex == invitedIndex) {
+            for (GroupMembership* member in membersInvited) {
+                [self.chatBackend disinviteFriend:member.contact.clientId handler:^(BOOL ok) {
+                    if (!ok) {
+                        [self.chatBackend disinviteFriendFailedAlertForContact:member.contact];
+                    }
+                }];
+            }
+        } else if (buttonIndex == makeGroupIndex) {
+            [self performSegueWithIdentifier: @"newGroup" sender: self.actionButton];
+       }
+    };
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"chat_action_sheet_title", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: nil
+                                      otherButtonTitles: NSArrayToVariableArgumentsList(buttonTitles)];
+    
+    [sheet showInView: self.view];
+
+}
 
 - (IBAction)sendPressed:(id)sender {
     NSString * cantSendTitle = NSLocalizedString(@"chat_cant_send_alert_title", nil);
     if ([self.partner.type isEqualToString:[Group entityName]]) {
         // check if there are other members in the group
         Group * group = (Group*)self.partner;
-        if ([[group otherJoinedMembers] count] == 0 || [group.groupState isEqualToString:@"kept"]) {
+        if ([[group otherJoinedMembers] count] == 0 || group.isKeptGroup) {
             // cant send message, no other joined members
             NSString * messageText;
             if ([[group otherInvitedMembers] count] > 0) {
@@ -587,7 +830,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (IBAction) unwindToChatView: (UIStoryboardSegue*) unwindSegue {
+    NSLog(@"ChatViewController:unwindToChatView");
+}
 
+- (UIViewController*)unwindToRootController {
+    return self;
 }
 
 #pragma mark - Attachments
@@ -624,7 +871,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     //NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
-                                                                        inManagedObjectContext: self.managedObjectContext];
+                                                                        inManagedObjectContext: AppDelegate.instance.mainObjectContext];
 
     // handle geolocation
     if ([attachmentInfo isKindOfClass: [NSDictionary class]] &&
@@ -770,7 +1017,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             return;
         }
         if (_currentExportSession != nil) {
-            NSString * myDescription = [NSString stringWithFormat:@"An audio export is still in progress"];
+            NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
             NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
             [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
             return;
@@ -940,40 +1187,62 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             }
             return;
         } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) || [mediaType isEqualToString:@"public.movie"]) {
-            NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
-            NSURL * myURL2 = attachmentInfo[UIImagePickerControllerMediaURL];
+            NSURL * referenceURL = attachmentInfo[UIImagePickerControllerReferenceURL];
+            NSURL * mediaURL = attachmentInfo[UIImagePickerControllerMediaURL];
 
-            // move file from temp directory to document directory
-            NSString * newFileName = @"video.mov";
-            NSURL * myNewURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-            NSError * myError = nil;
-            [[NSFileManager defaultManager] moveItemAtURL:myURL2 toURL:myNewURL error:&myError];
-            if (myError != nil) {
+            NSString * newFileName = @"video.mp4";
+            NSURL * outputURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+
+            if (_currentExportSession != nil) {
+                NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
+                NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                 [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
                 return;
             }
+
+            AVURLAsset * asset = [AVURLAsset assetWithURL:mediaURL];
+            _currentExportSession = [AVAssetExportSession exportSessionWithAsset:asset presetName:AVAssetExportPresetPassthrough];
+            _currentExportSession.outputURL = outputURL;
+            _currentExportSession.outputFileType = AVFileTypeMPEG4;
             
-            NSString *tempFilePath = [myNewURL path];
-            if (myURL == nil) { // video was just recorded
-                if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(tempFilePath))
-                {
-                    UISaveVideoAtPathToSavedPhotosAlbum(tempFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
-                    NSLog(@"Saved new video at %@ to album",tempFilePath);
+            [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
+                if (_currentExportSession.status == AVAssetExportSessionStatusCompleted) {
+                    _currentExportSession = nil;
+
+                    if (referenceURL == nil) { // video was just recorded
+                        NSString *outputFilePath = [outputURL path];
+
+                        if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFilePath)) {
+                            UISaveVideoAtPathToSavedPhotosAlbum(outputFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+                            NSLog(@"Saved new video at %@ to album",outputFilePath);
+                        } else {
+                            NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",outputFilePath];
+                            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                            NSLog(@"%@", myDescription);
+                            [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                            return;
+                        }
+                    }
+                    
+                    NSString * outputURLString = [outputURL absoluteString];
+                    self.currentAttachment.ownedURL = outputURLString;
+                    
+                    [self.currentAttachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
+                        [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:theError];
+                    }];
                 } else {
-                    NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",tempFilePath];
-                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                    NSLog(@"%@", myDescription);
-                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-                    return;
+                    [self finishPickedAttachmentProcessingWithImage:nil withError:_currentExportSession.error];
+                    _currentExportSession = nil;
                 }
-            }            
-            
-            NSString * myNewURLString = [myNewURL absoluteString];
-            self.currentAttachment.ownedURL = myNewURLString;
-            
-            [self.currentAttachment makeVideoAttachment: myNewURLString anOtherURL: nil withCompletion:^(NSError *theError) {
-                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
+                
+                NSError * myError = nil;
+                [[NSFileManager defaultManager] removeItemAtURL:mediaURL error:&myError];
+
+                if (myError != nil) {
+                    NSLog(@"Deleting media file failed: %@", myError);
+                }
             }];
+            
             return;
         }
     }
@@ -1185,17 +1454,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 #pragma mark - Core Data Stack
 
-- (NSManagedObjectContext *)managedObjectContext
-{
-    if (_managedObjectContext == nil) {
-        _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
-    }
-    return _managedObjectContext;
-}
 
 - (NSManagedObjectModel *)managedObjectModel
 {
-    if (_managedObjectContext == nil) {
+    if (_managedObjectModel == nil) {
         _managedObjectModel = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectModel;
     }
     return _managedObjectModel;
@@ -1203,12 +1465,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 
 - (void) setPartner: (Contact*) partner {
-    // NSLog(@"setPartner %@", partner.nickName);
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:setPartner %@", partner.nickName);
     // NSLog(@"%@", [NSThread callStackSymbols]);
-    if (_partner != nil) {
-        [_partner removeObserver: self forKeyPath: @"nickName"];
-        [_partner removeObserver: self forKeyPath: @"connectionStatus"];
-    }
+    
+    [self removeAllContactAndMembersKVOs];
+
     _partner = partner;
     if (partner == nil) {
         return;
@@ -1223,7 +1484,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             }
         }];
         // TODO: observe membership set and add/remove KVO on new/removed members
-        [group addObserver: self forKeyPath: @"members" options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context: nil];
+        [self addMembersKVO:group];
     }
 
     if (resultsControllers == nil) {
@@ -1242,7 +1503,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
         [fetchRequest setSortDescriptors:sortDescriptors];
 
-        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.objectID]];
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:AppDelegate.instance.mainObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.objectID]];
         _fetchedResultsController.delegate = self;
 
         resultsControllers[partner.objectID] = _fetchedResultsController;
@@ -1271,16 +1532,96 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) addContactKVO: (Contact*) contact {
-    [contact addObserver: self forKeyPath: @"nickName" options: NSKeyValueObservingOptionNew context: nil];
-    [contact addObserver: self forKeyPath: @"connectionStatus" options: NSKeyValueObservingOptionNew context: nil];
-    [contact addObserver: self forKeyPath: @"avatarImage" options: NSKeyValueObservingOptionNew context: nil];
+    if (contact != nil) {
+        if (![self.observedContacts containsObject:contact]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO for contact nick %@ id %@", contact.nickName, contact.clientId);
+            for (id keyPath in @[@"nickName", @"avatarImage", @"connectionStatus", @"deletedObject"]) {
+                if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO for %@ path %@ id %@", [contact class], keyPath, contact.clientId);
+                [contact addObserver: self forKeyPath: keyPath options: NSKeyValueObservingOptionNew context: &ChatViewObserverContext];
+            }
+            [self.observedContacts addObject:contact];
+        } else {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO: already has observers for contact nick %@ id %@", contact.nickName, contact.clientId);
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:addContactKVO: nil contact");
+    }
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO: self.observedContacts.count = %d", self.observedContacts.count);
 }
 
 - (void) removeContactKVO: (Contact*) contact {
-    [contact removeObserver: self forKeyPath: @"nickName"];
-    [contact removeObserver: self forKeyPath: @"connectionStatus"];
-    [contact removeObserver: self forKeyPath: @"avatarImage"];
+    if (contact != nil) {
+        if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO for contact nick %@ id %@", contact.nickName, contact.clientId);
+        if ([self.observedContacts containsObject:contact]) {
+            for (id keyPath in @[@"nickName", @"avatarImage", @"connectionStatus", @"deletedObject"]) {
+                if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO for %@ path %@ id %@", [contact class], keyPath, contact.clientId);
+                [contact removeObserver: self forKeyPath: keyPath context: &ChatViewObserverContext];
+            }
+            [self.observedContacts removeObject:contact];
+        } else {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO: no observers for contact nick %@ id %@", contact.nickName, contact.clientId);
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:removeContactKVO: nil contact");
+    }
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO: self.observedContacts.count = %d", self.observedContacts.count);
 }
+
+- (void) removeAllContactKVOs {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeAllContactKVOs");
+    NSSet * registered = [NSSet setWithSet:self.observedContacts]; // avoid enumeration mutation exception
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeAllContactKVOs: registered.count = %d", registered.count);
+    for (Contact * contact in registered) {
+        [self removeContactKVO:contact];
+    }
+    [self.observedContacts removeAllObjects];
+}
+
+- (void) addMembersKVO: (Group*) group {
+    if (group != nil) {
+        if (![self.observedMembersGroups containsObject:group]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addMembersKVO for group nick %@ id %@", group.nickName, group.clientId);
+            [group addObserver: self forKeyPath: @"members" options: NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context: &ChatViewObserverContext];
+             [self.observedMembersGroups addObject:group];
+        } else {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addMembersKVO: already has observers for group nick %@ id %@", group.nickName, group.clientId);
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:addMembersKVO: nil contact");
+    }
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addMembersKVO: self.observedMembersGroups.count = %d", self.observedMembersGroups.count);
+}
+
+- (void) removeMembersKVO: (Group*) group {
+    if (group != nil) {
+        if ([self.observedMembersGroups containsObject:group]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeMembersKVO for group nick %@ id %@", group.nickName, group.clientId);
+            [group removeObserver: self forKeyPath: @"members" context:&ChatViewObserverContext];
+            [self.observedMembersGroups removeObject:group];
+        } else {
+            if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeMembersKVO: no observers for group nick %@ id %@", group.nickName, group.clientId);
+        }
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:removeMembersKVO: nil contact");
+    }
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeMembersKVO: self.observedMembersGroups.count = %d", self.observedMembersGroups.count);
+}
+
+- (void) removeAllMembersKVOs {
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController: removeAllMembersKVOs");
+    NSSet * registered = [NSSet setWithSet:self.observedMembersGroups]; // avoid enumeration mutation exception
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeAllMembersKVOs: registered.count = %d", registered.count);
+    for (Group * group in registered) {
+        [self removeMembersKVO:group];
+    }
+    [self.observedMembersGroups removeAllObjects];
+}
+
+- (void) removeAllContactAndMembersKVOs {
+    [self removeAllMembersKVOs];
+    [self removeAllContactKVOs];
+}
+
 
 /*
 - (void) insertForwardedMessage {
@@ -1306,6 +1647,15 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     //NSLog(@"observeValueForKeyPath %@ change %@", keyPath, change);
     //NSLog(@"%@", [NSThread callStackSymbols]);
+    if ([keyPath isEqualToString: @"deletedObject"]) {
+        if (DEBUG_OBSERVERS) NSLog(@"ChatViewController: observeValueForKeyPath: deletedObject");
+        if ([object deletedObject]) {
+            if (DEBUG_OBSERVERS) NSLog(@"DataSheetController:observeValueForKeyPath: observed deletedObject, removing observers");
+            [self removeContactKVO:object];
+        }
+        return;
+    }
+
     if ([keyPath isEqualToString: @"nickName"] ||
         [keyPath isEqualToString: @"connectionStatus"]) {
         // self.title = [object nickName];
@@ -1318,6 +1668,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     } else if ([keyPath isEqualToString: @"avatarImage"]) {
         [self updateVisibleCells];
     } else if ([keyPath isEqualToString: @"members"]) {
+        if (self.partner.isGroup) {
+            [self checkActionButtonVisible];
+            if (self.partner.isNearby) {
+                [self configureTitle];
+            }
+        }
         if ([change[NSKeyValueChangeKindKey] isEqualToNumber: @(NSKeyValueChangeInsertion)]) {
             // NSLog(@"==== got new group member");
             NSSet * oldMembers = change[NSKeyValueChangeOldKey];
@@ -1410,7 +1766,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         {
             //NSLog(@"NSFetchedResultsChangeUpdate");
             HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-            [self configureCell: (MessageCell*)[tableView cellForRowAtIndexPath:indexPath] forMessage: message withAttachmentPreview:YES];
+            MessageCell * cell = (MessageCell*)[tableView cellForRowAtIndexPath:indexPath]; // returns nil if cell is not visible or index path is out of range
+            if (cell != nil && message != nil) {
+                [self configureCell: cell forMessage: message withAttachmentPreview:YES];
+            }
             break;
         }
 
@@ -1433,6 +1792,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         [NSTimer scheduledTimerWithTimeInterval:0.8 target:self selector:@selector(scrollToBottomAnimated) userInfo:nil repeats:NO];
         self.firstNewMessage = nil;
     }
+    [self checkActionButtonVisible];
 }
 
 #pragma mark - view/cell methods
@@ -1448,7 +1808,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (id) getAuthor: (HXOMessage*) message {
-    if ([message.isOutgoing isEqualToNumber: @YES]) {
+    if (message.isOutgoing) {
         return [UserProfile sharedProfile];
     } else if ([self.partner isKindOfClass: [Group class]]) {
         return [message.deliveries.anyObject sender];
@@ -1462,25 +1822,35 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message withAttachmentPreview:(BOOL)loadPreview {
+    if (cell == nil) {
+        NSLog(@"#WARNING: ChatViewController:configureCell called with cell = nil");
+        NSLog(@"%@", [NSThread callStackSymbols]);
+        return;
+    }
     if (DEBUG_TABLE_CELLS) NSLog(@"configureCell %@ withPreview=%d",cell,loadPreview);
 
     cell.delegate = self;
 
     if ([self viewIsVisible]){
-        if ([message.isRead isEqualToNumber: @NO]) {
-            // NSLog(@"configureCell setting isRead forMessage: %@", message.body);
-            message.isRead = @YES;
-            [self.managedObjectContext refreshObject: message.contact mergeChanges:YES];
+        if (!message.isRead) {
+            if (READ_DEBUG) NSLog(@"configureCell setting isReadFlag forMessage: %@", message.body);
+            message.isRead = YES;
+            [AppDelegate.instance.mainObjectContext refreshObject: message.contact mergeChanges:YES];
+            Delivery * delivery = (Delivery*)message.deliveries.anyObject;
+            if (message.isIncoming && delivery.isUnseen) {
+                [self.chatBackend inDeliveryConfirmMessage:message withDelivery:delivery];
+            }
         }
     }
 
     cell.colorScheme = [self colorSchemeForMessage: message];
-    cell.messageDirection = [message.isOutgoing isEqualToNumber: @YES] ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
+    cell.messageDirection = message.isOutgoing ? HXOMessageDirectionOutgoing : HXOMessageDirectionIncoming;
     id author = [self getAuthor: message];
     cell.avatar.image = [author avatarImage];
     cell.avatar.defaultIcon = [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [author isKindOfClass: [Contact class]] && [author isBlocked];
-    cell.avatar.isPresent = [self.partner isKindOfClass: [Group class]] && ! [message.isOutgoing boolValue] && ((Contact*)[message.deliveries.anyObject sender]).isPresent;
+    cell.avatar.isPresent = [self.partner isKindOfClass: [Group class]] && ! message.isOutgoing && ((Contact*)[message.deliveries.anyObject sender]).isConnected;
+    cell.avatar.isInBackground = [self.partner isKindOfClass: [Group class]] && message.isIncoming && ((Contact*)[message.deliveries.anyObject sender]).isBackground;
 
     cell.subtitle.text = [self subtitleForMessage: message];
 
@@ -1641,7 +2011,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 message.attachment.state == kAttachmentWantsTransfer) {
                 [message.attachment pauseTransfer];
             } else if (message.attachment.state == kAttachmentTransferOnHold) {
-                if (message.isOutgoing.boolValue) {
+                if (message.isOutgoing) {
                     [message.attachment upload];
                 } else {
                     [message.attachment download];
@@ -1654,61 +2024,244 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 }
 
-- (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
 
-    if ([message.isOutgoing isEqualToNumber: @NO]) {
-        return HXOBubbleColorSchemeIncoming;
-    }
-
-    if ([message.deliveries count] > 1) {
-        NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
-    }
-    for (Delivery * myDelivery in message.deliveries) {
-        if ([myDelivery.state isEqualToString:kDeliveryStateNew] ||
-            [myDelivery.state isEqualToString:kDeliveryStateDelivering])
-        {
-            return HXOBubbleColorSchemeInProgress;
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivered] ||
-                   [myDelivery.state isEqualToString:kDeliveryStateConfirmed])
-        {
-            return HXOBubbleColorSchemeSuccess;
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
-            return HXOBubbleColorSchemeFailed;
-        } else {
-            NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
-        }
+- (HXOBubbleColorScheme) colorSchemeForDelivery:(Delivery*) myDelivery {
+    
+    if (myDelivery.isPending) {
+        return HXOBubbleColorSchemeInProgress;
+    } else if (myDelivery.isDelivered) {
+        return HXOBubbleColorSchemeSuccess;
+    } else if (myDelivery.isFailure) {
+        return HXOBubbleColorSchemeFailed;
+    } else {
+        NSLog(@"ERROR: colorSchemeForMessage: unknown delivery state '%@'", myDelivery.state);
     }
     return HXOBubbleColorSchemeSuccess;
+}
+
+
+- (HXOBubbleColorScheme) colorSchemeForMessage: (HXOMessage*) message {
+    
+    if (message.isIncoming) {
+        return HXOBubbleColorSchemeIncoming;
+    }
+    
+    if ([message.deliveries count] == 1) {
+        return [self colorSchemeForDelivery:message.deliveries.anyObject];
+    } else {
+        //if (message.attachment == nil) {
+            // select color scheme by priority; if one message succeeded, return delivered
+            NSSet * messagesDelivered = message.deliveriesDelivered;
+            if (messagesDelivered.count > 0) {
+                return [self colorSchemeForDelivery:messagesDelivered.anyObject];
+            }
+
+            // progress is next
+            NSSet * messagesPending = message.deliveriesPending;
+            if (messagesPending.count > 0) {
+                return [self colorSchemeForDelivery:messagesPending.anyObject];
+            }
+
+            // only if all fail, we show failed
+            NSSet * messagesFailed = message.deliveriesFailed;
+            if (messagesFailed.count > 0) {
+                return [self colorSchemeForDelivery:messagesFailed.anyObject];
+            }
+        //}
+    }
+    NSLog(@"ERROR: colorSchemeForMessage: strange deliveries for message id '%@', delivery count=%d", message.messageId, message.deliveries.count);
+    return HXOBubbleColorSchemeSuccess;
+}
+
+NSString * delimiter(NSString* currentString) {
+    if (currentString.length == 0) {
+        return @"";
+    } else {
+        return @",";
+    }
+}
+
+NSSet * intersectionOfSets(NSSet * a, NSSet * b) {
+    NSMutableSet * result = [NSMutableSet setWithSet:a];
+    [result intersectSet:b];
+    return result;
+}
+
+NSSet * differenceOfSets(NSSet * a, NSSet * b) {
+    NSMutableSet * result = [NSMutableSet setWithSet:a];
+    [result minusSet:b];
+    return result;
+}
+
+- (NSString*) stateStringForMessageMulti: (HXOMessage*) message {
+    NSUInteger totalDeliveries = message.deliveries.count;
+    
+    NSSet * messagesNew;
+    NSUInteger newCount = 0;
+    
+    NSSet * messagesDelivering;
+    NSUInteger deliveringCount = 0;
+    
+    NSSet * messagesFailed;
+    NSUInteger failedCount = 0;
+    
+    NSSet * messagesSeen;
+    NSUInteger seenCount = 0;
+    
+    NSSet * messagesUnseen;
+    NSUInteger unseenCount = 0;
+    
+    NSSet * messagesPrivate;
+    NSUInteger privateCount = 0;
+
+    NSUInteger accountedDeliveries = 0;
+    
+    messagesSeen = message.deliveriesSeen;
+    seenCount = messagesSeen.count;
+    accountedDeliveries += seenCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesUnseen = message.deliveriesUnseen;
+    unseenCount = messagesUnseen.count;
+    accountedDeliveries += unseenCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesPrivate = message.deliveriesPrivate;
+    privateCount = messagesPrivate.count;
+    accountedDeliveries += privateCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesNew = message.deliveriesNew;
+    newCount = messagesNew.count;
+    accountedDeliveries += newCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesDelivering = message.deliveriesDelivering;
+    deliveringCount = messagesDelivering.count;
+    accountedDeliveries += deliveringCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+    messagesFailed = message.deliveriesFailed;
+    failedCount = messagesFailed.count;
+    accountedDeliveries += failedCount;
+    if (accountedDeliveries == totalDeliveries) goto ready;
+    
+ready:;
+
+    NSString * info = @"";
+    if (newCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), newCount, [self stateStringForDelivery:messagesNew.anyObject]]];
+    }
+    if (deliveringCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), deliveringCount, [self stateStringForDelivery:messagesDelivering.anyObject]]];
+    }
+    if (failedCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), failedCount, [self stateStringForDelivery:messagesFailed.anyObject]]];
+    }
+    
+    if (message.attachment != nil) {
+        //NSSet * attachmentsMissing = message.deliveriesAttachmentsMissing;
+        //NSUInteger attachmentMissingCount = attachmentsMissing.count;
+        
+        NSSet * attachmentsPending = message.deliveriesAttachmentsPending;
+        NSUInteger attachmentPendingCount = attachmentsPending.count;
+        
+        NSSet * attachmentsFailed = message.deliveriesAttachmentsFailed;
+        NSUInteger attachmentFailedCount = attachmentsFailed.count;
+        
+        NSSet * attachmentsReceived = message.deliveriesAttachmentsReceived;
+        //NSUInteger attachmentReceivedCount = attachmentsReceived.count;
+        
+        if (attachmentFailedCount != 0) {
+            info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), attachmentFailedCount, [self stateStringForDelivery:attachmentsFailed.anyObject]]];
+        }
+        attachmentsPending = differenceOfSets(attachmentsPending, messagesDelivering);
+        attachmentsPending = differenceOfSets(attachmentsPending, messagesNew);
+        attachmentPendingCount = attachmentsPending.count;
+        
+        if (attachmentPendingCount != 0) {
+            info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), attachmentPendingCount, [self stateStringForDelivery:attachmentsPending.anyObject]]];
+        }
+        messagesSeen = intersectionOfSets(messagesSeen,attachmentsReceived);
+        seenCount = messagesSeen.count;
+        
+        messagesUnseen = intersectionOfSets(messagesUnseen,attachmentsReceived);
+        unseenCount = messagesUnseen.count;
+        
+        messagesPrivate = intersectionOfSets(messagesPrivate,attachmentsReceived);
+        privateCount = messagesPrivate.count;
+    }
+    if (seenCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), seenCount, [self stateStringForDelivery:messagesSeen.anyObject]]];
+    }
+    if (unseenCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), unseenCount, [self stateStringForDelivery:messagesUnseen.anyObject]]];
+    }
+    if (privateCount != 0) {
+        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), privateCount, [self stateStringForDelivery:messagesPrivate.anyObject]]];
+    }
+    
+#ifdef DEBUG
+    info = [info stringByAppendingString:[NSString stringWithFormat:@" (%d)", totalDeliveries]];
+#endif
+    return info;
 }
 
 - (NSString*) stateStringForMessage: (HXOMessage*) message {
 
     if ([message.deliveries count] > 1) {
-        NSLog(@"WARNING: NOT YET IMPLEMENTED: delivery status for multiple deliveries");
-    }
-
-    for (Delivery * myDelivery in message.deliveries) {
-        if ([myDelivery.state isEqualToString:kDeliveryStateNew]) {
-            return NSLocalizedString(@"chat_message_pending", nil);
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateDelivering] ||
-                   [myDelivery.state isEqualToString:kDeliveryStateDelivered])
-        {
-            return NSLocalizedString(@"chat_message_sent", nil);
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateConfirmed]) {
-            return NSLocalizedString(@"chat_message_delivered", nil);
-        } else if ([myDelivery.state isEqualToString:kDeliveryStateFailed]) {
-            return NSLocalizedString(@"chat_message_failed", nil);
-        /* TODO } else if () {
-             return NSLocalizedString(@"chat_message_read", nil); */
-        } else {
-            NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
-        }
+        return [self stateStringForMessageMulti:message];
+    } else {
+        Delivery * myDelivery = message.deliveries.anyObject;
+        return [self stateStringForDelivery:myDelivery];
     }
     return @"";
 }
 
+- (NSString*) stateStringForDelivery: (Delivery*) myDelivery {
+    if (myDelivery.isStateNew) {
+        return NSLocalizedString(@"chat_message_pending", nil);
+        
+    } else if (myDelivery.isStateDelivering) {
+        return NSLocalizedString(@"chat_message_sent", nil);
+        
+    } else if (myDelivery.isDelivered) {
+        if (myDelivery.isAttachmentFailure) {
+            NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", myDelivery.message.attachment.mediaType];
+            NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_failed_attachment %@", nil),
+                                      NSLocalizedString(attachment_type, nil)];
+            return stateString;
+        } else  if (myDelivery.isAttachmentPending) {
+            NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", myDelivery.message.attachment.mediaType];
+            NSString * stateString = [NSString stringWithFormat:NSLocalizedString(@"chat_message_delivered_missing_attachment %@", nil),
+                                      NSLocalizedString(attachment_type, nil)];
+            return stateString;
+        } else {
+            if (myDelivery.isSeen) {
+                return NSLocalizedString(@"chat_message_read", nil);
+            } else if (!myDelivery.isPrivate) {
+                return NSLocalizedString(@"chat_message_unread", nil);
+            } else {
+                return NSLocalizedString(@"chat_message_delivered", nil);
+            }
+        }
+    } else if (myDelivery.isFailure) {
+        if (myDelivery.isFailed) {
+            return NSLocalizedString(@"chat_message_failed", nil);
+        } else if (myDelivery.isAborted) {
+            return NSLocalizedString(@"chat_message_aborted", nil);
+        } else if (myDelivery.isRejected) {
+            return NSLocalizedString(@"chat_message_rejected", nil);
+        }
+    } else {
+        NSLog(@"ERROR: unknow delivery state %@", myDelivery.state);
+    }
+    return myDelivery.state;
+}
+
+
 - (NSString*) subtitleForMessage: (HXOMessage*) message {
-    if ([message.isOutgoing isEqualToNumber: @YES]) {
+    if (message.isOutgoing) {
         return [self stateStringForMessage: message];
     } else {
 #ifdef DEBUG
@@ -1774,7 +2327,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     MessageItem * item = [self getItemWithMessage: message];
 
     Attachment * attachment = message.attachment;
-    BOOL isOutgoing = [message.isOutgoing isEqualToNumber: @YES];
+    BOOL isOutgoing = message.isOutgoing;
     BOOL isComplete = [attachment.transferSize isEqualToNumber: attachment.contentSize];
 
     // TODO: some of this stuff is quite expensive: reading vcards, loading audio metadata, &c.
@@ -1789,7 +2342,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             title = item.attachmentInfo.audioTitle;
         }
     } else if (message.attachment.state == kAttachmentTransferOnHold) {
-        NSString * name = message.attachment.humanReadableFileName != nil ? message.attachment.humanReadableFileName : NSLocalizedString(message.attachment.mediaType, nil);
+        NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", message.attachment.mediaType];
+        NSString * name = message.attachment.humanReadableFileName != nil ? message.attachment.humanReadableFileName : NSLocalizedString(attachment_type, nil);
         title = name;
     }
 
@@ -1806,7 +2360,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     NSString * sizeString;
     long long contentSize;
     long long doneSize;
-    if ([attachment.message.isOutgoing isEqualToNumber: @NO]) {
+    if (attachment.incoming) {
         contentSize = [attachment.contentSize longLongValue];
         doneSize = [attachment.transferSize longLongValue];
     } else {
@@ -1823,7 +2377,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 
     if (attachment.state == kAttachmentTransferOnHold) {
-        NSString * question = attachment.message.isOutgoing.boolValue ? @"attachment_on_hold_upload_question" : @"attachment_on_hold_download_question";
+        NSString * question = attachment.outgoing ? @"attachment_on_hold_upload_question" : @"attachment_on_hold_download_question";
         return [NSString stringWithFormat: NSLocalizedString(question, nil), fileSize];
     }
 
@@ -1843,7 +2397,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             
     }
     if (subtitle == nil) {
-        NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment.mediaType, nil);
+        NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", attachment.mediaType];
+        NSString * name = attachment.humanReadableFileName != nil ? attachment.humanReadableFileName : NSLocalizedString(attachment_type, nil);
         subtitle = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
      }
     return subtitle;
@@ -1892,8 +2447,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) messageCell:(MessageCell *)theCell resendMessage:(id)sender {
     //NSLog(@"resendMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-    for (int i = 0; i < 10;++i) {
-        [self.chatBackend forwardMessage: message.body toContactOrGroup:message.contact toGroupMemberOnly:nil withAttachment:message.attachment];
+    for (int i = 0; i < 20;++i) {
+        double delayInSeconds = 0.5 * i;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            NSString * numberedBody = [NSString stringWithFormat:@"%d:%@", i, message.body];
+            [self.chatBackend forwardMessage: numberedBody toContactOrGroup:message.contact toGroupMemberOnly:nil withAttachment:message.attachment];
+        });
     }
 }
 
@@ -2007,7 +2567,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     // deletion of deliveries and attachment handled by cascade deletion policies in database model
     
-    //[self.managedObjectContext deleteObject: message];
     [AppDelegate.instance deleteObject:message];
     [self.chatBackend.delegate saveDatabase];
     
@@ -2043,6 +2602,18 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     } else if ([segue.identifier isEqualToString: @"showContact"]) {
         HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell: sender]];
         contactOrProfile = [(Delivery*)message.deliveries.anyObject sender];
+    } else if ([segue.identifier isEqualToString: @"newGroup"]) {
+        if (self.partner.isGroup) {
+            // make sure before calling this segue that all group members have a relationship (friends, invited or invitedMe)
+            GroupInStatuNascendi * newGroup = [GroupInStatuNascendi new];
+            Group * currentGroup = (Group*)self.partner;
+            [newGroup addGroupMemberContacts:currentGroup.otherMembers];
+            contactOrProfile = newGroup;
+        } else {
+            NSLog(@"ERROR: showGroup segue on non-group-partner");
+        }
+    } else if ([segue.identifier isEqualToString: @"unwindToRoot"]) {
+        NSLog(@"unwinding to %@", segue.destinationViewController);
     }
     if (contactOrProfile && [segue.destinationViewController respondsToSelector: @selector(setInspectedObject:)]) {
         [segue.destinationViewController setInspectedObject: contactOrProfile];
@@ -2279,7 +2850,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                 [self removeContactKVO: contact];
             }
         }];
-        [group removeObserver: self forKeyPath: @"members"];
+        [self removeMembersKVO:group];
     }
     [self.messageField removeObserver: self forKeyPath: @"contentSize"];
 }
@@ -2363,9 +2934,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) setInspectedObject:(Contact *)inspectedObject {
-    [AppDelegate.instance endInspecting:self.partner withInspector:self];
+    if (self.inspectedObject != nil) {
+        [AppDelegate.instance endInspecting:self.inspectedObject withInspector:self];
+    }
     self.partner = inspectedObject;
-    [AppDelegate.instance beginInspecting:self.partner withInspector:self];
+    if (self.inspectedObject != nil) {
+        [AppDelegate.instance beginInspecting:self.inspectedObject withInspector:self];
+    }
 }
 
 @end

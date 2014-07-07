@@ -30,6 +30,7 @@ static const NSInteger kJsonRpcMethodNotFound = -32601;
 
 // TODO: clean-up error handling
 
+
 static const NSTimeInterval kResponseTimeout = 30;
 
 @interface JsonRpcWebSocket () <SRWebSocketDelegate>
@@ -50,8 +51,9 @@ static const NSTimeInterval kResponseTimeout = 30;
 
 @property (nonatomic, assign) SEL  selector;
 @property (nonatomic, assign) BOOL isNotification;
+@property (nonatomic, assign) BOOL asyncResult;
 
-+ (JsonRpcHandler*) jsonRpcHanlder: (SEL) selector isNotification: (BOOL) notificationFlag;
++ (JsonRpcHandler*) jsonRpcHanlder: (SEL) selector isNotification: (BOOL) notificationFlag asyncResult:(BOOL)asyncResultFlag;
 
 @end
 
@@ -136,7 +138,11 @@ static const NSTimeInterval kResponseTimeout = 30;
 #pragma mark - JSON RPC
 
 - (void) registerIncomingCall:(NSString*) methodName withSelector:(SEL)selector isNotification:(BOOL)notificationFlag {
-    _rpcMethods[methodName] = [JsonRpcHandler jsonRpcHanlder: selector isNotification: notificationFlag];
+    _rpcMethods[methodName] = [JsonRpcHandler jsonRpcHanlder: selector isNotification: notificationFlag asyncResult:NO];
+}
+
+- (void) registerIncomingCall:(NSString*) methodName withSelector:(SEL)selector asyncResult:(BOOL)asyncResultFlag {
+    _rpcMethods[methodName] = [JsonRpcHandler jsonRpcHanlder: selector isNotification: NO asyncResult:asyncResultFlag];
 }
 
 - (void) unmarshall: (NSString*) jsonString{
@@ -192,14 +198,24 @@ static const NSTimeInterval kResponseTimeout = 30;
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
             [self.delegate performSelector: handler.selector withObject: request[@"params"]];
         } else {
-            id resultOrError = [self.delegate performSelector: handler.selector withObject: request[@"params"]];
-#pragma clang diagnostic pop
-            if ([resultOrError isKindOfClass: [JsonRpcError class]]) {
-                [self respondWithError: resultOrError id: request[@"id"]];
+            if (!handler.asyncResult) {
+                id resultOrError = [self.delegate performSelector: handler.selector withObject: request[@"params"]];
+                if ([resultOrError isKindOfClass: [JsonRpcError class]]) {
+                    [self respondWithError: resultOrError id: request[@"id"]];
+                } else {
+                    [self respondWithResult: resultOrError id: request[@"id"]];
+                }
             } else {
-                [self respondWithResult: resultOrError id: request[@"id"]];
+                [self.delegate performSelector: handler.selector withObject: request[@"params"] withObject:^(id resultOrError){
+                    if ([resultOrError isKindOfClass: [JsonRpcError class]]) {
+                        [self respondWithError: resultOrError id: request[@"id"]];
+                    } else {
+                        [self respondWithResult: resultOrError id: request[@"id"]];
+                    }
+                }];
             }
         }
+#pragma clang diagnostic pop
     } else {
         [self emitJsonRpcError: [NSString stringWithFormat: @"method '%@' not found", request[@"method"]] code: kJsonRpcMethodNotFound data: nil];
     }
@@ -393,7 +409,7 @@ static const NSTimeInterval kResponseTimeout = 30;
         NSTimer * timer = request[@"timer"];
         [timer invalidate];
         NSLog(@"JsonRpc: request %@ was flushed (connection was closed)", theKey);
-        handler(@"connection closed", NO);
+        handler(@{@"message":@"connection closed",@"code":@7003}, NO);
     }
     
 }
@@ -475,12 +491,15 @@ static const NSTimeInterval kResponseTimeout = 30;
 
 @implementation JsonRpcHandler
 
-+ (JsonRpcHandler*) jsonRpcHanlder: (SEL) selector isNotification: (BOOL) notificationFlag {
++ (JsonRpcHandler*) jsonRpcHanlder: (SEL) selector isNotification: (BOOL) notificationFlag asyncResult:(BOOL)asyncResultFlag {
     JsonRpcHandler * handler = [[JsonRpcHandler alloc] init];
     handler.selector = selector;
     handler.isNotification = notificationFlag;
+    handler.asyncResult = asyncResultFlag;
     return handler;
 }
+
+
 
 @end
 

@@ -112,6 +112,7 @@
 
 @dynamic state;
 @dynamic available;
+@dynamic uploadable;
 
 @synthesize transferConnection = _transferConnection;
 @synthesize transferError = _transferError;
@@ -183,11 +184,11 @@ NSArray * TransferStateName = @[@"detached",
 
 
 - (AttachmentState) _state {
-    if (self.message == nil) {
-        return kAttachmentDetached;
-    }
     if (self.contentSize == nil || [self.contentSize isEqualToNumber:@(0)]) {
         return kAttachmentEmpty;
+    }
+    if (self.message == nil) {
+        return kAttachmentDetached;
     }
     if ([self.contentSize isEqualToNumber: self.transferSize]) {
         return kAttachmentTransfered;
@@ -212,22 +213,42 @@ NSArray * TransferStateName = @[@"detached",
         return kAttachmentTransferScheduled;
     }
     if ([self.transferSize longLongValue]> 0) {
-        if ([self.message.isOutgoing boolValue] == YES) {
+        if (self.outgoing) {
             return kAttachmentUploadIncomplete;
         }
         return kAttachmentDownloadIncomplete;
     }
-    if (![self.message.isOutgoing boolValue] && [self overTransferLimit:NO]) {
+    if (self.message.isIncoming && [self overTransferLimit:NO]) {
         return kAttachmentTransferOnHold;
     }
 
     return kAttachmentWantsTransfer;
 }
 
+- (BOOL) outgoing {
+    return self.message.isOutgoing;
+}
+
+- (BOOL) incoming {
+    return self.message.isIncoming;
+}
+
+
 - (BOOL) available {
     AttachmentState myState = self.state;
-    return myState == kAttachmentTransfered || ([self.message.isOutgoing boolValue] == YES && !(myState <= kAttachmentEmpty));
+    return myState == kAttachmentTransfered || (self.outgoing && (myState != kAttachmentEmpty)) || (myState == kAttachmentDetached);
 }
+
+- (BOOL) uploadable {
+    AttachmentState myState = self.state;
+    return (myState == kAttachmentWantsTransfer || myState == kAttachmentUploadIncomplete) && self.outgoing;
+}
+
+- (BOOL) downloadable {
+    AttachmentState myState = self.state;
+    return (myState == kAttachmentWantsTransfer || myState == kAttachmentDownloadIncomplete) && !self.outgoing;
+}
+
 
 - (BOOL) overTransferLimit:(BOOL)isOutgoing {
     BOOL reachableViaWLAN = [self.chatBackend.delegate.internetReachabilty isReachableViaWiFi];
@@ -861,7 +882,7 @@ NSArray * TransferStateName = @[@"detached",
 
 - (void) uploadData {
     if (CONNECTION_TRACE) {NSLog(@"Attachment:upload uploadURL=%@, attachment=%@", self.uploadURL, self );}
-    if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+    if (self.incoming) {
         NSLog(@"ERROR: uploadAttachment called on incoming attachment");
         return;
     }
@@ -890,7 +911,7 @@ NSArray * TransferStateName = @[@"detached",
 
 - (void) uploadStream {
     if (CONNECTION_TRACE) {NSLog(@"Attachment:uploadStream uploadURL=%@, attachment=%@", self.uploadURL, self );}
-    if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+    if (self.incoming) {
         NSLog(@"ERROR: uploadAttachment called on incoming attachment");
         return;
     }
@@ -932,6 +953,7 @@ NSArray * TransferStateName = @[@"detached",
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             [self registerBackgroundTask];
             [self notifyTransferStarted];
+            [self.chatBackend uploadStarted:self];
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
@@ -1006,7 +1028,7 @@ NSArray * TransferStateName = @[@"detached",
 
 - (void) tryResumeUploadStream {
     if (CONNECTION_TRACE) {NSLog(@"tryResumeUploadStream uploadURL=%@, attachment=%@", self.uploadURL, self );}
-    if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+    if (self.incoming) {
         NSLog(@"ERROR: uploadAttachment called on incoming attachment");
         return;
     }
@@ -1065,6 +1087,7 @@ NSArray * TransferStateName = @[@"detached",
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
             [self registerBackgroundTask];
             [self notifyTransferStarted];
+            [self.chatBackend uploadStarted:self];
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
@@ -1126,8 +1149,8 @@ NSArray * TransferStateName = @[@"detached",
 
 - (void) resumeDownload {
     if (CONNECTION_TRACE) {NSLog(@"Attachment resumeDownload remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );}
-    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
-        NSLog(@"ERROR: downloadAttachment called on outgoing attachment, isOutgoing = %@", self.message.isOutgoing);
+    if (self.outgoing) {
+        NSLog(@"ERROR: downloadAttachment called on outgoing attachment, isOutgoingFlag = %@", self.message.isOutgoingFlag);
         return;
     }
     if (self.transferConnection != nil) {
@@ -1202,8 +1225,8 @@ NSArray * TransferStateName = @[@"detached",
     self.didResume = NO; // just for TESTING
 #endif
     if (CONNECTION_TRACE) {NSLog(@"Attachment download remoteURL=%@, attachment.contentSize=%@", self.remoteURL, self.contentSize );}
-    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
-        NSLog(@"ERROR: downloadAttachment called on outgoing attachment, isOutgoing = %@", self.message.isOutgoing);
+    if (self.outgoing) {
+        NSLog(@"ERROR: downloadAttachment called on outgoing attachment, isOutgoingFlag = %@", self.message.isOutgoingFlag);
         return;
     }
     if (self.transferConnection != nil) {
@@ -1288,6 +1311,9 @@ NSArray * TransferStateName = @[@"detached",
         }
         NSLog(@"pausedTransfer transfer, cipherTransferSize=%@, cipheredSize=%@",self.cipherTransferSize,self.cipheredSize);
         self.transferPaused = [[NSDate alloc] init];
+        if (self.outgoing) {
+            [self.chatBackend uploadPaused:self];
+        }
     }
 }
 
@@ -1295,7 +1321,14 @@ NSArray * TransferStateName = @[@"detached",
     NSLog(@"unpausedTransfer");
     if (self.transferPaused != nil) {
         self.transferPaused = nil;
-        [self.chatBackend checkTransferQueues];
+        if (self.outgoing) {
+            [self.chatBackend uploadStarted:self];
+            [self.chatBackend enqueueUploadOfAttachment:self];
+            [self.chatBackend checkUploadQueue];
+        } else {
+            [self.chatBackend enqueueDownloadOfAttachment:self];
+            [self.chatBackend checkDowloadQueue];
+        }
     }
 }
 
@@ -1311,7 +1344,7 @@ NSArray * TransferStateName = @[@"detached",
 - (void)pressedButton: (id)sender {
     // NSLog(@"Attachment pressedButton %@", sender);
     self.transferFailures = 0;
-    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+    if (self.outgoing) {
         // [self.chatBackend enqueueUploadOfAttachment:self];
         [self upload];
     } else {
@@ -1640,7 +1673,7 @@ NSArray * TransferStateName = @[@"detached",
             NSString * myDescription = [NSString stringWithFormat:@"Attachment transferConnection didReceiveResponse http status code =%ld", self.transferHttpStatusCode];
             if (CONNECTION_TRACE) {NSLog(@"%@", myDescription);}
             self.transferError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 667 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-            if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+            if (self.outgoing) {
                 [self.chatBackend uploadFailed:self];
             } else {
                 [self.chatBackend downloadFailed:self];
@@ -1793,7 +1826,7 @@ NSArray * TransferStateName = @[@"detached",
 {
     if (connection == _transferConnection) {
         if (TRANSFER_TRACE) {NSLog(@"Attachment transferConnection didReceiveData len=%u", [data length]);}
-        if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+        if (self.incoming) {
             NSError *myError = nil;
             if (self.resumePos != 0) {
                 NSUInteger myFileSize = [[Attachment fileSize:self.ownedURL withError:&myError] unsignedLongValue];
@@ -1899,7 +1932,7 @@ NSArray * TransferStateName = @[@"detached",
         self.transferConnection = nil;
         self.transferError = error;
         [self notifyTransferFinished];
-        if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+        if (self.outgoing) {
             [self.chatBackend uploadFailed:self];
         } else {
             [self.chatBackend downloadFailed:self];
@@ -1954,7 +1987,7 @@ NSArray * TransferStateName = @[@"detached",
         if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection connectionDidFinishLoading %@", connection);}
         self.transferConnection = nil;
 
-        if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+        if (self.incoming) {
             // finish download
             NSError *myError = nil;
             NSData * plainTextData = [self.decryptionEngine finishWithError:&myError];
@@ -2164,7 +2197,7 @@ NSArray * TransferStateName = @[@"detached",
         NSError *error;
         NSDictionary * vars = @{ @"ownedURL" : self.ownedURL};
         NSFetchRequest *fetchRequest = [delegate.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByOwnedURL" substitutionVariables: vars];
-        NSArray *messages = [delegate.managedObjectContext executeFetchRequest:fetchRequest error:&error];
+        NSArray *messages = [delegate.currentObjectContext executeFetchRequest:fetchRequest error:&error];
         if (messages == nil) {
             NSLog(@"Fetch request failed: %@", error);
             abort();

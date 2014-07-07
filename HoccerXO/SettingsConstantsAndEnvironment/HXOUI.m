@@ -89,6 +89,10 @@ static HXOUI * _currentTheme;
     return [UIColor colorWithHexString: @"#8EC12C"];
 }
 
+- (UIColor*) avatarOnlineInBackgroundLedColor {
+    return [UIColor colorWithHexString: @"#E0CC34"];
+}
+
 - (UIColor*) verifiedKeyColor {
     return [UIColor colorWithHexString: @"#3ABB7D"];
 }

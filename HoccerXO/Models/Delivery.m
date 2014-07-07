@@ -16,12 +16,39 @@
 #import "NSData+CommonCrypto.h"
 #import "HXOBackend.h" // for class crypto methods
 #import "Group.h"
+#import "Attachment.h"
 
-NSString * const kDeliveryStateNew        = @"new";
-NSString * const kDeliveryStateDelivering = @"delivering";
-NSString * const kDeliveryStateDelivered  = @"delivered";
-NSString * const kDeliveryStateConfirmed  = @"confirmed";
-NSString * const kDeliveryStateFailed     = @"failed";
+NSString * const kDeliveryStateNew                          = @"new";
+NSString * const kDeliveryStateDelivering                   = @"delivering";
+NSString * const kDeliveryStateDeliveredPrivate             = @"deliveredPrivate";
+NSString * const kDeliveryStateDeliveredPrivateAcknowledged = @"deliveredPrivateAcknowledged";
+NSString * const kDeliveryStateDeliveredUnseen              = @"deliveredUnseen";
+NSString * const kDeliveryStateDeliveredUnseenAcknowledged  = @"deliveredUnseenAcknowledged";
+NSString * const kDeliveryStateDeliveredSeen                = @"deliveredSeen";
+NSString * const kDeliveryStateDeliveredSeenAcknowledged    = @"deliveredSeenAcknowledged";
+NSString * const kDeliveryStateFailed                       = @"failed";
+NSString * const kDeliveryStateRejected                     = @"rejected";
+NSString * const kDeliveryStateAborted                      = @"aborted";
+NSString * const kDeliveryStateAbortedAcknowledged          = @"aborteddelivered";
+NSString * const kDeliveryStateFailedAcknowledged           = @"failedAcknowledged";
+NSString * const kDeliveryStateRejectedAcknowledged         = @"rejectedAcknowledged";
+
+
+NSString * const kDelivery_ATTACHMENT_STATE_NONE                            = @"none";
+NSString * const kDelivery_ATTACHMENT_STATE_NEW                             = @"new";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOADING                       = @"uploading";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_PAUSED                   = @"paused";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOADED                        = @"uploaded";
+NSString * const kDelivery_ATTACHMENT_STATE_RECEIVED                        = @"received";
+NSString * const kDelivery_ATTACHMENT_STATE_RECEIVED_ACKNOWLEDGED           = @"receivedAcknowledged";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED                   = @"uploadFailed";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED_ACKNOWLEDGED      = @"uploadFailedAcknowledged";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED                  = @"uploadAborted";
+NSString * const kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED_ACKNOWLEDGED     = @"uploadAbortedAcknowledged";
+NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED                 = @"downloadFailed";
+NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED_ACKNOWLEDGED    = @"downloadFailedAcknowledged";
+NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED                = @"downloadAborted";
+NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"downloadAbortedAcknowledged";
 
 @implementation Delivery
 
@@ -37,6 +64,206 @@ NSString * const kDeliveryStateFailed     = @"failed";
 @dynamic timeChanged;
 @dynamic timeChangedMillis;
 @dynamic keyId;
+@dynamic attachmentState;
+
+-(BOOL)isGroupDelivery {
+    return self.group != nil && self.receiver == nil;
+}
+
+
+-(BOOL)isStateFailed {
+    return [kDeliveryStateFailed isEqualToString:self.state] || [kDeliveryStateFailedAcknowledged isEqualToString:self.state];
+}
+
+-(BOOL)isInFinalState {
+    return [Delivery isAcknowledgedState:self.state] && [Delivery isAcknowledgedAttachmentState:self.attachmentState] && !self.isUnseen;
+}
+
+-(BOOL)isDelivered {
+    return [Delivery isDeliveredState:self.state] || [@"confirmed" isEqualToString:self.state]; // confirmed is to handle locally stored legacy state
+}
+
+-(BOOL)isAborted {
+    return [Delivery isAbortedState:self.state];
+}
+
+-(BOOL)isRejected {
+    return [Delivery isRejectedState:self.state];
+}
+
+-(BOOL)isFailed {
+    return [Delivery isFailedState:self.state];
+}
+
+-(BOOL)isSeen {
+    return [Delivery isSeenState:self.state];
+}
+
+-(BOOL)isUnseen {
+    return [Delivery isUnseenState:self.state];
+}
+
+-(BOOL)isPrivate {
+    return [Delivery isPrivateState:self.state];
+}
+
+-(BOOL)isStateDelivering {
+    return [kDeliveryStateDelivering isEqualToString:self.state];
+}
+
+-(BOOL)isStateNew {
+    return [kDeliveryStateNew isEqualToString:self.state];
+}
+
+-(BOOL)isFailure {
+    return [Delivery isFailureState:self.state];
+}
+
+-(BOOL)isPending {
+    return [Delivery isPendingState:self.state];
+}
+
+-(BOOL)isAttachmentReceived {
+    return [Delivery isAttachmentReceivedState:self.attachmentState];
+}
+
+-(BOOL)isAttachmentFailure {
+    return [Delivery isAttachmentFailureState:self.attachmentState];
+}
+
+-(BOOL)isAttachmentPending {
+    return [Delivery isAttachmentPendingState:self.attachmentState];
+}
+
+
+// attachment is not yet received
+-(BOOL)isMissingAttachment {
+    return ![kDelivery_ATTACHMENT_STATE_NONE isEqualToString:self.attachmentState] && !self.isAttachmentReceived;
+}
+
+-(BOOL)attachmentDownloadable {
+    return self.message.attachment != nil &&
+    self.message.attachment.downloadable &&
+    ([kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:self.attachmentState] ||
+     [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:self.attachmentState]);
+}
+
+-(BOOL)attachmentUploadable {
+    return self.message.attachment != nil &&
+    self.message.attachment.uploadable &&
+    !self.isFailure &&
+    (self.isDelivered || self.isStateDelivering);
+}
+
+
++(BOOL)isDeliveredState:(NSString*) state {
+    return
+    [kDeliveryStateDeliveredSeen isEqualToString:state] ||
+    [kDeliveryStateDeliveredSeenAcknowledged isEqualToString:state] ||
+    [kDeliveryStateDeliveredUnseen isEqualToString:state] ||
+    [kDeliveryStateDeliveredUnseenAcknowledged isEqualToString:state] ||
+    [kDeliveryStateDeliveredPrivate isEqualToString:state] ||
+    [kDeliveryStateDeliveredPrivateAcknowledged isEqualToString:state];
+}
+
++(BOOL)isFailureState:(NSString*) state {
+    return [self isFailedState:state] || [self isRejectedState:state] || [self isAbortedState:state];
+}
+
++(BOOL)isFailedState:(NSString*) state {
+    return [kDeliveryStateFailed isEqualToString:state] ||
+    [kDeliveryStateFailedAcknowledged isEqualToString:state];
+}
+
++(BOOL)isRejectedState:(NSString*) state {
+    return [kDeliveryStateRejected isEqualToString:state] ||
+    [kDeliveryStateRejectedAcknowledged isEqualToString:state];
+}
+
++(BOOL)isAbortedState:(NSString*) state {
+    return [kDeliveryStateAborted isEqualToString:state] ||
+    [kDeliveryStateAbortedAcknowledged isEqualToString:state];
+}
+
+
++(BOOL)isAcknowledgedState:(NSString*) state {
+    return [kDeliveryStateDeliveredSeenAcknowledged isEqualToString:state] ||
+    [kDeliveryStateDeliveredUnseenAcknowledged isEqualToString:state] ||
+    [kDeliveryStateDeliveredPrivateAcknowledged isEqualToString:state] ||
+    [kDeliveryStateAbortedAcknowledged isEqualToString:state] ||
+    [kDeliveryStateRejectedAcknowledged isEqualToString:state] ||
+    [kDeliveryStateFailedAcknowledged isEqualToString:state];
+}
+
++(BOOL)isPendingState:(NSString*) state {
+    return [kDeliveryStateNew isEqualToString:state] ||
+    [kDeliveryStateDelivering isEqualToString:state];
+}
+
++(BOOL)isSeenState:(NSString*) state {
+    return [kDeliveryStateDeliveredSeen isEqualToString:state] ||
+    [kDeliveryStateDeliveredSeenAcknowledged isEqualToString:state];
+}
+
++(BOOL)isUnseenState:(NSString*) state {
+    return [kDeliveryStateDeliveredUnseen isEqualToString:state] ||
+    [kDeliveryStateDeliveredUnseenAcknowledged isEqualToString:state];
+}
+
++(BOOL)isPrivateState:(NSString*) state {
+    return [kDeliveryStateDeliveredPrivate isEqualToString:state] ||
+    [kDeliveryStateDeliveredPrivateAcknowledged isEqualToString:state];
+}
+
++(BOOL)shouldAcknowledgeStateForOutgoing:(NSString*) state {
+    return [kDeliveryStateDeliveredSeen isEqualToString:state] ||
+    [kDeliveryStateDeliveredUnseen isEqualToString:state] ||
+    [kDeliveryStateDeliveredPrivate isEqualToString:state] ||
+    [kDeliveryStateAborted isEqualToString:state] ||
+    [kDeliveryStateRejected isEqualToString:state] ||
+    [kDeliveryStateFailed isEqualToString:state];
+}
+
++(BOOL)isAttachmentReceivedState:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_RECEIVED_ACKNOWLEDGED isEqualToString:attachmentState];
+}
+
++(BOOL)isAttachmentPendingState:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_NEW isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOAD_PAUSED isEqualToString:attachmentState];
+}
+
+
++(BOOL)isAttachmentFailureState:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED isEqualToString:attachmentState];
+}
+
++(BOOL)isAcknowledgedAttachmentState:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_NONE isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_RECEIVED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED isEqualToString:attachmentState];
+}
+
++(BOOL)shouldAcknowledgeAttachmentStateForOutgoing:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED isEqualToString:attachmentState];
+}
+
++(BOOL)shouldAcknowledgeAttachmentStateForIncoming:(NSString*) attachmentState {
+    return [kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED_ACKNOWLEDGED isEqualToString:attachmentState] ||
+    [kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED_ACKNOWLEDGED isEqualToString:attachmentState];
+}
+
 
 -(NSString*) keyCiphertextString {
     return [self.keyCiphertext asBase64EncodedString];
@@ -53,7 +280,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
 }
 
 -(NSString*) receiverKeyId {
-    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+    if (self.message.isOutgoing) {
         // for outgoing deliveries
         if ([self.message.contact.type isEqualToString:@"Group"]) {
             self.keyId = @"0000000000000000";  // sent arbitrary string, will be substituted by server
@@ -75,7 +302,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
 
 // this function will yield the plaintext the keyCiphertext by decrypting it with the private key
 - (NSData *) keyCleartext {
-    if ([self.message.isOutgoing isEqualToNumber: @YES]) {
+    if (self.message.isOutgoing) {
         return nil; // can not decrypt outgoing key
     }
     CCRSA * rsa = [CCRSA sharedInstance];
@@ -92,7 +319,7 @@ NSString * const kDeliveryStateFailed     = @"failed";
 - (void) setKeyCleartext:(NSData *) theMessageKey {
     self.keyCiphertext = nil;
     // check a lot of preconditions just in case...
-    if ([self.message.isOutgoing isEqualToNumber: @NO]) {
+    if (self.message.isIncoming) {
         return;
     }
     if (![self.state isEqualToString:kDeliveryStateNew]) {
@@ -149,7 +376,8 @@ NSString * const kDeliveryStateFailed     = @"failed";
               @"timeAccepted"  : @"message.timeAcceptedMillis",
               @"timeChanged"   : @"timeChangedMillis",
               @"keyId"         : @"receiverKeyId",
-              @"keyCiphertext" : @"keyCiphertextString"
+              @"keyCiphertext" : @"keyCiphertextString",
+              @"attachmentState" : @"attachmentState"
               };
 }
 

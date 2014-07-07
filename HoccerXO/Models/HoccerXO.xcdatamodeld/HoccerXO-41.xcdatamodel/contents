@@ -66,7 +66,7 @@
         <attribute name="state" optional="YES" attributeType="String" defaultValueString="new" syncable="YES"/>
         <attribute name="timeChanged" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupDeliveries" inverseEntity="Group" syncable="YES"/>
-        <relationship name="message" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="HXOMessage" inverseName="deliveries" inverseEntity="HXOMessage" syncable="YES"/>
+        <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="deliveries" inverseEntity="HXOMessage" syncable="YES"/>
         <relationship name="receiver" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveriesReceived" inverseEntity="Contact" syncable="YES"/>
         <relationship name="sender" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveriesSent" inverseEntity="Contact" syncable="YES"/>
     </entity>

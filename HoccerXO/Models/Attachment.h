@@ -111,7 +111,13 @@ typedef enum AttachmentStates {
 
 @property (nonatomic) NSUInteger resumePos;
 
+// These properties only consider attachment state
+// See properties in Delivery to also consider attachment delivery state
 @property (readonly) BOOL available; // return true if attachment is outgoing or transfered
+@property (readonly) BOOL outgoing;  // return true if attachment is outgoing
+@property (readonly) BOOL incoming;  // return true if attachment is incoming
+@property (readonly) BOOL uploadable; // return true if attachment is outgoing, complete and not yet transfered
+@property (readonly) BOOL downloadable; // return true if attachment is outgoing, complete and not yet transfered
 
 -(void) computeSourceMac;
 -(void) computeDestMac;

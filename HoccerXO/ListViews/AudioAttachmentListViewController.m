@@ -67,7 +67,7 @@
 
 - (NSManagedObjectContext *)managedObjectContext {
     if (_managedObjectContext == nil) {
-        _managedObjectContext = [[AppDelegate instance] managedObjectContext];
+        _managedObjectContext = [[AppDelegate instance] mainObjectContext];
     }
     return _managedObjectContext;
 }

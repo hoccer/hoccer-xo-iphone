@@ -1100,14 +1100,11 @@ typedef enum ActionSheetTags {
     [self.navigationController popViewControllerAnimated: YES];
     NSLog(@"deleting contact with relationshipState %@", contact.relationshipState);
     if ([contact.relationshipState isEqualToString: kRelationStateGroupFriend] || [contact.relationshipState isEqualToString: kRelationStateKept]) {
-        [self.chatBackend handleDeletionOfContact:contact];
+        [self.chatBackend handleDeletionOfContact:contact withForce:YES];
         return;
     }
     [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
         if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
-        //NSManagedObjectContext * moc = self.appDelegate.managedObjectContext;
-        //[moc deleteObject: contact];
-        //[self.appDelegate saveDatabase];
     }];
 }
 

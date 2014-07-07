@@ -13,6 +13,7 @@
 @class SRWebSocket;
 
 typedef void (^ResponseBlock)(id responseOrError, BOOL success);
+typedef void (^ResultBlock)(id responseOrError);
 
 @protocol JsonRpcWebSocketDelegate <NSObject>
 
@@ -44,6 +45,7 @@ typedef void (^ResponseBlock)(id responseOrError, BOOL success);
 - (void) notify: (NSString*) method withParams: (id) params;
 - (void) invoke: (NSString*) method withParams: (id) params onResponse: (ResponseBlock) handler;
 - (void) registerIncomingCall: (NSString*) methodName withSelector: (SEL) selector isNotification: (BOOL) notificationFlag;
+- (void) registerIncomingCall:(NSString*) methodName withSelector:(SEL)selector asyncResult:(BOOL) asyncResultFlag;
 - (int) numberOfOpenRequests;
 - (int) numberOfFlushedRequests;
 

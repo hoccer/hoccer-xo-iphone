@@ -43,6 +43,7 @@
         <attribute name="publicKeyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="relationshipLastChanged" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="relationshipState" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="relationshipUnblockState" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="status" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="type" attributeType="String" defaultValueString="Contact" indexed="YES" syncable="YES"/>
         <attribute name="verifiedKey" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -55,7 +56,7 @@
             <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage" predicateString="contact == $FETCH_SOURCE AND timeAccepted == $FETCH_SOURCE.latestMessageTime"/>
         </fetchedProperty>
         <fetchedProperty name="unreadMessages" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage" predicateString="contact == $FETCH_SOURCE AND isRead == NO"/>
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="HXOMessage" predicateString="contact == $FETCH_SOURCE AND isReadFlag == NO"/>
         </fetchedProperty>
         <userInfo/>
     </entity>
@@ -66,7 +67,7 @@
         <attribute name="state" optional="YES" attributeType="String" defaultValueString="new" syncable="YES"/>
         <attribute name="timeChanged" optional="YES" attributeType="Date" syncable="YES"/>
         <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupDeliveries" inverseEntity="Group" syncable="YES"/>
-        <relationship name="message" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="HXOMessage" inverseName="deliveries" inverseEntity="HXOMessage" syncable="YES"/>
+        <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="deliveries" inverseEntity="HXOMessage" syncable="YES"/>
         <relationship name="receiver" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveriesReceived" inverseEntity="Contact" syncable="YES"/>
         <relationship name="sender" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveriesSent" inverseEntity="Contact" syncable="YES"/>
     </entity>
@@ -107,8 +108,8 @@
         <attribute name="cachedMessageFontSize" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="cachedPortraitCellHeight" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="destinationMAC" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="isOutgoing" attributeType="Boolean" syncable="YES"/>
-        <attribute name="isRead" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="isOutgoingFlag" attributeType="Boolean" elementID="isOutgoing" syncable="YES"/>
+        <attribute name="isReadFlag" attributeType="Boolean" defaultValueString="NO" elementID="isRead" syncable="YES"/>
         <attribute name="messageId" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="messageTag" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="outgoingCryptoKey" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -132,11 +133,11 @@
     <entity name="Invite" representedClassName="Invite" syncable="YES">
         <attribute name="token" attributeType="String" syncable="YES"/>
     </entity>
-    <fetchRequest name="AllOutgoingAttachments" entity="Attachment" predicateString="message.isOutgoing != 0"/>
-    <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing == 0 AND transferFailures &lt; $max_retries"/>
-    <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoing != 0 AND transferFailures &lt; $max_retries AND message != nil"/>
+    <fetchRequest name="AllOutgoingAttachments" entity="Attachment" predicateString="message.isOutgoingFlag != 0"/>
+    <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoingFlag == 0 AND transferFailures &lt; $max_retries"/>
+    <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoingFlag != 0 AND transferFailures &lt; $max_retries AND message != nil"/>
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
-    <fetchRequest name="ContactsLastUpdatedBefore" entity="Contact" predicateString="type == &quot;Contacts&quot; AND (lastUpdateReceived &lt; $lastUpdatedBefore OR lastUpdateReceived == nil) AND relationshipState != &quot;kept&quot;"/>
+    <fetchRequest name="ContactsLastUpdatedBefore" entity="Contact" predicateString="type == &quot;Contacts&quot; AND ((lastUpdateReceived &lt; $lastUpdatedBefore) OR (lastUpdateReceived == nil)) AND relationshipState != &quot;kept&quot;"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
     <fetchRequest name="DeliveryByMessageIdAndReceiverId" entity="Delivery" predicateString="$messageId == message.messageId AND $receiverId == receiver.clientId"/>
     <fetchRequest name="DeliveryByMessageTagAndGroupId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $groupId == group.clientId"/>
@@ -147,6 +148,7 @@
     <fetchRequest name="GroupMembershipsByGroup" entity="GroupMembership" predicateString="group == $group"/>
     <fetchRequest name="GroupsLastUpdatedBefore" entity="Group" predicateString="type == &quot;Group&quot; AND (lastUpdateReceived &lt; $lastUpdatedBefore OR lastUpdateReceived == nil) AND groupState != &quot;kept&quot;"/>
     <fetchRequest name="MessageByMessageId" entity="HXOMessage" predicateString="messageId == $messageId"/>
+    <fetchRequest name="MessageByMessageTag" entity="HXOMessage" predicateString="messageTag == $messageTag"/>
     <fetchRequest name="MessagesByContact" entity="HXOMessage" predicateString="contact == $contact"/>
     <fetchRequest name="MessagesByContactAfterTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted > $afterTime AND timeAccepted &lt; $beforeTime"/>
     <fetchRequest name="MessagesByContactAfterTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted > $afterTime AND timeAccepted &lt;= $untilTime"/>
@@ -155,7 +157,7 @@
     <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="390"/>
-        <element name="Contact" positionX="0" positionY="0" width="128" height="434"/>
+        <element name="Contact" positionX="0" positionY="0" width="128" height="449"/>
         <element name="Delivery" positionX="0" positionY="0" width="128" height="180"/>
         <element name="Group" positionX="0" positionY="0" width="128" height="210"/>
         <element name="GroupMembership" positionX="0" positionY="0" width="128" height="255"/>

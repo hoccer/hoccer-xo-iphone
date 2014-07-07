@@ -208,6 +208,15 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     self.ledLayer.opacity = isPresentFlag ? 1 : 0;
 }
 
+- (void) setIsInBackground:(BOOL)isInBackground {
+    _isInBackground = isInBackground;
+    if (isInBackground) {
+        self.ledLayer.fillColor = [HXOUI theme].avatarOnlineInBackgroundLedColor.CGColor;
+    } else {
+        self.ledLayer.fillColor = [HXOUI theme].avatarOnlineLedColor.CGColor;
+    }
+}
+
 - (CGFloat) blockedSignPadding {
     CGFloat t = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
     return ceilf(kHXOGridSpacing * (kBlockedSignPaddingFactor * t + kBlockedSignPaddingOffset));

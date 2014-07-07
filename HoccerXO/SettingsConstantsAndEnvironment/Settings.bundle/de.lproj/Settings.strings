@@ -64,6 +64,8 @@
 "tutorial_button_title" = "Anleitung";
 "faq_button_title"      = "FAQ";
 
+"confirm_seen_messages" = "Lesebestätigung senden";
+
 "full_sync_title"="Immer voll synchr.";
 
 "Sign Messages"="Signieren";

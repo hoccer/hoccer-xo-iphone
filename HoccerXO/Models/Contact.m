@@ -15,6 +15,7 @@
 
 #import "Group.h"
 #import "GroupMembership.h"
+#import "AppDelegate.h"
 
 // const float kTimeSectionInterval = 2 * 60;
 
@@ -29,7 +30,7 @@
 @dynamic nickName;
 @dynamic alias;
 @dynamic status;
-@dynamic isNearbyTag;
+//@dynamic isNearbyTag;
 
 // @dynamic currentTimeSection;
 @dynamic unreadMessages;
@@ -52,16 +53,25 @@
 @dynamic groupMembershipList;
 
 @synthesize rememberedLastVisibleChatCell;
-@synthesize friendMessageShown;
+@synthesize deletedObject;
 
 NSString * const kRelationStateNone        = @"none";
 NSString * const kRelationStateFriend      = @"friend";
 NSString * const kRelationStateBlocked     = @"blocked";
+NSString * const kRelationStateInvited     = @"invited";
+NSString * const kRelationStateInvitedMe   = @"invitedMe";
 NSString * const kRelationStateGroupFriend = @"groupfriend";
-NSString * const kRelationStateKept        = @"kept";
+NSString * const kRelationStateInternalKept= @"kept";
+
+NSString * const kPresenceStateOnline = @"online";
+NSString * const kPresenceStateOffline = @"offline";
+NSString * const kPresenceStateBackground = @"background";
+NSString * const kPresenceStateTyping = @"typing";
+
 
 @dynamic publicKeyString;
 @dynamic relationshipState;
+@dynamic relationshipUnblockState;
 @dynamic relationshipLastChanged;
 @dynamic relationshipLastChangedMillis;
 
@@ -168,22 +178,43 @@ NSString * const kRelationStateKept        = @"kept";
 
 
 - (NSString*) nickNameWithStatus {
+
+    if (self.isGroup && self.isNearby) {
+        if (self.isKeptGroup) {
+            return NSLocalizedString(@"group_name_nearby_kept", nil);
+        } else {
+            Group * group = (Group*)self;
+            NSUInteger otherCount = group.otherMembers.count;
+            if (otherCount > 0) {
+                return [NSString stringWithFormat:NSLocalizedString(@"group_name_nearby_active", nil), otherCount];
+            } else {
+                return NSLocalizedString(@"group_name_nearby_empty", nil);
+            }
+        }
+    }
     NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
     NSString * statusString = nil;
-    if (self.isKept) {
-        statusString = @"❌";
+    if (self.isInvited) {
+        statusString = @"✪";
+    } else if (self.invitedMe) {
+        statusString = @"★";
+    } else if (self.isKept) {
+        statusString = @"❄";
     } else if (self.isBlocked) {
-        statusString = nil;
+        statusString = @""; // We have already UI for blocked state
     } else if (self.isGroup && [(Group*)self otherJoinedMembers].count == 0) {
-        statusString = @"⭕";
-    } else if (self.isNotRelated) {
-        statusString = @"❓";
-    } else if (self.isGroupFriend) {
-        statusString = @"🔗";
+        statusString = @"◦";
+    } else if (!self.isGroup && self.isNotRelated) {
+        statusString = @"✢";
+    } else if (!self.isGroup && self.isGroupFriend) {
+        statusString = @"❖";
     } else if (self.isTyping) {
-        statusString = @"💬";
+        //statusString = @"✍"; //writing hand
+        //statusString = @"✎"; //Pen
+        //statusString = @"➽"; //arrow
+        statusString = @"↵"; //arrow
     } else if ( self.isBackground) {
-        statusString = @"💤";
+        statusString = @""; // should be yellow online indicator
     } else if ( ! self.connectionStatus || self.isConnected || self.isOffline) {
         statusString = nil;
     } else {
@@ -201,6 +232,18 @@ NSString * const kRelationStateKept        = @"kept";
     return [kRelationStateBlocked isEqualToString: self.relationshipState];
 }
 
+- (BOOL) isInvited {
+    return [kRelationStateInvited isEqualToString: self.relationshipState];
+}
+
+- (BOOL) invitedMe {
+    return [kRelationStateInvitedMe isEqualToString: self.relationshipState];
+}
+    
+- (BOOL) isInvitable {
+    return !self.isFriend && !self.invitedMe && !self.isInvited;
+}
+
 - (BOOL) isFriend {
     return [kRelationStateFriend isEqualToString: self.relationshipState];
 }
@@ -210,10 +253,10 @@ NSString * const kRelationStateKept        = @"kept";
 }
 
 - (BOOL) isKeptRelation {
-    return [kRelationStateKept isEqualToString: self.relationshipState];
+    return [kRelationStateInternalKept isEqualToString: self.relationshipState];
 }
 - (BOOL) isKeptGroup {
-    return [kRelationStateKept isEqualToString: self.myGroupMembership.group.groupState];
+    return [kRelationStateInternalKept isEqualToString: self.myGroupMembership.group.groupState];
 }
 
 - (BOOL) isKept {
@@ -225,23 +268,23 @@ NSString * const kRelationStateKept        = @"kept";
 }
 
 - (BOOL) isNotRelated {
-    return [kRelationStateNone isEqualToString: self.relationshipState];
+    return self.relationshipState == nil || [kRelationStateNone isEqualToString: self.relationshipState];
 }
 
 - (BOOL) isOffline {
-    return self.connectionStatus == nil || [ @"offline" isEqualToString: self.connectionStatus];
+    return self.connectionStatus == nil || [ kPresenceStateOffline isEqualToString: self.connectionStatus];
 }
 
 - (BOOL) isBackground {
-    return [@"background" isEqualToString: self.connectionStatus];
+    return [kPresenceStateBackground isEqualToString: self.connectionStatus];
 }
 
 - (BOOL) isOnline {
-    return [@"online" isEqualToString: self.connectionStatus];
+    return [kPresenceStateOnline isEqualToString: self.connectionStatus];
 }
 
 - (BOOL) isTyping {
-    return [@"typing" isEqualToString: self.connectionStatus];
+    return [kPresenceStateTyping isEqualToString: self.connectionStatus];
 }
 
 - (BOOL) isPresent {
@@ -253,7 +296,7 @@ NSString * const kRelationStateKept        = @"kept";
 }
 
 - (BOOL) isNearbyContact {
-    return [@"YES" isEqualToString: self.isNearbyTag];
+    return self.isMemberinNearbyGroup;
 }
 
 - (BOOL) isNearby {
@@ -263,13 +306,22 @@ NSString * const kRelationStateKept        = @"kept";
         return self.isNearbyContact;
     }
 }
-
+    
+- (BOOL) isMemberinNearbyGroup {
+    NSSet * thGroupSet = [self.groupMemberships objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.group.isNearbyGroup && obj.group.isExistingGroup;
+    }];
+    return thGroupSet.count > 0;
+}
+    
+/*
 -(void) updateNearbyFlag {
     NSSet * myMemberships = self.groupMemberships;
     BOOL isNearby = NO;
     for (GroupMembership * memberShip in myMemberships) {
-        if (memberShip.group.isExistingGroup && memberShip.group.isNearbyGroup) {
+        if (memberShip.isNearbyMember) {
             isNearby = YES;
+            break;
         }
     }
     if (isNearby != self.isNearbyContact) {
@@ -280,9 +332,9 @@ NSString * const kRelationStateKept        = @"kept";
         }
     }
 }
-
+*/
 - (NSString*) groupMembershipList {
-    NSLog(@"groupMembershipList called on contact %@",self);
+    // NSLog(@"groupMembershipList called on contact %@",self);
     NSMutableArray * groups = [[NSMutableArray alloc] init];
 
     [groups addObject: @""];
@@ -302,7 +354,7 @@ NSString * const kRelationStateKept        = @"kept";
     if (groups.count == 0) {
         return @"-";
     }
-    NSLog(@"groupMembershipList returns %@",[groups componentsJoinedByString:@", "]);
+    // NSLog(@"groupMembershipList returns %@",[groups componentsJoinedByString:@", "]);
     return [groups componentsJoinedByString:@", "];
 }
 
@@ -311,9 +363,20 @@ NSString * const kRelationStateKept        = @"kept";
     NSLog(@"WARNING: setter called on groupMembershipList, value = %@",theList);
 }
 
+-(void)prepareForDeletion {
+    if ([AppDelegate.instance.currentObjectContext isEqual: AppDelegate.instance.mainObjectContext]) {
+        // NSLog(@"Contact:prepareForDeletion type=%@ nick=%@ id = %@", [self class], self.nickName, self.clientId);
+        self.deletedObject = YES;
+    }
+}
+
+-(void)dealloc {
+    // NSLog(@"dealloc %@", [self class]);
+}
 
 - (NSDictionary*) rpcKeys {
     return @{ @"state"     : @"relationshipState",
+              @"unblockState": @"relationshipUnblockState",
               @"lastChanged": @"relationshipLastChangedMillis",
               };
 }
@@ -322,7 +385,8 @@ NSString * const kRelationStateKept        = @"kept";
     if ([key isEqualToString: @"password"]) {
         return nil;
     }
-    return [super valueForUndefinedKey: key];
+    return @"<undefined>";
+    //return [super valueForUndefinedKey: key];
 }
 
 @end

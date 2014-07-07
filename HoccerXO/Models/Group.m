@@ -15,6 +15,16 @@
 
 #define GROUPKEY_DEBUG NO
 
+NSString * const kGroupStateNone    = @"none";
+NSString * const kGroupStateExists  = @"exists";
+
+NSString * const kGroupStateInternalIncomplete  = @"incomplete";
+NSString * const kGroupStateInternalKept        = @"kept";
+
+NSString * const kGroupTypeUser     = @"user";
+NSString * const kGroupTypeNearby   = @"nearby";
+
+
 @implementation Group
 
 @dynamic groupKey;
@@ -33,9 +43,6 @@
 
 @dynamic keyDateMillis;
 @dynamic lastChangedMillis;
-
-@synthesize shouldPresentInvitation;
-@synthesize presentingInvitation;
 
 - (NSString*) sharedKeyIdString {
     return [self.sharedKeyId asBase64EncodedString];
@@ -69,6 +76,13 @@
     self.keyDate = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 
+- (NSSet*) otherMembers {
+    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return ![self isEqual:obj.contact];
+    }];
+    return theMemberSet;
+}
+
 - (NSSet*) otherJoinedMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         return ![self isEqual:obj.contact] && obj.isJoined;
@@ -97,6 +111,33 @@
     return theMemberSet;
 }
 
+- (NSSet*) membersNotFriends {
+    NSSet * theMemberSet = [self.otherMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return !obj.contact.isFriend;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) membersInvitable {
+    NSSet * theMemberSet = [self.otherMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.contact.isInvitable;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) membersInvitedMeAsFriend {
+    NSSet * theMemberSet = [self.otherMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.contact.invitedMe;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) membersInvitedAsFriend {
+    NSSet * theMemberSet = [self.otherMembers objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.contact.isInvited;
+    }];
+    return theMemberSet;
+}
 
 - (NSDate *) latestMemberChangeDate {
     NSSet * myMembers = self.members;
@@ -105,6 +146,16 @@
         latestDate = [m.lastChanged laterDate:latestDate];
     }
     return latestDate;
+}
+
+-(void)changeIdTo:(NSString*)newId {
+    //NSSet * myMembers = self.members;
+    self.clientId = newId;
+    /*
+    for (GroupMembership * member in myMembers) {
+        member.group = self;
+    }
+     */
 }
 
 -(BOOL) hasGroupKey {
@@ -116,21 +167,16 @@
 }
 
 -(void) generateNewGroupKey {
-    if (self.iAmAdmin) {
-        if (GROUPKEY_DEBUG) {NSLog(@"Group:generateNewGroupKey");}
-        self.groupKey = [Crypto random256BitKey];
-        self.sharedKeyIdSalt = [Crypto random256BitSalt];
-        self.keySupplier = [UserProfile sharedProfile].clientId;
-        self.sharedKeyId = [Crypto calcSymmetricKeyId:self.groupKey withSalt:self.sharedKeyIdSalt];
-        self.keyDateMillis = @0; // 0 indicates a local date not yet transmitted via the server which will give it a proper time stamp
-        if (![self hasGroupKey]) {
-            NSLog(@"ERROR: Group:generateNewGroupKey: hasGroupKey failed");
-        }
-        //if (GROUPKEY_DEBUG) [self checkGroupKey];
-    } else {
-        NSLog(@"Group:generateNewGroupKey: can't generate (not admin), group nick %@, id %@", self.nickName, self.clientId);
-        NSLog(@"%@", [NSThread callStackSymbols]);
+    if (GROUPKEY_DEBUG) {NSLog(@"Group:generateNewGroupKey");}
+    self.groupKey = [Crypto random256BitKey];
+    self.sharedKeyIdSalt = [Crypto random256BitSalt];
+    self.keySupplier = [UserProfile sharedProfile].clientId;
+    self.sharedKeyId = [Crypto calcSymmetricKeyId:self.groupKey withSalt:self.sharedKeyIdSalt];
+    self.keyDateMillis = @0; // 0 indicates a local date not yet transmitted via the server which will give it a proper time stamp
+    if (![self hasGroupKey]) {
+        NSLog(@"ERROR: Group:generateNewGroupKey: hasGroupKey failed");
     }
+    //if (GROUPKEY_DEBUG) [self checkGroupKey];
 }
 
 
@@ -200,16 +246,15 @@
 }
 
 - (BOOL) iAmAdmin {
-    return [@"admin" isEqualToString: self.myGroupMembership.role];
+    return [kGroupMembershipRoleAdmin isEqualToString: self.myGroupMembership.role];
 }
 
 - (BOOL) iJoined {
-    return [@"joined" isEqualToString: self.myGroupMembership.state];
+    return [kGroupMembershipStateJoined isEqualToString: self.myGroupMembership.state];
 }
 
-
 - (BOOL)isKeptGroup {
-    return [kRelationStateKept isEqualToString:self.groupState];
+    return [kGroupStateInternalKept isEqualToString:self.groupState];
 }
 
 - (BOOL)isRemovedGroup {
@@ -217,15 +262,15 @@
 }
 
 - (BOOL)isExistingGroup {
-    return [@"exists" isEqualToString:self.groupState];
+    return [kGroupStateExists isEqualToString:self.groupState];
 }
 
 - (BOOL)isIncompleteGroup {
-    return [@"incomplete" isEqualToString:self.groupState ];
+    return [kGroupStateInternalIncomplete isEqualToString:self.groupState ];
 }
 
 - (BOOL)isNearbyGroup{
-    return [@"nearby" isEqualToString: self.groupType];
+    return [kGroupTypeNearby isEqualToString: self.groupType];
 }
 
 //public class TalkGroup {
