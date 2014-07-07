@@ -2195,12 +2195,17 @@ static NSTimer * _stateNotificationDelayTimer;
         if (theAvatarURL.length) {
             if (CONNECTION_TRACE) {NSLog(@"updateAvatarForContact, downloading avatar from URL %@", theAvatarURL);}
             
+            NSString * contactId = myContact.clientId;
             [HXOBackend downloadDataFromURL:theAvatarURL inQueue:_avatarDownloadQueue withCompletion:^(NSData * data, NSError * error) {
                 NSData * myNewAvatar = data;
                 if (myNewAvatar != nil && error == nil) {
                     // NSLog(@"presenceUpdated, avatar downloaded");
-                    myContact.avatar = myNewAvatar;
-                    myContact.avatarURL = theAvatarURL;
+                    // search for contact again in case it has been deleted
+                    Contact * myContact = [self getContactByClientId:contactId inContext:self.delegate.currentObjectContext];
+                    if (myContact != nil) {
+                        myContact.avatar = myNewAvatar;
+                        myContact.avatarURL = theAvatarURL;
+                    }
                 } else {
                     NSLog(@"presenceUpdated, avatar download for contact '%@' id ‘%@' of URL %@ failed, error=%@ reason=%@", myContact.nickName, myContact.clientId, theAvatarURL, error.localizedDescription,error.localizedFailureReason);
                 }
