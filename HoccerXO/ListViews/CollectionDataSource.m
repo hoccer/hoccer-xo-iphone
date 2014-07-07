@@ -48,7 +48,7 @@
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
     id object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    NSAssert([object isKindOfClass:[CollectionItem class]], @"Expected CollectionItem");
+    NSAssert(object == nil || [object isKindOfClass:[CollectionItem class]], @"Expected CollectionItem or nil");
     CollectionItem* collectionItem = (CollectionItem *)object;
     return collectionItem.attachment;
 }
