@@ -17,8 +17,9 @@
 #import "CollectionDataSource.h"
 #import "Contact.h"
 #import "HXOAudioPlayer.h"
-#import "HXOUI.h"
+#import "HXOPluralocalization.h"
 #import "HXOThemedNavigationController.h"
+#import "HXOUI.h"
 #import "MusicBrowserDataSource.h"
 #import "tab_attachments.h"
 
@@ -213,13 +214,7 @@
     NSAssert(self.attachmentsToDelete == nil, @"AttachmentsToDelete not reset properly");
 
     self.attachmentsToDelete = attachments;
-    NSString *attachmentCount;
-
-    if ([attachments count] == 1) {
-        attachmentCount = NSLocalizedString(@"audio_attachment_list_one_attachment", nil);
-    } else {
-        attachmentCount = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_multiple_attachments", nil), [attachments count]];
-    }
+    NSString *attachmentCount = [NSString stringWithFormat:HXOPluralocalizedString(@"audio_attachment_list_count_attachments", [attachments count], NO), [attachments count]];
 
     UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
     actionSheet.title = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_confirm_delete_title", nil), attachmentCount];
