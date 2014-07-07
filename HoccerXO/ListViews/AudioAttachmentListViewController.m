@@ -269,7 +269,7 @@
     if (buttonIndex == actionSheet.destructiveButtonIndex) {
         // delete attachments
         for (Attachment *attachment in self.attachmentsToDelete) {
-            [[AppDelegate instance] deleteObject:attachment];
+            [[AppDelegate instance] deleteObject:attachment.message];
         }
     } else if (buttonIndex == actionSheet.cancelButtonIndex) {
         BOOL usedSwipeToDelete = !self.tableView.allowsMultipleSelectionDuringEditing;
