@@ -265,7 +265,7 @@
                                 myGroupMembership.group.groupState =='exists' AND\
                                 SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'nearbyMember').@count > 1 ))"]];
     } else {
-        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
+        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR (relationshipState == 'kept' AND messages.@count > 0) OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
     }
 }
 
