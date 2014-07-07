@@ -915,7 +915,6 @@ static int  groupMemberContext;
 
 
     id picker = [ContactPicker contactPickerWithTitle: NSLocalizedString(@"Invite:", nil)
-                                                types: 0
                                                 style: ContactPickerStyleMulti
                                             predicate: predicate
                                            completion: completion];

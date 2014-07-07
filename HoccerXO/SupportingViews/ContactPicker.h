@@ -24,7 +24,6 @@ typedef void(^ContactPickerCompletion)(id result);
 @interface ContactPicker : ContactListViewController
 
 + (id) contactPickerWithTitle: (NSString*)               title
-                        types: (NSUInteger)              typeMask
                         style: (ContactPickerStyle)      style
                     predicate: (NSPredicate*)            predicate
                    completion: (ContactPickerCompletion) completion;

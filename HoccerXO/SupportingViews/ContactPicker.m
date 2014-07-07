@@ -23,7 +23,6 @@
 @implementation ContactPicker
 
 + (id) contactPickerWithTitle: (NSString*)               title
-                        types: (NSUInteger)              typeMask
                         style: (ContactPickerStyle)      style
                     predicate: (NSPredicate *)           predicate
                    completion: (ContactPickerCompletion) completion
