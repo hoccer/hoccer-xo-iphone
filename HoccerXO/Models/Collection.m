@@ -16,7 +16,11 @@
 @dynamic name;
 
 - (void) appendAttachments:(NSArray *)attachments {
-    for (Attachment *attachment in attachments) {
+    NSSet *attachmentsInCollection = [self.items valueForKeyPath:@"@distinctUnionOfObjects.attachment"];
+    NSMutableSet *newAttachments = [NSMutableSet setWithArray:attachments];
+    [newAttachments minusSet:attachmentsInCollection];
+
+    for (Attachment *attachment in newAttachments) {
         CollectionItem *collectionItem = [NSEntityDescription insertNewObjectForEntityForName:@"CollectionItem" inManagedObjectContext:self.managedObjectContext];
         collectionItem.index = [self.items count];
         collectionItem.attachment = attachment;
