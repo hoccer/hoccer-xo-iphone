@@ -231,8 +231,8 @@
 
 "contact_message_count_format"                  = "%@ messages";
 "contact_message_count_format (one)"            = "%@ message";
-"contact_audio_attachment_count_format_s"       = "%@ song";
-"contact_audio_attachment_count_format_p"       = "%@ songs";
+"contact_audio_attachment_count_format"         = "%@ songs";
+"contact_audio_attachment_count_format (one)"   = "%@ song";
 
 "contact_delete_btn_title"                      = "Delete contact";
 "contact_delete_safety_question"                = "Delete contact, chat and attachments?";

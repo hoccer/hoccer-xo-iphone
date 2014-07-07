@@ -316,11 +316,7 @@ static int  groupMemberContext;
     if ([item isEqual: self.chatItem]) {
         return HXOPluralocalizedKey(@"contact_message_count_format", self.contact.messages.count, NO);
     } else if ([item isEqual: self.attachmentItem]) {
-        if ([[self valueForItem:item] isEqualToNumber:[NSNumber numberWithUnsignedInteger:1]]) {
-            return @"contact_audio_attachment_count_format_s";
-        } else {
-            return @"contact_audio_attachment_count_format_p";
-        }
+        return HXOPluralocalizedKey(@"contact_audio_attachment_count_format", [[self valueForItem:item] intValue], NO);
     }
     return nil;
 }
