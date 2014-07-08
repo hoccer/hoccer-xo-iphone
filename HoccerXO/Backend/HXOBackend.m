@@ -490,6 +490,9 @@ static NSTimer * _stateNotificationDelayTimer;
         [self outDeliveryRequest: message withDeliveries: @[delivery] withCompletion:^(BOOL ok) {
             if (ok) {
                 [SoundEffectPlayer messageSent];
+                if (attachment != nil && attachment.state == kAttachmentWantsTransfer && ! deliveryFailed) {
+                    [self enqueueUploadOfAttachment:attachment];
+                }
             }
         }];
      } else {
