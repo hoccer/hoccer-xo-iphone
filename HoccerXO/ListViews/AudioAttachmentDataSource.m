@@ -13,10 +13,12 @@
 #import "AttachmentInfo.h"
 #import "AudioAttachmentCell.h"
 #import "AudioAttachmentDataSourceDelegate.h"
+#import "Contact.h"
 
 @interface AudioAttachmentDataSource ()
 
-@property (nonatomic, strong) NSArray *searchResults;
+@property (nonatomic, strong) NSArray *filteredAttachments;
+@property (nonatomic, strong) NSArray *filteredContacts;
 
 @end
 
@@ -55,33 +57,81 @@
     _searchText = searchText;
     
     if (searchText) {
-        NSPredicate *searchPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+        NSPredicate *attachmentSearchPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             Attachment *attachment = evaluatedObject;
             AttachmentInfo *info = [[AttachmentInfo alloc] initWithAttachment:attachment];
             return [info.audioTitle rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound;
         }];
 
-        self.searchResults = [[self attachments] filteredArrayUsingPredicate:searchPredicate];
+        NSArray *attachments = [self attachments];
+        self.filteredAttachments = [attachments filteredArrayUsingPredicate:attachmentSearchPredicate];
+
+        NSPredicate *contactSearchPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            Contact *contact = evaluatedObject;
+            return [contact.displayName rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound;
+        }];
+
+        NSArray *contacts = [attachments valueForKeyPath:@"@distinctUnionOfObjects.message.contact"];
+        self.filteredContacts = [contacts filteredArrayUsingPredicate:contactSearchPredicate];
     } else {
-        self.searchResults = nil;
+        self.filteredAttachments = nil;
+        self.filteredContacts = nil;
+    }
+}
+
+#pragma mark - Sections
+
+- (BOOL) hasContactSection {
+    return [self.filteredContacts count] > 0;
+}
+
+- (BOOL) isContactSection:(NSInteger)section {
+    return [self hasContactSection] && section == 0;
+}
+
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
+    if ([self hasContactSection]) {
+        return 2;
+    } else {
+        return 1;
+    }
+}
+
+- (NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if ([self isContactSection:section]) {
+        return NSLocalizedString(@"audio_attachment_list_search_section_senders", nil);
+    } else if ([self hasContactSection] && [self tableView:tableView numberOfRowsInSection:section] > 0) {
+        return NSLocalizedString(@"audio_attachment_list_search_section_attachments", nil);
+    } else {
+        return nil;
     }
 }
 
 #pragma mark - Rows and Cells
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if (self.searchResults) {
-        return [self.searchResults count];
+    if ([self isContactSection:section]) {
+        return [self.filteredContacts count];
     } else {
-        id<NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
-        return [sectionInfo numberOfObjects];
+        if (self.filteredAttachments) {
+            return [self.filteredAttachments count];
+        } else {
+            id<NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[0];
+            return [sectionInfo numberOfObjects];
+        }
     }
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    AudioAttachmentCell *cell = [tableView dequeueReusableCellWithIdentifier:[AudioAttachmentCell reuseIdentifier] forIndexPath:indexPath];
-    [self configureCell:cell atIndexPath:indexPath];
-    return cell;
+    if ([self isContactSection:indexPath.section]) {
+        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"contact_cell"];
+        cell.textLabel.text = [[self.filteredContacts objectAtIndex:indexPath.row] displayName];
+        return cell;
+    } else {
+        AudioAttachmentCell *cell = [tableView dequeueReusableCellWithIdentifier:[AudioAttachmentCell reuseIdentifier] forIndexPath:indexPath];
+        [self configureCell:cell atIndexPath:indexPath];
+        return cell;
+    }
 }
 
 - (void) configureCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
@@ -90,8 +140,8 @@
 }
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
-    if (self.searchResults) {
-        return [self.searchResults objectAtIndex:indexPath.row];
+    if (self.filteredAttachments) {
+        return [self.filteredAttachments objectAtIndex:indexPath.row];
     } else {
         return [self specializedAttachmentAtIndexPath:indexPath];
     };

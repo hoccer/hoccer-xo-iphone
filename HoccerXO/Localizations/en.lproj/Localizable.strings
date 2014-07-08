@@ -125,15 +125,18 @@
 // Audio Attachment List
 //==============================================================================
 
-"audio_attachment_list_nav_title"               = "Media";
-"audio_attachment_list_footer_send"             = "send";
-"audio_attachment_list_footer_delete"           = "delete";
-"audio_attachment_list_footer_add"              = "add";
+"audio_attachment_list_nav_title"                  = "Media";
+"audio_attachment_list_footer_send"                = "send";
+"audio_attachment_list_footer_delete"              = "delete";
+"audio_attachment_list_footer_add"                 = "add";
 
-"audio_attachment_list_count_attachments"       = "%u songs";
-"audio_attachment_list_count_attachments (one)" = "one song";
-"audio_attachment_list_confirm_delete_title"    = "Delete %@?";
-"audio_attachment_list_remove_from_collection"  = "Remove from Playlist";
+"audio_attachment_list_count_attachments"          = "%u songs";
+"audio_attachment_list_count_attachments (one)"    = "one song";
+"audio_attachment_list_confirm_delete_title"       = "Delete %@?";
+"audio_attachment_list_remove_from_collection"     = "Remove from Playlist";
+
+"audio_attachment_list_search_section_senders"     = "Senders";
+"audio_attachment_list_search_section_attachments" = "Songs";
 
 //==============================================================================
 // Audio Player
