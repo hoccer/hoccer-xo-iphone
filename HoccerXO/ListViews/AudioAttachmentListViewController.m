@@ -17,6 +17,7 @@
 #import "CollectionDataSource.h"
 #import "Contact.h"
 #import "ContactPicker.h"
+#import "Group.h"
 #import "HXOAudioPlayer.h"
 #import "HXOPluralocalization.h"
 #import "HXOThemedNavigationController.h"
@@ -253,11 +254,19 @@
             [self toggleEditMode:nil];
         }
     };
+    
+    NSPredicate *contactPredicate = [NSPredicate predicateWithFormat:@"type == %@ AND relationshipState == 'friend'", [Contact entityName]];
+    NSPredicate *nearbyContactPredicate = [NSPredicate predicateWithFormat:@"type == %@ AND SUBQUERY(groupMemberships, $member, $member.group.groupType == %@ AND $member.group.groupState == %@).@count > 0", [Contact entityName], kGroupTypeNearby, kGroupStateExists];
+    NSPredicate *groupAndNearbyGroupPredicate = [NSPredicate predicateWithFormat:@"type == %@ AND myGroupMembership.state == 'joined'", [Group entityName]];
+
+    NSPredicate *predicate = [NSCompoundPredicate orPredicateWithSubpredicates:@[ contactPredicate,
+                                                                                  nearbyContactPredicate,
+                                                                                  groupAndNearbyGroupPredicate ]];
 
     id picker = [ContactPicker contactPickerWithTitle:NSLocalizedString(@"contact_list_nav_title", nil)
                                                 types:ContactPickerTypeContact | ContactPickerTypeGroup
                                                 style:ContactPickerStyleMulti
-                                            predicate:nil
+                                            predicate:predicate
                                            completion:completion];
     
     [self presentViewController:picker animated:YES completion:nil];
