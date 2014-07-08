@@ -58,7 +58,7 @@
 
 #pragma mark - Data Accessors
 
-- (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
+- (Attachment *) specializedAttachmentAtIndexPath:(NSIndexPath *)indexPath {
     id attachment = [self.fetchedResultsController objectAtIndexPath:indexPath];
     NSAssert(attachment == nil || [attachment isKindOfClass:[Attachment class]], @"Expected Attachment or nil");
     return attachment;

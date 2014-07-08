@@ -85,11 +85,19 @@
 }
 
 - (void) configureCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    Attachment *attachment = self.searchResults ? [self.searchResults objectAtIndex:indexPath.row] : [self attachmentAtIndexPath:indexPath];
+    Attachment *attachment = [self attachmentAtIndexPath:indexPath];
     cell.attachment = attachment;
 }
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
+    if (self.searchResults) {
+        return [self.searchResults objectAtIndex:indexPath.row];
+    } else {
+        return [self specializedAttachmentAtIndexPath:indexPath];
+    };
+}
+
+- (Attachment *) specializedAttachmentAtIndexPath:(NSIndexPath *)indexPath {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"AudioAttachmentDataSource must be subclassed" userInfo:nil];
 }
 

@@ -348,9 +348,10 @@
         [self updateFooterButtons];
     } else {
         NSArray *playlist = self.dataSource.attachments;
+        NSUInteger trackNumber = [playlist indexOfObject:[self.dataSource attachmentAtIndexPath:indexPath]];
         
         HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
-        BOOL success = [audioPlayer playWithPlaylist:playlist atTrackNumber:indexPath.row];
+        BOOL success = [audioPlayer playWithPlaylist:playlist atTrackNumber:trackNumber];
         
         if (success) {
             UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];
