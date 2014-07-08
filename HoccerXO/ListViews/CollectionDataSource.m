@@ -44,6 +44,12 @@
     return fetchRequest;
 }
 
+#pragma mark - Sections
+
+- (BOOL) hasContactSection {
+    return NO;
+}
+
 #pragma mark - Data Accessors
 
 - (Attachment *) specializedAttachmentAtIndexPath:(NSIndexPath *)indexPath {

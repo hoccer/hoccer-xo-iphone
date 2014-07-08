@@ -18,6 +18,7 @@
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath;
 - (Contact *) contactAtIndexPath:(NSIndexPath *)indexPath;
 - (NSFetchRequest *) fetchRequest;
+- (BOOL) hasContactSection;
 - (BOOL) isContactSection:(NSInteger)section;
 
 @property (nonatomic, readonly) NSArray *attachments;

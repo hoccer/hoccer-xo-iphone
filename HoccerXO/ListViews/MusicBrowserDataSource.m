@@ -56,6 +56,12 @@
     }
 }
 
+#pragma mark - Sections
+
+- (BOOL) hasContactSection {
+    return [super hasContactSection] && self.contact == nil;
+}
+
 #pragma mark - Data Accessors
 
 - (Attachment *) specializedAttachmentAtIndexPath:(NSIndexPath *)indexPath {
