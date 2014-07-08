@@ -10,8 +10,15 @@
 
 #import "AppDelegate.h"
 #import "Attachment.h"
+#import "AttachmentInfo.h"
 #import "AudioAttachmentCell.h"
 #import "AudioAttachmentDataSourceDelegate.h"
+
+@interface AudioAttachmentDataSource ()
+
+@property (nonatomic, strong) NSArray *searchResults;
+
+@end
 
 @implementation AudioAttachmentDataSource
 
@@ -42,11 +49,33 @@
     return _fetchedResultsController;
 }
 
+#pragma mark - Search
+
+- (void) setSearchText:(NSString *)searchText {
+    _searchText = searchText;
+    
+    if (searchText) {
+        NSPredicate *searchPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            Attachment *attachment = evaluatedObject;
+            AttachmentInfo *info = [[AttachmentInfo alloc] initWithAttachment:attachment];
+            return [info.audioTitle rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound;
+        }];
+
+        self.searchResults = [[self attachments] filteredArrayUsingPredicate:searchPredicate];
+    } else {
+        self.searchResults = nil;
+    }
+}
+
 #pragma mark - Rows and Cells
 
 - (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    id<NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
-    return [sectionInfo numberOfObjects];
+    if (self.searchResults) {
+        return [self.searchResults count];
+    } else {
+        id<NSFetchedResultsSectionInfo> sectionInfo = self.fetchedResultsController.sections[section];
+        return [sectionInfo numberOfObjects];
+    }
 }
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -56,7 +85,7 @@
 }
 
 - (void) configureCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    Attachment *attachment = [self attachmentAtIndexPath:indexPath];
+    Attachment *attachment = self.searchResults ? [self.searchResults objectAtIndex:indexPath.row] : [self attachmentAtIndexPath:indexPath];
     cell.attachment = attachment;
 }
 
