@@ -347,6 +347,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (self.tableView.isEditing) {
         [self updateFooterButtons];
+    } else if ([self.dataSource isContactSection:indexPath.section]) {
+        Contact *contact = [self.dataSource contactAtIndexPath:indexPath];
+        AudioAttachmentListViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioAttachmentListViewController"];
+        viewController.contact = contact;
+        [self.navigationController pushViewController:viewController animated:YES];
     } else {
         NSArray *playlist = self.dataSource.attachments;
         NSUInteger trackNumber = [playlist indexOfObject:[self.dataSource attachmentAtIndexPath:indexPath]];

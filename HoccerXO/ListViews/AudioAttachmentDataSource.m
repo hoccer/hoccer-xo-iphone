@@ -146,6 +146,8 @@
 }
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {
+    NSAssert(![self isContactSection:indexPath.section], @"indexPath not in attachment section");
+
     if (self.filteredAttachments) {
         return [self.filteredAttachments objectAtIndex:indexPath.row];
     } else {
@@ -155,6 +157,12 @@
 
 - (Attachment *) specializedAttachmentAtIndexPath:(NSIndexPath *)indexPath {
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"AudioAttachmentDataSource must be subclassed" userInfo:nil];
+}
+
+- (Contact *) contactAtIndexPath:(NSIndexPath *)indexPath {
+    NSAssert([self isContactSection:indexPath.section], @"indexPath not in sender section");
+
+    return [self.filteredContacts objectAtIndex:indexPath.row];
 }
 
 #pragma mark - Fetched Results Controller Delegate

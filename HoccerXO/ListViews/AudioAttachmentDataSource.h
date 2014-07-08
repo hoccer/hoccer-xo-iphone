@@ -9,12 +9,16 @@
 #import <Foundation/Foundation.h>
 
 @class Attachment;
+@class Contact;
+
 @protocol AudioAttachmentDataSourceDelegate;
 
 @interface AudioAttachmentDataSource : NSObject <UITableViewDataSource, NSFetchedResultsControllerDelegate>
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath;
+- (Contact *) contactAtIndexPath:(NSIndexPath *)indexPath;
 - (NSFetchRequest *) fetchRequest;
+- (BOOL) isContactSection:(NSInteger)section;
 
 @property (nonatomic, readonly) NSArray *attachments;
 @property (nonatomic, weak) id<AudioAttachmentDataSourceDelegate> delegate;
