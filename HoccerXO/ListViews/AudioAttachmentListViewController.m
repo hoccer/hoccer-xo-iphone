@@ -164,6 +164,7 @@
 
     self.dataSource.delegate = self;
     self.tableView.dataSource = self.dataSource;
+    self.searchDisplayController.searchResultsDataSource = self.dataSource;
     [self.tableView reloadData];
 }
 
@@ -370,6 +371,27 @@
     if (self.tableView.isEditing) {
         [self updateFooterButtons];
     }
+}
+
+#pragma mark - Search Bar Delegate
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    if ([searchText isEqualToString:@""]) {
+        self.dataSource.searchText = nil;
+    } else {
+        self.dataSource.searchText = searchText;
+    }
+}
+
+#pragma mark - Search Display Delegate
+
+- (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView {
+    [tableView registerClass:[AudioAttachmentCell class] forCellReuseIdentifier:[AudioAttachmentCell reuseIdentifier]];
+    tableView.rowHeight = self.tableView.rowHeight;
+}
+
+- (void)searchDisplayControllerDidEndSearch:(UISearchDisplayController *)controller {
+    self.dataSource.searchText = nil;
 }
 
 #pragma mark - Audio Attachment Data Source Delegate

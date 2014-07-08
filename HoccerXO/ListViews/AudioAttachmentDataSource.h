@@ -23,4 +23,6 @@
 @property (nonatomic, readonly) NSManagedObjectContext *mainObjectContext;
 @property (nonatomic, readonly) NSManagedObjectModel *managedObjectModel;
 
+@property (nonatomic, strong) NSString *searchText;
+
 @end
