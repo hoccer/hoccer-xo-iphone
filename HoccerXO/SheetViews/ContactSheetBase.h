@@ -28,6 +28,8 @@
 @property (nonatomic, readonly) DatasheetSection    * destructiveSection;
 @property (nonatomic, readonly) DatasheetItem       * destructiveButton;
 
+@property (nonatomic, readonly) DatasheetItem       * relationshipItem;
+
 - (void) addUtilitySections: (NSMutableArray*) sections;
 
 

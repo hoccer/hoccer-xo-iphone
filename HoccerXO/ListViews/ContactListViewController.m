@@ -696,10 +696,10 @@ bool almostEqual(CGFloat a, CGFloat b) {
     cell.avatar.isPresent  = contact.isConnected && !contact.isKept;
     cell.avatar.isInBackground  = contact.isBackground;
     
-    cell.subtitleLabel.text = [self statusStringForContact: contact];
+    cell.subtitleLabel.text = [ContactListViewController statusStringForContact: contact];
 }
 
-- (NSString*) statusStringForContact: (Contact*) contact {
++ (NSString*) statusStringForContact: (Contact*) contact {
     if ([contact isKindOfClass: [Group class]]) {
         // Man, this shit is disgusting. Needs de-monstering... I mean *really*. [agnat]
         Group * group = (Group*)contact;

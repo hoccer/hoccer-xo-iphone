@@ -177,7 +177,7 @@ static int  groupMemberContext;
 
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
-    section.items = @[self.nicknameItem, self.aliasItem, self.chatItem, self.keyItem];
+    section.items = @[/*self.relationshipItem,*/ self.nicknameItem, self.aliasItem, self.chatItem, self.keyItem];
     return section;
 }
 
@@ -245,7 +245,9 @@ static int  groupMemberContext;
 
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    if ([item isEqual: self.chatItem]) {
+    if ([item isEqual: self.relationshipItem]) {
+        return [super isItemVisible: item];
+    } else if ([item isEqual: self.chatItem]) {
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
         
     } else if ([item isEqual: self.aliasItem]) {
@@ -276,7 +278,7 @@ static int  groupMemberContext;
         if (self.group && self.group.isKeptGroup) {
             return YES;
         }
-        return ! self.groupInStatuNascendi && [super isItemVisible: item];
+        return ! self.groupInStatuNascendi && !self.contact.isGroupFriend && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
 }
