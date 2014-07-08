@@ -14,6 +14,7 @@
 #import "AudioAttachmentCell.h"
 #import "AudioAttachmentDataSourceDelegate.h"
 #import "Contact.h"
+#import "ContactCell.h"
 
 @interface AudioAttachmentDataSource ()
 
@@ -124,19 +125,24 @@
 
 - (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     if ([self isContactSection:indexPath.section]) {
-        UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"contact_cell"];
-        cell.textLabel.text = [[self.filteredContacts objectAtIndex:indexPath.row] displayName];
+        ContactCell *cell = [tableView dequeueReusableCellWithIdentifier:[ContactCell reuseIdentifier] forIndexPath:indexPath];
+        [self configureContactCell:cell atIndexPath:indexPath];
         return cell;
     } else {
         AudioAttachmentCell *cell = [tableView dequeueReusableCellWithIdentifier:[AudioAttachmentCell reuseIdentifier] forIndexPath:indexPath];
-        [self configureCell:cell atIndexPath:indexPath];
+        [self configureAudioAttachmentCell:cell atIndexPath:indexPath];
         return cell;
     }
 }
 
-- (void) configureCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+- (void) configureAudioAttachmentCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Attachment *attachment = [self attachmentAtIndexPath:indexPath];
     cell.attachment = attachment;
+}
+
+- (void) configureContactCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+    Contact *contact = [self.filteredContacts objectAtIndex:indexPath.row];
+    [cell configureForContact:contact];
 }
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {

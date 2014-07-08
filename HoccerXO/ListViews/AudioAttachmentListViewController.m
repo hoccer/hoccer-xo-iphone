@@ -16,6 +16,7 @@
 #import "Collection.h"
 #import "CollectionDataSource.h"
 #import "Contact.h"
+#import "ContactCell.h"
 #import "ContactPicker.h"
 #import "Group.h"
 #import "HXOAudioPlayer.h"
@@ -388,6 +389,7 @@
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView {
     [tableView registerClass:[AudioAttachmentCell class] forCellReuseIdentifier:[AudioAttachmentCell reuseIdentifier]];
+    [tableView registerClass:[ContactCell class] forCellReuseIdentifier:[ContactCell reuseIdentifier]];
     tableView.rowHeight = self.tableView.rowHeight;
 }
 
