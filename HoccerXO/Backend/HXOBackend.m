@@ -777,7 +777,13 @@ static NSTimer * _stateNotificationDelayTimer;
         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[contact]
                                                                                   withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
         {
-            [context refreshObject: managedObjects[0] mergeChanges: YES];
+            Contact * contact = managedObjects[0];
+            [context refreshObject: contact mergeChanges: YES];
+            if (![self.delegate isInspecting:contact]) {
+                // make chat to scroll to bottom when a new message is received
+                //NSLog(@"clearing rememberedLastVisibleChatCell");
+                contact.rememberedLastVisibleChatCell = nil;
+            }
         }];
 
         if (DELIVERY_TRACE) NSLog(@"receiveMessage: scheduling new deliveryConfirm");

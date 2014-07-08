@@ -2809,8 +2809,10 @@ ready:;
 
 - (void) scrollToRememberedCellOrToBottomIfNone {
     if ([self isValidIndexPath:self.partner.rememberedLastVisibleChatCell]) {
+        //NSLog(@"scrollToRememberedCell");
         [self scrollToCell:self.partner.rememberedLastVisibleChatCell];
     } else {
+        //NSLog(@"scrollToBottomAnimated");
         [self scrollToBottomAnimated];
     }
 }
