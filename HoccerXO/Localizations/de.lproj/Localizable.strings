@@ -512,6 +512,7 @@
 
 "permission_denied_title"              = "Zugriff verweigert";
 "permission_denied_microphone_message" = "Um Sprache aufzunehmen erlaube Hoccer XO in Einstellungen->Datenschutz->Mikrofon den Zugriff.";
+"permission_denied_location_message"   = "Um mit Leuten in der Nähe zu chatten erlaube Hoccer XO in Einstellungen->Datenschutz->Ortungsdienste den Zugriff.";
 
 //==============================================================================
 // Profile
