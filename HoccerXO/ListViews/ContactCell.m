@@ -6,13 +6,20 @@
 //  Copyright (c) 2013 Hoccer GmbH. All rights reserved.
 //
 
+#import "AvatarView.h"
+#import "Contact.h"
 #import "ContactCell.h"
+#import "Group.h"
+#import "GroupMembership.h"
 #import "HXOUI.h"
 #import "HXOLabel.h"
+#import "HXOPluralocalization.h"
 #import "HXOUI.h"
-#import "AvatarView.h"
-#import "avatar_contact.h"
 #import "VectorArtView.h"
+
+#import "avatar_contact.h"
+#import "avatar_group.h"
+#import "avatar_location.h"
 #import "disclosure_arrow.h"
 
 #define CELL_DEBUG NO
@@ -152,4 +159,62 @@
         [self.delegate contactCellDidPressAvatar: self];
     }
 }
+
+- (void) configureForContact: (Contact *)contact {
+    self.delegate = nil;
+    
+    self.titleLabel.text = contact.nickNameWithStatus;
+    
+    UIImage * avatar = contact.avatarImage;
+    self.avatar.image = avatar;
+    self.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [((Group*)contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
+    self.avatar.isBlocked = [contact isBlocked];
+    self.avatar.isPresent  = contact.isConnected && !contact.isKept;
+    self.avatar.isInBackground  = contact.isBackground;
+    
+    self.subtitleLabel.text = [self statusStringForContact: contact];
+}
+
+- (NSString*) statusStringForContact: (Contact*) contact {
+    if ([contact isKindOfClass: [Group class]]) {
+        // Man, this shit is disgusting. Needs de-monstering... I mean *really*. [agnat]
+        Group * group = (Group*)contact;
+        NSInteger joinedMemberCount = [group.otherJoinedMembers count];
+        NSInteger invitedMemberCount = [group.otherInvitedMembers count];
+        
+        NSString * joinedStatus = @"";
+        
+        if (group.isKept) {
+            joinedStatus = NSLocalizedString(@"group_state_kept", nil);
+            
+        } else if (group.myGroupMembership.isInvited){
+            joinedStatus = NSLocalizedString(@"group_membership_state_invited", nil);
+            
+        } else {
+            if (group.iAmAdmin) {
+                joinedStatus = NSLocalizedString(@"group_membership_role_admin", nil);
+            }
+            if (joinedStatus.length>0) {
+                joinedStatus = [joinedStatus stringByAppendingString: @", "];
+            }
+            joinedStatus =  [joinedStatus stringByAppendingString: [NSString stringWithFormat: HXOPluralocalizedString(@"group_member_count_joined", joinedMemberCount, YES), joinedMemberCount]];
+            if (invitedMemberCount > 0) {
+                if (joinedStatus.length>0) {
+                    joinedStatus = [joinedStatus stringByAppendingString: @", "];
+                }
+                joinedStatus = [NSString stringWithFormat:NSLocalizedString(@"group_member_invited_count",nil), invitedMemberCount];
+            }
+#ifdef DEBUG
+            if (group.sharedKeyId != nil) {
+                joinedStatus = [[joinedStatus stringByAppendingString:@" "] stringByAppendingString:group.sharedKeyIdString];
+            }
+#endif
+        }
+        return joinedStatus;
+    } else {
+        NSString * relationshipKey = [NSString stringWithFormat: @"contact_relationship_%@", contact.relationshipState];
+        return NSLocalizedString(relationshipKey, nil);
+    }
+}
+
 @end

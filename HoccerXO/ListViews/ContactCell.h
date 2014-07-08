@@ -11,6 +11,7 @@
 #import "HXOTableViewCell.h"
 
 @class AvatarView;
+@class Contact;
 @class ContactCell;
 
 @protocol ContactCellDelegate <NSObject>
@@ -33,5 +34,6 @@
 - (CGFloat) verticalPadding;
 - (CGFloat) labelSpacing;
 
+- (void) configureForContact: (Contact *)contact;
 
 @end
