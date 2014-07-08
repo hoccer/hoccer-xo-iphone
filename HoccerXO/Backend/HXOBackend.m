@@ -2544,6 +2544,12 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }
     
+    BOOL tryPresentInvitation = NO;
+    // _groupsNotYetPresentedInvitation will only contain the group if our own group contact has already arrived
+    if ([_groupsNotYetPresentedInvitation containsObject:group.clientId] && [kGroupStateExists isEqualToString:groupState]) {
+        tryPresentInvitation = YES;
+    }
+    
     [group updateWithDictionary: groupDict];
     
     if (!group.isKeptGroup && group.isKeptRelation) {
@@ -2558,6 +2564,13 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     [self.delegate saveContext:context];
+    
+    if (tryPresentInvitation) {
+        [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[group] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+            Group * group = (Group*)managedObjects[0];
+            [self tryPresentInvitationIfPossibleForGroup:group withMemberShip:group.myGroupMembership];
+        }];
+    }
     if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupHere %@",groupId);
     return YES;
 }
