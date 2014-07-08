@@ -141,8 +141,8 @@
 }
 
 - (void) configureContactCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    Contact *contact = [self.filteredContacts objectAtIndex:indexPath.row];
-    [cell configureForContact:contact];
+    Contact *contact = [self contactAtIndexPath:indexPath];
+    [ContactCell configureCell:cell forContact:contact];
 }
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {

@@ -160,22 +160,22 @@
     }
 }
 
-- (void) configureForContact: (Contact *)contact {
-    self.delegate = nil;
++ (void) configureCell:(UITableViewCell<ContactCell> *)cell forContact: (Contact *)contact {
+    cell.delegate = nil;
     
-    self.titleLabel.text = contact.nickNameWithStatus;
+    cell.titleLabel.text = contact.nickNameWithStatus;
     
     UIImage * avatar = contact.avatarImage;
-    self.avatar.image = avatar;
-    self.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [((Group*)contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
-    self.avatar.isBlocked = [contact isBlocked];
-    self.avatar.isPresent  = contact.isConnected && !contact.isKept;
-    self.avatar.isInBackground  = contact.isBackground;
+    cell.avatar.image = avatar;
+    cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [((Group*)contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
+    cell.avatar.isBlocked = [contact isBlocked];
+    cell.avatar.isPresent  = contact.isConnected && !contact.isKept;
+    cell.avatar.isInBackground  = contact.isBackground;
     
-    self.subtitleLabel.text = [self statusStringForContact: contact];
+    cell.subtitleLabel.text = [ContactCell statusStringForContact: contact];
 }
 
-- (NSString*) statusStringForContact: (Contact*) contact {
++ (NSString*) statusStringForContact: (Contact*) contact {
     if ([contact isKindOfClass: [Group class]]) {
         // Man, this shit is disgusting. Needs de-monstering... I mean *really*. [agnat]
         Group * group = (Group*)contact;

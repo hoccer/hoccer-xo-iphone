@@ -680,7 +680,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ContactListViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"%@",  [NSThread callStackSymbols]);
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-    [cell configureForContact:contact];
+    [ContactCell configureCell:cell forContact:contact];
 }
 
 #pragma mark - Invitations
