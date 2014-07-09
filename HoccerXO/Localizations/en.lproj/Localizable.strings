@@ -271,7 +271,7 @@
 "contact_relationship_invited"                  = "Invited as Friend";
 "contact_relationship_invitedMe"                = "Invited you as Friend";
 
-"contact_list_placeholder"                      = "[Invite friends](http://hoccer.com/hoccer-xo-tutorial/#contacts) to chat with.";
+"contact_list_placeholder"                      = "[Invite friends](http://hoccer.com/hoccer-xo-tutorial/#invite) to chat with.";
 "contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://hoccer.com/hoccer-xo-tutorial/#nearby)…";
 
 
