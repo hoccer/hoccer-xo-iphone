@@ -278,7 +278,7 @@ static int  groupMemberContext;
         if (self.group && self.group.isKeptGroup) {
             return YES;
         }
-        return ! self.groupInStatuNascendi && !self.contact.isGroupFriend && [super isItemVisible: item];
+        return ! self.groupInStatuNascendi && !(!self.contact.isGroup && self.contact.isGroupFriend) && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
 }
