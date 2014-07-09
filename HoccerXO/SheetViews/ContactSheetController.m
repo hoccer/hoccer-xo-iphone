@@ -1122,17 +1122,25 @@ static int  groupMemberContext;
     ContactPickerCompletion completion = ^(NSArray * result) {
         if (self.groupInStatuNascendi) {
             for (Contact * contact in result) {
-                DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
-                [self addContactObservers: contact];
-                [self.groupMemberItems addObject: contactItem];
-                [self.groupInStatuNascendi.members addObject: contact];
+                if (contact != nil && !contact.isDeleted) {
+                    DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
+                    [self addContactObservers: contact];
+                    [self.groupMemberItems addObject: contactItem];
+                    [self.groupInStatuNascendi.members addObject: contact];
+                } else {
+                    NSLog(@"#WARNING: ContactSheetController:inviteMembersPressed(1): contact nil or deleted");
+                }
             }
             [self updateCurrentItems];
         } else {
             for (Contact * contact in result) {
-                [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
-                    // yeah, baby
-                }];
+                if (contact != nil && !contact.isDeleted) {
+                    [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
+                        // yeah, baby
+                    }];
+                } else {
+                    NSLog(@"#WARNING: ContactSheetController:inviteMembersPressed(2): contact nil or deleted");
+                }
             }
         }
     };
