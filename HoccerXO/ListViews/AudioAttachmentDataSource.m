@@ -60,7 +60,7 @@
     if (searchText) {
         NSPredicate *attachmentSearchPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             Attachment *attachment = evaluatedObject;
-            AttachmentInfo *info = [[AttachmentInfo alloc] initWithAttachment:attachment];
+            AttachmentInfo *info = [AttachmentInfo infoForAttachment:attachment];
             return [info.audioTitle rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound;
         }];
 

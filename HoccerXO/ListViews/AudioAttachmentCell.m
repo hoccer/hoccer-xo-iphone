@@ -151,7 +151,7 @@
     _attachment = attachment;
 
     if (attachment) {
-        AttachmentInfo *info = [[AttachmentInfo alloc] initWithAttachment:attachment];
+        AttachmentInfo *info = [AttachmentInfo infoForAttachment:attachment];
         self.titleLabel.text = info.audioTitle;
         self.subtitleLabel.text = info.audioArtistAndAlbum;
         

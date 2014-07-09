@@ -134,7 +134,7 @@
     Attachment *attachment = self.audioPlayer.attachment;
 
     if (attachment) {
-        AttachmentInfo *attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:attachment];
+        AttachmentInfo *attachmentInfo = [AttachmentInfo infoForAttachment:attachment];
         self.titleLabel.text = attachmentInfo.audioTitle;
         self.artistLabel.text = attachmentInfo.audioArtist;
 

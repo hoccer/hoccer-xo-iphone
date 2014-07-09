@@ -42,7 +42,7 @@ static NSDataDetector * _linkDetector;
 - (void) setMessage:(HXOMessage *)message {
     _message = message;
     if (message.attachment && message.attachment.available) {
-        _attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:message.attachment];
+        _attachmentInfo = [AttachmentInfo infoForAttachment:message.attachment];
     } else {
         _attachmentInfo = nil;
     }

@@ -232,7 +232,7 @@
 - (void) updateNowPlayingInfo {
     MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
     if (self.attachment) {
-        AttachmentInfo *attachmentInfo = [[AttachmentInfo alloc] initWithAttachment:self.attachment];
+        AttachmentInfo *attachmentInfo = [AttachmentInfo infoForAttachment:self.attachment];
         NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary dictionary];
         
         if (attachmentInfo.audioTitle) {

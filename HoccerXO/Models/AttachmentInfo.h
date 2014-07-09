@@ -12,7 +12,7 @@
 
 @interface AttachmentInfo : NSObject
 
-- (id) initWithAttachment: (Attachment *) attachment;
++ (AttachmentInfo *) infoForAttachment:(Attachment *)attachment;
 
 @property (nonatomic,readonly) NSString * vcardName;
 @property (nonatomic,readonly) NSString * vcardOrganization;

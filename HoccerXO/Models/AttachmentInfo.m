@@ -18,6 +18,38 @@
 
 @implementation AttachmentInfo
 
++ (AttachmentInfo *) infoForAttachment:(Attachment *)attachment {
+    AttachmentInfo *info;
+
+    NSCache *cache = [AttachmentInfo cache];
+    NSString *key = attachment.localURL;
+
+    if (key) {
+        info = [cache objectForKey:key];
+    }
+    
+    if (!info) {
+        info = [[AttachmentInfo alloc] initWithAttachment:attachment];
+        
+        if (key) {
+            [cache setObject:info forKey:key];
+        }
+    }
+    
+    return info;
+}
+
++ (NSCache *) cache {
+    static NSCache *cache;
+    static dispatch_once_t onceToken;
+    
+    dispatch_once(&onceToken, ^{
+        cache = [[NSCache alloc] init];
+    });
+    
+    return cache;
+}
+
 - (id) initWithAttachment: (Attachment *) attachment {
     self = [super init];
     if (self && attachment.available) {
