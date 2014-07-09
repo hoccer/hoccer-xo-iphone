@@ -298,13 +298,15 @@
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     BOOL usedSwipeToDelete = !self.tableView.allowsMultipleSelectionDuringEditing;
+    BOOL delete = buttonIndex == actionSheet.destructiveButtonIndex;
+    BOOL cancel = buttonIndex == actionSheet.cancelButtonIndex;
 
-    if (buttonIndex == actionSheet.destructiveButtonIndex) {
+    if (delete) {
         // delete attachments
         for (Attachment *attachment in self.attachmentsToDelete) {
             [[AppDelegate instance] deleteObject:attachment.message];
         }
-    } else if (buttonIndex == actionSheet.cancelButtonIndex) {
+    } else if (cancel) {
         if (usedSwipeToDelete) {
             // hide delete button when canceling swipe-to-delete
             self.tableView.editing = NO;
@@ -320,6 +322,8 @@
     
     if (usedSwipeToDelete) {
         [[AppDelegate instance] saveDatabase];
+    } else if (!cancel) {
+        [self toggleEditMode:nil];
     }
     
     self.attachmentsToDelete = nil;
