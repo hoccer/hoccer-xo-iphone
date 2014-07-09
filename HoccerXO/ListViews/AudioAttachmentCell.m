@@ -148,20 +148,32 @@
 }
 
 - (void) setAttachment:(Attachment *)attachment {
+    if (attachment == _attachment) {
+        // This is particularly important to break an infinite loop where [attachment
+        // loadPreviewImageIntoCacheWithCompletion] modifies the attachment itself,
+        // causing this method to be called again (through NSFetchedResultsControllerDelegate
+        // updates).
+
+        return;
+    }
+
     _attachment = attachment;
 
     if (attachment) {
         AttachmentInfo *info = [AttachmentInfo infoForAttachment:attachment];
         self.titleLabel.text = info.audioTitle;
         self.subtitleLabel.text = info.audioArtistAndAlbum;
+        self.artwork.image = attachment.previewImage;
         
-        [attachment loadImage:^(UIImage *image, NSError *error) {
-            if (error == nil) {
-                self.artwork.image = image;
-            } else {
-                NSLog(@"ERROR: Loading audio artwork image failed: %@", error);
-            }
-        }];
+        if (!attachment.previewImage) {
+            [attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *error) {
+                if (error == nil) {
+                    self.artwork.image = attachment.previewImage;
+                } else {
+                    NSLog(@"ERROR: Loading audio artwork preview image failed: %@", error);
+                }
+            }];
+        }
     } else {
         self.titleLabel.text = @"";
         self.subtitleLabel.text = @"";
