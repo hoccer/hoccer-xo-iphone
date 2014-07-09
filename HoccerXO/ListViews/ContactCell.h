@@ -36,5 +36,6 @@
 - (CGFloat) labelSpacing;
 
 + (void) configureCell:(UITableViewCell<ContactCell> *)cell forContact: (Contact *)contact;
+- (void) highlightText:(NSString *)highlightText;
 
 @end

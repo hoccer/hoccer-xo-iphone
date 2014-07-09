@@ -144,6 +144,7 @@
 - (void) configureContactCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Contact *contact = [self contactAtIndexPath:indexPath];
     [ContactCell configureCell:cell forContact:contact];
+    [cell highlightText:self.searchText];
 }
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath {

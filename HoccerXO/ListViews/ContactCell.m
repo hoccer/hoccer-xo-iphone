@@ -15,6 +15,7 @@
 #import "HXOLabel.h"
 #import "HXOPluralocalization.h"
 #import "HXOUI.h"
+#import "NSString+EnumerateRanges.h"
 #import "VectorArtView.h"
 
 #import "avatar_contact.h"
@@ -214,6 +215,20 @@
     } else {
         NSString * relationshipKey = [NSString stringWithFormat: @"contact_relationship_%@", contact.relationshipState];
         return NSLocalizedString(relationshipKey, nil);
+    }
+}
+
+- (void) highlightText:(NSString *)highlightText {
+    if (highlightText) {
+        NSString *title = self.titleLabel.text;
+        NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc] initWithString:title];
+        
+        [title enumerateRangesOfString:highlightText options:NSCaseInsensitiveSearch usingBlock:^(NSRange range) {
+            [attributedTitle setAttributes:@{ NSForegroundColorAttributeName: [UIColor blackColor] } range:range];
+        }];
+        
+        self.titleLabel.textColor = [[HXOUI theme] lightTextColor];
+        self.titleLabel.attributedText = attributedTitle;
     }
 }
 
