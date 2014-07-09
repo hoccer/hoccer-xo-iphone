@@ -27,6 +27,7 @@
 #import "GroupInStatuNascendi.h"
 #import "KeyStatusCell.h"
 #import "HXOPluralocalization.h"
+#import "NSString+UUID.h"
 
 
 //#define SHOW_CONNECTION_STATUS
@@ -326,6 +327,34 @@ static int  groupMemberContext;
     [super didUpdateInspectedObject];
 
     if (self.groupInStatuNascendi) {
+#ifndef OLD_CREATION
+        NSMutableArray * members = [NSMutableArray new];
+        NSMutableArray * roles = [NSMutableArray new];
+        for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
+            Contact * contact = self.groupInStatuNascendi.members[i];
+            [members addObject:contact.clientId];
+            [roles addObject:kGroupMembershipRoleMember];
+        }
+        [self.chatBackend createGroupWithMembersAndType:kGroupTypeUser
+                                                withTag:[NSString stringWithUUID]
+                                               withName:self.groupInStatuNascendi.nickName
+                                            withMembers:members
+                                              withRoles:roles
+                                            withHandler:^(Group *newGroup)
+         {
+             if (newGroup != nil) {
+                 newGroup.alias = self.groupInStatuNascendi.alias;
+                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
+                 [self.chatBackend updateGroup:newGroup];
+                 self.inspectedObject = newGroup;
+             } else {
+                 [AppDelegate.instance showOperationFailedAlert:nil withTitle:nil withOKBlock:^{
+                     [self quitInspection];
+                     [self.delegate controllerDidFinish: self];
+                 }];
+             }
+         }];
+#else
         [self.chatBackend createGroupWithHandler:^(Group * newGroup) {
             if (newGroup) {
                 newGroup.nickName = self.groupInStatuNascendi.nickName;
@@ -370,6 +399,7 @@ static int  groupMemberContext;
                 self.inspectedObject = newGroup;
             }
         }];
+#endif
     } else if (self.group.iAmAdmin) {
         [self.chatBackend updateGroup: self.group];
     }
