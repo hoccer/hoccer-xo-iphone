@@ -261,6 +261,7 @@
 		C5B167D01962B982004D3A28 /* AddToCollectionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */; };
 		C5B167E21963ECF6004D3A28 /* AudioAttachmentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E11963ECF6004D3A28 /* AudioAttachmentDataSource.m */; };
 		C5B167E619657AA0004D3A28 /* CollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E519657AA0004D3A28 /* CollectionItem.m */; };
+		C5C359AC196D395700D835F3 /* NSString+EnumerateRanges.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C359AB196D395700D835F3 /* NSString+EnumerateRanges.m */; };
 		C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C3BD17194065100072AE5F /* AttachmentMigration.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
@@ -926,6 +927,8 @@
 		C5B167E519657AA0004D3A28 /* CollectionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionItem.m; sourceTree = "<group>"; };
 		C5C35982196AB09D00D835F3 /* HoccerXO-44.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-44.xcdatamodel"; sourceTree = "<group>"; };
 		C5C3599B196ACF5500D835F3 /* HoccerXO-45.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-45.xcdatamodel"; sourceTree = "<group>"; };
+		C5C359AA196D395700D835F3 /* NSString+EnumerateRanges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+EnumerateRanges.h"; sourceTree = "<group>"; };
+		C5C359AB196D395700D835F3 /* NSString+EnumerateRanges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+EnumerateRanges.m"; sourceTree = "<group>"; };
 		C5C3BD16194065100072AE5F /* AttachmentMigration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentMigration.h; sourceTree = "<group>"; };
 		C5C3BD17194065100072AE5F /* AttachmentMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentMigration.m; sourceTree = "<group>"; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
@@ -1356,6 +1359,8 @@
 				C576EBC71934CC6100C0D254 /* NSMutableArray+Shuffle.m */,
 				E95176121913ECCB00EFD1C6 /* NSObject+DelegateHelper.h */,
 				E95176131913ECCB00EFD1C6 /* NSObject+DelegateHelper.m */,
+				C5C359AA196D395700D835F3 /* NSString+EnumerateRanges.h */,
+				C5C359AB196D395700D835F3 /* NSString+EnumerateRanges.m */,
 				C576EBC81934CC6100C0D254 /* NSString+FromTimeInterval.h */,
 				C576EBC91934CC6100C0D254 /* NSString+FromTimeInterval.m */,
 				E9E92F91187503F7007B8042 /* NSString+HTML.h */,
@@ -2784,6 +2789,7 @@
 				E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */,
 				6378484A16F4040C00DE03C2 /* HXOModel.m in Sources */,
 				63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */,
+				C5C359AC196D395700D835F3 /* NSString+EnumerateRanges.m in Sources */,
 				C576EC6E1934CD1500C0D254 /* AudioAttachmentSection.m in Sources */,
 				6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */,
 				E9E92F8C18748F21007B8042 /* ServerViewController.m in Sources */,
