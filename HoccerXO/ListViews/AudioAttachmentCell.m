@@ -170,6 +170,34 @@
     [self updatePlaybackState];
 }
 
+- (void) setHighlightText:(NSString *)highlightText {
+    _highlightText = highlightText;
+    
+    if (highlightText) {
+        NSString *title = self.titleLabel.text;
+        NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc] initWithString:title];
+
+        BOOL done = NO;
+        NSRange searchRange = NSMakeRange(0, [title length]);
+        
+        while (!done) {
+            NSRange foundRange = [title rangeOfString:highlightText options:NSCaseInsensitiveSearch range:searchRange];
+            
+            if (foundRange.location == NSNotFound) {
+                done = YES;
+            } else {
+                [attributedTitle setAttributes:@{ NSForegroundColorAttributeName: [UIColor blackColor] } range:foundRange];
+
+                NSUInteger newRangeStart = NSMaxRange(foundRange);
+                searchRange = NSMakeRange(newRangeStart, [title length] - newRangeStart);
+            }
+        }
+
+        self.titleLabel.textColor = [[HXOUI theme] lightTextColor];
+        self.titleLabel.attributedText = attributedTitle;
+    }
+}
+
 - (void) updatePlaybackState {
     HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
     if (player.isPlaying && [player.attachment isEqual:self.attachment]) {
