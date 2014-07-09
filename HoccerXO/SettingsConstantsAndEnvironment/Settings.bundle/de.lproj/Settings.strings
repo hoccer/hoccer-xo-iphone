@@ -15,9 +15,9 @@
 
 "p_thumb" = "Briefmarke (0.01 MPixel)";
 "p_low" = "gering (0.06 MPixel)";
-"p_medium" = "mittel (0.25 MPixels)";
-"p_high" = "hoch (1 MPixels)";
-"p_veryhigh" = "sehr hoch (4 Mpixels)";
+"p_medium" = "mittel (0.25 MPixel)";
+"p_high" = "hoch (1 MPixel)";
+"p_veryhigh" = "sehr hoch (4 MPixel)";
 "p_full" = "volle Auflösung";
 
 "Appearance"="Ansicht";
