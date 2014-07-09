@@ -3108,7 +3108,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3142,7 +3142,6 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -3151,7 +3150,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "473C0135-A15E-4F09-88D5-FD666C6E152C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "473C0135-A15E-4F09-88D5-FD666C6E152C";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -3165,8 +3163,6 @@
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -3189,7 +3185,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO";
-				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
@@ -3205,7 +3200,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Hoccer GmbH (SK64A5FJ3Z)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hoccer GmbH (SK64A5FJ3Z)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -3228,8 +3222,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO";
-				PROVISIONING_PROFILE = "473C0135-A15E-4F09-88D5-FD666C6E152C";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "473C0135-A15E-4F09-88D5-FD666C6E152C";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
@@ -3250,7 +3242,7 @@
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -3278,8 +3270,6 @@
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -3302,7 +3292,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO Dev";
-				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
@@ -3361,7 +3350,6 @@
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = "HOCCER_DEV=1";
@@ -3371,7 +3359,6 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "9A8CF503-E59C-404A-8096-541DB42A5E29";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "9A8CF503-E59C-404A-8096-541DB42A5E29";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -3386,7 +3373,6 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Hoccer GmbH (SK64A5FJ3Z)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hoccer GmbH (SK64A5FJ3Z)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -3409,7 +3395,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO Dev";
-				PROVISIONING_PROFILE = "9A8CF503-E59C-404A-8096-541DB42A5E29";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
