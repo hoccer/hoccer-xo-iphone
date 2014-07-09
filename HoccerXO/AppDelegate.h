@@ -111,6 +111,7 @@ extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * con
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
 
 - (void) showFatalErrorAlertWithMessage:(NSString *)message withTitle:(NSString *)title;
+- (void) showOperationFailedAlert:(NSString *)message withTitle:(NSString *) title withOKBlock:(ContinueBlock)okBlock;
 
 -(void)configureForNearbyMode:(BOOL)modeNearby;
 -(BOOL)inNearbyMode;

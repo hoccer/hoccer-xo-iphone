@@ -1589,6 +1589,22 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     [alert show];
 }
 
+- (void) showOperationFailedAlert:  (NSString *) message withTitle:(NSString *) title withOKBlock:(ContinueBlock)okBlock{
+    if (title == nil) {
+        title = NSLocalizedString(@"operation_failed_default_title", nil);
+    }
+    if (message == nil) {
+        message = NSLocalizedString(@"operation_failed_default_message", nil);
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
+                                                    message: message
+                                            completionBlock: ^(NSUInteger buttonIndex,UIAlertView* alertView) { okBlock(); }
+                                          cancelButtonTitle:NSLocalizedString(@"ok",nil)
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
+
 - (void) showCorruptedDatabaseAlert {
     [self showDeleteDatabaseAlertWithMessage:@"The database is corrupted. Your database must be deleted to continue. All chats will be deleted. Do you want to delete your database?" withTitle:@"Database corrupted"];
     

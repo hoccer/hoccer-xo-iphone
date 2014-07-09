@@ -47,6 +47,10 @@
 "fatal_error_default_title"   = "Fatal Error";
 "fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
 
+"operation_failed_default_title"    = "Operation Failed";
+"operation_failed_default_message"  = "The operation has failed. Check you network connection and try again later";
+
+
 "http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
 "http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
 

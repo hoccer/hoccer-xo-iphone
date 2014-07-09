@@ -47,6 +47,10 @@
 "fatal_error_default_title"   = "Unbehebbarer Fehlerzustand";
 "fatal_error_default_message" = "Ein unbehebbarer Fehler ist aufgetreten und Hoccer XO wird sich beenden. Bitte starte Hoccer XO neu.";
 
+"operation_failed_default_title"    = "Vorgang fehlgeschlagen";
+"operation_failed_default_message"  = "Ein Vorgang ist fehlgeschlagen. Überprüfe deine Netzwerkverbindung und versuche es später noch einmal.";
+
+
 "http://hoccer.com/hoccer-xo-tutorial/"="http://hoccer.com/hoccer-xo-anleitung/";
 "http://hoccer.com/hoccer-xo-faq/"="http://hoccer.com/hoccer-xo-fragen-antworten/";
 

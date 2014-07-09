@@ -2278,6 +2278,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 #pragma mark - Group related rpc interfaces: outgoing rpc calls
 
+
 // TODO: better failure behavior using handler
 - (void) createGroupWithHandler:(CreateGroupHandler)handler {
     Group * group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:self.delegate.mainObjectContext];
@@ -2290,9 +2291,7 @@ static NSTimer * _stateNotificationDelayTimer;
     //group.groupKey = [Crypto random256BitKey];
     
     GroupMembership * myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.mainObjectContext];
-    //AUTOREL [group addMembersObject:myMember];
     myMember.group = group;
-    //AUTOREL group.myGroupMembership = myMember;
     myMember.ownGroupContact = group;
     myMember.contact = group;
     myMember.role = @"admin";
@@ -2325,6 +2324,34 @@ static NSTimer * _stateNotificationDelayTimer;
          }
      }];
 }
+
+
+// public TalkGroup createGroupWithMembers(String groupTag, String groupName, String[] members, String[] roles) {
+- (void) createGroupWithMembersAndType:(NSString*)type withTag:(NSString*)groupTag withName:(NSString*)groupName withMembers:(NSArray*)memberIds withRoles:(NSArray*)roles withHandler:(CreateGroupHandler)handler {
+    
+    [_serverConnection invoke: @"createGroupWithMembers" withParams: @[type, groupTag, groupName, memberIds, roles]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSString * groupId = responseOrError[@"groupId"];
+             if (groupId != nil) {
+                 [self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                     [self updateGroupHere: responseOrError inContext:context];
+                     [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                         Group * group = [self getGroupById:groupId inContext:context];
+                         if (handler) handler(group);
+                     }];
+                 }];
+             } else {
+                 NSLog(@"'ERROR: createGroupWithMembers: nil group id");
+             }
+         } else {
+             NSLog(@"createGroupWithMembers() failed: %@", responseOrError);
+             if (handler) handler(nil);
+         }
+     }];
+}
+
 
 // String updateEnvironment(TalkEnvironment environment);
 - (void) updateEnvironment:(HXOEnvironment *) environment withHandler:(UpdateEnvironmentHandler)handler {
@@ -2513,9 +2540,15 @@ static NSTimer * _stateNotificationDelayTimer;
     if (GROUP_DEBUG) NSLog(@"updateGroupHere with %@",groupDict);
     
     NSString * groupId = groupDict[@"groupId"];
-    if (LOCKING_TRACE) NSLog(@"Entering synchronized updateGroupHere %@",groupId);
+    NSString * groupTag = groupDict[@"groupTag"];
+    if (LOCKING_TRACE) NSLog(@"Entering updateGroupHere %@",groupId);
     
-    Group * group = [self getGroupById: groupId orByTag:groupDict[@"groupTag"] inContext:context];
+    if (groupId == nil || groupTag == nil) {
+        NSLog(@"#ERROR: group without tag or id");
+        return NO;
+    }
+    
+    Group * group = [self getGroupById: groupId orByTag:groupTag inContext:context];
     
     NSString * groupState = groupDict[@"state"];
     if (groupState == nil) {

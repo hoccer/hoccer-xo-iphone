@@ -96,6 +96,13 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) acceptInvitation: (NSString*) token;
 
 - (void) createGroupWithHandler:(CreateGroupHandler)handler;
+- (void) createGroupWithMembersAndType:(NSString*)type
+                               withTag:(NSString*)groupTag
+                              withName:(NSString*)groupName
+                           withMembers:(NSArray*)memberIds
+                             withRoles:(NSArray*)roles
+                           withHandler:(CreateGroupHandler)handler;
+
 - (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler;
 - (void) removeGroupMember:(GroupMembership *) member onDeletion:(GroupMemberDeleted)deletionHandler;
 - (void) updateGroup:(Group *) group;
