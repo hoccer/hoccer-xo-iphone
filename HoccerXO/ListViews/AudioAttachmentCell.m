@@ -171,9 +171,7 @@
     [self updatePlaybackState];
 }
 
-- (void) setHighlightText:(NSString *)highlightText {
-    _highlightText = highlightText;
-    
+- (void) highlightText:(NSString *)highlightText {
     if (highlightText) {
         NSString *title = self.titleLabel.text;
         NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc] initWithString:title];

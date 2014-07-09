@@ -138,7 +138,7 @@
 - (void) configureAudioAttachmentCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Attachment *attachment = [self attachmentAtIndexPath:indexPath];
     cell.attachment = attachment;
-    cell.highlightText = self.searchText;
+    [cell highlightText:self.searchText];
 }
 
 - (void) configureContactCell:(ContactCell *)cell atIndexPath:(NSIndexPath *)indexPath {

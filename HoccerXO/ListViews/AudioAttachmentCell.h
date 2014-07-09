@@ -19,7 +19,6 @@
 @property (nonatomic,readonly) UILabel     * subtitleLabel;
 @property (nonatomic,readonly) UIImageView * artwork;
 @property (nonatomic,strong)   Attachment  * attachment;
-@property (nonatomic,strong)   NSString    * highlightText;
 
 - (void) commonInit;
 - (void) preferredContentSizeChanged: (NSNotification*) notification;
@@ -29,5 +28,7 @@
 - (CGFloat) artworkSize;
 - (CGFloat) verticalPadding;
 - (CGFloat) labelSpacing;
+
+- (void) highlightText:(NSString *)highlightText;
 
 @end
