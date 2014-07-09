@@ -2209,7 +2209,7 @@ ready:;
         return [self stateStringForMessage: message];
     } else {
 #ifdef DEBUG
-        NSString * author = [[self getAuthor: message] nickName];
+        NSString * author = [[self getAuthor: message] nickNameOrAlias];
         NSString * attachmentMac = @"";
         if (message.attachment != nil) {
             if (message.attachment.sourceMAC != nil && message.attachment.destinationMAC != nil) {
@@ -2228,7 +2228,7 @@ ready:;
             }
         }
 #endif
-        return [[self getAuthor: message] nickName];
+        return [[self getAuthor: message] nickNameOrAlias];
     }
 }
 

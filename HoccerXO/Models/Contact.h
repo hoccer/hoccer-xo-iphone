@@ -102,6 +102,7 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 @property (nonatomic, strong)   NSMutableSet    * deliveriesReceived;
 @property (nonatomic, strong)   NSMutableSet    * groupMemberships;
 @property (readonly)            NSString        * nickNameWithStatus;
+@property (readonly)            NSString        * nickNameOrAlias;
 
 @property (nonatomic)           NSString        * groupMembershipList;
 

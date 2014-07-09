@@ -560,7 +560,10 @@ bool almostEqual(CGFloat a, CGFloat b) {
 }
 
 - (NSArray*) sortDescriptors {
-    return @[[[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES]];
+    return @[[[NSSortDescriptor alloc] initWithKey:@"relationshipState" ascending: YES],
+             [[NSSortDescriptor alloc] initWithKey: @"alias" ascending: YES],
+             [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES]
+             ];
 }
 
 - (void) addPredicates: (NSMutableArray*) predicates {

@@ -175,7 +175,9 @@ NSString * const kPresenceStateTyping = @"typing";
     }
 }
 
-
+- (NSString*) nickNameOrAlias {
+    return self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
+}
 
 - (NSString*) nickNameWithStatus {
 
@@ -192,7 +194,7 @@ NSString * const kPresenceStateTyping = @"typing";
             }
         }
     }
-    NSString * name = self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
+    NSString * name = self.nickNameOrAlias;
     NSString * statusString = nil;
     if (self.isInvited) {
         statusString = @"✪";
