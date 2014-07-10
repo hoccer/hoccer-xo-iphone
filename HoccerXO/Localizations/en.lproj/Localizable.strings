@@ -45,7 +45,7 @@
 "search_placeholder" = "search";
 
 "fatal_error_default_title"   = "Fatal Error";
-"fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
+"fatal_error_default_message" = "An unrecoverable error occured and Bofrost Messenger will quit. Please restart Bofrost Messenger.";
 
 "http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
 "http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
@@ -54,7 +54,7 @@
 // About
 //==============================================================================
 
-"about_prosa"             = "Hoccer XO - your secure multimedia messenger\n\nSecurity, data protection and the protection of privacy are of extreme importance to us. Hoccer sets new standards in mobile data transmission and puts mobile privacy to a whole new level, due to latest encryption and transmission technologies. Hoccer XO provides an easy and unlimited exchange of data between smartphones and tablets, without constraining users to register and enter confidential data.\n\nShare hugs & kisses";
+"about_prosa"             = "Bofrost Messenger - your secure multimedia messenger\n\nSecurity, data protection and the protection of privacy are of extreme importance to us. Hoccer sets new standards in mobile data transmission and puts mobile privacy to a whole new level, due to latest encryption and transmission technologies. Bofrost Messenger provides an easy and unlimited exchange of data between smartphones and tablets, without constraining users to register and enter confidential data.\n\nShare hugs & kisses";
 
 "about_team_heading"      = "Team";
 "about_client_developers" = "Client Developers:";
@@ -162,7 +162,7 @@
 //==============================================================================
 
 "certificate_invalid_title"   = "Invalid Server Certificate";
-"certificate_invalid_message" = "Hoccer XO could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
+"certificate_invalid_message" = "Bofrost Messenger could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
 
 //==============================================================================
 // Chat
@@ -315,7 +315,7 @@
 //==============================================================================
 
 "credentials_setup_nav_title"                  = "Account";
-"credentials_setup_found_old_text"             = "Hoccer XO was installed before. Do you want to reactivate the old account and keep all contacts?";
+"credentials_setup_found_old_text"             = "Bofrost Messenger was installed before. Do you want to reactivate the old account and keep all contacts?";
 "credentials_setup_found_file_text"            = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
 "credentials_setup_keep_btn_title"             = "Reactivate account";
 "credentials_setup_import_btn_title"           = "Import";
@@ -346,7 +346,7 @@
 "credentials_and_database_not_deleted_message" = "Try restoring from backup or import saved credentials";
 
 "credentials_and_database_deleted_title"       = "Credentials Deleted";
-"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer XO.";
+"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Bofrost Messenger.";
 
 "credentials_invalid_title"                    = "Credentials not accepted";
 "credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') If this is a new device and you have transfered data from the old device, you can transfer your credentials from your old device under 'Profile'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
@@ -360,9 +360,9 @@
 //==============================================================================
 
 "database_corrupt_not_deleted_title"   = "Database not deleted";
-"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer XO will not work.";
+"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Bofrost Messenger will not work.";
 "database_corrupt_deleted_title"       = "Database deleted";
-"database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
+"database_corrupt_deleted_message"     = "The database was deleted. Please restart Bofrost Messenger.";
 
 "database_delete_btn_title"="Delete Database";
 
@@ -461,9 +461,9 @@
 "invite_option_mail_btn_title"    = "Invite via E-Mail";
 "invite_option_code_btn_title"    = "Invite by Code";
 
-"invite_mail_subject"             = "Hoccer XO Invitation";
-"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
-"invite_sms_text"                 = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
+"invite_mail_subject"             = "Bofrost Messenger Invitation";
+"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Bofrost Messenger to chat securely with my friends.\nDownload Bofrost Messenger now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
+"invite_sms_text"                 = "Hey! I'm now using the free app Bofrost Messenger for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
 
 "invite_scan_nav_title"           = "Scan";
 "invite_generate_nav_title"       = "Generate";
@@ -474,7 +474,7 @@
 "invite_error_alert_title"        = "Invite failed";
 "invite_error_rejected_by_server" = "The code has been rejected";
 
-"invite_no_xo_qr_code_title"      = "Not a Hoccer XO code";
+"invite_no_xo_qr_code_title"      = "Not a Bofrost Messenger code";
 
 //==============================================================================
 // Keys
@@ -494,7 +494,7 @@
 "key_length_unit_format"                         = "%@ bit";
 
 "key_renew_keypair"                              = "Renew RSA Keypair";
-"key_renew_keypair_info"                         = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+"key_renew_keypair_info"                         = "Bofrost Messenger protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
 
 "key_renew_option_sheet_title"                   = "Create new RSA Keypair?";
 "key_renew_option_automatic"                     = "Automatic";
@@ -545,7 +545,7 @@
 //==============================================================================
 
 "permission_denied_title"              = "Access Denied";
-"permission_denied_microphone_message" = "Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";
+"permission_denied_microphone_message" = "Grant microphone access to Bofrost Messenger in Settings->Privacy->Microphone if you want to record audio.";
 
 //==============================================================================
 // Profile
