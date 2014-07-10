@@ -365,7 +365,11 @@
         [self.navigationController pushViewController:viewController animated:YES];
     } else {
         id<HXOPlaylist> playlist = [[HXOAudioAttachmentDataSourcePlaylist alloc] initWithDataSource:self.dataSource];
-        BOOL success = [[HXOAudioPlayer sharedInstance] playWithPlaylist:playlist atTrackNumber:indexPath.row];
+        
+        // Get track number in original playlist (independent of search mode)
+        NSUInteger trackNumber = [[self.dataSource indexPathForAttachment:[self.dataSource attachmentAtIndexPath:indexPath]] row];
+
+        BOOL success = [[HXOAudioPlayer sharedInstance] playWithPlaylist:playlist atTrackNumber:trackNumber];
         
         if (success) {
             UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];
