@@ -3169,8 +3169,8 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				HXO_DEFAULT_ENVIRONMENT = production;
-				HXO_URL_SCHEME = hxo;
-				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
+				HXO_URL_SCHEME = wlbm;
+				HXO_URL_SCHEME_ID = com.hoccer.bofrostmessenger;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -3208,8 +3208,8 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				HXO_DEFAULT_ENVIRONMENT = production;
-				HXO_URL_SCHEME = hxo;
-				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
+				HXO_URL_SCHEME = wlbm;
+				HXO_URL_SCHEME_ID = com.hoccer.bofrostmessenger;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -3282,8 +3282,8 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				HXO_DEFAULT_ENVIRONMENT = development;
-				HXO_URL_SCHEME = hxod;
-				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
+				HXO_URL_SCHEME = wlbmd;
+				HXO_URL_SCHEME_ID = "com.hoccer.bofrostmessenger-dev";
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -3389,8 +3389,8 @@
 					"3rdParty/openssl-xcode/openssl/include",
 				);
 				HXO_DEFAULT_ENVIRONMENT = development;
-				HXO_URL_SCHEME = hxod;
-				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
+				HXO_URL_SCHEME = wlbmd;
+				HXO_URL_SCHEME_ID = "com.hoccer.bofrostmessenger-dev";
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (

@@ -67,10 +67,10 @@
 
 
 #ifdef HOCCER_DEV
-NSString * const kHXOURLScheme = @"hxod";
+NSString * const kHXOURLScheme = @"wlbmd";
 static NSString * const kTestFlightAppToken = @"c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 #else
-NSString * const kHXOURLScheme = @"hxo";
+NSString * const kHXOURLScheme = @"wlbm";
 static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
 #endif
 
