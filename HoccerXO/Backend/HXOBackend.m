@@ -2020,10 +2020,11 @@ static NSTimer * _stateNotificationDelayTimer;
 
     // NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
-        [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self.delegate performWithLockingId:@"presences" inNewBackgroundContext:^(NSManagedObjectContext *context) {
             for (id presence in changedPresences) {
                 // NSLog(@"updatePresences presence=%@",presence);
-                [self presenceUpdatedLocked:presence inContext:context];
+                [self presenceUpdated:presence inContext:context];
+                //[self presenceUpdatedLocked:presence inContext:context];
             }
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                 [self checkContactsWithCompletion:completion];
@@ -2100,7 +2101,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }];
     }
 }
-
+/*
 - (void) presenceUpdatedLocked:(NSDictionary *) thePresence inContext:(NSManagedObjectContext *)context {
     NSString * myClient = thePresence[@"clientId"];
     if (myClient != nil) {
@@ -2110,7 +2111,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self.delegate unlockId:myClient];
     }
 }
-
+*/
 
 - (void) presenceUpdated:(NSDictionary *) thePresence inContext:(NSManagedObjectContext *)context {
     
@@ -2470,13 +2471,15 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     [self getGroups: latestChange groupsHandler:^(NSArray * changedGroupsDicts) {
-        [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self.delegate performWithLockingId:@"groups" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        //[self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
             if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroupsDicts);
             if ([changedGroupsDicts isKindOfClass:[NSArray class]]) {
                 BOOL ok = YES;
                 for (NSDictionary * groupDict in changedGroupsDicts) {
                     
-                    BOOL stateOk =[self updateGroupHereLocking: groupDict inContext:context];
+                    //BOOL stateOk =[self updateGroupHereLocking: groupDict inContext:context];
+                    BOOL stateOk = [self updateGroupHere:groupDict inContext:context];
                     Group * group = [self getGroupById:groupDict[@"groupId"] inContext:context];
                     if (group != nil) {
                         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[group] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)  {
@@ -2570,7 +2573,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     return nil;
 }
-
+/*
 - (BOOL) updateGroupHereLocking:(NSDictionary*) groupDict inContext:(NSManagedObjectContext*) context {
     NSString * groupId = groupDict[@"groupId"];
     if (groupId != nil) {
@@ -2581,7 +2584,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     return NO;
 }
-
+*/
 - (BOOL) updateGroupHere: (NSDictionary*) groupDict inContext:(NSManagedObjectContext*) context {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
     if (GROUP_DEBUG) NSLog(@"updateGroupHere with %@",groupDict);
@@ -2929,7 +2932,8 @@ static NSTimer * _stateNotificationDelayTimer;
     [self getGroup: group.clientId onResult:^(NSDictionary * groupDict) {
         if (groupDict) {
             [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
-                [self updateGroupHereLocking:groupDict inContext:context];
+                //[self updateGroupHereLocking:groupDict inContext:context];
+                [self updateGroupHere:groupDict inContext:context];
             }];
         }
     }];
@@ -2949,10 +2953,10 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) getGroupMember:(GroupMembership *)member {
-    NSString * memberClientId = member.group.clientId;
-    [self getGroupMember:memberClientId clientId:member.contactClientId onResult:^(NSDictionary *memberDict) {
+    NSString * groupId = member.group.clientId;
+    [self getGroupMember:groupId clientId:member.contactClientId onResult:^(NSDictionary *memberDict) {
         if (memberDict != nil) {
-            [self.delegate performWithLockingId:memberClientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            [self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 [self updateGroupMemberHere: memberDict inContext:context];
             }];
         }
@@ -3006,7 +3010,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere found group nick %@ id %@",group.nickName, group.clientId);
     
     NSString * memberClientId = groupMemberDict[@"clientId"];
-    [self.delegate lockId:memberClientId];
+    //[self.delegate lockId:memberClientId];
     Contact * memberContact = [self getContactByClientId:memberClientId inContext:context];
     
     if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere getContactByClientId %@ returned group contact nick %@ id %@",memberClientId,memberContact.nickName,memberContact.clientId);
@@ -3018,7 +3022,7 @@ static NSTimer * _stateNotificationDelayTimer;
             // do not process unknown contacts with membership state ‘none'
             if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere not processing group member with state %@ id %@",groupMemberDict[@"state"], memberClientId);
             if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r2) %@",groupId);
-            [self.delegate unlockId:memberClientId];
+            //[self.delegate unlockId:memberClientId];
             return;
         }
         // create new Contact because it does not exist and is not own contact
@@ -3028,7 +3032,7 @@ static NSTimer * _stateNotificationDelayTimer;
         memberContact.clientId = memberClientId;
         [self.delegate saveContext:context];
     }
-    [self.delegate unlockId:memberClientId];
+    //[self.delegate unlockId:memberClientId];
     
     // look for member matching memberClientId in group members
     NSSet * theMemberSet = [group.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
