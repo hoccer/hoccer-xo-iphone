@@ -133,7 +133,7 @@
 "audio_attachment_list_count_attachments"          = "%u Songs";
 "audio_attachment_list_count_attachments (one)"    = "Einen Song";
 "audio_attachment_list_confirm_delete_title"       = "%@ löschen?";
-"audio_attachment_list_remove_from_collection"     = "Aus Wiedergabeliste entfernen";
+"audio_attachment_list_remove_from_collection"     = "Aus Sammlung entfernen";
 
 "audio_attachment_list_search_section_senders"     = "Absender";
 "audio_attachment_list_search_section_attachments" = "Songs";
@@ -224,9 +224,9 @@
 // Collection
 //==============================================================================
 
-"collection_list_nav_title"         = "Wiedergabelisten";
-"collection_new_collection_title"   = "Neue Wiedergabeliste";
-"collection_new_collection_message" = "Bitte gib einen Namen für die neue Wiedergabeliste ein:";
+"collection_list_nav_title"         = "Sammlungen";
+"collection_new_collection_title"   = "Neue Sammlung";
+"collection_new_collection_message" = "Bitte gib einen Namen für die neue Sammlung ein:";
 
 //==============================================================================
 // Contact - uses strings from profile
