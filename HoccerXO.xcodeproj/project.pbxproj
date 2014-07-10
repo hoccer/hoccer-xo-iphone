@@ -479,8 +479,6 @@
 /* Begin PBXFileReference section */
 		1F5ACFB1196EE31900E00CB7 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "filecache-whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
 		1F5ACFB2196EE31900E00CB7 /* whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
-		1F5ACFB3196EE43400E00CB7 /* filecache.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = filecache.talk.hoccer.de.der; sourceTree = "<group>"; };
-		1F5ACFB4196EE43400E00CB7 /* talkserver.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = talkserver.talk.hoccer.de.der; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
 		6302A97118DA870400B2D04F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
 		6302A97218DA870400B2D04F /* BigNumUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumUtilities.h; sourceTree = "<group>"; };
@@ -1654,8 +1652,6 @@
 		6390949D1738751800DF889B /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
-				1F5ACFB3196EE43400E00CB7 /* filecache.talk.hoccer.de.der */,
-				1F5ACFB4196EE43400E00CB7 /* talkserver.talk.hoccer.de.der */,
 				1F5ACFB1196EE31900E00CB7 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */,
 				1F5ACFB2196EE31900E00CB7 /* whitelabel-bofrost.talk.hoccer.de.der */,
 				6382545017503531000347CD /* server_production.der */,

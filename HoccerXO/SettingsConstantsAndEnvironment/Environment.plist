@@ -11,8 +11,8 @@
 	<dict>
 		<key>development</key>
 		<array>
-			<string>talkserver.talk.hoccer.de</string>
-			<string>filecache.talk.hoccer.de</string>
+			<string>whitelabel-bofrost.talk.hoccer.de</string>
+			<string>filecache-whitelabel-bofrost.talk.hoccer.de</string>
 			<string>server_production</string>
 		</array>
 		<key>development_orig</key>
@@ -29,7 +29,7 @@
 	<key>talkServer</key>
 	<dict>
 		<key>development</key>
-		<string>wss://test1.talk.hoccer.de</string>
+		<string>wss://192.76.129.21:443</string>
 		<key>production</key>
 		<string>wss://192.76.129.21:443</string>
 	</dict>
