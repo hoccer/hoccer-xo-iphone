@@ -13,7 +13,7 @@
 #import "AppDelegate.h"
 #import "Attachment.h"
 #import "AttachmentInfo.h"
-#import "NSArray+RemoveObject.h"
+#import "HXOArrayPlaylist.h"
 #import "NSMutableArray+Shuffle.h"
 
 @interface HXOAudioPlayer ()
@@ -23,7 +23,7 @@
 @property (nonatomic, assign) HXOAudioPlayerRepeatState repeatState;
 @property (nonatomic, strong) Attachment * attachment;
 @property (nonatomic, strong) AVAudioPlayer * player;
-@property (nonatomic, strong) NSArray * playlist;
+@property (nonatomic, strong) id<HXOPlaylist> playlist;
 @property (nonatomic, strong) NSArray * trackNumbers;
 @property (nonatomic, assign) NSUInteger playlistIndex;
 
@@ -49,29 +49,20 @@
     self = [super init];
     
     if (self) {
-        self.playlist = @[];
+        self.playlist = [[HXOArrayPlaylist alloc] initWithArray:@[]];
         self.trackNumbers = @[];
         self.playlistIndex = 0;
         self.isShuffled = NO;
         self.repeatState = HXOAudioPlayerRepeatStateOff;
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(objectsDidChange:) name:NSManagedObjectContextObjectsDidChangeNotification object:[[AppDelegate instance] mainObjectContext]];
     }
     
     return self;
 }
 
-- (void) dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:NSManagedObjectContextObjectsDidChangeNotification object:[[AppDelegate instance] mainObjectContext]];
-}
-
 #pragma mark - Public interface
 
-- (BOOL) playWithPlaylist: (NSArray *) playlist atTrackNumber: (NSUInteger) trackNumber {
-    self.playlist = playlist;
-    NSUInteger index = [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
-
-    return [self playAtIndex:index];
+- (BOOL) playArray:(NSArray *)playlist atTrackNumber:(NSUInteger)trackNumber {
+    return [self playWithPlaylist:[[HXOArrayPlaylist alloc] initWithArray:playlist] atTrackNumber:trackNumber];
 }
 
 - (BOOL) play {
@@ -160,12 +151,21 @@
 
 #pragma mark - Private helpers
 
+- (BOOL) playWithPlaylist: (id<HXOPlaylist>) playlist atTrackNumber: (NSUInteger) trackNumber {
+    self.playlist = playlist;
+    playlist.delegate = self;
+
+    NSUInteger index = [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
+    
+    return [self playAtIndex:index];
+}
+
 - (BOOL) playAtIndex: (NSUInteger) index {
     NSAssert(index < [self.playlist count], @"playlist index out of bounds");
 
     self.playlistIndex = index;
     
-    Attachment *attachment = [self.playlist objectAtIndex:self.currentTrackNumber];
+    Attachment *attachment = [self.playlist attachmentAtIndex:self.currentTrackNumber];
     return [self playAttachment:attachment];
 }
 
@@ -206,20 +206,14 @@
     [self updateNowPlayingInfo];
 }
 
-- (void) removeAttachmentFromPlaylist: (Attachment *) attachment {
-    NSUInteger removedTrackNumber = [self.playlist indexOfObject:attachment];
-    
-    if (removedTrackNumber != NSNotFound) {
-        NSArray *newPlaylist = [self.playlist arrayByRemovingObject:attachment];
+- (void) playlist:(id<HXOPlaylist>)playlist didRemoveAttachment:(Attachment *)attachment atIndex:(NSUInteger)index {
+    NSUInteger currentTrackNumber = [self currentTrackNumber];
+    NSUInteger newTrackNumber = index < currentTrackNumber ? currentTrackNumber - 1 : currentTrackNumber;
 
-        NSUInteger currentTrackNumber = [self currentTrackNumber];
-        NSUInteger newTrackNumber = removedTrackNumber < currentTrackNumber ? currentTrackNumber - 1 : currentTrackNumber;
-
-        if (newTrackNumber < [newPlaylist count]) {
-            [self playWithPlaylist:newPlaylist atTrackNumber:newTrackNumber];
-        } else {
-            [self stop];
-        }
+    if (newTrackNumber < [self.playlist count]) {
+        [self playWithPlaylist:self.playlist atTrackNumber:newTrackNumber];
+    } else {
+        [self stop];
     }
 }
 
@@ -300,19 +294,6 @@
 
 - (void) audioPlayerBeginInterruption:(AVAudioPlayer *)player {
     [self stop];
-}
-
-#pragma mark - Notification handling
-
-- (void) objectsDidChange: (NSNotification *) notification {
-    NSArray *deletedObjects = [[notification userInfo] objectForKey:NSDeletedObjectsKey];
-    
-    for (id object in deletedObjects) {
-        if ([object isKindOfClass:[Attachment class]]) {
-            Attachment *attachment = (Attachment *)object;
-            [self removeAttachmentFromPlaylist:attachment];
-        }
-    }
 }
 
 @end

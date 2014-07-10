@@ -260,6 +260,7 @@
 		C5B167E21963ECF6004D3A28 /* AudioAttachmentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E11963ECF6004D3A28 /* AudioAttachmentDataSource.m */; };
 		C5B167E619657AA0004D3A28 /* CollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E519657AA0004D3A28 /* CollectionItem.m */; };
 		C5C359AC196D395700D835F3 /* NSString+EnumerateRanges.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C359AB196D395700D835F3 /* NSString+EnumerateRanges.m */; };
+		C5C359FF196EC72F00D835F3 /* HXOArrayPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C359FE196EC72F00D835F3 /* HXOArrayPlaylist.m */; };
 		C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C3BD17194065100072AE5F /* AttachmentMigration.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
@@ -921,6 +922,10 @@
 		C5C3599B196ACF5500D835F3 /* HoccerXO-45.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-45.xcdatamodel"; sourceTree = "<group>"; };
 		C5C359AA196D395700D835F3 /* NSString+EnumerateRanges.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+EnumerateRanges.h"; sourceTree = "<group>"; };
 		C5C359AB196D395700D835F3 /* NSString+EnumerateRanges.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+EnumerateRanges.m"; sourceTree = "<group>"; };
+		C5C359EE196EC4CD00D835F3 /* HXOPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXOPlaylist.h; sourceTree = "<group>"; };
+		C5C359FD196EC72F00D835F3 /* HXOArrayPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOArrayPlaylist.h; sourceTree = "<group>"; };
+		C5C359FE196EC72F00D835F3 /* HXOArrayPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOArrayPlaylist.m; sourceTree = "<group>"; };
+		C5C35A00196ECAB500D835F3 /* HXOPlaylistDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXOPlaylistDelegate.h; sourceTree = "<group>"; };
 		C5C3BD16194065100072AE5F /* AttachmentMigration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentMigration.h; sourceTree = "<group>"; };
 		C5C3BD17194065100072AE5F /* AttachmentMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentMigration.m; sourceTree = "<group>"; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
@@ -1988,10 +1993,14 @@
 		C576EBB11934CC3B00C0D254 /* Audio Player */ = {
 			isa = PBXGroup;
 			children = (
+				C5C359FD196EC72F00D835F3 /* HXOArrayPlaylist.h */,
+				C5C359FE196EC72F00D835F3 /* HXOArrayPlaylist.m */,
 				C576EBB21934CC3B00C0D254 /* HXOAudioPlaybackButtonController.h */,
 				C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */,
 				C576EBB41934CC3B00C0D254 /* HXOAudioPlayer.h */,
 				C576EBB51934CC3B00C0D254 /* HXOAudioPlayer.m */,
+				C5C359EE196EC4CD00D835F3 /* HXOPlaylist.h */,
+				C5C35A00196ECAB500D835F3 /* HXOPlaylistDelegate.h */,
 			);
 			path = "Audio Player";
 			sourceTree = "<group>";
@@ -2846,6 +2855,7 @@
 				C576EC451934CCB200C0D254 /* player_close.m in Sources */,
 				63638F8E18EC8210008DA997 /* avatar_group.m in Sources */,
 				E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */,
+				C5C359FF196EC72F00D835F3 /* HXOArrayPlaylist.m in Sources */,
 				63CB3E8918D4A909006BB511 /* VectorArt.m in Sources */,
 				63C1356D1716A4AB00969B0B /* Invite.m in Sources */,
 				63793C0C18D5024800BB6951 /* paper_dart.m in Sources */,

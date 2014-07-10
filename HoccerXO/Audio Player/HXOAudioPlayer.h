@@ -9,6 +9,9 @@
 #import <AVFoundation/AVFoundation.h>
 #import <Foundation/Foundation.h>
 
+#import "HXOPlaylist.h"
+#import "HXOPlaylistDelegate.h"
+
 @class Attachment;
 
 typedef NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
@@ -17,11 +20,11 @@ typedef NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
     HXOAudioPlayerRepeatStateAll
 };
 
-@interface HXOAudioPlayer : NSObject <AVAudioPlayerDelegate>
+@interface HXOAudioPlayer : NSObject <AVAudioPlayerDelegate, HXOPlaylistDelegate>
 
 + (HXOAudioPlayer *) sharedInstance;
 
-- (BOOL) playWithPlaylist: (NSArray *) playlist atTrackNumber: (NSUInteger) trackNumber;
+- (BOOL) playArray:(NSArray *)array atTrackNumber:(NSUInteger)trackNumber;
 - (BOOL) play;
 - (void) pause;
 - (void) togglePlayPause;
