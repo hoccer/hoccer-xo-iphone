@@ -48,6 +48,10 @@
     return [self.array objectAtIndex:index];
 }
 
+- (NSUInteger) indexOfAttachment:(Attachment *)attachment {
+    return [self.array indexOfObject:attachment];
+}
+
 #pragma mark - Notification handling
 
 - (void) objectsDidChange: (NSNotification *) notification {

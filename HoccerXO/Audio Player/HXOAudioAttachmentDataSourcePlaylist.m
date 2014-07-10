@@ -39,6 +39,10 @@
     return [self.dataSource attachmentAtIndexPath:[NSIndexPath indexPathForRow:index inSection:0]];
 }
 
+- (NSUInteger) indexOfAttachment:(Attachment *)attachment {
+    return [[self.dataSource indexPathForAttachment:attachment] row];
+}
+
 #pragma mark - AudioAttachmentDataSourceDelegate
 
 - (void) dataSourceWillChangeContent:(AudioAttachmentDataSource *)dataSource {}
@@ -47,24 +51,21 @@
 
 - (void) dataSource:(AudioAttachmentDataSource *)dataSource didChangeAttachmentAtIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     switch(type) {
-        case NSFetchedResultsChangeInsert: {
-            [self.delegate playlist:self didInsertAttachmentAtIndex:newIndexPath.row];
+        case NSFetchedResultsChangeInsert:
+            [self.delegate playlistDidChange:self];
             break;
-        }
             
-        case NSFetchedResultsChangeDelete: {
+        case NSFetchedResultsChangeDelete:
             [self.delegate playlist:self didRemoveAttachmentAtIndex:indexPath.row];
             break;
-        }
             
-        case NSFetchedResultsChangeUpdate: {
+        case NSFetchedResultsChangeUpdate:
+            [self.delegate playlistDidChange:self];
             break;
-        }
             
-        case NSFetchedResultsChangeMove: {
-            [self.delegate playlist:self didMoveAttachmentFromIndex:indexPath.row toIndex:newIndexPath.row];
+        case NSFetchedResultsChangeMove:
+            [self.delegate playlistDidChange:self];
             break;
-        }
     }
 }
 

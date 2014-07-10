@@ -16,6 +16,7 @@
 
 - (NSUInteger) count;
 - (Attachment *) attachmentAtIndex:(NSUInteger)index;
+- (NSUInteger) indexOfAttachment:(Attachment *)attachment;
 
 @property (nonatomic, weak) id<HXOPlaylistDelegate> delegate;
 

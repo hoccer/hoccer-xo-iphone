@@ -12,8 +12,7 @@
 
 @protocol HXOPlaylistDelegate <NSObject>
 
-- (void) playlist:(id<HXOPlaylist>)playlist didInsertAttachmentAtIndex:(NSUInteger)index;
-- (void) playlist:(id<HXOPlaylist>)playlist didMoveAttachmentFromIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex;
+- (void) playlistDidChange:(id<HXOPlaylist>)playlist;
 - (void) playlist:(id<HXOPlaylist>)playlist didRemoveAttachmentAtIndex:(NSUInteger)index;
 
 @end
