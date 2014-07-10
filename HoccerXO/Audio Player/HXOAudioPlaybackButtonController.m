@@ -9,6 +9,7 @@
 #import "HXOAudioPlaybackButtonController.h"
 
 #import "Attachment.h"
+#import "HXOArrayPlaylist.h"
 #import "HXOAudioPlayer.h"
 
 
@@ -60,9 +61,12 @@
 
 - (void) togglePlayback: (id) sender {
     if ([self isPlaying]) {
-        [[HXOAudioPlayer sharedInstance] pause];
+        [self.audioPlayer pause];
+    } else if ([self.audioPlayer.attachment isEqual:self.attachment]) {
+        [self.audioPlayer play];
     } else {
-        BOOL success = [[HXOAudioPlayer sharedInstance] playArray:@[ self.attachment ] atTrackNumber:0];
+        HXOArrayPlaylist *playlist = [[HXOArrayPlaylist alloc] initWithArray:@[ self.attachment ]];
+        BOOL success = [self.audioPlayer playWithPlaylist:playlist atTrackNumber:0];
         
         if (!success) {
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)

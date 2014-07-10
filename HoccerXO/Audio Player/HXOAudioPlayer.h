@@ -24,7 +24,6 @@ typedef NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
 
 + (HXOAudioPlayer *) sharedInstance;
 
-- (BOOL) playArray:(NSArray *)array atTrackNumber:(NSUInteger)trackNumber;
 - (BOOL) playWithPlaylist:(id<HXOPlaylist>)playlist atTrackNumber:(NSUInteger)trackNumber;
 - (BOOL) play;
 - (void) pause;

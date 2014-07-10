@@ -61,10 +61,6 @@
 
 #pragma mark - Public interface
 
-- (BOOL) playArray:(NSArray *)playlist atTrackNumber:(NSUInteger)trackNumber {
-    return [self playWithPlaylist:[[HXOArrayPlaylist alloc] initWithArray:playlist] atTrackNumber:trackNumber];
-}
-
 - (BOOL) playWithPlaylist:(id<HXOPlaylist>)playlist atTrackNumber:(NSUInteger)trackNumber {
     self.playlist = playlist;
     playlist.delegate = self;
