@@ -30,7 +30,7 @@ static HXOUI * _currentTheme;
 #pragma mark - Applicationwide Colors
 
 - (UIColor*) tintColor {
-    return [UIColor colorWithHexString: @"#0079FF"];
+    return [UIColor colorWithHexString: @"#172c63"];
 }
 
 - (UIColor*) navigationBarBackgroundColor {
@@ -38,7 +38,7 @@ static HXOUI * _currentTheme;
 }
 
 - (UIColor*) navigationBarTintColor {
-    return [UIColor colorWithHexString: @"#4DBFAC"];
+    return [UIColor colorWithHexString: @"#172c63"];
 }
 
 - (UIColor*) tableSeparatorColor {
@@ -111,7 +111,7 @@ static HXOUI * _currentTheme;
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
         case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: @"#E6E7EB"];
-        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: @"#4DBFAC"];
+        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: @"#172c63"];
         case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: @"#B8CCCA"];
         case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: @"#BD3935"];
     }
