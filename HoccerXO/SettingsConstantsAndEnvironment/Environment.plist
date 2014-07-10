@@ -21,8 +21,8 @@
 		</array>
 		<key>production</key>
 		<array>
-			<string>talkserver.talk.hoccer.de</string>
-			<string>filecache.talk.hoccer.de</string>
+			<string>whitelabel-bofrost.talk.hoccer.de</string>
+			<string>filecache-whitelabel-bofrost.talk.hoccer.de</string>
 			<string>server_production</string>
 		</array>
 	</dict>
