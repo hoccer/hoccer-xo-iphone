@@ -3182,7 +3182,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Hoccer XO";
+				PRODUCT_NAME = "Bofrost Messenger";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -3221,7 +3221,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Hoccer XO";
+				PRODUCT_NAME = "Bofrost Messenger";
 				PROVISIONING_PROFILE = "473C0135-A15E-4F09-88D5-FD666C6E152C";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "473C0135-A15E-4F09-88D5-FD666C6E152C";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -3295,7 +3295,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Hoccer XO Dev";
+				PRODUCT_NAME = "Bofrost Messenger Dev";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -3402,7 +3402,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Hoccer XO Dev";
+				PRODUCT_NAME = "Bofrost Messenger Dev";
 				PROVISIONING_PROFILE = "9A8CF503-E59C-404A-8096-541DB42A5E29";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
