@@ -79,4 +79,10 @@
     return [[self.fetchedResultsController fetchedObjects] copy];
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    return [[MusicBrowserDataSource alloc] initWithContact:self.contact];
+}
+
 @end

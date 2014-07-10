@@ -60,7 +60,7 @@
             
             if (index != NSNotFound) {
                 self.array = [self.array arrayByRemovingObject:attachment];
-                [self.delegate playlist:self didRemoveAttachment:attachment atIndex:index];
+                [self.delegate playlist:self didRemoveAttachmentAtIndex:index];
             }
         }
     }

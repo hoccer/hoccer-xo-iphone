@@ -8,11 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-@class Attachment;
 @protocol HXOPlaylist;
 
 @protocol HXOPlaylistDelegate <NSObject>
 
-- (void) playlist:(id<HXOPlaylist>)playlist didRemoveAttachment:(Attachment *)attachment atIndex:(NSUInteger)index;
+- (void) playlist:(id<HXOPlaylist>)playlist didInsertAttachmentAtIndex:(NSUInteger)index;
+- (void) playlist:(id<HXOPlaylist>)playlist didMoveAttachmentFromIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex;
+- (void) playlist:(id<HXOPlaylist>)playlist didRemoveAttachmentAtIndex:(NSUInteger)index;
 
 @end

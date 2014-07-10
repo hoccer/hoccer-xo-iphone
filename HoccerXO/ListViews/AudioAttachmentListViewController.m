@@ -18,6 +18,7 @@
 #import "ContactCell.h"
 #import "ContactPicker.h"
 #import "Group.h"
+#import "HXOAudioAttachmentDataSourcePlaylist.h"
 #import "HXOAudioPlayer.h"
 #import "HXOPluralocalization.h"
 #import "HXOThemedNavigationController.h"
@@ -363,11 +364,8 @@
         viewController.contact = contact;
         [self.navigationController pushViewController:viewController animated:YES];
     } else {
-        NSArray *playlist = self.dataSource.attachments;
-        NSUInteger trackNumber = [playlist indexOfObject:[self.dataSource attachmentAtIndexPath:indexPath]];
-        
-        HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
-        BOOL success = [audioPlayer playArray:playlist atTrackNumber:trackNumber];
+        id<HXOPlaylist> playlist = [[HXOAudioAttachmentDataSourcePlaylist alloc] initWithDataSource:self.dataSource];
+        BOOL success = [[HXOAudioPlayer sharedInstance] playWithPlaylist:playlist atTrackNumber:indexPath.row];
         
         if (success) {
             UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];

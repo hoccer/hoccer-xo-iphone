@@ -65,6 +65,15 @@
     return [self playWithPlaylist:[[HXOArrayPlaylist alloc] initWithArray:playlist] atTrackNumber:trackNumber];
 }
 
+- (BOOL) playWithPlaylist:(id<HXOPlaylist>)playlist atTrackNumber:(NSUInteger)trackNumber {
+    self.playlist = playlist;
+    playlist.delegate = self;
+    
+    NSUInteger index = [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
+    
+    return [self playAtIndex:index];
+}
+
 - (BOOL) play {
     return [self playAtIndex:self.playlistIndex];
 }
@@ -151,15 +160,6 @@
 
 #pragma mark - Private helpers
 
-- (BOOL) playWithPlaylist: (id<HXOPlaylist>) playlist atTrackNumber: (NSUInteger) trackNumber {
-    self.playlist = playlist;
-    playlist.delegate = self;
-
-    NSUInteger index = [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
-    
-    return [self playAtIndex:index];
-}
-
 - (BOOL) playAtIndex: (NSUInteger) index {
     NSAssert(index < [self.playlist count], @"playlist index out of bounds");
 
@@ -204,17 +204,6 @@
     }
     
     [self updateNowPlayingInfo];
-}
-
-- (void) playlist:(id<HXOPlaylist>)playlist didRemoveAttachment:(Attachment *)attachment atIndex:(NSUInteger)index {
-    NSUInteger currentTrackNumber = [self currentTrackNumber];
-    NSUInteger newTrackNumber = index < currentTrackNumber ? currentTrackNumber - 1 : currentTrackNumber;
-
-    if (newTrackNumber < [self.playlist count]) {
-        [self playWithPlaylist:self.playlist atTrackNumber:newTrackNumber];
-    } else {
-        [self stop];
-    }
 }
 
 - (void) setCurrentTime:(NSTimeInterval)currentTime {
@@ -267,6 +256,65 @@
     } else {
         self.trackNumbers = orderedTrackNumbers;
         return trackNumber;
+    }
+}
+
+#pragma mark - HXOPlaylistDelegate
+
+- (void) playlist:(id<HXOPlaylist>)playlist didInsertAttachmentAtIndex:(NSUInteger)index {
+    NSUInteger currentTrackNumber = [self currentTrackNumber];
+    NSUInteger newTrackNumber = index <= currentTrackNumber ? currentTrackNumber + 1 : currentTrackNumber;
+    
+    [self playWithPlaylist:self.playlist atTrackNumber:newTrackNumber];
+}
+
+- (void) playlist:(id<HXOPlaylist>)playlist didMoveAttachmentFromIndex:(NSUInteger)sourceIndex toIndex:(NSUInteger)destinationIndex {
+    NSUInteger currentTrackNumber = [self currentTrackNumber];
+    NSUInteger newTrackNumber;
+
+    if (sourceIndex < destinationIndex) {
+        // item is moved downwards
+        if (currentTrackNumber < sourceIndex) {
+            // item is above the moved item
+            newTrackNumber = currentTrackNumber;
+        } else if (currentTrackNumber == sourceIndex) {
+            // item is moved item
+            newTrackNumber = destinationIndex;
+        } else if (currentTrackNumber <= destinationIndex) {
+            // item is between moved item and destination
+            newTrackNumber = currentTrackNumber - 1;
+        } else {
+            // item is below the destination
+            newTrackNumber = currentTrackNumber;
+        }
+    } else {
+        // item is moved upwards
+        if (currentTrackNumber > sourceIndex) {
+            // item is below the moved item
+            newTrackNumber = currentTrackNumber;
+        } else if (currentTrackNumber == sourceIndex) {
+            // item is moved item
+            newTrackNumber = destinationIndex;
+        } else if (currentTrackNumber >= destinationIndex) {
+            // item is between moved item and destination
+            newTrackNumber = currentTrackNumber + 1;
+        } else {
+            // item is above the destination
+            newTrackNumber = currentTrackNumber;
+        }
+    }
+
+    [self playWithPlaylist:self.playlist atTrackNumber:newTrackNumber];
+}
+
+- (void) playlist:(id<HXOPlaylist>)playlist didRemoveAttachmentAtIndex:(NSUInteger)index {
+    NSUInteger currentTrackNumber = [self currentTrackNumber];
+    NSUInteger newTrackNumber = index < currentTrackNumber ? currentTrackNumber - 1 : currentTrackNumber;
+    
+    if (newTrackNumber < [self.playlist count]) {
+        [self playWithPlaylist:self.playlist atTrackNumber:newTrackNumber];
+    } else {
+        [self stop];
     }
 }
 

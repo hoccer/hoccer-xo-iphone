@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
+#import "AudioAttachmentDataSourceDelegate.h"
+
 @class Attachment;
 @class Contact;
 
-@protocol AudioAttachmentDataSourceDelegate;
-
-@interface AudioAttachmentDataSource : NSObject <UITableViewDataSource, NSFetchedResultsControllerDelegate>
+@interface AudioAttachmentDataSource : NSObject <UITableViewDataSource, NSFetchedResultsControllerDelegate, NSCopying>
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath;
 - (Contact *) contactAtIndexPath:(NSIndexPath *)indexPath;

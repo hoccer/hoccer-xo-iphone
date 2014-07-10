@@ -261,6 +261,7 @@
 		C5B167E619657AA0004D3A28 /* CollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E519657AA0004D3A28 /* CollectionItem.m */; };
 		C5C359AC196D395700D835F3 /* NSString+EnumerateRanges.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C359AB196D395700D835F3 /* NSString+EnumerateRanges.m */; };
 		C5C359FF196EC72F00D835F3 /* HXOArrayPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C359FE196EC72F00D835F3 /* HXOArrayPlaylist.m */; };
+		C5C35A03196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C35A02196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m */; };
 		C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C3BD17194065100072AE5F /* AttachmentMigration.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
@@ -926,6 +927,8 @@
 		C5C359FD196EC72F00D835F3 /* HXOArrayPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOArrayPlaylist.h; sourceTree = "<group>"; };
 		C5C359FE196EC72F00D835F3 /* HXOArrayPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOArrayPlaylist.m; sourceTree = "<group>"; };
 		C5C35A00196ECAB500D835F3 /* HXOPlaylistDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HXOPlaylistDelegate.h; sourceTree = "<group>"; };
+		C5C35A01196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioAttachmentDataSourcePlaylist.h; sourceTree = "<group>"; };
+		C5C35A02196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioAttachmentDataSourcePlaylist.m; sourceTree = "<group>"; };
 		C5C3BD16194065100072AE5F /* AttachmentMigration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentMigration.h; sourceTree = "<group>"; };
 		C5C3BD17194065100072AE5F /* AttachmentMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentMigration.m; sourceTree = "<group>"; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
@@ -1995,6 +1998,8 @@
 			children = (
 				C5C359FD196EC72F00D835F3 /* HXOArrayPlaylist.h */,
 				C5C359FE196EC72F00D835F3 /* HXOArrayPlaylist.m */,
+				C5C35A01196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.h */,
+				C5C35A02196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m */,
 				C576EBB21934CC3B00C0D254 /* HXOAudioPlaybackButtonController.h */,
 				C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */,
 				C576EBB41934CC3B00C0D254 /* HXOAudioPlayer.h */,
@@ -2954,6 +2959,7 @@
 				63E5698C196353B0007E06BF /* HXOPluralocalization.m in Sources */,
 				E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */,
 				630CAB7818E0F6C400782507 /* ContactSheetBase.m in Sources */,
+				C5C35A03196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m in Sources */,
 				E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */,
 				E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */,
 				E9E92F6F18733D01007B8042 /* HTTPConnection.m in Sources */,

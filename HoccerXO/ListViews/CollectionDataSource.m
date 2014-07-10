@@ -90,4 +90,10 @@
     [self.collection moveAttachmentAtIndex:sourceIndexPath.row toIndex:destinationIndexPath.row];
 }
 
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone {
+    return [[CollectionDataSource alloc] initWithCollection:self.collection];
+}
+
 @end

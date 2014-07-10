@@ -199,4 +199,10 @@
     @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"AudioAttachmentDataSource must be subclassed" userInfo:nil];
 }
 
+#pragma mark - NSCopying
+
+- (id) copyWithZone:(NSZone *)zone {
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"AudioAttachmentDataSource must be subclassed" userInfo:nil];
+}
+
 @end
