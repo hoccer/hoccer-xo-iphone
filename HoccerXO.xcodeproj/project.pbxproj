@@ -175,7 +175,6 @@
 		63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */; };
 		63FE105418EFA726008630DE /* AttachmentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE105318EFA726008630DE /* AttachmentButton.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
-		6AC25EE1193F844700ED5E61 /* navbar-playing.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25EE0193F844700ED5E61 /* navbar-playing.m */; };
 		6AC25F0C193FAB3200ED5E61 /* navbar-profile-contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25F0B193FAB3200ED5E61 /* navbar-profile-contact.m */; };
 		6AC25F0F193FAC0800ED5E61 /* navbar-profile-group.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AC25F0E193FAC0800ED5E61 /* navbar-profile-group.m */; };
 		C51B1148194858EC00FBCD2B /* NSArray+RemoveObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */; };
@@ -188,7 +187,6 @@
 		C576EBCC1934CC6100C0D254 /* NSMutableArray+Shuffle.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBC71934CC6100C0D254 /* NSMutableArray+Shuffle.m */; };
 		C576EBCD1934CC6100C0D254 /* NSString+FromTimeInterval.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBC91934CC6100C0D254 /* NSString+FromTimeInterval.m */; };
 		C576EBCE1934CC6100C0D254 /* UIImage+Tint.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBCB1934CC6100C0D254 /* UIImage+Tint.m */; };
-		C576EBD51934CC8400C0D254 /* AudioPlayerStateItemController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD01934CC8400C0D254 /* AudioPlayerStateItemController.m */; };
 		C576EBD61934CC8400C0D254 /* AudioPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD21934CC8400C0D254 /* AudioPlayerViewController.m */; };
 		C576EBD71934CC8400C0D254 /* SeekSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD41934CC8400C0D254 /* SeekSlider.m */; };
 		C576EBDC1934CC9E00C0D254 /* AudioAttachmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD91934CC9E00C0D254 /* AudioAttachmentCell.m */; };
@@ -790,10 +788,6 @@
 		63FE105218EFA726008630DE /* AttachmentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentButton.h; sourceTree = "<group>"; };
 		63FE105318EFA726008630DE /* AttachmentButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentButton.m; sourceTree = "<group>"; };
 		6A568B8A18BA8F0400584A04 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		6AC25EDF193F844700ED5E61 /* navbar-playing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "navbar-playing.h"; sourceTree = "<group>"; };
-		6AC25EE0193F844700ED5E61 /* navbar-playing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "navbar-playing.m"; sourceTree = "<group>"; };
-		6AC25EF0193F872300ED5E61 /* navbar-playing.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "navbar-playing.pcvd"; sourceTree = "<group>"; };
-		6AC25EF1193F872300ED5E61 /* navbar-playing.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "navbar-playing.svg"; sourceTree = "<group>"; };
 		6AC25F06193FAB1C00ED5E61 /* navbar-profile-contact.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "navbar-profile-contact.pcvd"; sourceTree = "<group>"; };
 		6AC25F07193FAB1C00ED5E61 /* navbar-profile-group.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "navbar-profile-group.pcvd"; sourceTree = "<group>"; };
 		6AC25F08193FAB1C00ED5E61 /* navbar-profile-contact.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "navbar-profile-contact.svg"; sourceTree = "<group>"; };
@@ -822,8 +816,6 @@
 		C576EBC91934CC6100C0D254 /* NSString+FromTimeInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+FromTimeInterval.m"; sourceTree = "<group>"; };
 		C576EBCA1934CC6100C0D254 /* UIImage+Tint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Tint.h"; sourceTree = "<group>"; };
 		C576EBCB1934CC6100C0D254 /* UIImage+Tint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Tint.m"; sourceTree = "<group>"; };
-		C576EBCF1934CC8400C0D254 /* AudioPlayerStateItemController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayerStateItemController.h; sourceTree = "<group>"; };
-		C576EBD01934CC8400C0D254 /* AudioPlayerStateItemController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerStateItemController.m; sourceTree = "<group>"; };
 		C576EBD11934CC8400C0D254 /* AudioPlayerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioPlayerViewController.h; sourceTree = "<group>"; };
 		C576EBD21934CC8400C0D254 /* AudioPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerViewController.m; sourceTree = "<group>"; };
 		C576EBD31934CC8400C0D254 /* SeekSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeekSlider.h; sourceTree = "<group>"; };
@@ -1694,8 +1686,6 @@
 			children = (
 				63AE4548170494AF0099F0CB /* AboutViewController.h */,
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
-				C576EBCF1934CC8400C0D254 /* AudioPlayerStateItemController.h */,
-				C576EBD01934CC8400C0D254 /* AudioPlayerStateItemController.m */,
 				C576EBD11934CC8400C0D254 /* AudioPlayerViewController.h */,
 				C576EBD21934CC8400C0D254 /* AudioPlayerViewController.m */,
 				63756A8E18F6434C003F7555 /* ContactPicker.h */,
@@ -2027,10 +2017,6 @@
 				C576EBEE1934CCB100C0D254 /* fullscreen-icon-volume-down@2x.png */,
 				C576EBEF1934CCB100C0D254 /* fullscreen-icon-volume-up.png */,
 				C576EBF01934CCB100C0D254 /* fullscreen-icon-volume-up@2x.png */,
-				6AC25EDF193F844700ED5E61 /* navbar-playing.h */,
-				6AC25EE0193F844700ED5E61 /* navbar-playing.m */,
-				6AC25EF0193F872300ED5E61 /* navbar-playing.pcvd */,
-				6AC25EF1193F872300ED5E61 /* navbar-playing.svg */,
 				C576EBF31934CCB200C0D254 /* player_button_next.h */,
 				C576EBF41934CCB200C0D254 /* player_button_next.m */,
 				C576EBF51934CCB200C0D254 /* player_button_pause.h */,
@@ -2830,7 +2816,6 @@
 				636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */,
 				636492D71711E97900E35514 /* AvatarView.m in Sources */,
 				63E9B00118F314AB00EFF829 /* disclosure_arrow.m in Sources */,
-				6AC25EE1193F844700ED5E61 /* navbar-playing.m in Sources */,
 				63DC01511713976B00609513 /* ImageViewController.m in Sources */,
 				C576EC6D1934CD1500C0D254 /* AudioAttachmentMessageCell.m in Sources */,
 				637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */,
@@ -2963,7 +2948,6 @@
 				E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */,
 				E9E92F6F18733D01007B8042 /* HTTPConnection.m in Sources */,
 				E9E92F3C18733B7A007B8042 /* DDASLLogger.m in Sources */,
-				C576EBD51934CC8400C0D254 /* AudioPlayerStateItemController.m in Sources */,
 				6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */,
 				E9E92F7A18733D01007B8042 /* HTTPRedirectResponse.m in Sources */,
 				6302A98D18DA870400B2D04F /* SRPServer.m in Sources */,

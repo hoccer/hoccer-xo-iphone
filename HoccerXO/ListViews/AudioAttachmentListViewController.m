@@ -12,7 +12,6 @@
 #import "AppDelegate.h"
 #import "Attachment.h"
 #import "AudioAttachmentCell.h"
-#import "AudioPlayerStateItemController.h"
 #import "Collection.h"
 #import "CollectionDataSource.h"
 #import "Contact.h"
@@ -30,7 +29,6 @@
 @interface AudioAttachmentListViewController ()
 
 @property (nonatomic, strong) UIView                         * footerContainerView;
-@property (nonatomic, strong) AudioPlayerStateItemController * audioPlayerStateItemController;
 @property (nonatomic, strong) AudioAttachmentDataSource      * dataSource;
 @property (nonatomic, strong) NSArray                        * attachmentsToDelete;
 
@@ -53,8 +51,6 @@
     
     [self registerCellClass:[AudioAttachmentCell class]];
     [self updateDataSource];
-
-    self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     [self preferredContentSizeChanged:nil];

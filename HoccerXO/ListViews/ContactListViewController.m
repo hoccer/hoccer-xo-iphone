@@ -22,7 +22,6 @@
 #import "GroupInStatuNascendi.h"
 #import "WebViewController.h"
 #import "tab_contacts.h"
-#import "AudioPlayerStateItemController.h"
 
 #define HIDE_SEPARATORS
 #define FETCHED_RESULTS_DEBUG NO
@@ -60,7 +59,6 @@ static const CGFloat kMagicSearchBarHeight = 44;
 @property (nonatomic, readonly) BOOL                           inGroupMode;
 
 @property (nonatomic, readonly) UINavigationController       * webViewController;
-@property (nonatomic, strong) AudioPlayerStateItemController * audioPlayerStateItemController;
 
 
 @end
@@ -307,7 +305,6 @@ CGPoint _correctContentOffset;
 #endif
 
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
-    self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
 

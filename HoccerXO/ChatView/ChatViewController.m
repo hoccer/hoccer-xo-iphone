@@ -60,7 +60,6 @@
 #import "HXOPluralocalization.h"
 #import "HXOAudioPlaybackButtonController.h"
 #import "NSString+FromTimeInterval.h"
-#import "AudioPlayerStateItemController.h"
 
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
@@ -97,7 +96,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (nonatomic, strong)   UITextField                    * autoCorrectTriggerHelper;
 @property (nonatomic, strong)   UILabel                        * messageFieldPlaceholder;
 @property (nonatomic, strong)   NSTimer                        * typingTimer;
-@property (nonatomic, strong)   AudioPlayerStateItemController * audioPlayerStateItemController;
 
 @property  BOOL                                                keyboardShown;
 
@@ -178,8 +176,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     // XXX do this in a more general way...
     self.titleLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-    
-    self.audioPlayerStateItemController = [[AudioPlayerStateItemController alloc] initWithViewController:self];
     
     [self configureView];
 }
