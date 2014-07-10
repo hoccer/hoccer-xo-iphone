@@ -116,4 +116,7 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_A
 +(BOOL)shouldAcknowledgeAttachmentStateForOutgoing:(NSString*) attachmentState;
 +(BOOL)shouldAcknowledgeAttachmentStateForIncoming:(NSString*) attachmentState;
 
++(NSDictionary*) updateRpcKeys;
+
+
 @end

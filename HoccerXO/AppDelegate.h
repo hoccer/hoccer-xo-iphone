@@ -93,7 +93,7 @@ extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * con
 
 - (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock;
 - (void)performWithoutLockingInNewBackgroundContext:(ContextBlock)backgroundBlock;
-- (void)performWithLockingId:(NSString*)lockId inMainContext:(ContextBlock)contextBlock;
+//- (void)performWithLockingId:(NSString*)lockId inMainContext:(ContextBlock)contextBlock;
 - (void)performWithoutLockingInMainContext:(ContextBlock)contextBlock;
 - (void)performAfterCurrentContextFinishedInMainContext:(ContextBlock)contextBlock;
 - (void)performAfterCurrentContextFinishedInMainContextPassing:(NSArray*)objects withBlock:(ContextParameterBlock)contextBlock;

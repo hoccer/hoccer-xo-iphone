@@ -925,16 +925,21 @@ BOOL sameObjects(id obj1, id obj2) {
 -(void)unlockId:(NSString*)Id {
     [[self idLock:Id] unlock];
 }
-
+/*
 - (void)performWithLockingId:(NSString*)lockId inMainContext:(ContextBlock)contextBlock {
     NSManagedObjectContext * mainMOC = [self mainObjectContext];
     [mainMOC performBlock:^{
         NSLock * lock = [self idLock:lockId];
+        if (TRACE_LOCKING) NSLog(@"maincontext acquiring lock %@",lock);
         [lock lock];
+        if (TRACE_LOCKING) NSLog(@"maincontext acquired lock %@",lock);
         contextBlock(mainMOC);
+        if (TRACE_LOCKING) NSLog(@"maincontext releasing lock %@",lock);
         [lock unlock];
+        if (TRACE_LOCKING) NSLog(@"maincontext released lock %@",lock);
     }];
 }
+*/
 
 NSArray * objectIds(NSArray* managedObjects) {
     NSError * error = nil;
@@ -1029,7 +1034,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         ++validationErrorCount;
-        if (validationErrorCount < 3) {
+        if (validationErrorCount < 3 || [context isEqual:self.mainObjectContext]) {
             [self performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
                 [self displayValidationError:error];
             }];

@@ -500,46 +500,81 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
+- (NSString*)chatLockForSenderId:(NSString *)senderId andGroupId:(NSString*)groupId {
+    NSString * contactId;
+    if (groupId != nil) {
+        contactId = groupId;
+    } else {
+        contactId = senderId;
+    }
+    NSString * lockId = [@"Chat-" stringByAppendingString:contactId];
+    return lockId;
+}
+
 // TODO: contact should be an array of contacts
 - (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment {
     
-    HXOMessage * message =  (HXOMessage*)[NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: self.delegate.mainObjectContext];
-    message.body = text;
-    message.timeSent = [self estimatedServerTime]; // [NSDate date];
-    message.contact = contact;
-    message.timeAccepted = [self estimatedServerTime];
-    message.isOutgoingFlag = @YES;
-    // message.timeSection = [contact sectionTimeForMessageTime: message.timeSent];
-    message.messageId = @"";
-    //message.messageTag = [NSString stringWithUUID];
-    message.senderId = [UserProfile sharedProfile].clientId;
-
-    Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: self.delegate.mainObjectContext];
-    [message.deliveries addObject: delivery];
-    delivery.message = message;
-    delivery.state = kDeliveryStateNew;
-    
-    if ([contact.type isEqualToString:@"Group"]) {
-        delivery.group = (Group*)contact;
-        delivery.receiver = privateGroupMessageContact;
-        message.sharedKeyIdSalt = delivery.group.sharedKeyIdSalt;
-        message.sharedKeyId = delivery.group.sharedKeyId;
-    } else {
-        delivery.receiver = contact;
-        delivery.group = nil;
-    }
-    
-    [message setupOutgoingEncryption];
-    
-    if (attachment != nil) {
-        message.attachment = attachment;
-        attachment.cipheredSize = [attachment calcCipheredSize];
-        delivery.attachmentState = kDelivery_ATTACHMENT_STATE_NEW;
-        [self createUrlsForTransferOfAttachmentOfMessage:message];
+    if (contact == nil) {
+        NSLog(@"ERROR: sendMessage contact is nil");
         return;
     }
-    delivery.attachmentState = kDelivery_ATTACHMENT_STATE_NONE;
-    [self finishSendMessage:message toContact:contact withDelivery:delivery withAttachment:attachment];
+    
+    NSString * lockId = [self chatLockForSenderId:[UserProfile sharedProfile].clientId andGroupId: contact.isGroup ? contact.clientId : nil];
+    
+    NSManagedObjectID * contactId = contact.objectID;
+    NSManagedObjectID * privateContactId = privateGroupMessageContact.objectID;
+    NSManagedObjectID * attachmentId = attachment.objectID;
+    
+    [self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        
+        Contact * contact = (Contact *)[context objectWithID:contactId];
+        Contact * privateGroupMessageContact = privateContactId == nil ? nil : (Contact *)[context objectWithID:privateContactId];
+        Attachment * attachment = attachmentId == nil ? nil : (Attachment*)[context objectWithID:attachmentId];
+        
+        HXOMessage * message =  (HXOMessage*)[NSEntityDescription insertNewObjectForEntityForName: [HXOMessage entityName] inManagedObjectContext: context];
+        message.body = text;
+        message.timeSent = [self estimatedServerTime]; // [NSDate date];
+        message.contact = contact;
+        message.timeAccepted = [self estimatedServerTime];
+        message.isOutgoingFlag = @YES;
+        // message.timeSection = [contact sectionTimeForMessageTime: message.timeSent];
+        message.messageId = @"";
+        //message.messageTag = [NSString stringWithUUID];
+        message.senderId = [UserProfile sharedProfile].clientId;
+        
+        Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: context];
+        [message.deliveries addObject: delivery];
+        delivery.message = message;
+        delivery.state = kDeliveryStateNew;
+        
+        if (contact.isGroup) {
+            delivery.group = (Group*)contact;
+            delivery.receiver = privateGroupMessageContact;
+            message.sharedKeyIdSalt = delivery.group.sharedKeyIdSalt;
+            message.sharedKeyId = delivery.group.sharedKeyId;
+        } else {
+            delivery.receiver = contact;
+            delivery.group = nil;
+        }
+        
+        [message setupOutgoingEncryption];
+        
+        if (attachment != nil) {
+            message.attachment = attachment;
+            attachment.cipheredSize = [attachment calcCipheredSize];
+            delivery.attachmentState = kDelivery_ATTACHMENT_STATE_NEW;
+            [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[message] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                [self createUrlsForTransferOfAttachmentOfMessage:managedObjects[0]];
+            }];
+            return;
+        }
+        delivery.attachmentState = kDelivery_ATTACHMENT_STATE_NONE;
+        [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[message, delivery] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+            HXOMessage * message = managedObjects[0];
+            Delivery * delivery = managedObjects[1];
+            [self finishSendMessage:message toContact:message.contact withDelivery:delivery withAttachment:message.attachment];
+        }];
+    }];
 }
 
 - (void) createUrlsForTransferOfAttachmentOfMessage:(HXOMessage*)message {
@@ -608,13 +643,21 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary {
+    
     NSString * myMessageId = messageDictionary[@"messageId"];
+    NSString * groupId = deliveryDictionary[@"groupId"];
+    NSString * senderId = deliveryDictionary[@"senderId"];
+    
     if (myMessageId == nil) {
         NSLog(@"ERROR: receiveMessage: missing messageId");
         return;
     }
     
-    [self.delegate performWithLockingId:myMessageId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    // we need to log all message in chat to avoid timeSection problems
+    // (when acceptedTime is set, the timesection of other messages will be touched, too)
+    NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
+    
+    [self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
         if (DELIVERY_TRACE) NSLog(@"receiveMessage");
         if (USE_VALIDATOR) [self validateObject: messageDictionary forEntity:@"RPC_TalkMessage_in"];  // TODO: Handle Validation Error
         if (USE_VALIDATOR) [self validateObject: deliveryDictionary forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
@@ -676,8 +719,8 @@ static NSTimer * _stateNotificationDelayTimer;
             message.attachment = attachment;
         }
         
-        NSString * groupId = deliveryDictionary[@"groupId"];
-        NSString * senderId = deliveryDictionary[@"senderId"];
+        //NSString * groupId = deliveryDictionary[@"groupId"];
+        //NSString * senderId = deliveryDictionary[@"senderId"];
         NSString * receiverId = deliveryDictionary[@"receiverId"];
         
         Contact * sender = [self getContactByClientId:senderId inContext:context];
@@ -692,15 +735,19 @@ static NSTimer * _stateNotificationDelayTimer;
         // There is a small possibilty of message loss, though. It happens if a message by some client
         // to a group arrives before the membership is known to this client.
         if (sender == nil || (groupId != nil && group == nil)) {
-            NSLog(@"Strange message:");
+            NSString * reason = @"";
             if (sender == nil) {
-                NSLog(@"from unknown sender with id %@", senderId);
+                reason = [NSString stringWithFormat: @"{Unknown sender id %@}", senderId];
             } else {
-                NSLog(@"from known sender with name %@ relation %@", sender.nickName, sender.relationshipState);
+                reason = [NSString stringWithFormat: @"{Known sender with name %@ relation %@ id %@}", sender.nickName, sender.relationshipState, sender.clientId];
             }
+            if (groupId != nil && group == nil) {
+                reason = [NSString stringWithFormat: @"%@{Unknown group id %@}", reason, groupId];
+            }
+            NSLog(@"Rejecting strange incoming message, reason= %@",reason);
             
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                [self outDeliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"]];
+                [self inDeliveryReject:messageDictionary[@"messageId"] withReason:reason];
             }];
             [AppDelegate.instance deleteObject:message inContext:context];
             [AppDelegate.instance deleteObject:delivery inContext:context];
@@ -4578,9 +4625,10 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             NSArray * deliveryIds = objectIds(deliveries);
             NSArray * resultDeliveryDicts = (NSArray*)responseOrError;
             NSDictionary * dict = resultDeliveryDicts[0];
-            NSString * messageId = dict[@"messageId"]; // for locking
             
-            [self.delegate performWithLockingId:messageId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            NSString * lockid = [self chatLockForSenderId:dict[@"messageId"] andGroupId:dict[@"groupId"]];
+            
+            [self.delegate performWithLockingId:lockid inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 NSArray * deliveries = managedObjects(deliveryIds,context);
                 HXOMessage * message = (HXOMessage*)[context objectWithID:messageObjId];
                 
@@ -4648,7 +4696,14 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                 for (Delivery * delivery in deliveries) {
                     if (USE_VALIDATOR) [self validateObject: updatedDeliveryDicts[i] forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
                     if (DELIVERY_TRACE) {NSLog(@"deliveryRequest result: Delivery state '%@'->'%@' for messageTag %@ id %@",delivery.state, updatedDeliveryDicts[i][@"state"], updatedDeliveryDicts[i][@"messageTag"],updatedDeliveryDicts[i][@"messageId"] );}
-                    [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
+                    
+                    // update the message fields only from the first delivery
+                    if (i == 0) {
+                        [delivery updateWithDictionary: updatedDeliveryDicts[i++]];
+                    } else {
+                        [delivery updateWithDictionary:updatedDeliveryDicts[i++] withKeys:[Delivery updateRpcKeys]];
+                    }
+                    
                     if (delivery.group != nil) {
                         delivery.group.latestMessageTime = message.timeAccepted;
                     } else {
@@ -5410,8 +5465,9 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             return;
         }
        
-        //NSString * oldAttachmentState = delivery.attachmentState;
-        [delivery updateWithDictionary:deliveryDict];
+        //[delivery updateWithDictionary:deliveryDict];
+        [delivery updateWithDictionary:deliveryDict withKeys:[Delivery updateRpcKeys]];
+        
         if (delivery.message.attachment != nil) {
             NSString * fileId = delivery.message.attachmentFileId;
             if ([kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED isEqualToString:delivery.attachmentState]) {
@@ -5640,7 +5696,14 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         return;
     }
     
-    [self.delegate performWithLockingId:myMessageId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    NSString * groupId = deliveryDict[@"groupId"];
+    NSString * senderId = deliveryDict[@"senderId"];
+
+    // we need to log all message in chat to avoid timeSection problems
+    // (when acceptedTime is set, the timesection of other messages will be touched, too)
+    NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
+    
+    [self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
         
         NSString * myMessageTag = deliveryDict[@"messageTag"];
         NSString * myReceiverId = deliveryDict[@"receiverId"];
@@ -5664,21 +5727,9 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         }
         if (DELIVERY_TRACE) NSLog(@"myDelivery: message Id: %@ receiver:%@ group:%@ objId:%@",myDelivery.message.messageId, myDelivery.receiver.clientId, myDelivery.group.clientId, myDelivery.objectID);
         
-        //HXOMessage * myMessage = [self getMessageById:myMessageId inContext:context];
         HXOMessage * myMessage = [self getMessageByTag:myMessageTag inContext:context];
         
-        //if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%@",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries);
         if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%d",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries.count);
-        
-        /*
-        // handle group delivery
-        if (myDelivery == nil && myMessage != nil && myGroupId != nil) {
-            if (DELIVERY_TRACE) NSLog(@"outgoingDeliveryUpdated: New group delivery for message Id: %@ group:%@ receiver:%@",myMessage.messageId, myGroupId, myReceiverId);
-            Delivery * delivery = [NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: context];
-            //AUTOREL [message.deliveries addObject: delivery];
-            delivery.message = myMessage;
-        }
-         */
         
         if (myDelivery != nil && myMessage != nil) {
             if (myDelivery.isInFinalState) {
@@ -5700,7 +5751,8 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             }
             if (DELIVERY_TRACE) {NSLog(@"outgoingDelivery Notification: Delivery state '%@'->'%@' attachmentState '%@'->'%@'for messageTag %@ id %@",myDelivery.state, deliveryDict[@"state"], myDelivery.attachmentState, deliveryDict[@"attachmentState"],myMessageTag, deliveryDict[@"messageId"]);}
             
-            [myDelivery updateWithDictionary: deliveryDict];
+            //[myDelivery updateWithDictionary: deliveryDict];
+            [myDelivery updateWithDictionary:deliveryDict withKeys:[Delivery updateRpcKeys]];
             
             [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery.message]
                                                                         withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)

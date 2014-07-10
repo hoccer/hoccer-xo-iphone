@@ -1470,7 +1470,7 @@ nil
         NSError *error = nil;
         if (![_fetchedResultsController performFetch:&error]) {
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            [(AppDelegate *)(self.chatBackend.delegate) showCorruptedDatabaseAlert];
+            [(AppDelegate *)(self.chatBackend.delegate) showFatalErrorAlertWithMessage:nil withTitle:nil];
               return;
         }
     } else {
