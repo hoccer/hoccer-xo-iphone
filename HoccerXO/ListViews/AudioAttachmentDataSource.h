@@ -17,7 +17,10 @@
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath;
 - (Contact *) contactAtIndexPath:(NSIndexPath *)indexPath;
+- (NSIndexPath *) indexPathForAttachment:(Attachment *)attachment;
+
 - (NSFetchRequest *) fetchRequest;
+
 - (BOOL) hasContactSection;
 - (BOOL) isContactSection:(NSInteger)section;
 

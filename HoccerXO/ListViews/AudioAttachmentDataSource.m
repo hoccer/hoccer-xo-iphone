@@ -167,6 +167,10 @@
     return [self.filteredContacts objectAtIndex:indexPath.row];
 }
 
+- (NSIndexPath *) indexPathForAttachment:(Attachment *)attachment {
+    @throw [NSException exceptionWithName:NSInternalInconsistencyException reason:@"AudioAttachmentDataSource must be subclassed" userInfo:nil];
+}
+
 #pragma mark - Fetched Results Controller Delegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {

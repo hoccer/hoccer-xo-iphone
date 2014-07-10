@@ -56,7 +56,7 @@
     [self preferredContentSizeChanged:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated{
+- (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
     if (self.footerContainerView == nil) {
@@ -83,6 +83,16 @@
     }
 
     [self updateNavigationBar];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
+    
+    if ([audioPlayer isPlaying]) {
+        Attachment *nowPlayingAttachment = [audioPlayer attachment];
+        NSIndexPath *indexPath = [self.dataSource indexPathForAttachment:nowPlayingAttachment];
+        [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
 }
 
 - (UIButton *)createFooterButton {

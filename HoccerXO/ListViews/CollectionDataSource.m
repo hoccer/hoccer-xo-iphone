@@ -59,6 +59,15 @@
     return collectionItem.attachment;
 }
 
+- (NSIndexPath *) indexPathForAttachment:(Attachment *)attachment {
+    NSSet *items = [self.collection.items filteredSetUsingPredicate:[NSPredicate predicateWithFormat:@"attachment == %@", attachment]];
+
+    NSAssert([items count] <= 1, @"Only one item expected");
+    CollectionItem *item = [items anyObject];
+
+    return [self.fetchedResultsController indexPathForObject:item];
+}
+
 - (NSArray *) attachments {
     NSSortDescriptor *sortDescriptor = [NSSortDescriptor sortDescriptorWithKey:@"index" ascending:YES];
     NSArray *items = [self.collection.items sortedArrayUsingDescriptors:@[ sortDescriptor ]];
