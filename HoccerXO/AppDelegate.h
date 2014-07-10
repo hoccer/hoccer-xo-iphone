@@ -28,7 +28,7 @@ extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * con
 @class MFSideMenuContainerViewController;
 @class HTTPServer;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate, UITabBarControllerDelegate>
 {
     UIBackgroundTaskIdentifier _backgroundTask;
 }

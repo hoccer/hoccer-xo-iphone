@@ -27,6 +27,7 @@
 #import "GesturesInterpreter.h"
 #import "HXOEnvironment.h"
 #import "HXOAudioPlayer.h"
+#import "AudioAttachmentListViewController.h"
 
 #import "Delivery.h" //DEBUG
 
@@ -339,6 +340,9 @@ BOOL sameObjects(id obj1, id obj2) {
 #endif
 
     [AttachmentMigration determinePlayabilityForAllAudioAttachments];
+
+    NSAssert([self.window.rootViewController isKindOfClass:[UITabBarController class]], @"Expecting UITabBarController");
+    ((UITabBarController *)self.window.rootViewController).delegate = self;
     
     return YES;
 }
@@ -2010,6 +2014,20 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             default:
                 break;
         }
+    }
+}
+
+#pragma mark - TabBarControllerDelegate
+
+- (void) tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+    UIViewController *destinationViewController = viewController;
+    
+    if ([viewController isKindOfClass:[UINavigationController class]]) {
+        destinationViewController = ((UINavigationController *)viewController).topViewController;
+    }
+
+    if ([destinationViewController respondsToSelector:@selector(wasSelectedByTabBarController:)]) {
+        [(id)destinationViewController wasSelectedByTabBarController:tabBarController];
     }
 }
 

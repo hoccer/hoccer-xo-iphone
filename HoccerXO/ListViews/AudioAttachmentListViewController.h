@@ -15,6 +15,8 @@
 
 @interface AudioAttachmentListViewController : HXOTableViewController <AudioAttachmentDataSourceDelegate, AddToCollectionListViewControllerDelegate, UIActionSheetDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
 
+- (void)wasSelectedByTabBarController:(UITabBarController *)tabBarController;
+
 @property (nonatomic, strong) Collection *collection;
 @property (nonatomic, strong) Contact *contact;
 

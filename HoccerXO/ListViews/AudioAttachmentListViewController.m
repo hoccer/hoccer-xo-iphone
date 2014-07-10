@@ -85,7 +85,7 @@
     [self updateNavigationBar];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
+- (void)wasSelectedByTabBarController:(UITabBarController *)tabBarController {
     HXOAudioPlayer *audioPlayer = [HXOAudioPlayer sharedInstance];
     
     if ([audioPlayer isPlaying]) {
