@@ -11,8 +11,8 @@
 	<dict>
 		<key>development</key>
 		<array>
-			<string>whitelabel-bofrost.talk.hoccer.de.der</string>
-			<string>filecache-whitelabel-bofrost.talk.hoccer.de.der</string>
+			<string>whitelabel-bofrost.talk.hoccer.de</string>
+			<string>filecache-whitelabel-bofrost.talk.hoccer.de</string>
 		</array>
 		<key>development_orig</key>
 		<array>
@@ -20,8 +20,8 @@
 		</array>
 		<key>production</key>
 		<array>
-			<string>whitelabel-bofrost.talk.hoccer.de.der</string>
-			<string>filecache-whitelabel-bofrost.talk.hoccer.de.der</string>
+			<string>whitelabel-bofrost.talk.hoccer.de</string>
+			<string>filecache-whitelabel-bofrost.talk.hoccer.de</string>
 		</array>
 	</dict>
 	<key>talkServer</key>

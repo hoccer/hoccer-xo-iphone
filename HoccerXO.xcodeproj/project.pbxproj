@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		1FA4DE52195D9B400008C9DD /* AudioAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBDB1934CC9E00C0D254 /* AudioAttachmentListViewController.m */; };
+		1FD60C1C196FEDD80094E643 /* filecache-whitelabel-bofrost.talk.hoccer.de.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FD60C1A196FEDD80094E643 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */; };
+		1FD60C1D196FEDD80094E643 /* whitelabel-bofrost.talk.hoccer.de.der in Resources */ = {isa = PBXBuildFile; fileRef = 1FD60C1B196FEDD80094E643 /* whitelabel-bofrost.talk.hoccer.de.der */; };
 		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
 		6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97318DA870400B2D04F /* BigNumUtilities.m */; };
 		6302A98818DA870400B2D04F /* Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97518DA870400B2D04F /* Digest.m */; };
@@ -475,8 +477,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1FDD8CE8196FE67400A2F786 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "filecache-whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
-		1FDD8CE9196FE67400A2F786 /* whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
+		1FD60C1A196FEDD80094E643 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "filecache-whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
+		1FD60C1B196FEDD80094E643 /* whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
 		6302A97118DA870400B2D04F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
 		6302A97218DA870400B2D04F /* BigNumUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumUtilities.h; sourceTree = "<group>"; };
@@ -663,7 +665,7 @@
 		63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		63AE45591705EE770099F0CB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63AE455C1705EE820099F0CB /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
-		63AEE2D416CA4D0200522F92 /* Hoccer XO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Hoccer XO.app"; path = "Bofrost Messenger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AEE2D416CA4D0200522F92 /* Bofrost Messenger.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Bofrost Messenger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1648,8 +1650,8 @@
 		6390949D1738751800DF889B /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
-				1FDD8CE8196FE67400A2F786 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */,
-				1FDD8CE9196FE67400A2F786 /* whitelabel-bofrost.talk.hoccer.de.der */,
+				1FD60C1A196FEDD80094E643 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */,
+				1FD60C1B196FEDD80094E643 /* whitelabel-bofrost.talk.hoccer.de.der */,
 			);
 			path = Certificates;
 			sourceTree = "<group>";
@@ -1749,7 +1751,7 @@
 		63AEE2D516CA4D0200522F92 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				63AEE2D416CA4D0200522F92 /* Hoccer XO.app */,
+				63AEE2D416CA4D0200522F92 /* Bofrost Messenger.app */,
 				6302A9B318DA8A9500B2D04F /* HoccerXO Tests.xctest */,
 			);
 			name = Products;
@@ -2407,7 +2409,7 @@
 			);
 			name = HoccerXO;
 			productName = Hoccenger;
-			productReference = 63AEE2D416CA4D0200522F92 /* Hoccer XO.app */;
+			productReference = 63AEE2D416CA4D0200522F92 /* Bofrost Messenger.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2576,6 +2578,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9A85D9D184FD1AD00EB9B68 /* chatbar-attachment-icon-contact@2x.png in Resources */,
+				1FD60C1C196FEDD80094E643 /* filecache-whitelabel-bofrost.talk.hoccer.de.der in Resources */,
 				C576EC571934CCB200C0D254 /* player_repeat_title.pcvd in Resources */,
 				63B1C9DD1843E4FD00B75CD8 /* cnt-download.png in Resources */,
 				C576EC4C1934CCB200C0D254 /* player_next.svg in Resources */,
@@ -2673,6 +2676,7 @@
 				E9A85DA6184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png in Resources */,
 				C576EC501934CCB200C0D254 /* player_play.svg in Resources */,
 				C576EC751934CD2E00C0D254 /* tab_attachments.pcvd in Resources */,
+				1FD60C1D196FEDD80094E643 /* whitelabel-bofrost.talk.hoccer.de.der in Resources */,
 				E9A85DA0184FD1AD00EB9B68 /* chatbar-attachment-icon-music.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
