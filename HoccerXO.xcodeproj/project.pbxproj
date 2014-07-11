@@ -91,11 +91,9 @@
 		63808A2F185A11B60001AC96 /* AttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A2E185A11B60001AC96 /* AttachmentSection.m */; };
 		63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A31185A25B10001AC96 /* GenericAttachmentSection.m */; };
 		63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A34185A27730001AC96 /* GenericAttachmentMessageCell.m */; };
-		6382545117503531000347CD /* server_production.der in Resources */ = {isa = PBXBuildFile; fileRef = 6382545017503531000347CD /* server_production.der */; };
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		63848A9518F473AC00C253A4 /* SmallContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63848A9418F473AC00C253A4 /* SmallContactCell.m */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
-		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
 		639094C21739970200DF889B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094C11739970200DF889B /* CoreLocation.framework */; };
@@ -477,8 +475,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		1F5ACFB1196EE31900E00CB7 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "filecache-whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
-		1F5ACFB2196EE31900E00CB7 /* whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
+		1FDD8CE8196FE67400A2F786 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "filecache-whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
+		1FDD8CE9196FE67400A2F786 /* whitelabel-bofrost.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "whitelabel-bofrost.talk.hoccer.de.der"; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
 		6302A97118DA870400B2D04F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
 		6302A97218DA870400B2D04F /* BigNumUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumUtilities.h; sourceTree = "<group>"; };
@@ -635,7 +633,6 @@
 		63808A31185A25B10001AC96 /* GenericAttachmentSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentSection.m; sourceTree = "<group>"; };
 		63808A33185A27730001AC96 /* GenericAttachmentMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericAttachmentMessageCell.h; sourceTree = "<group>"; };
 		63808A34185A27730001AC96 /* GenericAttachmentMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentMessageCell.m; sourceTree = "<group>"; };
-		6382545017503531000347CD /* server_production.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_production.der; sourceTree = "<group>"; };
 		63825499175F746B000347CD /* ProfileDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileDataSource.h; sourceTree = "<group>"; };
 		6382549A175F746B000347CD /* ProfileDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileDataSource.m; sourceTree = "<group>"; };
 		6383FF751729DC2200835C91 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -643,7 +640,6 @@
 		63848A9418F473AC00C253A4 /* SmallContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallContactCell.m; sourceTree = "<group>"; };
 		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		63903AA8193E533500B7A4B4 /* HoccerXO- 39.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO- 39.xcdatamodel"; sourceTree = "<group>"; };
-		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
 		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
 		639094BF1739842A00DF889B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -667,7 +663,7 @@
 		63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		63AE45591705EE770099F0CB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63AE455C1705EE820099F0CB /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
-		63AEE2D416CA4D0200522F92 /* Hoccer XO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer XO.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AEE2D416CA4D0200522F92 /* Hoccer XO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "Hoccer XO.app"; path = "Bofrost Messenger.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1652,10 +1648,8 @@
 		6390949D1738751800DF889B /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
-				1F5ACFB1196EE31900E00CB7 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */,
-				1F5ACFB2196EE31900E00CB7 /* whitelabel-bofrost.talk.hoccer.de.der */,
-				6382545017503531000347CD /* server_production.der */,
-				6390949F1738751800DF889B /* server_development.der */,
+				1FDD8CE8196FE67400A2F786 /* filecache-whitelabel-bofrost.talk.hoccer.de.der */,
+				1FDD8CE9196FE67400A2F786 /* whitelabel-bofrost.talk.hoccer.de.der */,
 			);
 			path = Certificates;
 			sourceTree = "<group>";
@@ -2653,7 +2647,6 @@
 				E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
 				C576EC391934CCB200C0D254 /* fullscreen-icon-volume-up@2x.png in Resources */,
-				639094A11738751800DF889B /* server_development.der in Resources */,
 				C576EC301934CCB200C0D254 /* fullscreen-button-forward.png in Resources */,
 				C576EC281934CCB200C0D254 /* button-pause.png in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
@@ -2666,7 +2659,6 @@
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
 				C576EC541934CCB200C0D254 /* player_repeat_all.svg in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
-				6382545117503531000347CD /* server_production.der in Resources */,
 				C576EC4D1934CCB200C0D254 /* player_pause.pcvd in Resources */,
 				E9A85DA3184FD1AD00EB9B68 /* chatbar-attachment-icon-photo@2x.png in Resources */,
 				63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */,
