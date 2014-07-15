@@ -18,6 +18,7 @@
 #import "UIImage+ScaleAndCrop.h"
 #import "UIImage+ImageEffects.h"
 #import "ContactListViewController.h"
+#import "ContactCell.h"
 
 #define DEBUG_PERF NO
 
@@ -117,7 +118,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (DatasheetItem*) relationshipItem {
     if ( !_relationshipItem) {
-        NSString * status = [ContactListViewController statusStringForContact: (Contact*)self.inspectedObject];
+        NSString * status = [ContactCell statusStringForContact: (Contact*)self.inspectedObject];
         _relationshipItem = [self itemWithIdentifier: @"status" cellIdentifier: @"DatasheetCell"];
         _relationshipItem.title = status;
     }

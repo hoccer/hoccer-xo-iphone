@@ -36,6 +36,4 @@
 - (void) addButtonPressed: (id) sender;
 - (void) segmentChanged: (id) sender;
 
-+ (NSString*) statusStringForContact: (Contact*) contact;
-
 @end

@@ -38,4 +38,6 @@
 + (void) configureCell:(UITableViewCell<ContactCell> *)cell forContact: (Contact *)contact;
 - (void) highlightText:(NSString *)highlightText;
 
++ (NSString*) statusStringForContact: (Contact*) contact;
+
 @end

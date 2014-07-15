@@ -153,6 +153,7 @@
     <fetchRequest name="ContactByClientId" entity="Contact" predicateString="clientId == $clientId"/>
     <fetchRequest name="ContactsLastUpdatedBefore" entity="Contact" predicateString="type == &quot;Contacts&quot; AND ((lastUpdateReceived &lt; $lastUpdatedBefore) OR (lastUpdateReceived == nil)) AND relationshipState != &quot;kept&quot;"/>
     <fetchRequest name="DeliveriesWithStateNew" entity="Delivery" predicateString="state == &quot;new&quot;"/>
+    <fetchRequest name="DeliveryByAttachmentFileIdAndReceiverId" entity="Delivery" predicateString="$attachmentFileId == message.attachmentFileId AND $receiverId == receiver.clientId"/>
     <fetchRequest name="DeliveryByMessageIdAndReceiverId" entity="Delivery" predicateString="$messageId == message.messageId AND $receiverId == receiver.clientId"/>
     <fetchRequest name="DeliveryByMessageTagAndGroupId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $groupId == group.clientId"/>
     <fetchRequest name="DeliveryByMessageTagAndGroupIdAndReceiverId" entity="Delivery" predicateString="$messageTag == message.messageTag AND $groupId == group.clientId AND $receiverId == receiver.clientId"/>
@@ -161,6 +162,7 @@
     <fetchRequest name="GroupByTag" entity="Group" predicateString="groupTag == $groupTag AND type == &quot;Group&quot;"/>
     <fetchRequest name="GroupMembershipsByGroup" entity="GroupMembership" predicateString="group == $group"/>
     <fetchRequest name="GroupsLastUpdatedBefore" entity="Group" predicateString="type == &quot;Group&quot; AND (lastUpdateReceived &lt; $lastUpdatedBefore OR lastUpdateReceived == nil) AND groupState != &quot;kept&quot;"/>
+    <fetchRequest name="MessageByAttachmentFileId" entity="HXOMessage" predicateString="attachmentFileId == $attachmentFileId"/>
     <fetchRequest name="MessageByMessageId" entity="HXOMessage" predicateString="messageId == $messageId"/>
     <fetchRequest name="MessageByMessageTag" entity="HXOMessage" predicateString="messageTag == $messageTag"/>
     <fetchRequest name="MessagesByContact" entity="HXOMessage" predicateString="contact == $contact"/>
