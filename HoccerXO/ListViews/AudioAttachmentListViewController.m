@@ -108,7 +108,7 @@
     if (self.collection) {
         self.navigationItem.title = self.collection.name;
     } else if (self.contact) {
-        self.navigationItem.title = self.contact.displayName;
+        self.navigationItem.title = self.contact.nickNameOrAlias;
     } else {
         self.navigationItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
         if (self.tableView.isEditing) {

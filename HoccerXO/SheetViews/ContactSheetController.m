@@ -29,6 +29,7 @@
 #import "GroupInStatuNascendi.h"
 #import "KeyStatusCell.h"
 #import "HXOPluralocalization.h"
+#import "NSString+UUID.h"
 
 
 //#define SHOW_CONNECTION_STATUS
@@ -180,7 +181,7 @@ static int  groupMemberContext;
 
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
-    section.items = @[self.nicknameItem, self.keyItem, self.aliasItem, self.chatItem, self.attachmentItem];
+    section.items = @[self.nicknameItem, self.aliasItem, self.chatItem, self.attachmentItem, self.keyItem];
     return section;
 }
 
@@ -261,7 +262,9 @@ static int  groupMemberContext;
 
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    if ([item isEqual: self.chatItem]) {
+    if ([item isEqual: self.relationshipItem]) {
+        return [super isItemVisible: item];
+    } else if ([item isEqual: self.chatItem]) {
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
         
     } else if ([item isEqual: self.aliasItem]) {
@@ -295,7 +298,7 @@ static int  groupMemberContext;
         if (self.group && self.group.isKeptGroup) {
             return YES;
         }
-        return ! self.groupInStatuNascendi && [super isItemVisible: item];
+        return ! self.groupInStatuNascendi && !(!self.contact.isGroup && self.contact.isGroupFriend) && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
 }
@@ -345,6 +348,34 @@ static int  groupMemberContext;
     [super didUpdateInspectedObject];
 
     if (self.groupInStatuNascendi) {
+#ifndef OLD_CREATION
+        NSMutableArray * members = [NSMutableArray new];
+        NSMutableArray * roles = [NSMutableArray new];
+        for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
+            Contact * contact = self.groupInStatuNascendi.members[i];
+            [members addObject:contact.clientId];
+            [roles addObject:kGroupMembershipRoleMember];
+        }
+        [self.chatBackend createGroupWithMembersAndType:kGroupTypeUser
+                                                withTag:[NSString stringWithUUID]
+                                               withName:self.groupInStatuNascendi.nickName
+                                            withMembers:members
+                                              withRoles:roles
+                                            withHandler:^(Group *newGroup)
+         {
+             if (newGroup != nil) {
+                 newGroup.alias = self.groupInStatuNascendi.alias;
+                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
+                 [self.chatBackend updateGroup:newGroup];
+                 self.inspectedObject = newGroup;
+             } else {
+                 [AppDelegate.instance showOperationFailedAlert:nil withTitle:nil withOKBlock:^{
+                     [self quitInspection];
+                     [self.delegate controllerDidFinish: self];
+                 }];
+             }
+         }];
+#else
         [self.chatBackend createGroupWithHandler:^(Group * newGroup) {
             if (newGroup) {
                 newGroup.nickName = self.groupInStatuNascendi.nickName;
@@ -389,6 +420,7 @@ static int  groupMemberContext;
                 self.inspectedObject = newGroup;
             }
         }];
+#endif
     } else if (self.group.iAmAdmin) {
         [self.chatBackend updateGroup: self.group];
     }
@@ -1150,17 +1182,25 @@ static int  groupMemberContext;
     ContactPickerCompletion completion = ^(NSArray * result) {
         if (self.groupInStatuNascendi) {
             for (Contact * contact in result) {
-                DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
-                [self addContactObservers: contact];
-                [self.groupMemberItems addObject: contactItem];
-                [self.groupInStatuNascendi.members addObject: contact];
+                if (contact != nil && !contact.isDeleted) {
+                    DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
+                    [self addContactObservers: contact];
+                    [self.groupMemberItems addObject: contactItem];
+                    [self.groupInStatuNascendi.members addObject: contact];
+                } else {
+                    NSLog(@"#WARNING: ContactSheetController:inviteMembersPressed(1): contact nil or deleted");
+                }
             }
             [self updateCurrentItems];
         } else {
             for (Contact * contact in result) {
-                [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
-                    // yeah, baby
-                }];
+                if (contact != nil && !contact.isDeleted) {
+                    [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
+                        // yeah, baby
+                    }];
+                } else {
+                    NSLog(@"#WARNING: ContactSheetController:inviteMembersPressed(2): contact nil or deleted");
+                }
             }
         }
     };

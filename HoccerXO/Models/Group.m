@@ -266,7 +266,7 @@ NSString * const kGroupTypeNearby   = @"nearby";
 }
 
 - (BOOL)isIncompleteGroup {
-    return [kGroupStateInternalIncomplete isEqualToString:self.groupState ];
+    return [kGroupStateInternalIncomplete isEqualToString:self.groupState];
 }
 
 - (BOOL)isNearbyGroup{

@@ -51,10 +51,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>14105</string>
+	<string>14268</string>
 	<key>HXOClientDevelopers</key>
 	<array>
-		<string>David Siegel</string>
 		<string>Pavel Mayer</string>
 	</array>
 	<key>HXODefaultEnvironment</key>
@@ -66,9 +65,7 @@
 	<key>HXOReleaseName</key>
 	<string>Cleats</string>
 	<key>HXOServerDevelopers</key>
-	<array>
-		<string>Björn Heller</string>
-	</array>
+	<array/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIBackgroundModes</key>

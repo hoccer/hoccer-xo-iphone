@@ -121,7 +121,11 @@ static HXOEnvironment *instance;
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error {
     
     if (error.code == kCLErrorDenied){
-        UIAlertView *locationAlert = [[UIAlertView alloc]initWithTitle:NSLocalizedString(@"Title_LocationDidFail", nil) message:NSLocalizedString(@"Message_LocationDidFail", nil) delegate:nil cancelButtonTitle:NSLocalizedString(@"Button_OK", nil) otherButtonTitles:nil, nil];
+        UIAlertView *locationAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
+                                                                message: NSLocalizedString(@"permission_denied_location_message", nil)
+                                                               delegate: nil
+                                                      cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                                      otherButtonTitles: nil];
         [locationAlert show];
     }
 }

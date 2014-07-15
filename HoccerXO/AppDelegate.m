@@ -61,9 +61,9 @@
 #define TRACE_DELETES               NO
 #define TRACE_INSPECTION            NO
 #define TRACE_PENDING_CHANGES       NO
-#define TRACE_BACKGROUND_PROCESSING NO
+#define TRACE_BACKGROUND_PROCESSING YES
 #define TRACE_NEARBY_ACTIVATION     NO
-#define TRACE_LOCKING               NO
+#define TRACE_LOCKING               YES
 #define TRACE_DELIVERY_SAVES        NO
 
 
@@ -87,6 +87,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSMutableArray * _inspectors;
     NSMutableDictionary *_idLocks;
     NSObject * _inspectionLock;
+    NSMutableDictionary * _backgroundContexts;
 }
 @end
 
@@ -234,6 +235,7 @@ BOOL sameObjects(id obj1, id obj2) {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
     
     _idLocks = [NSMutableDictionary new];
+    _backgroundContexts = [NSMutableDictionary new];
     _inspectionLock = [NSObject new];
 
 #ifdef DEBUG
@@ -837,6 +839,7 @@ BOOL sameObjects(id obj1, id obj2) {
     }
     NSManagedObjectContext *temporaryContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
     temporaryContext.parentContext = [self mainObjectContext];
+    [temporaryContext setUndoManager: nil];
     return temporaryContext;
 }
 
@@ -888,7 +891,70 @@ BOOL sameObjects(id obj1, id obj2) {
 
 - (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock  {
     if (lockId == nil) {
-        NSLog(@"#ERROR: idLock called with nil lockId, stack=%@", [NSThread callStackSymbols]);
+        NSLog(@"#ERROR: performWithLockingId called with nil lockId, stack=%@", [NSThread callStackSymbols]);
+        lockId = @"NIL-LOCK";
+    }
+    
+    // TODO: get rid of unused contexts
+    NSManagedObjectContext *temporaryContext = [self backGroundContextForId:lockId];
+    if (temporaryContext != nil) {
+        NSManagedObjectContext * mainMOC = [self mainObjectContext];
+        [temporaryContext performBlock:^{
+            if (TRACE_LOCKING) NSLog(@"performing on queue %@",lockId);
+            
+            [temporaryContext reset]; // load any changes in the parent context after lock acquisition
+            
+            [NSThread currentThread].threadDictionary[@"hxoMOContext"] = temporaryContext;
+            
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Starting backgroundblock of ctx %@", temporaryContext);
+            
+            backgroundBlock(temporaryContext);
+            
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished backgroundblock of ctx %@, pushing to parent", temporaryContext);
+            
+            // push to parent
+            if ([temporaryContext hasChanges]) {
+                [self saveContext:temporaryContext];
+                
+                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished saving to parent of ctx %@, pushing done", temporaryContext);
+                
+                // save parent to disk
+                [mainMOC performBlockAndWait:^{
+                    if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes of ctx %@,", temporaryContext);
+                    [self saveDatabaseNow];
+                    if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes done of ctx %@,", temporaryContext);
+                }];
+            } else {
+                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"No uncommited changes for backgroundblock of ctx %@,", temporaryContext);
+            }
+            [[NSThread currentThread].threadDictionary removeObjectForKey:@"hxoMOContext"];
+        }];
+    }
+}
+
+- (NSManagedObjectContext*) backGroundContextForId:(NSString*)name {
+    
+    if (name == nil) {
+        NSLog(@"#ERROR: backGroundContextForId called with nil name, stack=%@", [NSThread callStackSymbols]);
+        name = @"NIL-CONTEXT";
+    }
+    
+    @synchronized(_backgroundContexts) {
+        NSManagedObjectContext * context = _backgroundContexts[name];
+        if (context != nil) {
+            if (TRACE_LOCKING) NSLog(@"handing out context %@ for name %@", context, name);
+            return context;
+        }
+        context = [self newBackgroundManagedObjectContext];
+        _backgroundContexts[name] = context;
+        if (TRACE_LOCKING) NSLog(@"handing out new context %@ for name %@",context, name);
+        return context;
+    }
+}
+/*
+- (void)performWithLockingIdX:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock  {
+    if (lockId == nil) {
+        NSLog(@"#ERROR: performWithLockingId called with nil lockId, stack=%@", [NSThread callStackSymbols]);
         lockId = @"NIL-LOCK";
     }
     
@@ -927,7 +993,8 @@ BOOL sameObjects(id obj1, id obj2) {
         }];
     }
 }
-
+ */
+/*
 -(void)lockId:(NSString*)Id {
     [[self idLock:Id] lock];
 }
@@ -935,16 +1002,23 @@ BOOL sameObjects(id obj1, id obj2) {
 -(void)unlockId:(NSString*)Id {
     [[self idLock:Id] unlock];
 }
+*/
 
+/*
 - (void)performWithLockingId:(NSString*)lockId inMainContext:(ContextBlock)contextBlock {
     NSManagedObjectContext * mainMOC = [self mainObjectContext];
     [mainMOC performBlock:^{
         NSLock * lock = [self idLock:lockId];
+        if (TRACE_LOCKING) NSLog(@"maincontext acquiring lock %@",lock);
         [lock lock];
+        if (TRACE_LOCKING) NSLog(@"maincontext acquired lock %@",lock);
         contextBlock(mainMOC);
+        if (TRACE_LOCKING) NSLog(@"maincontext releasing lock %@",lock);
         [lock unlock];
+        if (TRACE_LOCKING) NSLog(@"maincontext released lock %@",lock);
     }];
 }
+*/
 
 NSArray * objectIds(NSArray* managedObjects) {
     NSError * error = nil;
@@ -1005,7 +1079,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         NSArray * ids = objectIds(objects);
         NSManagedObjectContext * mainMOC = [self mainObjectContext];
         [mainMOC performBlock:^{
-            [self saveContext:mainMOC];
+            //[self saveContext:mainMOC];
             contextBlock(mainMOC, managedObjects(ids, mainMOC));
         }];
     }];
@@ -1039,7 +1113,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         ++validationErrorCount;
-        if (validationErrorCount < 3) {
+        if (validationErrorCount < 3 || [context isEqual:self.mainObjectContext]) {
             [self performWithoutLockingInMainContext:^(NSManagedObjectContext *context) {
                 [self displayValidationError:error];
             }];
@@ -1598,6 +1672,22 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                                           otherButtonTitles:nil];
     [alert show];
 }
+
+- (void) showOperationFailedAlert:  (NSString *) message withTitle:(NSString *) title withOKBlock:(ContinueBlock)okBlock{
+    if (title == nil) {
+        title = NSLocalizedString(@"operation_failed_default_title", nil);
+    }
+    if (message == nil) {
+        message = NSLocalizedString(@"operation_failed_default_message", nil);
+    }
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
+                                                    message: message
+                                            completionBlock: ^(NSUInteger buttonIndex,UIAlertView* alertView) { okBlock(); }
+                                          cancelButtonTitle:NSLocalizedString(@"ok",nil)
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
 
 - (void) showCorruptedDatabaseAlert {
     [self showDeleteDatabaseAlertWithMessage:@"The database is corrupted. Your database must be deleted to continue. All chats will be deleted. Do you want to delete your database?" withTitle:@"Database corrupted"];

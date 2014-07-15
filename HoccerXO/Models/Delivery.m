@@ -381,4 +381,14 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
               };
 }
 
++ (NSDictionary*) updateRpcKeys {
+    return @{ @"state"         : @"state",
+              @"timeChanged"   : @"timeChangedMillis",
+              @"keyId"         : @"receiverKeyId",
+              @"keyCiphertext" : @"keyCiphertextString",
+              @"attachmentState" : @"attachmentState"
+              };
+}
+
+
 @end

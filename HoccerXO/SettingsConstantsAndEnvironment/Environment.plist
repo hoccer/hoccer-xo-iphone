@@ -31,7 +31,7 @@
 		<key>development</key>
 		<string>wss://test1.talk.hoccer.de</string>
 		<key>production</key>
-		<string>wss://talkserver.talk.hoccer.de:8443</string>
+		<string>wss://talkserver.talk.hoccer.de</string>
 	</dict>
 </dict>
 </plist>

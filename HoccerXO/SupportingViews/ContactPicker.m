@@ -92,14 +92,18 @@
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     Contact * contact = [self.currentFetchedResultsController objectAtIndexPath: indexPath];
-    if ([self.pickedContacts indexOfObject: contact] == NSNotFound) {
-        [self.pickedContacts addObject: contact];
+    if (contact != nil) {
+        if ([self.pickedContacts indexOfObject: contact] == NSNotFound) {
+            [self.pickedContacts addObject: contact];
+        } else {
+            [self.pickedContacts removeObject: contact];
+        }
+        [self configureCell: [self.tableView cellForRowAtIndexPath:indexPath] atIndexPath: indexPath];
+        if (self.pickerStyle == ContactPickerStyleSingle && self.pickedContacts.count == 1) {
+            [self done: self];
+        }
     } else {
-        [self.pickedContacts removeObject: contact];
-    }
-    [self configureCell: [self.tableView cellForRowAtIndexPath:indexPath] atIndexPath: indexPath];
-    if (self.pickerStyle == ContactPickerStyleSingle && self.pickedContacts.count == 1) {
-        [self done: self];
+        NSLog(@"#WARNING: ContactPicker:tableView:didSelectRowAtIndexPath: nil contact");
     }
 }
 

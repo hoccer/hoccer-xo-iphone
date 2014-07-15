@@ -175,7 +175,7 @@ NSString * const kPresenceStateTyping = @"typing";
     }
 }
 
-- (NSString*) displayName {
+- (NSString*) nickNameOrAlias {
     if (self.isGroup && self.isNearby) {
         if (self.isKeptGroup) {
             return NSLocalizedString(@"group_name_nearby_kept", nil);
@@ -224,7 +224,7 @@ NSString * const kPresenceStateTyping = @"typing";
         statusString = [NSString stringWithFormat:@"[%@]", self.connectionStatus];
     }
 
-    NSString * name = self.displayName;
+    NSString * name = self.nickNameOrAlias;
     return statusString ? [NSString stringWithFormat: @"%@ %@", name, statusString] : name;
 }
 
@@ -250,6 +250,10 @@ NSString * const kPresenceStateTyping = @"typing";
 
 - (BOOL) isFriend {
     return [kRelationStateFriend isEqualToString: self.relationshipState];
+}
+
+- (BOOL) isDirectlyRelated {
+    return self.isFriend || self.isInvited || self.invitedMe || self.isBlocked;
 }
 
 - (BOOL) isGroupFriend {

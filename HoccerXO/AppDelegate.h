@@ -87,18 +87,13 @@ extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * con
 - (BOOL)deleteObject:(id)object;
 - (BOOL)deleteObject:(id)object inContext:(NSManagedObjectContext *) context;
 
-//- (void)performInNewBackgroundContext:(ContextBlock)backgroundBlock;
-//- (void)performInMainContext:(ContextBlock)contextBlock;
-//- (void)performInMainContextAndWait:(ContextBlock)contextBlock;
-
 - (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock;
 - (void)performWithoutLockingInNewBackgroundContext:(ContextBlock)backgroundBlock;
-- (void)performWithLockingId:(NSString*)lockId inMainContext:(ContextBlock)contextBlock;
 - (void)performWithoutLockingInMainContext:(ContextBlock)contextBlock;
 - (void)performAfterCurrentContextFinishedInMainContext:(ContextBlock)contextBlock;
 - (void)performAfterCurrentContextFinishedInMainContextPassing:(NSArray*)objects withBlock:(ContextParameterBlock)contextBlock;
-- (void)lockId:(NSString*)Id;
-- (void)unlockId:(NSString*)Id;
+//- (void)lockId:(NSString*)Id;
+//- (void)unlockId:(NSString*)Id;
 - (void)assertMainContext;
 
 - (NSURL *)applicationDocumentsDirectory;
@@ -111,6 +106,7 @@ extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * con
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
 
 - (void) showFatalErrorAlertWithMessage:(NSString *)message withTitle:(NSString *)title;
+- (void) showOperationFailedAlert:(NSString *)message withTitle:(NSString *) title withOKBlock:(ContinueBlock)okBlock;
 
 -(void)configureForNearbyMode:(BOOL)modeNearby;
 -(BOOL)inNearbyMode;

@@ -211,21 +211,21 @@ CGPoint _correctContentOffset;
     
     if (self.tableView.tableHeaderView != nil) {
         CGFloat threshhold = (searchBarHiddenPos + searchBarOpenPos)/2.0 - searchBarHeight/5.0;
-        NSLog(@"adjustSearchBarPosition threshhold = %f", threshhold);
+        if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"adjustSearchBarPosition threshhold = %f", threshhold);
         if (currentPos < threshhold) { // threshhold on 75% open
             // is almost open, open completely
-            NSLog(@"adjustSearchBarPosition moving to searchBarOpenPos = %f", searchBarOpenPos);
+            if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"adjustSearchBarPosition moving to searchBarOpenPos = %f", searchBarOpenPos);
             [self.tableView setContentOffset:CGPointMake(0, searchBarOpenPos) animated:NO];
         } else if (currentPos < searchBarHiddenPos) {
             // is slightly open, close completely
-            NSLog(@"adjustSearchBarPosition moving to searchBarHiddenPos = %f", searchBarHiddenPos);
+            if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"adjustSearchBarPosition moving to searchBarHiddenPos = %f", searchBarHiddenPos);
             [self.tableView setContentOffset:CGPointMake(0, searchBarHiddenPos) animated:NO];
         } else {
-            NSLog(@"adjustSearchBarPosition: not moving");
+            if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"adjustSearchBarPosition: not moving");
         }
     } else {
         // should not need to do anything, but wait
-        NSLog(@"adjustSearchBarPosition: not moving, no searchbar");
+        if (SEARCHBAR_SCROLLING_DEBUG) NSLog(@"adjustSearchBarPosition: not moving, no searchbar");
     }
 }
 
@@ -553,7 +553,10 @@ bool almostEqual(CGFloat a, CGFloat b) {
 }
 
 - (NSArray*) sortDescriptors {
-    return @[[[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES]];
+    return @[[[NSSortDescriptor alloc] initWithKey:@"relationshipState" ascending: YES],
+             [[NSSortDescriptor alloc] initWithKey: @"alias" ascending: YES],
+             [[NSSortDescriptor alloc] initWithKey:@"nickName" ascending: YES]
+             ];
 }
 
 - (void) addPredicates: (NSMutableArray*) predicates {

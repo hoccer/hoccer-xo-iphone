@@ -1507,7 +1507,7 @@ nil
         NSError *error = nil;
         if (![_fetchedResultsController performFetch:&error]) {
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            [(AppDelegate *)(self.chatBackend.delegate) showCorruptedDatabaseAlert];
+            [(AppDelegate *)(self.chatBackend.delegate) showFatalErrorAlertWithMessage:nil withTitle:nil];
               return;
         }
     } else {
@@ -2261,7 +2261,7 @@ ready:;
         return [self stateStringForMessage: message];
     } else {
 #ifdef DEBUG
-        NSString * author = [[self getAuthor: message] nickName];
+        NSString * author = [[self getAuthor: message] nickNameOrAlias];
         NSString * attachmentMac = @"";
         if (message.attachment != nil) {
             if (message.attachment.sourceMAC != nil && message.attachment.destinationMAC != nil) {
@@ -2280,7 +2280,7 @@ ready:;
             }
         }
 #endif
-        return [[self getAuthor: message] nickName];
+        return [[self getAuthor: message] nickNameOrAlias];
     }
 }
 
@@ -2820,8 +2820,10 @@ ready:;
 
 - (void) scrollToRememberedCellOrToBottomIfNone {
     if ([self isValidIndexPath:self.partner.rememberedLastVisibleChatCell]) {
+        //NSLog(@"scrollToRememberedCell");
         [self scrollToCell:self.partner.rememberedLastVisibleChatCell];
     } else {
+        //NSLog(@"scrollToBottomAnimated");
         [self scrollToBottomAnimated];
     }
 }

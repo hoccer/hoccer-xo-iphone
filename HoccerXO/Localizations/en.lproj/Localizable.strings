@@ -47,6 +47,10 @@
 "fatal_error_default_title"   = "Fatal Error";
 "fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
 
+"operation_failed_default_title"    = "Operation Failed";
+"operation_failed_default_message"  = "The operation has failed. Check you network connection and try again later";
+
+
 "http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
 "http://hoccer.com/hoccer-xo-faq/"      = "http://hoccer.com/hoccer-xo-faq/";
 
@@ -309,7 +313,7 @@
 "contact_relationship_invited"                  = "Invited as Friend";
 "contact_relationship_invitedMe"                = "Invited you as Friend";
 
-"contact_list_placeholder"                      = "[Invite friends](http://hoccer.com/hoccer-xo-tutorial/#contacts) to chat with.";
+"contact_list_placeholder"                      = "[Invite friends](http://hoccer.com/hoccer-xo-tutorial/#invite) to chat with.";
 "contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://hoccer.com/hoccer-xo-tutorial/#nearby)…";
 
 
@@ -491,8 +495,8 @@
 "key_state_mistrusted"                           = "Mistrusted";
 
 "key_fingerprint_title"                          = "Id:";
-"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://hoccer.com/hoccer-xo-tutorial/#key_verification) of your friends. Ask them for their key ids and compare.";
-"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://hoccer.com/hoccer-xo-tutorial/#key_verification).";
+"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://hoccer.com/hoccer-xo-tutorial/#verify) of your friends. Ask them for their key ids and compare.";
+"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://hoccer.com/hoccer-xo-tutorial/#verify).";
 "key_length_item"                                = "Key Length:";
 "key_length_unit_format"                         = "%@ bit";
 
@@ -549,6 +553,7 @@
 
 "permission_denied_title"              = "Access Denied";
 "permission_denied_microphone_message" = "Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";
+"permission_denied_location_message"   = "Grant location access to Hoccer XO in Settings->Privacy->Location Services to chat with people nearby.";
 
 //==============================================================================
 // Profile

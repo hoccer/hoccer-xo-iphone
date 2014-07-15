@@ -69,7 +69,7 @@
 
         NSPredicate *contactSearchPredicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
             Contact *contact = evaluatedObject;
-            return [contact.displayName rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound;
+            return [contact.nickNameOrAlias rangeOfString:searchText options:NSCaseInsensitiveSearch].location != NSNotFound;
         }];
 
         NSArray *contacts = [attachments valueForKeyPath:@"@distinctUnionOfObjects.message.contact"];
