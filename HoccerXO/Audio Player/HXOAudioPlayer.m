@@ -228,6 +228,8 @@
 
         [nowPlayingInfo setValue:[NSNumber numberWithDouble:attachmentInfo.audioDuration] forKey:MPMediaItemPropertyPlaybackDuration];
 
+        [nowPlayingInfo setValue:[NSNumber numberWithInteger:1] forKey:MPNowPlayingInfoPropertyPlaybackRate];
+        
         infoCenter.nowPlayingInfo = nowPlayingInfo;
     } else {
         infoCenter.nowPlayingInfo = nil;
