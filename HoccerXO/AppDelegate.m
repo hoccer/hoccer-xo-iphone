@@ -405,14 +405,13 @@ BOOL sameObjects(id obj1, id obj2) {
     }
     
     [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&myError];
-    //[session setCategory:AVAudioSessionCategoryRecord error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryRecord, error=%@",myError);
+        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryPlayAndRecord, error=%@",myError);
     }
     
     [session setActive:YES error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryRecord, error=%@",myError);
+        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryPlayAndRecord, error=%@",myError);
     }
     [AppDelegate requestRecordPermission];
 }
@@ -429,12 +428,12 @@ BOOL sameObjects(id obj1, id obj2) {
     
     [session setCategory:AVAudioSessionCategoryAudioProcessing error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryRecord, error=%@",myError);
+        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryAudioProcessing, error=%@",myError);
     }
     
     [session setActive:YES error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryRecord, error=%@",myError);
+        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryAudioProcessing, error=%@",myError);
     }
 }
 
@@ -451,11 +450,12 @@ BOOL sameObjects(id obj1, id obj2) {
     
     [session setCategory:AVAudioSessionCategoryPlayback error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryPlayback, error=%@",myError);
     }
+    
     [session setActive:YES error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryPlayback, error=%@",myError);
     }
 }
 
