@@ -55,6 +55,8 @@
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
     [self preferredContentSizeChanged:nil];
+    
+    self.tableView.contentOffset = CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
 }
 
 - (void)viewWillAppear:(BOOL)animated {
