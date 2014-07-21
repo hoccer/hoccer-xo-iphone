@@ -62,24 +62,17 @@
 #pragma mark - Public interface
 
 - (BOOL) playWithPlaylist:(id<HXOPlaylist>)playlist atTrackNumber:(NSUInteger)trackNumber {
-    self.playlist = playlist;
-    playlist.delegate = self;
-    
-    NSUInteger index = [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
-    
+    NSUInteger index = [self setPlaylist:playlist andGetIndexForTrackNumber:trackNumber];
     return [self playAtIndex:index];
 }
 
 - (BOOL)updatePlaylist:(id<HXOPlaylist>)playlist withStartingTrackNumber:(NSUInteger)trackNumber {
 
-    NSUInteger index = [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
-
+    NSUInteger index = [self setPlaylist:playlist andGetIndexForTrackNumber:trackNumber];
+    
     if ([self isPlaying]) {
         return [self playAtIndex:index];
     } else {
-        self.playlist = playlist;
-        playlist.delegate = self;
-        
         NSAssert(index < [self.playlist count], @"playlist index out of bounds");
         self.playlistIndex = index;
         return YES;
@@ -171,6 +164,12 @@
 }
 
 #pragma mark - Private helpers
+
+- (NSUInteger) setPlaylist:(id<HXOPlaylist>)playlist andGetIndexForTrackNumber: (NSUInteger) trackNumber {
+    self.playlist = playlist;
+    playlist.delegate = self;
+    return [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
+}
 
 - (BOOL) playAtIndex: (NSUInteger) index {
     NSAssert(index < [self.playlist count], @"playlist index out of bounds");
