@@ -70,6 +70,22 @@
     return [self playAtIndex:index];
 }
 
+- (BOOL)updatePlaylist:(id<HXOPlaylist>)playlist withStartingTrackNumber:(NSUInteger)trackNumber {
+
+    NSUInteger index = [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
+
+    if ([self isPlaying]) {
+        return [self playAtIndex:index];
+    } else {
+        self.playlist = playlist;
+        playlist.delegate = self;
+        
+        NSAssert(index < [self.playlist count], @"playlist index out of bounds");
+        self.playlistIndex = index;
+        return YES;
+    }
+}
+
 - (BOOL) play {
     return [self playAtIndex:self.playlistIndex];
 }
@@ -257,7 +273,7 @@
 
 - (void) playlistDidChange:(id<HXOPlaylist>)playlist {
     NSUInteger newTrackNumber = [playlist indexOfAttachment:self.attachment];
-    [self playWithPlaylist:self.playlist atTrackNumber:newTrackNumber];
+    [self updatePlaylist:self.playlist withStartingTrackNumber:newTrackNumber];
 }
 
 - (void) playlist:(id<HXOPlaylist>)playlist didRemoveAttachmentAtIndex:(NSUInteger)index {
@@ -265,7 +281,7 @@
     NSUInteger newTrackNumber = index < currentTrackNumber ? currentTrackNumber - 1 : currentTrackNumber;
     
     if (newTrackNumber < [self.playlist count]) {
-        [self playWithPlaylist:self.playlist atTrackNumber:newTrackNumber];
+        [self updatePlaylist:self.playlist withStartingTrackNumber:newTrackNumber];
     } else {
         [self stop];
     }
