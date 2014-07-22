@@ -107,22 +107,27 @@
 }
 
 - (void)updateNavigationBar {
+    UIBarButtonSystemItem editButton = self.tableView.isEditing ? UIBarButtonSystemItemDone : UIBarButtonSystemItemEdit;
+    self.navigationItem.hidesBackButton = self.tableView.isEditing;
+
+    // list of a collection
     if (self.collection) {
         self.navigationItem.title = self.collection.name;
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:editButton target:self action:@selector(toggleEditMode:)];
+
     } else if (self.contact) {
         self.navigationItem.title = self.contact.nickNameOrAlias;
+
+    // list of all music items
     } else {
         self.navigationItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
         if (self.tableView.isEditing) {
-            self.navigationItem.leftBarButtonItem = nil;
+            self.navigationItem.rightBarButtonItem = nil;
         } else {
-            self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
         }
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:editButton target:self action:@selector(toggleEditMode:)];
     }
-    
-    UIBarButtonSystemItem item = self.tableView.isEditing ? UIBarButtonSystemItemDone : UIBarButtonSystemItemEdit;
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:item target:self action:@selector(toggleEditMode:)];
-    self.navigationItem.hidesBackButton = self.tableView.isEditing;
 }
 
 - (void)updateFooter {
