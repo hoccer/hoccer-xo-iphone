@@ -1962,8 +1962,10 @@ nil
     
     if (attachment.state == kAttachmentTransfered) {
         section.playbackButtonController = [[HXOAudioPlaybackButtonController alloc] initWithButton:section.playbackButton attachment:attachment];
+        section.playbackButton.hidden = NO;
     } else {
         section.playbackButtonController = nil;
+        section.playbackButton.hidden = YES;
     }
 }
 
