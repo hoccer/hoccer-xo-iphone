@@ -219,8 +219,9 @@
 }
 
 - (void) highlightText:(NSString *)highlightText {
-    if (highlightText) {
-        NSString *title = self.titleLabel.text;
+    NSString *title = self.titleLabel.text;
+
+    if (highlightText && title) {
         NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc] initWithString:title];
         
         [title enumerateRangesOfString:highlightText options:NSCaseInsensitiveSearch usingBlock:^(NSRange range) {
