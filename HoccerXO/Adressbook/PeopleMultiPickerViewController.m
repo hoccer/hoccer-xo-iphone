@@ -94,28 +94,40 @@
 
     NSUInteger index = [self.selectedPeople indexOfObject: (__bridge id)(person)];
     if (index == NSNotFound) {
-        ABPersonViewController *view = [[ABPersonViewController alloc] init];
+        NSArray * properties = [self pickableProperties];
+        NSUInteger total = 0;
+        ABPropertyID selectedProperty = 0;
+        for (id property in properties) {
+            ABMultiValueRef multiValue = ABRecordCopyValue(person, [property integerValue]);
+            NSUInteger count = ABMultiValueGetCount(multiValue);
+            total += count;
+            if (count == 1) {
+                selectedProperty = [property integerValue];
+            }
+            CFRelease(multiValue);
+        }
+        if (total == 1) {
+            ABMultiValueRef multiValue = ABRecordCopyValue(person, selectedProperty);
+            ABMultiValueIdentifier identifier = ABMultiValueGetIdentifierAtIndex(multiValue, 0);
+            [self.selectedPeople addObject: (__bridge id)person];
+            [self.selectedProperties addObject: @(selectedProperty)];
+            [self.selectedPropertyMVI addObject: @(identifier)];
+            CFRelease(multiValue);
+            [self updateCellForPerson: person];
+        } else {
+            ABPersonViewController *view = [[ABPersonViewController alloc] init];
+            view.personViewDelegate = self;
+            view.displayedPerson = person;
+            view.displayedProperties = properties;
+            view.allowsActions = NO;
 
-        view.personViewDelegate = self;
-        view.displayedPerson = person; //CFBridgingRetain(person);
-        view.displayedProperties = @[@(kABPersonPhoneProperty), @(kABPersonEmailProperty)];
-        view.allowsActions = NO;
-
-        [self.navigationController pushViewController:view animated:YES];
+            [self.navigationController pushViewController:view animated:YES];
+        }
     } else {
         [self.selectedPeople removeObjectAtIndex: index];
         [self.selectedProperties removeObjectAtIndex: index];
         [self.selectedPropertyMVI removeObjectAtIndex: index];
         [self updateCellForPerson: person];
-    }
-
-}
-
-- (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString: @"showPerson"]) {
-        ABPersonViewController * vc = (ABPersonViewController*)segue.destinationViewController;
-        vc.displayedPerson = CFBridgingRetain((self.peopleList[((NSIndexPath*)sender).row]));
-        vc.personViewDelegate = self;
     }
 }
 
@@ -136,6 +148,10 @@
 	}
 
 	return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+}
+
+- (NSArray*) pickableProperties {
+    return self.mode == PeoplePickerModeMail ? @[@(kABPersonEmailProperty)] : @[@(kABPersonPhoneProperty), @(kABPersonEmailProperty)];
 }
 
 - (BOOL) personViewController:(ABPersonViewController *)personViewController shouldPerformDefaultActionForPerson:(ABRecordRef)person property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
