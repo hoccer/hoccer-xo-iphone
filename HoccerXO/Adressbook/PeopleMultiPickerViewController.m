@@ -61,7 +61,9 @@
 }
 
 - (void) createPeopleList {
-    self.peopleList = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(self.addressBook);
+    self.peopleList = [(__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(self.addressBook) sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        return [[self name: (__bridge ABRecordRef)(obj1)] caseInsensitiveCompare: [self name: (__bridge ABRecordRef)(obj2)]];
+    }];
     [self.tableView reloadData];
 }
 
