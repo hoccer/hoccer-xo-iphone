@@ -16,7 +16,6 @@
 #import "HXOMessage.h"
 #import "AppDelegate.h"
 #import "HXOUserDefaults.h"
-#import "ProfileViewController.h"
 #import "Attachment.h"
 #import "Environment.h"
 #import "HXOUI.h"
@@ -29,6 +28,7 @@
 #define TRACE_NOTIFICATIONS NO
 #define FETCHED_RESULTS_DEBUG_PERF NO
 #define NEARBY_CONFIG_DEBUG NO
+#define SEGUE_DEBUG NO
 
 @interface ConversationViewController ()
 
@@ -144,7 +144,7 @@
                                                                              object:nil
                                                                               queue:[NSOperationQueue mainQueue]
                                                                          usingBlock:^(NSNotification *note) {
-                                                                             if (TRACE_NOTIFICATIONS, YES) NSLog(@"ConversationView: loginSucceeded");
+                                                                             if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: loginSucceeded");
                                                                              [self configureForNearbyMode:self.inNearbyMode];
                                                                          }];
 
@@ -190,22 +190,34 @@
     [self performSegueWithIdentifier: @"showChat" sender: indexPath];
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(NSIndexPath*) indexPath {
-    if ([segue.identifier isEqualToString:@"showChat"]) {
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id) sender {
+    if (SEGUE_DEBUG) NSLog(@"ConversationViewController:prepareForSegue: %@", segue.identifier);
+    if ([sender isKindOfClass:[NSIndexPath class]]) {
+        
+        NSIndexPath * indexPath = (NSIndexPath *)sender;
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
-        if (self.caughtMessage == nil) {
+        
+        if ([segue.identifier isEqualToString:@"showChat"]) {
             _chatViewController = [segue destinationViewController];
             _chatViewController.inspectedObject = contact;
-        } else {
+            
+        } else if ([segue.identifier isEqualToString:@"showContact"] || [segue.identifier isEqualToString: @"showGroup"]) {
+            ((DatasheetViewController*)segue.destinationViewController).inspectedObject = contact;
+        }
+    } else {
+        // catch
+        if ([segue.identifier isEqualToString:@"showChat"] && self.caughtMessage != nil) {
             _chatViewController = [segue destinationViewController];
             _chatViewController.inspectedObject = self.caughtMessage.contact;
             self.caughtMessage = nil;
         }
-    } else if ([segue.identifier isEqualToString:@"showContact"] || [segue.identifier isEqualToString: @"showGroup"]) {
-        Contact * contact = [self.currentFetchedResultsController objectAtIndexPath:indexPath];
-        ((DatasheetViewController*)segue.destinationViewController).inspectedObject = contact;
-    } else {
-        [super prepareForSegue: segue sender: indexPath];
+    }
+}
+
+- (IBAction) unwindToRootView: (UIStoryboardSegue*) unwindSegue {
+    if (SEGUE_DEBUG) NSLog(@"ConversationViewController:unwindToRootView src=%@ dest=%@", [unwindSegue.sourceViewController class], [unwindSegue.destinationViewController class]);
+    if ([unwindSegue.sourceViewController respondsToSelector:@selector(setInspectedObject:)]) {
+        [unwindSegue.sourceViewController performSelector:@selector(setInspectedObject:) withObject:nil];
     }
 }
 
@@ -242,16 +254,83 @@
 
 - (void) addPredicates: (NSMutableArray*) predicates {
     if (self.inNearbyMode) {
-        [predicates addObject: [NSPredicate predicateWithFormat: @"(type == 'Contact' AND isNearbyTag == 'YES') OR (type == 'Group' AND (myGroupMembership.state == 'joined' AND myGroupMembership.group.groupType == 'nearby' AND myGroupMembership.group.groupState =='exists'))"]];
+        [predicates addObject: [NSPredicate predicateWithFormat:
+                                @"(type == 'Contact' AND \
+                                SUBQUERY(groupMemberships, $member, $member.group.groupType == 'nearby' AND $member.group.groupState =='exists').@count > 0 ) \
+                                OR \
+                                (type == 'Group' AND \
+                                (myGroupMembership.state == 'joined' AND \
+                                myGroupMembership.group.groupType == 'nearby' AND \
+                                myGroupMembership.group.groupState =='exists' AND\
+                                SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'nearbyMember').@count > 1 ))"]];
     } else {
-        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR relationshipState == 'kept' OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
+        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR (relationshipState == 'kept' AND messages.@count > 0) OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
     }
 }
 
-- (void) addSearchPredicates: (NSMutableArray*) predicates searchString: (NSString*) searchString {
-    // TODO: add full text search?
-    [predicates addObject: [NSPredicate predicateWithFormat:@"nickName CONTAINS[cd] %@", searchString]];
+// will return localized strings of theDate depending on how long it is ago:
+// if theDate is tody, only the time will be returned
+// if theDate is this year, only day and month will be returned
+// otherwise, day, month and year in short format will be returned
+
+- (NSString*)adaptiveDateTimeString:(NSDate*)theDate {
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDateComponents *components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
+    NSDate *today = [calendar dateFromComponents:components];
+    components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit) fromDate:[NSDate date]];
+    NSDate *thisYear = [calendar dateFromComponents:components];
+    
+    components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate: theDate];
+    NSDate *latestMessageDate = [calendar dateFromComponents:components];
+    
+    components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit) fromDate: theDate];
+    NSDate *latestMessageYear = [calendar dateFromComponents:components];
+    
+    NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
+    if([today isEqualToDate: latestMessageDate]) {
+        // show only the time
+        [formatter setDateStyle:NSDateFormatterNoStyle];
+        [formatter setTimeStyle:NSDateFormatterShortStyle];
+    } else if([thisYear isEqualToDate: latestMessageYear]){
+        // show month and day
+        NSLocale *currentLocale = [NSLocale currentLocale];
+        
+        // the date components we want
+        NSString *dateComponents = @"Md";
+        
+        // The components will be reordered according to the locale
+        NSString *dateFormat = [NSDateFormatter dateFormatFromTemplate:dateComponents options:0 locale:currentLocale];
+        //NSLog(@"Date format for %@: %@", [currentLocale displayNameForKey:NSLocaleIdentifier value:[currentLocale localeIdentifier]], dateFormat);
+        
+        [formatter setTimeStyle:NSDateFormatterNoStyle];
+        [formatter setDateStyle:NSDateFormatterShortStyle];
+        [formatter setDateFormat:dateFormat];
+    } else {
+        [formatter setDateStyle:NSDateFormatterShortStyle];
+        [formatter setTimeStyle:NSDateFormatterNoStyle];
+    }
+    return [formatter stringFromDate: theDate];
 }
+
+/*
+- (HXOMessage*)latestMessageForContact:(Contact*)contact {
+    NSFetchRequest *fetchRequest = [NSFetchRequest new];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:[HXOMessage entityName] inManagedObjectContext:AppDelegate.instance.mainObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(contact == %@) AND (timeAccepted == contact.latestMessageTime)", contact];
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"contact == %@", contact];
+    [fetchRequest setPredicate: predicate];
+    fetchRequest.sortDescriptors = [NSArray array];
+
+    NSError *error = nil;
+    NSArray *array = [AppDelegate.instance.mainObjectContext executeFetchRequest:fetchRequest error:&error];
+    if (array.count > 0) {
+        return array[0];
+    }
+    return nil;
+}
+*/
 
 - (void)configureCell:(ConversationCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ConversationViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
@@ -261,7 +340,11 @@
     }
     [super configureCell: cell atIndexPath: indexPath];
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-
+    //NSLog(@"contact class %@ nick %@, latestCount=%d group.latestMessageTime=%@ millis=%@", contact.class, contact.nickName, contact.latestMessage.count, contact.latestMessageTime, [HXOBackend millisFromDate:contact.latestMessageTime]);
+    
+    //HXOMessage * myLatestMessage = [self latestMessageForContact:contact];
+    //NSLog(@"myLatestMessage: %@ %@, millis=%@", myLatestMessage.body, myLatestMessage.timeAccepted, [HXOBackend millisFromDate:myLatestMessage.timeAccepted]);
+    
     cell.delegate = self;
     cell.avatar.badgeText = [HXOUI messageCountBadgeText: contact.unreadMessages.count];
 
@@ -285,24 +368,11 @@
             //cell.subtitleLabel.font = [UIFont italicSystemFontOfSize: cell.subtitleLabel.font.pointSize];
         }
         latestMessageTime = message.timeAccepted;
+        //NSLog(@"--- contact class %@ nick %@, latestDate=%@", contact.class, contact.nickName, message.timeAccepted);
     }
 
     if (latestMessageTime) {
-        NSCalendar *calendar = [NSCalendar currentCalendar];
-        NSDateComponents *components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate:[NSDate date]];
-        NSDate *today = [calendar dateFromComponents:components];
-
-        components = [calendar components:(NSEraCalendarUnit|NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit) fromDate: latestMessageTime];
-        NSDate *latestMessageDate = [calendar dateFromComponents:components];
-        NSDateFormatter * formatter = [[NSDateFormatter alloc] init];
-        if([today isEqualToDate: latestMessageDate]) {
-            [formatter setDateStyle:NSDateFormatterNoStyle];
-            [formatter setTimeStyle:NSDateFormatterShortStyle];
-        } else {
-            [formatter setDateStyle:NSDateFormatterMediumStyle];
-            [formatter setTimeStyle:NSDateFormatterNoStyle];
-        }
-        cell.dateLabel.text = [formatter stringFromDate: latestMessageTime];
+        cell.dateLabel.text = [self adaptiveDateTimeString:latestMessageTime];
     } else {
         cell.dateLabel.text = @"";
     }

@@ -55,6 +55,7 @@
 
 "report_crashes" = "Report Crashes";
 
+"confirm_seen_messages" = "Confirm Messages Seen";
 
 "support_tag" = "Support Tag";
 "support_tag_explanation" = "Our support team may ask you to enter a support tag to help with resolving issues you reported.";

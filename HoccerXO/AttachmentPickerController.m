@@ -486,10 +486,14 @@
 }
 
 - (void) locationPicker:(GeoLocationPicker *)picker didPickLocation:(MKPointAnnotation*)placemark preview:(UIImage *)preview {
-    NSDictionary *myAttachmentInfo = @{@"com.hoccer.xo.mediaType": @"geolocation",
-                                       @"com.hoccer.xo.geolocation": placemark,
-                                       @"com.hoccer.xo.previewImage": preview};
-    [self.delegate didPickAttachment: myAttachmentInfo];
+    if (placemark != nil && preview != nil) {
+        NSDictionary *myAttachmentInfo = @{@"com.hoccer.xo.mediaType": @"geolocation",
+                                           @"com.hoccer.xo.geolocation": placemark,
+                                           @"com.hoccer.xo.previewImage": preview};
+        [self.delegate didPickAttachment: myAttachmentInfo];
+    } else {
+        NSLog(@"#ERROR:locationPicker:didPickLocation: missing placemark or preview");
+    }
 }
 
 - (void) locationPickerDidCancel:(GeoLocationPicker *)picker {

@@ -11,7 +11,12 @@
 
 #import "HXOTableViewController.h"
 #import "HXOHyperLabel.h"
+
+@class Contact;
+
 @interface ContactListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate, HXOHyperLabelDelegate>
+
+
 
 @property (nonatomic, strong) IBOutlet UISearchBar         * searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
@@ -32,5 +37,7 @@
 - (void) invitePeople;
 - (void) addButtonPressed: (id) sender;
 - (void) segmentChanged: (id) sender;
+
++ (NSString*) statusStringForContact: (Contact*) contact;
 
 @end

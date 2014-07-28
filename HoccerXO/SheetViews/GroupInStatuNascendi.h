@@ -23,4 +23,10 @@
 @property (nonatomic, strong)   NSString       * verifiedKey;
 @property (nonatomic, strong)   NSArray        * messages;
 
+@property (nonatomic, strong)   NSString       * clientId; // needed for some debug output
+
+@property                       BOOL           deletedObject;
+
+-(void) addGroupMemberContacts:(NSSet *)members;
+
 @end

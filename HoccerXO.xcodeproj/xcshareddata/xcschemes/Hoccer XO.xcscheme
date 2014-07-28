@@ -128,7 +128,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-dumpRecordsForEntity Group"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-attachmentVerbosity trace"
@@ -152,7 +152,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-jsonrpcverbosity dump"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-jsonrpcverbosity trace"
@@ -160,7 +160,7 @@
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-environment development"
-            isEnabled = "YES">
+            isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
             argument = "-dumpRecordsForEntity Group"

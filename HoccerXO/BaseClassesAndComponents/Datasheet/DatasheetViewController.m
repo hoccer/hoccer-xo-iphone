@@ -20,6 +20,9 @@
 #import "WebViewController.h"
 #import "AppDelegate.h"
 
+#define SEGUE_DEBUG         NO
+#define INSPECTION_DEBUG    NO
+
 static CGFloat kHeaderHeight;
 
 @interface DatasheetViewController ()
@@ -82,13 +85,14 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
-    NSLog(@"DataSheetViewController:viewDidDisappear");
+    if (SEGUE_DEBUG) NSLog(@"DataSheetViewController:viewDidDisappear");
     if ([self isMovingFromParentViewController]) {
-        NSLog(@"isMovingFromParentViewController");
+        if (SEGUE_DEBUG) NSLog(@"isMovingFromParentViewController");
         [AppDelegate.instance endInspecting:self.dataSheetController.inspectedObject withInspector:self.dataSheetController];
+        self.dataSheetController.inspectedObject = nil;
     }
     if ([self isBeingDismissed]) {
-        NSLog(@"isBeingDismissed");
+        if (SEGUE_DEBUG) NSLog(@"isBeingDismissed");
     }
     [super viewDidDisappear: animated];
 }
@@ -403,6 +407,8 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) controller: (DatasheetController*) controller didChangeObject: (NSIndexPath*) indexPath forChangeType: (DatasheetChangeType) type newIndexPath: (NSIndexPath*) newIndexPath {
+    //NSLog(@"DatasheetController:didChangeObject path %@ type %@ newIndexPath %@", indexPath, type==DatasheetChangeDelete ? @"DatasheetChangeDelete" : type==DatasheetChangeInsert ? @"DatasheetChangeInsert" : type==DatasheetChangeUpdate ? @"DatasheetChangeUpdate" : @"???", newIndexPath);
+    
     switch(type) {
         case DatasheetChangeInsert:
             [self.tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -421,6 +427,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) controller: (DatasheetController*) controller didChangeSection: (NSIndexPath*) indexPath forChangeType: (DatasheetChangeType) type {
+    //NSLog(@"DatasheetController:didChangeSection path %@ type %@", indexPath, type==DatasheetChangeDelete ? @"DatasheetChangeDelete" : type==DatasheetChangeInsert ? @"DatasheetChangeInsert" :   @"???");
     switch(type) {
         case DatasheetChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex: indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
@@ -484,6 +491,7 @@ static CGFloat kHeaderHeight;
 }
 
 - (void) setInspectedObject: (id) inspectedObject {
+    if (INSPECTION_DEBUG) NSLog(@"DatasheetViewController:setInspectedObject %@", [inspectedObject class]);
     self.dataSheetController.inspectedObject = inspectedObject;
 }
 
