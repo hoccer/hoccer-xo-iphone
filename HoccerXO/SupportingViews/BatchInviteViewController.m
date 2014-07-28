@@ -51,8 +51,7 @@
 }
 
 - (UIViewController*) rootViewForAuthorizationStatus: (BOOL) granted {
-    AppDelegate * appDelegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
-    return granted ? self.peoplePicker : self.mode == PeoplePickerModeMail ? appDelegate.mailPicker : appDelegate.smsPicker;
+    return granted ? self.peoplePicker : self.mode == PeoplePickerModeMail ?  [[MFMailComposeViewController alloc] init] : [[MFMessageComposeViewController alloc] init];
 }
 
 - (void) setMode:(PeoplePickerMode)mode {

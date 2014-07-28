@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13D65" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="5056" systemVersion="13E28" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
@@ -1136,14 +1136,14 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="I8w-H7-Q9a"/>
+        <segue reference="UJI-wH-YH7"/>
+        <segue reference="Xaf-oq-onc"/>
         <segue reference="S5q-xe-rQg"/>
         <segue reference="NNl-EZ-WW3"/>
-        <segue reference="rce-WF-Xcw"/>
-        <segue reference="UJI-wH-YH7"/>
-        <segue reference="CES-Ic-Rhf"/>
-        <segue reference="I8w-H7-Q9a"/>
-        <segue reference="iwW-8u-tft"/>
         <segue reference="6i4-qU-VgJ"/>
+        <segue reference="CES-Ic-Rhf"/>
+        <segue reference="iwW-8u-tft"/>
         <segue reference="rav-wy-jJw"/>
     </inferredMetricsTieBreakers>
 </document>

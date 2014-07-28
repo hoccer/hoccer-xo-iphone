@@ -1441,6 +1441,8 @@
 			children = (
 				63AE4548170494AF0099F0CB /* AboutViewController.h */,
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
+				63581CDD1959FC890068F48A /* BatchInviteViewController.h */,
+				63581CDE1959FC890068F48A /* BatchInviteViewController.m */,
 				63756A8E18F6434C003F7555 /* ContactPicker.h */,
 				63756A8F18F6434C003F7555 /* ContactPicker.m */,
 				631FE508191947D80073E980 /* CustomKeyViewController.h */,
@@ -1461,8 +1463,6 @@
 				63CED3E218F9D86E0095110B /* SetupViewControllers.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
-				63581CDD1959FC890068F48A /* BatchInviteViewController.h */,
-				63581CDE1959FC890068F48A /* BatchInviteViewController.m */,
 			);
 			name = "Supporting Views";
 			path = SupportingViews;

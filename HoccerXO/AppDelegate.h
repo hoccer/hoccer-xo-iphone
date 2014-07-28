@@ -69,9 +69,6 @@ typedef void (^ContinueBlock)();
 @property BOOL launchedAfterCrash;
 @property BOOL runningNewBuild;
 
-@property (nonatomic, strong) MFMessageComposeViewController *smsPicker;
-@property (nonatomic, strong) MFMailComposeViewController *mailPicker;
-
 @property (nonatomic, strong) ConversationViewController * conversationViewController;
 
 

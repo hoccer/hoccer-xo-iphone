@@ -29,6 +29,7 @@
 #import "GroupInStatuNascendi.h"
 #import "WebViewController.h"
 #import "tab_contacts.h"
+#import "BatchInviteViewController.h"
 
 #define HIDE_SEPARATORS
 #define FETCHED_RESULTS_DEBUG NO
@@ -258,6 +259,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
         vc.inspectedObject = contact;
     } else if ([sid isEqualToString:@"showInviteMessageViewController"]) {
         ((UIViewController*)((UINavigationController*)segue.destinationViewController).viewControllers[0]).title = NSLocalizedString(@"invite_recipient_picker_title", nil);
+        ((BatchInviteViewController*)segue.destinationViewController).mode = [sender integerValue];
     }
 }
 
@@ -520,11 +522,11 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
     if ([MFMessageComposeViewController canSendText]) {
         [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_sms_btn_title",@"Invite Actionsheet Button Title")];
-        [actions addObject: ^() { [self inviteBySMS]; }];
+        [actions addObject: ^() { [self inviteByMessage: PeoplePickerModeText]; }];
     }
     if ([MFMailComposeViewController canSendMail]) {
         [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_mail_btn_title",@"Invite Actionsheet Button Title")];
-        [actions addObject: ^() { [self performSegueWithIdentifier: @"showInviteMessageViewController" sender: self];/*[self inviteByMail];*/ }];
+        [actions addObject: ^() { [self inviteByMessage: PeoplePickerModeMail]; }];
     }
     [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_code_btn_title",@"Invite Actionsheet Button Title")];
     [actions addObject: ^() { [self inviteByCode]; }];
@@ -534,93 +536,12 @@ static const CGFloat kMagicSearchBarHeight = 44;
     [sheet showInView: self.view];
 }
 
-- (void) inviteByMail {
-    [self.chatBackend generatePairingTokenWithHandler: ^(NSString* token) {
-        if (token == nil) {
-            return;
-        }
-        MFMailComposeViewController *picker= ((AppDelegate*)[UIApplication sharedApplication].delegate).mailPicker = [[MFMailComposeViewController alloc] init];
-        picker.mailComposeDelegate = self;
-
-        [picker setSubject: NSLocalizedString(@"invite_mail_subject", @"Mail Invitation Subject")];
-
-        NSString * body = NSLocalizedString(@"invite_mail_body", @"Mail Invitation Body");
-        NSString * inviteLink = [self inviteURL: token];
-        NSString * appStoreLink = [self appStoreURL];
-        //NSString * androidLink = [self androidURL];
-        body = [NSString stringWithFormat: body, appStoreLink, /*androidLink,*/ inviteLink/*, token*/];
-        [picker setMessageBody:body isHTML:NO];
-
-        [self presentViewController: picker animated: YES completion: nil];
-    }];
-}
-
-- (void) inviteBySMS {
-    [self.chatBackend generatePairingTokenWithHandler: ^(NSString* token) {
-        if (token == nil) {
-            return;
-        }
-        MFMessageComposeViewController *picker= ((AppDelegate*)[UIApplication sharedApplication].delegate).smsPicker = [[MFMessageComposeViewController alloc] init];
-        picker.messageComposeDelegate = self;
-
-        NSString * smsText = NSLocalizedString(@"invite_sms_text", @"SMS Invitation Body");
-        picker.body = [NSString stringWithFormat: smsText, [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
-
-        [self presentViewController: picker animated: YES completion: nil];
-
-    }];
-}
-
 - (void) inviteByCode {
     [self performSegueWithIdentifier: @"showInviteCodeViewController" sender: self];
 }
 
-- (NSString*) inviteURL: (NSString*) token {
-    return [NSString stringWithFormat: @"%@://%@", kHXOURLScheme, token];
-}
-
-- (NSString*) appStoreURL {
-    return @"itms-apps://itunes.com/apps/hoccerxo";
-}
-
-- (NSString*) androidURL {
-    return @"http://google.com";
-}
-
-- (void)mailComposeController:(MFMailComposeViewController*)controller
-          didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
-
-	switch (result) {
-		case MFMailComposeResultCancelled:
-			break;
-		case MFMailComposeResultSaved:
-			break;
-		case MFMailComposeResultSent:
-			break;
-		case MFMailComposeResultFailed:
-            NSLog(@"mailComposeControllerr:didFinishWithResult MFMailComposeResultFailed");
-			break;
-		default:
-			break;
-	}
-    [self dismissViewControllerAnimated: NO completion: nil];
-}
-
-- (void)messageComposeViewController:(MFMessageComposeViewController *)controller
-                 didFinishWithResult:(MessageComposeResult)result {
-
-	switch (result) {
-		case MessageComposeResultCancelled:
-			break;
-		case MessageComposeResultSent:
-			break;
-		case MessageComposeResultFailed:
-            NSLog(@"messageComposeViewController:didFinishWithResult MessageComposeResultFailed");
-			break;
-		default:
-			break;
-	}
-    [self dismissViewControllerAnimated: NO completion: nil];
+- (void) inviteByMessage: (PeoplePickerMode) mode {
+    [self performSegueWithIdentifier: @"showInviteMessageViewController" sender: @(mode)];
 }
 
 #pragma mark - Empty Table Placeholder
