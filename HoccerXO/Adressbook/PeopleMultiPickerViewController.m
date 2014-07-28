@@ -14,11 +14,13 @@
 
 @interface PeopleMultiPickerViewController ()
 
-@property (nonatomic, assign) ABAddressBookRef   addressBook;
-@property (nonatomic, strong) NSArray          * peopleList;
-@property (nonatomic, strong) NSMutableArray   * selectedPeople;
-@property (nonatomic, strong) NSMutableArray   * selectedProperties;
-@property (nonatomic, strong) NSMutableArray   * selectedPropertyMVI;
+@property (nonatomic, assign)   ABAddressBookRef   addressBook;
+@property (nonatomic, strong)   NSArray          * peopleList;
+@property (nonatomic, readonly) NSArray          * currentPeopleList;
+@property (nonatomic, strong)   NSArray          * filteredPeopleList;
+@property (nonatomic, strong)   NSMutableArray   * selectedPeople;
+@property (nonatomic, strong)   NSMutableArray   * selectedProperties;
+@property (nonatomic, strong)   NSMutableArray   * selectedPropertyMVI;
 
 @end
 
@@ -54,6 +56,11 @@
 }
 
 - (void)viewDidLoad {
+    UISearchBar * searchBar = [[UISearchBar alloc] initWithFrame: CGRectMake(0, 0, self.tableView.bounds.size.width, 44)];
+    searchBar.delegate = self;
+    self.tableView.tableHeaderView = searchBar;
+    self.tableView.contentOffset = CGPointMake(0, searchBar.bounds.size.height);
+
     [self.tableView registerClass: [UITableViewCell class] forCellReuseIdentifier: @"cell"];
     [self createPeopleList];
 
@@ -79,20 +86,20 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.peopleList.count;
+    return self.currentPeopleList.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier: @"cell" forIndexPath:indexPath];
 
-    ABRecordRef person = (__bridge ABRecordRef)(self.peopleList[indexPath.row]);
+    ABRecordRef person = (__bridge ABRecordRef)(self.currentPeopleList[indexPath.row]);
 
     [self configureCell: cell withPerson: person];
     return cell;
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    ABRecordRef person = (__bridge ABRecordRef)(self.peopleList[indexPath.row]);
+    ABRecordRef person = (__bridge ABRecordRef)(self.currentPeopleList[indexPath.row]);
 
     NSUInteger index = [self.selectedPeople indexOfObject: (__bridge id)(person)];
     if (index == NSNotFound) {
@@ -166,7 +173,7 @@
 }
 
 - (void) updateCellForPerson: (ABRecordRef) person {
-    NSIndexPath * indexPath = [NSIndexPath indexPathForItem: [self.peopleList indexOfObject: (__bridge id)(person)] inSection: 0];
+    NSIndexPath * indexPath = [NSIndexPath indexPathForItem: [self.currentPeopleList indexOfObject: (__bridge id)(person)] inSection: 0];
     [self.tableView beginUpdates];
     [self configureCell: [self.tableView cellForRowAtIndexPath: indexPath] withPerson: person];
     [self.tableView endUpdates];
@@ -178,6 +185,24 @@
 
     BOOL isSelected = [self.selectedPeople indexOfObject: (__bridge id)(person)] == NSNotFound;
     cell.accessoryType = isSelected ? UITableViewCellAccessoryNone : UITableViewCellAccessoryCheckmark;
+}
+
+#pragma mark - Searching
+
+- (NSArray*) currentPeopleList {
+    return self.filteredPeopleList ? self.filteredPeopleList : self.peopleList;
+}
+
+- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
+    if (searchText && ! [searchText isEqualToString: @""]) {
+        NSPredicate * predicate = [NSPredicate predicateWithFormat:@"self CONTAINS[cd] %@", searchText];
+        self.filteredPeopleList = [self.peopleList filteredArrayUsingPredicate: [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary *bindings) {
+            return [predicate evaluateWithObject: [self name: (__bridge ABRecordRef)(evaluatedObject)] substitutionVariables: bindings];
+        }]];
+    } else {
+        self.filteredPeopleList = nil;
+    }
+    [self.tableView reloadData];
 }
 
 #pragma mark - Actions

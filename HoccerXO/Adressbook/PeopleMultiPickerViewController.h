@@ -24,7 +24,7 @@ typedef enum PeoplePickerModes {
 
 @end
 
-@interface PeopleMultiPickerViewController : UITableViewController <ABPersonViewControllerDelegate>
+@interface PeopleMultiPickerViewController : UITableViewController <ABPersonViewControllerDelegate, UISearchBarDelegate>
 
 @property (nonatomic,assign) PeoplePickerMode              mode;
 @property (nonatomic,weak)   id<PeopleMultiPickerDelegate> delegate;
