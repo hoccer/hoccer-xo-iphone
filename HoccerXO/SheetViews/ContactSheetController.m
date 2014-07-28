@@ -26,10 +26,16 @@
 #import "ContactPicker.h"
 #import "GroupInStatuNascendi.h"
 #import "KeyStatusCell.h"
+#import "HXOPluralocalization.h"
+#import "NSString+UUID.h"
 
 
 //#define SHOW_CONNECTION_STATUS
 //#define SHOW_UNREAD_MESSAGE_COUNT
+
+#define DEBUG_INVITE_ITEMS NO
+
+#define DEBUG_OBSERVERS NO
 
 static const BOOL GROUPVIEW_DEBUG    = NO;
 static const BOOL RELATIONSHIP_DEBUG = NO;
@@ -41,6 +47,10 @@ static int  groupMemberContext;
 @property (nonatomic, readonly) DatasheetItem              * chatItem;
 @property (nonatomic, readonly) DatasheetItem              * aliasItem;
 @property (nonatomic, readonly) DatasheetItem              * blockContactItem;
+
+@property (nonatomic, readonly) DatasheetSection           * inviteContactSection;
+@property (nonatomic, readonly) DatasheetItem              * inviteContactItem;
+
 @property (nonatomic, readonly) Contact                    * contact;
 @property (nonatomic, readonly) Group                      * group;
 @property (nonatomic, readonly) GroupInStatuNascendi       * groupInStatuNascendi;
@@ -48,6 +58,10 @@ static int  groupMemberContext;
 @property (nonatomic, readonly) DatasheetSection           * invitationResponseSection;
 @property (nonatomic, readonly) DatasheetItem              * joinGroupItem;
 @property (nonatomic, readonly) DatasheetItem              * invitationDeclineItem;
+
+@property (nonatomic, readonly) DatasheetSection           * friendInvitationResponseSection;
+@property (nonatomic, readonly) DatasheetItem              * acceptFriendItem;
+@property (nonatomic, readonly) DatasheetItem              * refuseFriendItem;
 
 @property (nonatomic, readonly) DatasheetSection           * groupMemberSection;
 @property (nonatomic, strong)   NSMutableArray             * groupMemberItems;
@@ -58,9 +72,11 @@ static int  groupMemberContext;
 @property (nonatomic, readonly) AppDelegate                * appDelegate;
 
 @property (nonatomic, strong)   NSFetchedResultsController * fetchedResultsController;
-@property (nonatomic, readonly) NSManagedObjectContext     * managedObjectContext;
+//@property (nonatomic, readonly) NSManagedObjectContext     * managedObjectContext;
 
 @property (nonatomic, strong)   id                           profileObserver;
+
+@property (nonatomic, strong)   NSMutableSet               * contactObserverRegistered;
 
 @end
 
@@ -68,14 +84,19 @@ static int  groupMemberContext;
 
 @synthesize chatItem = _chatItem;
 @synthesize blockContactItem = _blockContactItem;
+@synthesize inviteContactSection = _inviteContactSection;
+@synthesize inviteContactItem = _inviteContactItem;
 @synthesize chatBackend = _chatBackend;
 @synthesize groupMemberSection = _groupMemberSection;
 @synthesize aliasItem = _aliasItem;
+@synthesize contactObserverRegistered = _contactObserverRegistered;
 
 - (void) commonInit {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:commonInit");
     [super commonInit];
 
     self.groupMemberItems = [NSMutableArray array];
+    self.contactObserverRegistered = [NSMutableSet new];
 
     self.nicknameItem.valuePlaceholder = nil;
 
@@ -100,8 +121,13 @@ static int  groupMemberContext;
     self.destructiveSection.items = @[self.blockContactItem, self.destructiveButton];
 }
 
+- (void) dealloc {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:dealloc");
+    [self removeAllContactObservers];
+}
+
 - (BOOL) isEditable {
-    return ! self.group || ! (self.group.myGroupMembership.isInvited || self.group.isNearbyGroup);
+    return ! self.group || ! (self.group.myGroupMembership.isInvited || self.group.isNearbyGroup || self.group.isKept);
 }
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
@@ -113,6 +139,8 @@ static int  groupMemberContext;
 - (void) addUtilitySections:(NSMutableArray *)sections {
     [super addUtilitySections: sections];
     [sections addObject: self.invitationResponseSection];
+    [sections addObject: self.inviteContactSection];
+    [sections addObject: self.friendInvitationResponseSection];
     [sections addObject: self.groupMemberSection];
 }
 
@@ -150,7 +178,7 @@ static int  groupMemberContext;
 
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
-    section.items = @[self.nicknameItem, self.aliasItem, self.chatItem, self.keyItem];
+    section.items = @[/*self.relationshipItem,*/ self.nicknameItem, self.aliasItem, self.chatItem, self.keyItem];
     return section;
 }
 
@@ -185,6 +213,28 @@ static int  groupMemberContext;
     return _blockContactItem;
 }
 
+
+- (DatasheetSection*) inviteContactSection {
+    if ( ! _inviteContactSection) {
+        _inviteContactSection = [DatasheetSection datasheetSectionWithIdentifier: @"invite_contact_section"];
+        _inviteContactSection.items = @[self.inviteContactItem];
+    }
+    return _inviteContactSection;
+}
+
+- (DatasheetItem*) inviteContactItem {
+    if ( ! _inviteContactItem) {
+        _inviteContactItem = [self itemWithIdentifier: @"invite_contact" cellIdentifier: @"DatasheetActionCell"];
+        _inviteContactItem.dependencyPaths = @[@"relationshipState", kHXONickName];
+        _inviteContactItem.visibilityMask = DatasheetModeEdit;
+        _inviteContactItem.target = self;
+        _inviteContactItem.action = @selector(inviteToggled:);
+        _inviteContactItem.visibilityMask = DatasheetModeView | DatasheetModeEdit;
+
+    }
+    return _inviteContactItem;
+}
+
 - (id) valueForItem: (DatasheetItem*) item {
     if ([item isEqual: self.chatItem]) {
         return @(self.contact.messages.count);
@@ -196,29 +246,40 @@ static int  groupMemberContext;
 
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    if ([item isEqual: self.chatItem]) {
+    if ([item isEqual: self.relationshipItem]) {
+        return [super isItemVisible: item];
+    } else if ([item isEqual: self.chatItem]) {
         return ! self.groupInStatuNascendi && [super isItemVisible: item];
         
     } else if ([item isEqual: self.aliasItem]) {
         return (self.contact.alias && ! [self.contact.alias isEqualToString: @""]) || [super isItemVisible:item];
 
     } else if ([item isEqual: self.blockContactItem]) {
-        return (self.contact.isBlocked || self.contact.isFriend) && [super isItemVisible:item];
+        if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible blockContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
+        return !self.contact.isGroup && !self.groupInStatuNascendi && (self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe || self.contact.isGroupFriend) && [super isItemVisible:item];
+        
+    } else if ([item isEqual: self.inviteContactItem]) {
+        if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible inviteContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
+        return !self.contact.isGroup && !self.groupInStatuNascendi && !(self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe) && [super isItemVisible:item];
+        
+    } else if ([item isEqual: self.acceptFriendItem] || [item isEqual: self.refuseFriendItem]) {
+        if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible acceptFriendItem or refuseFriendItem %d %d", self.contact.invitedMe, [super isItemVisible:item]);
+        return !self.contact.isGroup && !self.groupInStatuNascendi && self.contact.invitedMe && [super isItemVisible: item];
         
     } else if ([item isEqual: self.keyItem]) {
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
         
     } else if ([item isEqual: self.inviteMembersItem]) {
-        return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! self.group.isNearbyGroup && [super isItemVisible: item];
+        return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! self.group.isNearbyGroup && !self.group.isKept && [super isItemVisible: item];
         
     } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
         return self.group.myGroupMembership.isInvited;
         
     } else if ([item isEqual: self.destructiveButton]) {
-        if (self.group && self.group.isNearbyGroup && self.group.isKeptGroup) {
+        if (self.group && self.group.isKeptGroup) {
             return YES;
         }
-        return ! self.groupInStatuNascendi && [super isItemVisible: item];
+        return ! self.groupInStatuNascendi && !(!self.contact.isGroup && self.contact.isGroupFriend) && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
 }
@@ -240,7 +301,7 @@ static int  groupMemberContext;
 
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
-        return self.contact.messages.count == 1 ? @"contact_message_count_format_s" : @"contact_message_count_format_p";
+        return HXOPluralocalizedKey(@"contact_message_count_format", self.contact.messages.count, NO);
     }
     return nil;
 }
@@ -251,7 +312,8 @@ static int  groupMemberContext;
         self.avatarView.isBlocked = self.contact.isBlocked;
         if ( ! self.contact.avatarImage) {
             // a liitle extra somethin for those without avatars ;)
-            self.avatarView.isPresent = self.contact.isPresent;
+            self.avatarView.isPresent = self.contact.isConnected;
+            self.avatarView.isInBackground = self.contact.isBackground;
             self.avatarView.badgeText = [HXOUI messageCountBadgeText: self.contact.unreadMessages.count];
         } else {
             self.avatarView.isPresent = NO;
@@ -265,6 +327,34 @@ static int  groupMemberContext;
     [super didUpdateInspectedObject];
 
     if (self.groupInStatuNascendi) {
+#ifndef OLD_CREATION
+        NSMutableArray * members = [NSMutableArray new];
+        NSMutableArray * roles = [NSMutableArray new];
+        for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
+            Contact * contact = self.groupInStatuNascendi.members[i];
+            [members addObject:contact.clientId];
+            [roles addObject:kGroupMembershipRoleMember];
+        }
+        [self.chatBackend createGroupWithMembersAndType:kGroupTypeUser
+                                                withTag:[NSString stringWithUUID]
+                                               withName:self.groupInStatuNascendi.nickName
+                                            withMembers:members
+                                              withRoles:roles
+                                            withHandler:^(Group *newGroup)
+         {
+             if (newGroup != nil) {
+                 newGroup.alias = self.groupInStatuNascendi.alias;
+                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
+                 [self.chatBackend updateGroup:newGroup];
+                 self.inspectedObject = newGroup;
+             } else {
+                 [AppDelegate.instance showOperationFailedAlert:nil withTitle:nil withOKBlock:^{
+                     [self quitInspection];
+                     [self.delegate controllerDidFinish: self];
+                 }];
+             }
+         }];
+#else
         [self.chatBackend createGroupWithHandler:^(Group * newGroup) {
             if (newGroup) {
                 newGroup.nickName = self.groupInStatuNascendi.nickName;
@@ -272,14 +362,44 @@ static int  groupMemberContext;
                 newGroup.avatarImage = self.groupInStatuNascendi.avatarImage;
                 [self.chatBackend updateGroup:newGroup];
                 for (int i = 1; i < self.groupInStatuNascendi.members.count; ++i) {
-                    [self.chatBackend inviteGroupMember: self.groupInStatuNascendi.members[i] toGroup: newGroup onDone:^(BOOL success) {
-                        // yeah, baby
-                    }];
+                    Contact * contact = self.groupInStatuNascendi.members[i];
+                    if (contact.isInvitable) {
+                        [self.chatBackend inviteFriend:contact.clientId handler:^(BOOL ok) {
+                            if (!ok) {
+                                [self.chatBackend inviteFriendFailedAlertForContact:contact];
+                            } else {
+                                [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {
+                                    if (!success) {
+                                        [self.chatBackend inviteGroupMemberFailedForContact:contact inGroup:newGroup];
+                                    }
+                                }];
+                            }
+                        }];
+                    } else if (contact.invitedMe) {
+                        [self.chatBackend acceptFriend:contact.clientId handler:^(BOOL ok) {
+                            if (!ok) {
+                                [self.chatBackend acceptFriendFailedAlertForContact:contact];
+                            } else {
+                                [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {
+                                    if (!success) {
+                                        [self.chatBackend inviteGroupMemberFailedForContact:contact inGroup:newGroup];
+                                    }
+                                }];
+                            }
+                        }];
+                    } else {
+                        [self.chatBackend inviteGroupMember:contact toGroup: newGroup onDone:^(BOOL success) {
+                            if (!success) {
+                                [self.chatBackend inviteGroupMemberFailedForContact:contact inGroup:newGroup];
+                            }
+                        }];
+                    }
                 }
-
+                
                 self.inspectedObject = newGroup;
             }
         }];
+#endif
     } else if (self.group.iAmAdmin) {
         [self.chatBackend updateGroup: self.group];
     }
@@ -288,6 +408,8 @@ static int  groupMemberContext;
 - (NSString*) titleForItem:(DatasheetItem *)item {
     if ([item isEqual: self.blockContactItem]) {
         return [self blockItemTitle];
+    } else  if ([item isEqual: self.inviteContactItem]) {
+        return [self inviteItemTitle];
     } else if ([item isEqual: self.destructiveButton]) {
         return [self destructiveButtonTitle];
     } else if ([item isEqual: self.inviteMembersItem]) {
@@ -362,8 +484,10 @@ static int  groupMemberContext;
 }
 
 - (void) inspectedObjectWillChange {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:inspectedObjectWillChange");
     [super inspectedObjectWillChange];
     [self removeProfileObservers];
+    [self removeAllContactObservers];
     if (self.fetchedResultsController) {
         self.fetchedResultsController.delegate = nil;
         self.fetchedResultsController = nil;
@@ -378,8 +502,10 @@ static int  groupMemberContext;
 }
 
 - (void) inspectedObjectDidChange {
+    if (DEBUG_OBSERVERS) NSLog(@"inspectedObjectDidChange");
     if (self.groupInStatuNascendi) {
         if (self.groupMemberItems.count == 0) {
+            
             DatasheetItem * me = [self itemWithIdentifier: [NSString stringWithFormat: @"%p", self.groupInStatuNascendi] cellIdentifier: @"SmallContactCell"];
             me.currentValue = self.groupInStatuNascendi;
             [self.groupMemberItems addObject: me];
@@ -390,11 +516,22 @@ static int  groupMemberContext;
         }
     }
 
-
     self.fetchedResultsController = [self createFetchedResutsController];
     if (self.fetchedResultsController) {
         for (int i = 0; i < [self.fetchedResultsController.sections[0] numberOfObjects]; ++i) {
             [self.groupMemberItems addObject: [self createGroupMemberItem: i]];
+        }
+    } else {
+        // Add pre-chosen members in case when groupInStatuNascendi has been already filled by segue sender
+        if (self.groupInStatuNascendi) {
+            for (Contact * contact in self.groupInStatuNascendi.members) {
+                if (![contact isEqual:self.groupInStatuNascendi]) {
+                    DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
+                    [self addContactObservers: contact];
+                    [self.groupMemberItems addObject: contactItem];
+                }
+            }
+            [self updateCurrentItems];
         }
     }
 
@@ -425,7 +562,7 @@ static int  groupMemberContext;
 
 - (NSString*) blockItemTitle {
     NSString * formatKey = nil;
-    if (self.contact.isFriend) {
+    if (self.contact.isFriend || self.contact.isGroupFriend || self.contact.invitedMe) {
         formatKey = @"contact_block_btn_title_format";
     } else if (self.contact.isBlocked) {
         formatKey = @"contact_unblock_btn_title_format";
@@ -433,8 +570,18 @@ static int  groupMemberContext;
     return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
 }
 
+- (NSString*) inviteItemTitle {
+    NSString * formatKey = nil;
+    if (!self.contact.isInvited) {
+        formatKey = @"contact_invite_btn_title_format";
+    } else if (self.contact.isInvited) {
+        formatKey = @"contact_disinvite_btn_title_format";
+    }
+    return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
+}
+
 - (void) blockToggled: (id) sender {
-    if (self.contact.isFriend) {
+    if (self.contact.isFriend || self.contact.isGroupFriend || self.contact.invitedMe) {
         // NSLog(@"friend -> blocked");
         [self.chatBackend blockClient: self.contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"blockClient: %@", success ? @"success" : @"failed");
@@ -448,6 +595,29 @@ static int  groupMemberContext;
         NSLog(@"ContactSheetController toggleBlockedPressed: unhandled status %@", self.contact.status);
     }
 }
+
+- (void) inviteToggled: (id) sender {
+    if (self.contact.isInvited) {
+        // NSLog(@"friend -> invited");
+        [self.chatBackend disinviteFriend: self.contact.clientId handler:^(BOOL success) {
+            if (RELATIONSHIP_DEBUG || !success) NSLog(@"disinviteClient: %@", success ? @"success" : @"failed");
+            if (!success) {
+                [self.chatBackend disinviteFriendFailedAlertForContact:self.contact];
+            }
+        }];
+    } else if (self.contact.isGroupFriend || self.contact.isBlocked || self.contact.isKept || self.contact.isNotRelated) {
+        // NSLog(@"none, blocked -> invited");
+        [self.chatBackend inviteFriend: self.contact.clientId handler:^(BOOL success) {
+            if (RELATIONSHIP_DEBUG || !success) NSLog(@"inviteClient: %@", success ? @"success" : @"failed");
+            if (!success) {
+                [self.chatBackend inviteFriendFailedAlertForContact:self.contact];
+            }
+        }];
+    } else {
+        NSLog(@"ContactSheetController inviteToggled: unhandled status %@", self.contact.relationshipState);
+    }
+}
+
 
 #pragma mark - Destructive Button
 
@@ -494,8 +664,8 @@ static int  groupMemberContext;
 - (void) deleteGroupData {
     Group * group = self.group;
     [self quitInspection];
-    [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: group];
-    NSLog(@"ContactSheetController: cleanupGroup: deleteObject: group");
+    [self.chatBackend deleteInDatabaseAllMembersAndContactsofGroup: group inContext:AppDelegate.instance.mainObjectContext];
+    if (GROUPVIEW_DEBUG) NSLog(@"ContactSheetController: cleanupGroup: deleteObject: group");
     [AppDelegate.instance deleteObject:group];
     [self.appDelegate saveDatabase];
 }
@@ -508,7 +678,7 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully deleted group %@ from server", group.nickName);
         } else {
             NSLog(@"ERROR: deleteGroup %@ failed, retrieving all groups", group);
-            [self.chatBackend getGroupsForceAll: YES withCompletion:nil];
+            [self.chatBackend syncGroupsWithForce:NO withCompletion:nil];
         }
     }];
 }
@@ -521,17 +691,18 @@ static int  groupMemberContext;
             if (GROUPVIEW_DEBUG) NSLog(@"Successfully left group %@", group.nickName);
         } else {
             NSLog(@"ERROR: leaveGroup %@ failed, retrieving all groups", group);
-            [self.chatBackend getGroupsForceAll:YES withCompletion:nil];
+            [self.chatBackend syncGroupsWithForce:NO withCompletion:nil];
         }
     }];
 }
 
 - (void) deleteContact {
-    NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
+    if (GROUPVIEW_DEBUG) NSLog(@"deleting contact with relationshipState %@", self.contact.relationshipState);
     Contact * contact = self.contact;
     [self quitInspection];
     if (contact.isGroupFriend || contact.isKept) {
-        [self.chatBackend handleDeletionOfContact: contact];
+        //[self.chatBackend handleDeletionOfContact: contact withForce:YES];
+        [self.chatBackend handleDeletionOfContact: contact withForce:YES inContext:AppDelegate.instance.mainObjectContext];
     } else {
         [self.chatBackend depairClient: contact.clientId handler:^(BOOL success) {
             if (RELATIONSHIP_DEBUG || !success) NSLog(@"depair client: %@", success ? @"succcess" : @"failed");
@@ -540,17 +711,92 @@ static int  groupMemberContext;
 }
 
 - (void) quitInspection {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:quitInspection");
+    Contact * contact = self.contact;
+    if (contact != nil) {
+        [self removeContactObservers:contact];
+    }
     self.fetchedResultsController.delegate = nil;
     self.inspectedObject = nil;
-    //[self.delegate controllerDidFinish:self];
 }
 
-#pragma mark - Invitation Response Section
+#pragma mark - Friend Invitation Response Section
+
+@synthesize friendInvitationResponseSection = _friendInvitationResponseSection;
+- (DatasheetSection*) friendInvitationResponseSection {
+    if ( ! _friendInvitationResponseSection) {
+        _friendInvitationResponseSection = [DatasheetSection datasheetSectionWithIdentifier: @"friend_invitation_response_section"];
+        _friendInvitationResponseSection.title = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"contact_friend_invitation_section_title",nil) attributes: nil];
+        [_friendInvitationResponseSection setItems: @[self.acceptFriendItem, self.refuseFriendItem]];
+    }
+    return _friendInvitationResponseSection;
+}
+
+@synthesize acceptFriendItem = _acceptFriendItem;
+- (DatasheetItem*) acceptFriendItem {
+    if ( ! _acceptFriendItem) {
+        _acceptFriendItem = [self itemWithIdentifier: @"friend_invitation_accept" cellIdentifier: @"DatasheetActionCell"];
+        _acceptFriendItem.title = NSLocalizedString(@"contact_friend_accept_button", nil);
+        _acceptFriendItem.target = self;
+        _acceptFriendItem.action = @selector(acceptFriendTapped:);
+        _acceptFriendItem.visibilityMask = DatasheetModeView | DatasheetModeEdit;
+    }
+    return _acceptFriendItem;
+}
+
+@synthesize refuseFriendItem = _refuseFriendItem;
+- (DatasheetItem*) refuseFriendItem {
+    if ( ! _refuseFriendItem) {
+        _refuseFriendItem = [self itemWithIdentifier: @"friend_invitation_refuse" cellIdentifier: @"DatasheetActionCell"];
+        _refuseFriendItem.title = NSLocalizedString( @"contact_friend_refuse_button", nil);
+        _refuseFriendItem.target = self;
+        _refuseFriendItem.action = @selector(refuseFriendTapped:);
+        _refuseFriendItem.visibilityMask = DatasheetModeView | DatasheetModeEdit;
+    }
+    return _refuseFriendItem;
+}
+
+- (void) acceptFriendTapped: (id) sender {
+    [self.chatBackend acceptFriend:self.contact.clientId handler:^(BOOL success) {
+        if (!success) {
+            [self.chatBackend acceptFriendFailedAlertForContact:self.contact];
+        } else {
+            NSLog(@"Accepted friend %@", self.contact.clientId);
+        }
+    }];
+}
+
+- (void) refuseFriendTapped: (id) sender {
+    NSString * title = NSLocalizedString(@"contact_friend_refuse_title", nil);
+    NSString * destructiveButtonTitle = NSLocalizedString(@"contact_friend_refuse_button_title", nil);
+    
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [self.chatBackend refuseFriend:self.contact.clientId handler:^(BOOL success) {
+                if (!success) {
+                    [self.chatBackend refuseFriendFailedAlertForContact:self.contact];
+                } else {
+                    NSLog(@"Refused friend %@", self.contact.clientId);
+                }
+            }];
+        }
+    };
+    UIActionSheet * actionSheet = [HXOUI actionSheetWithTitle: title
+                                              completionBlock: completion
+                                            cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                       destructiveButtonTitle: destructiveButtonTitle
+                                            otherButtonTitles: nil];
+    [actionSheet showInView: [(id)self.delegate view]];
+}
+
+
+
+#pragma mark - Group Invitation Response Section
 
 @synthesize invitationResponseSection = _invitationResponseSection;
 - (DatasheetSection*) invitationResponseSection {
     if ( ! _invitationResponseSection) {
-        _invitationResponseSection = [DatasheetSection datasheetSectionWithIdentifier: @"invitation_response_section"];
+        _invitationResponseSection = [DatasheetSection datasheetSectionWithIdentifier: @"group_invitation_response_section"];
         _invitationResponseSection.title = [[NSAttributedString alloc] initWithString: @"Du bist eingeladen der gruppe beizutreten" attributes: nil];
         [_invitationResponseSection setItems: @[self.joinGroupItem, self.invitationDeclineItem]];
     }
@@ -617,7 +863,11 @@ static int  groupMemberContext;
         return self.groupInStatuNascendi.members[index];
     }
     NSIndexPath * indexPath = [NSIndexPath indexPathForItem: index inSection: 0];
-    return [[self.fetchedResultsController objectAtIndexPath: indexPath] contact];
+    id objectAtIndexPath = [self.fetchedResultsController objectAtIndexPath: indexPath];
+    if (objectAtIndexPath != nil) {
+        return [objectAtIndexPath contact];
+    }
+    return nil;
 }
 
 - (DatasheetItem*) myMembershipItem {
@@ -650,7 +900,7 @@ static int  groupMemberContext;
     if (admins.count == 0) {
         title = NSLocalizedString(@"group_no_admin", nil);
     } else {
-        NSString * label = NSLocalizedString(admins.count > 1 ? @"group_admin_label_p" : @"group_admin_label_s", nil);
+        NSString * label = HXOPluralocalizedString(@"group_admin_label", admins.count, NO);
         title = [label stringByAppendingString: [admins componentsJoinedByString:@", "]];
     }
     return [[NSAttributedString alloc] initWithString: title attributes: nil];
@@ -702,7 +952,8 @@ static int  groupMemberContext;
         cell.subtitleLabel.alpha  = isInvited ? 0.5 : 1;
         cell.avatar.image         = isMyMembership ? [UserProfile sharedProfile].avatarImage : contact.avatarImage;
         cell.avatar.defaultIcon   = [[avatar_contact alloc] init];
-        cell.avatar.isPresent      = ! isMyMembership && contact.isPresent;
+        cell.avatar.isPresent      = ! isMyMembership && contact.isConnected;
+        cell.avatar.isInBackground = ! isMyMembership && contact.isBackground;
         cell.closingSeparator     = indexPath.row == self.groupMemberItems.count - 1;
     } else if ([aCell.reuseIdentifier isEqualToString: @"KeyStatusCell"]) {
         ((KeyStatusCell*)aCell).keyStatusColor = [self keyItemStatusColor];
@@ -726,6 +977,7 @@ static int  groupMemberContext;
 
 - (DatasheetItem*) createGroupMemberItem: (NSUInteger) index {
     Contact * contact = [self contactAtIndex: index];
+    if (GROUPVIEW_DEBUG) NSLog(@"createGroupMemberItem index %d for contact %@ objectId %@", index, contact.nickName, contact.objectID);
     NSString * identifier = [NSString stringWithFormat: @"%@", contact.objectID];
     DatasheetItem * item = [self itemWithIdentifier: identifier cellIdentifier: [SmallContactCell reuseIdentifier]];
     item.accessoryStyle = DatasheetAccessoryDisclosure;
@@ -734,24 +986,64 @@ static int  groupMemberContext;
 }
 
 - (void) removeGroupMemberItem: (NSUInteger) index contact: (Contact*) contact {
+    if (GROUPVIEW_DEBUG) NSLog(@"removeGroupMemberItem %d for contact %@", index, contact.nickName);
     [self removeContactObservers: contact];
-    [self.groupMemberItems removeObjectAtIndex: index];
+    if (index < self.groupMemberItems.count) {
+        [self.groupMemberItems removeObjectAtIndex: index];
+    }
 }
 
 - (void) addContactObservers: (Contact*) contact {
-    for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
-        [contact addObserver: self forKeyPath: keyPath options: NSKeyValueObservingOptionNew context: &groupMemberContext];
+    if (contact == nil) {
+        NSLog(@"ERROR: addContactObservers: contact is nil, not adding any observers");
+        return;
+    }
+    if (![self.contactObserverRegistered containsObject:contact]) {
+        if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: addContactObservers for %@ %@", [contact class], contact.clientId);
+        for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus", @"deletedObject"]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: addObserver in groupMemberContext for %@ path %@ id %@", [contact class], keyPath, contact.clientId);
+            [contact addObserver: self forKeyPath: keyPath options: NSKeyValueObservingOptionNew context: &groupMemberContext];
+        }
+        [self.contactObserverRegistered addObject:contact];
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: addContactObservers: already registered for %@ %@", [contact class], contact.clientId);
     }
 }
 
 - (void) removeContactObservers: (Contact*) contact {
-    for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus"]) {
-        [contact removeObserver: self forKeyPath: keyPath context: &groupMemberContext];
+    if (contact == nil) {
+        NSLog(@"ERROR: removeContactObservers: contact is nil, not removing any observers");
+        return;
     }
+    if ([self.contactObserverRegistered containsObject:contact]) {
+        if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeContactObservers for %@ %@", [contact class], contact.clientId);
+        for (id keyPath in @[@"nickName", @"avatar", @"onlineStatus", @"deletedObject"]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeObserver in groupMemberContext for %@ path %@ id %@", [contact class], keyPath, contact.clientId);
+            [contact removeObserver: self forKeyPath: keyPath context: &groupMemberContext];
+        }
+        [self.contactObserverRegistered removeObject:contact];
+    } else {
+        if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeContactObservers: not registered for %@ %@", [contact class], contact.clientId);
+    }
+}
+
+- (void) removeAllContactObservers {
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeAllContactObservers");
+    NSSet * registered = [NSSet setWithSet:self.contactObserverRegistered]; // avoid enumeration mutation exception
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:removeAllContactObservers: registered.count = %d", registered.count);
+    for (Contact * contact in registered) {
+        [self removeContactObservers:contact];
+    }
+    [self.contactObserverRegistered removeAllObjects];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if (context == &groupMemberContext) {
+        if ([keyPath isEqualToString:@"deleted"]) {
+            if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removing observers for deleted %@", [object class]);
+            [self removeContactObservers:object];
+            return;
+        }
         [self performSelectorOnMainThread: @selector(updateCurrentItems) withObject: nil waitUntilDone: NO];
 //        [self updateCurrentItems]; // Bam!
     } else {
@@ -761,7 +1053,7 @@ static int  groupMemberContext;
 
 - (NSFetchedResultsController*) createFetchedResutsControllerWithRequest: (NSFetchRequest*) fetchRequest {
     NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest: fetchRequest
-                                                                                                managedObjectContext: self.managedObjectContext
+                                                                                                managedObjectContext: AppDelegate.instance.mainObjectContext
                                                                                                   sectionNameKeyPath: nil
                                                                                                            cacheName: nil];
     if (aFetchedResultsController) {
@@ -781,13 +1073,14 @@ static int  groupMemberContext;
         return nil;
     }
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [NSEntityDescription entityForName: [GroupMembership entityName] inManagedObjectContext: self.managedObjectContext];
+    NSEntityDescription *entity = [NSEntityDescription entityForName: [GroupMembership entityName] inManagedObjectContext: AppDelegate.instance.mainObjectContext];
     [fetchRequest setEntity:entity];
     [fetchRequest setSortDescriptors: @[[[NSSortDescriptor alloc] initWithKey:@"contact.nickName" ascending: YES]]];
 
     NSMutableArray *predicates = [NSMutableArray array];
 
-    [predicates addObject: [NSPredicate predicateWithFormat:@"group == %@", self.group]];
+    //[predicates addObject: [NSPredicate predicateWithFormat:@"(group.clientId == %@) AND (contact.clientId != group.clientId)", self.group.clientId]];
+    [predicates addObject: [NSPredicate predicateWithFormat:@"group.clientId == %@", self.group.clientId]];
 
     NSPredicate * filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates: predicates];
     [fetchRequest setPredicate:filterPredicate];
@@ -800,6 +1093,9 @@ static int  groupMemberContext;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    if (membership == nil || membership.contact == nil || membership.group == nil) {
+        if (DEBUG_OBSERVERS) NSLog(@"#WARNING: membership=%@, membership.contact=%@, membership.group=%@", membership, membership?membership.contact:nil, membership?membership.group:nil);
+    }
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.groupMemberItems insertObject: [self createGroupMemberItem: newIndexPath.row] atIndex: newIndexPath.row];
@@ -825,7 +1121,7 @@ static int  groupMemberContext;
 // Thing is: If we are displaying a group our own membership cell needs a little
 // kick if we edit our own profile...
 - (void) addProfileObservers {
-    if ([self myMembershipItem]) {
+    if ([self myMembershipItem] && self.profileObserver == nil) {
         self.profileObserver = [[NSNotificationCenter defaultCenter] addObserverForName: @"profileUpdatedByUser"
                                                                                  object: nil
                                                                                   queue: [NSOperationQueue mainQueue]
@@ -838,6 +1134,7 @@ static int  groupMemberContext;
 - (void) removeProfileObservers {
     if (self.profileObserver) {
         [[NSNotificationCenter defaultCenter] removeObserver: self.profileObserver];
+        self.profileObserver = nil;
     }
 }
 
@@ -855,17 +1152,25 @@ static int  groupMemberContext;
     ContactPickerCompletion completion = ^(NSArray * result) {
         if (self.groupInStatuNascendi) {
             for (Contact * contact in result) {
-                DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
-                [self addContactObservers: contact];
-                [self.groupMemberItems addObject: contactItem];
-                [self.groupInStatuNascendi.members addObject: contact];
+                if (contact != nil && !contact.isDeleted) {
+                    DatasheetItem * contactItem = [self itemWithIdentifier: [NSString stringWithFormat: @"%@", contact.objectID] cellIdentifier: @"SmallContactCell"];
+                    [self addContactObservers: contact];
+                    [self.groupMemberItems addObject: contactItem];
+                    [self.groupInStatuNascendi.members addObject: contact];
+                } else {
+                    NSLog(@"#WARNING: ContactSheetController:inviteMembersPressed(1): contact nil or deleted");
+                }
             }
             [self updateCurrentItems];
         } else {
             for (Contact * contact in result) {
-                [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
-                    // yeah, baby
-                }];
+                if (contact != nil && !contact.isDeleted) {
+                    [self.chatBackend inviteGroupMember: contact toGroup: self.group onDone:^(BOOL success) {
+                        // yeah, baby
+                    }];
+                } else {
+                    NSLog(@"#WARNING: ContactSheetController:inviteMembersPressed(2): contact nil or deleted");
+                }
             }
         }
     };
@@ -900,13 +1205,20 @@ static int  groupMemberContext;
             NSLog(@"ERROR: item not found");
         } else {
             [self removeGroupMemberItem: index contact: contact];
-            [self.groupInStatuNascendi.members removeObjectAtIndex: index];
+            if (index < self.groupInStatuNascendi.members.count) {
+                [self.groupInStatuNascendi.members removeObjectAtIndex: index];
+            }
         }
         [self updateCurrentItems];
     } else {
-        [self.chatBackend removeGroupMember: [self membershipOfContact: contact] onDeletion:^(GroupMembership *member) {
-            // yeah... absolutely
-        }];
+        GroupMembership * member = [self membershipOfContact: contact];
+        if (member != nil) {
+            [self.chatBackend removeGroupMember: member onDeletion:^(GroupMembership *member) {
+                // yeah... absolutely
+            }];
+        } else {
+            NSLog(@"#ERROR: editRemoveItem: trying to remove nil member");
+        }
     }
 }
 
@@ -944,7 +1256,7 @@ static int  groupMemberContext;
     }
     return _appDelegate;
 }
-
+/*
 @synthesize managedObjectContext = _managedObjectContext;
 - (NSManagedObjectContext*) managedObjectContext {
     if ( ! _managedObjectContext) {
@@ -952,5 +1264,5 @@ static int  groupMemberContext;
     }
     return _managedObjectContext;
 }
-
+*/
 @end

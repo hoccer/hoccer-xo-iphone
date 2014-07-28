@@ -46,6 +46,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 
 @dynamic groupMembershipList;
 @synthesize connectionStatus;
+@synthesize deletedObject;
 @dynamic avatarImage;
 @dynamic keyLength;
 

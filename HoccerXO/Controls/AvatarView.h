@@ -16,6 +16,7 @@
 @property (nonatomic, strong) VectorArt * defaultIcon;
 @property (nonatomic, assign) BOOL        isBlocked;
 @property (nonatomic, assign) BOOL        isPresent;
+@property (nonatomic, assign) BOOL        isInBackground;
 @property (nonatomic, strong) NSString  * badgeText;
 @property (nonatomic, strong) UIFont    * badgeFont;
 

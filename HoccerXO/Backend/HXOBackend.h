@@ -31,7 +31,9 @@ typedef void (^GroupMembersOutdatedHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^ObjectResultHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
-typedef void (^GenericResultHandler)(BOOL);
+typedef void (^GenericResultHandler)(BOOL ok);
+typedef void (^StringResultHandler)(NSString* result, BOOL ok);
+typedef void (^BoolResultHandler)(BOOL result, BOOL ok);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 typedef void (^DataLoadedBlock)(NSData *, NSError*);
 typedef void (^DoneBlock)();
@@ -40,14 +42,15 @@ typedef void (^GroupMemberChanged)(GroupMembership* member);
 typedef void (^GroupHandler)(Group* group);
 typedef void (^CreateGroupHandler)(Group* group);
 typedef void (^FileURLRequestHandler)(NSDictionary* urls);
-typedef void (^DataURLStatusHandler)(NSString * url, BOOL ok);
+typedef void (^DataURLStatusHandler)(NSString * url, long long transferedSize, BOOL ok);
 typedef void (^UpdateEnvironmentHandler)(NSString*);
 typedef void (^DateHandler)(NSDate* date);
+typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 
 @protocol HXODelegate <NSObject>
 
 - (NSString*) apnDeviceToken;
-@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
+//@property (readonly, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readonly, nonatomic) NSManagedObjectModel *managedObjectModel;
 
 - (void) didPairWithStatus: (BOOL) status; // pregnant...
@@ -78,18 +81,28 @@ typedef void (^DateHandler)(NSDate* date);
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
 - (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
-- (void) receiveMessage: (NSDictionary*) messageDictionary withDelivery: (NSDictionary*) deliveryDictionary;
 - (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
 - (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)completion;
 
-- (void) deliveryConfirm: (NSString*) messageId withDelivery: (Delivery*) delivery;
-//- (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
+- (void) inDeliveryConfirmPrivate: (NSString*) messageId withDelivery: (Delivery*) delivery;
+- (void) inDeliveryConfirmSeen: (NSString*) messageId withDelivery: (Delivery*) delivery;
+- (void) inDeliveryConfirmUnseen: (NSString*) messageId withDelivery: (Delivery*) delivery;
+- (void)inDeliveryConfirmMessage:(HXOMessage *)message withDelivery:(Delivery *)delivery;
+
+    //- (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler;
 - (void) generatePairingTokenWithHandler: (InviteTokenHanlder) handler;
 
 - (void) pairByToken: (NSString*) token;
 - (void) acceptInvitation: (NSString*) token;
 
 - (void) createGroupWithHandler:(CreateGroupHandler)handler;
+- (void) createGroupWithMembersAndType:(NSString*)type
+                               withTag:(NSString*)groupTag
+                              withName:(NSString*)groupName
+                           withMembers:(NSArray*)memberIds
+                             withRoles:(NSArray*)roles
+                           withHandler:(CreateGroupHandler)handler;
+
 - (void) inviteGroupMember:(Contact *)contact toGroup:(Group*)group onDone:(GenericResultHandler)doneHandler;
 - (void) removeGroupMember:(GroupMembership *) member onDeletion:(GroupMemberDeleted)deletionHandler;
 - (void) updateGroup:(Group *) group;
@@ -98,9 +111,10 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) joinGroup:(Group *) group onJoined:(GroupHandler)handler;
 - (void) leaveGroup:(Group *) group onGroupLeft:(GroupHandler)handler;
 
-//- (void) updateGroupKeysForMyGroupMemberships;
+- (void) inviteGroupMemberFailedForContact:(Contact*)contact inGroup:(Group*)group;
+- (void) disinviteGroupMemberFailedForContact:(Contact*)contact inGroup:(Group*)group;
 
-- (void) getGroupsForceAll:(BOOL)forceAll withCompletion:(DoneBlock)done;
+- (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
 
 - (void) hintApnsUnreadMessage: (NSUInteger) count handler: (GenericResultHandler) handler;
 
@@ -108,6 +122,16 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) unblockClient: (NSString*) clientId handler: (GenericResultHandler) handler;
 
 - (void) depairClient: (NSString*) clientId handler: (GenericResultHandler) handler;
+
+- (void) inviteFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
+- (void) disinviteFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
+- (void) acceptFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
+- (void) refuseFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
+
+- (void) acceptFriendFailedAlertForContact:(Contact*)contact;
+- (void) refuseFriendFailedAlertForContact:(Contact*)contact;
+- (void) inviteFriendFailedAlertForContact:(Contact*)contact;
+- (void) disinviteFriendFailedAlertForContact:(Contact*)contact;
 
 - (void) gotAPNSDeviceToken: (NSString*) deviceToken;
 - (void) unregisterApns;
@@ -141,14 +165,17 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) uploadFinished:(Attachment *)theAttachment;
 - (void) downloadFailed:(Attachment *)theAttachment;
 - (void) uploadFailed:(Attachment *)theAttachment;
+- (void) uploadStarted:(Attachment *)theAttachment;
+- (void) uploadPaused:(Attachment *)theAttachment;
 
-- (void) updateRelationships;
+- (void) syncRelationshipsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion;
 - (void) updatePresenceWithHandler:(GenericResultHandler)handler;
 
 - (void) updateKeyWithHandler:(GenericResultHandler) handler;
 
-- (void) deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group;
-- (void) handleDeletionOfContact:(Contact*)contact;
+- (void) deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group inContext:(NSManagedObjectContext*) context;
+- (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force inContext:(NSManagedObjectContext*) context;
+- (void) handleDeletionOfGroupMember:(GroupMembership*)myMember inGroup:(Group*)group withContact:(Contact*)memberContact disinvited:(BOOL)disinvited inContext:(NSManagedObjectContext*) context;
 
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment;
@@ -157,6 +184,8 @@ typedef void (^DateHandler)(NSDate* date);
 - (void) dequeueUploadOfAttachment:(Attachment*) theAttachment;
     
 - (void) checkTransferQueues;
+- (void)checkDowloadQueue;
+- (void)checkUploadQueue;
 
 - (void) updateEnvironment:(HXOEnvironment *) environment withHandler:(UpdateEnvironmentHandler)handler;
 - (void) destroyEnvironmentType:(NSString*)type withHandler:(GenericResultHandler)handler;
@@ -166,7 +195,7 @@ typedef void (^DateHandler)(NSDate* date);
 
 - (NSDate*) estimatedServerTime;
 
--(Contact *) getContactByClientId:(NSString *) theClientId;
+-(Contact *) getContactByClientId:(NSString *) theClientId inContext:(NSManagedObjectContext *)context;
 
 + (NSData *) calcKeyId:(NSData *) myKeyBits;
 + (NSString *) keyIdString:(NSData *) myKeyId;
@@ -197,5 +226,17 @@ typedef void (^DateHandler)(NSDate* date);
 + (BOOL) isInvalid:(NSData*)theData;
 
 + (NSString*)checkForceFilecacheUrl:(NSString*)theURL;
+
+// messages >= sinceTime && < beforeTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalSinceTime:(NSDate *)sinceTime beforeTime:(NSDate*)beforeTime;
+
+// messages > afterTime && <= untilTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalAfterTime:(NSDate *)afterTime untilTime:(NSDate*)untilTime;
+
+// messages >= sinceTime && <= untilTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalSinceTime:(NSDate *)sinceTime untilTime:(NSDate*)untilTime;
+
+// messages > afterTime && < beforeTime
++ (NSArray *) messagesByContact:(Contact*)contact inIntervalAfterTime:(NSDate *)afterTime beforeTime:(NSDate*)beforeTime;
 
 @end

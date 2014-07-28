@@ -15,9 +15,9 @@
 
 "p_thumb" = "Briefmarke (0.01 MPixel)";
 "p_low" = "gering (0.06 MPixel)";
-"p_medium" = "mittel (0.25 MPixels)";
-"p_high" = "hoch (1 MPixels)";
-"p_veryhigh" = "sehr hoch (4 Mpixels)";
+"p_medium" = "mittel (0.25 MPixel)";
+"p_high" = "hoch (1 MPixel)";
+"p_veryhigh" = "sehr hoch (4 MPixel)";
 "p_full" = "volle Auflösung";
 
 "Appearance"="Ansicht";
@@ -58,11 +58,13 @@
 
 
 "support_tag" = "Support Tag";
-"support_tag_explanation" = "Unser Team kann dich bitten ein Support Tag einzutragen wenn du dich mit einem Problem an uns gewendet hast.";
+"support_tag_explanation" = "Unser Team kann dich bitten, ein Support Tag einzutragen wenn du dich mit einem Problem an uns gewendet hast.";
 
 "about_button_title"    = "Über Hoccer XO";
 "tutorial_button_title" = "Anleitung";
 "faq_button_title"      = "FAQ";
+
+"confirm_seen_messages" = "Lesebestätigung senden";
 
 "full_sync_title"="Immer voll synchr.";
 

@@ -25,13 +25,13 @@
 
 @implementation HXOMessage
 
-@dynamic isOutgoing;
+@dynamic isOutgoingFlag;
 @dynamic body;
 @dynamic timeSent;
 @dynamic timeReceived;
 @dynamic timeAccepted;
 @dynamic timeSection;
-@dynamic isRead;
+@dynamic isReadFlag;
 @dynamic messageId;
 @dynamic messageTag;
 @dynamic salt;
@@ -59,12 +59,130 @@
 @dynamic cachedMessageFontSize;
 @dynamic cachedCellHeight;
 
+@dynamic isOutgoing;
+@dynamic isRead;
+
+@dynamic isIncoming;
+
 @synthesize cryptoKey = _cryptoKey;
 
 @dynamic bodyCiphertext;
 
 
 #define KEY_DEBUG NO
+
+-(BOOL)isIncoming {
+    return !self.isOutgoingFlag.boolValue;
+}
+
+-(BOOL)isOutgoing {
+    return self.isOutgoingFlag.boolValue;
+}
+
+-(void)setIsOutgoing:(BOOL)isOutgoing {
+    if (isOutgoing) {
+        self.isOutgoingFlag = @YES;
+    }else {
+        self.isOutgoingFlag = @NO;
+    }
+}
+
+-(BOOL)isRead {
+    return self.isReadFlag.boolValue;
+}
+
+-(void)setIsRead:(BOOL)isRead {
+    if (isRead) {
+        self.isReadFlag = @YES;
+    }else {
+        self.isReadFlag = @NO;
+    }
+}
+
+- (NSSet*) deliveriesFailed {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isFailure;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesSeen {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isSeen;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesUnseen {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isUnseen;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesPrivate {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isPrivate;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesDelivered {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isDelivered;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesNew {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isStateNew;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesDelivering {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isStateDelivering;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesPending {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isPending;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesAttachmentsReceived {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isAttachmentReceived;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesAttachmentsFailed {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isAttachmentFailure;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesAttachmentsPending {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isAttachmentPending;
+    }];
+    return theMemberSet;
+}
+
+- (NSSet*) deliveriesAttachmentsMissing {
+    NSSet * theMemberSet = [self.deliveries objectsPassingTest:^BOOL(Delivery* obj, BOOL *stop) {
+        return obj.isMissingAttachment;
+    }];
+    return theMemberSet;
+}
+
 
 -(CGFloat) cachedCellHeight {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
@@ -105,7 +223,7 @@
 
 -(NSData*) cryptoKey {
     if (_cryptoKey == nil) {
-        if ([self.isOutgoing isEqualToNumber: @YES]) {
+        if (self.isOutgoing) {
             [self setupOutgoingEncryption];
         } else {
             // get the key from the incoming delivery object
@@ -192,7 +310,7 @@
             self.outgoingCryptoKey = [Crypto random256BitKey];
         }
     } else {
-        NSLog(@"HXOMessage:setupOutgoingEncryption: (re)using key %@",self.outgoingCryptoKey);
+        if (KEY_DEBUG) NSLog(@"HXOMessage:setupOutgoingEncryption: (re)using key %@",self.outgoingCryptoKey);
     }
     [self setCryptoKey:self.outgoingCryptoKey];
 }
@@ -211,6 +329,8 @@
 }
 
 - (void) setTimeAcceptedMillis:(NSNumber*) milliSecondsSince1970 {
+    //NSLog(@"message.timeAccepted=%@", milliSecondsSince1970);
+    //NSLog(@"%@", [NSThread callStackSymbols]);
     self.timeAccepted = [HXOBackend dateFromMillis:milliSecondsSince1970];
 }
 

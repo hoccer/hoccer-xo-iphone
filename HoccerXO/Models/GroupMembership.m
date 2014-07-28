@@ -15,6 +15,14 @@
 #import "Crypto.h"
 #import "UserProfile.h"
 
+NSString * const kGroupMembershipStateNone          = @"none";
+NSString * const kGroupMembershipStateInvited       = @"invited";
+NSString * const kGroupMembershipStateJoined        = @"joined";
+NSString * const kGroupMembershipStateGroupRemoved  = @"groupRemoved";
+
+NSString * const kGroupMembershipRoleAdmin          = @"admin";
+NSString * const kGroupMembershipRoleMember         = @"member";
+NSString * const kGroupMembershipRoleNearbyMember   = @"nearbyMember";
 
 @implementation GroupMembership
 
@@ -92,35 +100,35 @@
 }
 
 - (BOOL)isJoined {
-    return [@"joined" isEqualToString: self.state];
+    return [kGroupMembershipStateJoined isEqualToString: self.state];
 }
 
 - (BOOL)isInvited {
-    return [@"invited" isEqualToString: self.state];
+    return [kGroupMembershipStateInvited isEqualToString: self.state];
 }
 
 - (BOOL)isStateNone {
-    return [@"none" isEqualToString: self.state];
+    return [kGroupMembershipStateNone isEqualToString: self.state];
 }
 
 - (BOOL)isGroupRemoved {
-    return [@"groupRemoved" isEqualToString: self.state];
+    return [kGroupMembershipStateGroupRemoved isEqualToString: self.state];
 }
 
 - (BOOL)isMember {
-    return [@"member" isEqualToString: self.role];
+    return [kGroupMembershipRoleMember isEqualToString: self.role];
+}
+
+- (BOOL)isNearbyMember {
+    return [kGroupMembershipRoleNearbyMember isEqualToString: self.role];
 }
 
 - (BOOL)isAdmin {
-    return [@"admin" isEqualToString: self.role];
+    return [kGroupMembershipRoleAdmin isEqualToString: self.role];
 }
 
-- (BOOL)hasRoleMemberOrAdmin {
-    return self.isMember || self.isAdmin;
-}
-
-- (BOOL)isRoleNone {
-    return [@"none" isEqualToString: self.role];
+- (BOOL)hasActiveRole {
+    return self.isMember || self.isAdmin || self.isNearbyMember;
 }
 
 - (NSData *) calcCipheredGroupKey {

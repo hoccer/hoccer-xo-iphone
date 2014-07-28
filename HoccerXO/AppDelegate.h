@@ -18,6 +18,11 @@
 FOUNDATION_EXPORT NSString * const kHXOURLScheme;
 
 typedef void (^ContinueBlock)();
+typedef void (^ContextBlock)(NSManagedObjectContext* context);
+typedef void (^ContextParameterBlock)(NSManagedObjectContext* context, NSArray * managedObjects);
+
+extern NSArray * objectIds(NSArray* managedObjects);
+extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context);
 
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
@@ -29,7 +34,8 @@ typedef void (^ContinueBlock)();
 }
 @property (strong, nonatomic) UIWindow *window;
 
-@property (readonly, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectContext *mainObjectContext;
+@property (readonly, strong, nonatomic) NSManagedObjectContext *currentObjectContext;
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
@@ -77,7 +83,18 @@ typedef void (^ContinueBlock)();
 
 - (void)saveContext;
 - (void)saveDatabase;
+-(void)saveContext:(NSManagedObjectContext*)context;
 - (BOOL)deleteObject:(id)object;
+- (BOOL)deleteObject:(id)object inContext:(NSManagedObjectContext *) context;
+
+- (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock;
+- (void)performWithoutLockingInNewBackgroundContext:(ContextBlock)backgroundBlock;
+- (void)performWithoutLockingInMainContext:(ContextBlock)contextBlock;
+- (void)performAfterCurrentContextFinishedInMainContext:(ContextBlock)contextBlock;
+- (void)performAfterCurrentContextFinishedInMainContextPassing:(NSArray*)objects withBlock:(ContextParameterBlock)contextBlock;
+//- (void)lockId:(NSString*)Id;
+//- (void)unlockId:(NSString*)Id;
+- (void)assertMainContext;
 
 - (NSURL *)applicationDocumentsDirectory;
 - (NSURL *)applicationLibraryDirectory;
@@ -89,6 +106,7 @@ typedef void (^ContinueBlock)();
 -(void) dumpAllRecordsOfEntityNamed:(NSString *)theEntityName;
 
 - (void) showFatalErrorAlertWithMessage:(NSString *)message withTitle:(NSString *)title;
+- (void) showOperationFailedAlert:(NSString *)message withTitle:(NSString *) title withOKBlock:(ContinueBlock)okBlock;
 
 -(void)configureForNearbyMode:(BOOL)modeNearby;
 -(BOOL)inNearbyMode;
@@ -97,6 +115,7 @@ typedef void (^ContinueBlock)();
 -(void)endInspecting:(id)inspectedObject withInspector:(id)inspector;
 -(BOOL)isInspecting:(id)inspectedObject withInspector:(id)inspector;
 -(BOOL)isInspecting:(id)inspectedObject;
+-(id)inspectorOf:(id)inspectedObject;
 
 
 + (void) setDefaultAudioSession;

@@ -10,6 +10,18 @@
 #import <CoreData/CoreData.h>
 #import "Contact.h"
 
+// group states
+FOUNDATION_EXPORT NSString * const kGroupStateNone;
+FOUNDATION_EXPORT NSString * const kGroupStateExists;
+
+// internal group states, do not go over the wire
+FOUNDATION_EXPORT NSString * const kGroupStateInternalIncomplete;
+FOUNDATION_EXPORT NSString * const kGroupStateInternalKept;
+
+// group roles
+FOUNDATION_EXPORT NSString * const kGroupTypeUser;
+FOUNDATION_EXPORT NSString * const kGroupTypeNearby;
+
 @class GroupMembership;
 
 @interface Group : Contact
@@ -32,18 +44,19 @@
 @property (nonatomic, retain) NSNumber    * lastChangedMillis;
 @property (nonatomic, retain) NSNumber    * keyDateMillis;
 
-@property BOOL shouldPresentInvitation;
-@property BOOL presentingInvitation;
-
 // @property (nonatomic, readonly) GroupMembership * myGroupMemberShip;
 
 - (BOOL) iAmAdmin;
 - (BOOL) iJoined;
+- (NSSet*) otherMembers;
 - (NSSet*) otherJoinedMembers;
 - (NSSet*) otherInvitedMembers;
 - (NSSet*) adminMembers;
 - (NSSet*) knownAdminMembers;
-
+- (NSSet*) membersNotFriends;
+- (NSSet*) membersInvitable;
+- (NSSet*) membersInvitedMeAsFriend;
+- (NSSet*) membersInvitedAsFriend;
 
 - (NSDate *) latestMemberChangeDate; // returns the latest latestChange date of all members
 
@@ -60,6 +73,8 @@
 - (BOOL)isExistingGroup;
 - (BOOL)isNearbyGroup;
 - (BOOL)isIncompleteGroup;
+
+-(void)changeIdTo:(NSString*)newId;
 
 @end
 

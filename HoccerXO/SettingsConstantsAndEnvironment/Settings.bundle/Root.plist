@@ -283,6 +283,22 @@
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
+			<key>Title</key>
+			<string></string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>confirm_seen_messages</string>
+			<key>Key</key>
+			<string>confirmSeenMessages</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
 			<key>FooterText</key>
 			<string>support_tag_explanation</string>
 		</dict>
@@ -305,6 +321,16 @@
 			<string>fullSync</string>
 			<key>DefaultValue</key>
 			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Quickstart</string>
+			<key>Key</key>
+			<string>quickStart</string>
+			<key>DefaultValue</key>
+			<true/>
 		</dict>
 		<dict>
 			<key>Type</key>

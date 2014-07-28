@@ -17,6 +17,7 @@
 #import "ImageViewController.h"
 #import "UIImage+ScaleAndCrop.h"
 #import "UIImage+ImageEffects.h"
+#import "ContactListViewController.h"
 
 #define DEBUG_PERF NO
 
@@ -36,6 +37,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 @synthesize avatarView = _avatarView;
 @synthesize commonSection = _commonSection;
 @synthesize nicknameItem = _nicknameItem;
+@synthesize relationshipItem = _relationshipItem;
 @synthesize keyItem = _keyItem;
 @synthesize destructiveSection = _destructiveSection;
 @synthesize destructiveButton = _destructiveButton;
@@ -54,6 +56,10 @@ static const NSUInteger kHXOMaxNameLength = 25;
     self.avatarItem.visibilityMask = DatasheetModeNone;
     self.avatarItem.valuePath = @"avatarImage";
     self.avatarItem.segueIdentifier = @"showAvatar";
+}
+
+- (UIViewController*)unwindToRootController {
+    return self.delegate;
 }
 
 - (NSArray*) buildSections {
@@ -108,6 +114,16 @@ static const NSUInteger kHXOMaxNameLength = 25;
     }
     return _nicknameItem;
 }
+
+- (DatasheetItem*) relationshipItem {
+    if ( !_relationshipItem) {
+        NSString * status = [ContactListViewController statusStringForContact: (Contact*)self.inspectedObject];
+        _relationshipItem = [self itemWithIdentifier: @"status" cellIdentifier: @"DatasheetCell"];
+        _relationshipItem.title = status;
+    }
+    return _relationshipItem;
+}
+
 
 - (DatasheetSection*) destructiveSection {
     if ( ! _destructiveSection) {
