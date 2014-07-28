@@ -16,7 +16,6 @@
 #import "NSString+UUID.h"
 #import "AppDelegate.h"
 #import "CryptoJSON.h"
-#import "ProfileViewController.h"
 #import "SRPClient.h"
 #import "SRPVerifierGenerator.h"
 #import "CCRSA.h"
