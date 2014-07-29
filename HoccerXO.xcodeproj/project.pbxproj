@@ -64,6 +64,7 @@
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
+		63581CDF1959FC890068F48A /* BatchInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63581CDE1959FC890068F48A /* BatchInviteViewController.m */; };
 		63638F8E18EC8210008DA997 /* avatar_group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63638F8D18EC8210008DA997 /* avatar_group.m */; };
 		636492D71711E97900E35514 /* AvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* AvatarView.m */; };
 		6365EB2C18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EB2B18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m */; };
@@ -95,6 +96,7 @@
 		6383FF761729DC2200835C91 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 6383FF751729DC2200835C91 /* Settings.bundle */; };
 		63848A9518F473AC00C253A4 /* SmallContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63848A9418F473AC00C253A4 /* SmallContactCell.m */; };
 		638EBE3917870E8600F1B9AD /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638EBE3817870E8600F1B9AD /* CoreText.framework */; };
+		63903ABE194276B500B7A4B4 /* PeopleMultiPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63903ABD194276B500B7A4B4 /* PeopleMultiPickerViewController.m */; };
 		639094A11738751800DF889B /* server_development.der in Resources */ = {isa = PBXBuildFile; fileRef = 6390949F1738751800DF889B /* server_development.der */; };
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
@@ -578,6 +580,8 @@
 		634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpDownLoadControl.m; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
 		63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonFloatingSectionHeaderTableView.m; sourceTree = "<group>"; };
+		63581CDD1959FC890068F48A /* BatchInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatchInviteViewController.h; sourceTree = "<group>"; };
+		63581CDE1959FC890068F48A /* BatchInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatchInviteViewController.m; sourceTree = "<group>"; };
 		63638F8C18EC8210008DA997 /* avatar_group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avatar_group.h; sourceTree = "<group>"; };
 		63638F8D18EC8210008DA997 /* avatar_group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = avatar_group.m; sourceTree = "<group>"; };
 		636492D51711E97900E35514 /* AvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvatarView.h; sourceTree = "<group>"; };
@@ -636,6 +640,8 @@
 		63848A9418F473AC00C253A4 /* SmallContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SmallContactCell.m; sourceTree = "<group>"; };
 		638EBE3817870E8600F1B9AD /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		63903AA8193E533500B7A4B4 /* HoccerXO- 39.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO- 39.xcdatamodel"; sourceTree = "<group>"; };
+		63903ABC194276B500B7A4B4 /* PeopleMultiPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PeopleMultiPickerViewController.h; sourceTree = "<group>"; };
+		63903ABD194276B500B7A4B4 /* PeopleMultiPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PeopleMultiPickerViewController.m; sourceTree = "<group>"; };
 		6390949F1738751800DF889B /* server_development.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = server_development.der; sourceTree = "<group>"; };
 		639094BC1739828700DF889B /* GeoLocationPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GeoLocationPicker.h; sourceTree = "<group>"; };
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
@@ -1686,6 +1692,8 @@
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
 				C576EBD11934CC8400C0D254 /* AudioPlayerViewController.h */,
 				C576EBD21934CC8400C0D254 /* AudioPlayerViewController.m */,
+				63581CDD1959FC890068F48A /* BatchInviteViewController.h */,
+				63581CDE1959FC890068F48A /* BatchInviteViewController.m */,
 				63756A8E18F6434C003F7555 /* ContactPicker.h */,
 				63756A8F18F6434C003F7555 /* ContactPicker.m */,
 				631FE508191947D80073E980 /* CustomKeyViewController.h */,
@@ -2127,6 +2135,8 @@
 				E99886C21725CB3F0089A510 /* VcardParserDelegate.h */,
 				E99886C31725CB3F0089A510 /* VcardWriter.h */,
 				E99886C41725CB3F0089A510 /* VcardWriter.m */,
+				63903ABC194276B500B7A4B4 /* PeopleMultiPickerViewController.h */,
+				63903ABD194276B500B7A4B4 /* PeopleMultiPickerViewController.m */,
 			);
 			path = Adressbook;
 			sourceTree = "<group>";
@@ -2828,6 +2838,7 @@
 				1FA4DE52195D9B400008C9DD /* AudioAttachmentListViewController.m in Sources */,
 				631FE51A1919A3B60073E980 /* HXOActivityIndicatorView.m in Sources */,
 				63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */,
+				63903ABE194276B500B7A4B4 /* PeopleMultiPickerViewController.m in Sources */,
 				C5B167D01962B982004D3A28 /* AddToCollectionListViewController.m in Sources */,
 				C576EC451934CCB200C0D254 /* player_close.m in Sources */,
 				63638F8E18EC8210008DA997 /* avatar_group.m in Sources */,
@@ -2840,6 +2851,7 @@
 				E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
 				E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */,
 				E9E92F3E18733B7A007B8042 /* DDLog.m in Sources */,
+				63581CDF1959FC890068F48A /* BatchInviteViewController.m in Sources */,
 				63B78FFA18D4D6C1003A9125 /* tab_chats.m in Sources */,
 				6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */,
 				E9E92F901874E7A3007B8042 /* MyHttpConnection.m in Sources */,

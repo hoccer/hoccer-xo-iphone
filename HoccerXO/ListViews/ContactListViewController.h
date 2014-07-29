@@ -14,7 +14,9 @@
 
 @class Contact;
 
-@interface ContactListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate, MFMailComposeViewControllerDelegate, MFMessageComposeViewControllerDelegate, HXOHyperLabelDelegate>
+@interface ContactListViewController : HXOTableViewController <NSFetchedResultsControllerDelegate, UISearchBarDelegate, HXOHyperLabelDelegate>
+
+
 
 @property (nonatomic, strong) IBOutlet UISearchBar         * searchBar;
 @property (nonatomic, readonly) NSFetchedResultsController * currentFetchedResultsController;
