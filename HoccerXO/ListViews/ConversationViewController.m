@@ -16,7 +16,6 @@
 #import "HXOMessage.h"
 #import "AppDelegate.h"
 #import "HXOUserDefaults.h"
-#import "ProfileViewController.h"
 #import "Attachment.h"
 #import "Environment.h"
 #import "HXOUI.h"

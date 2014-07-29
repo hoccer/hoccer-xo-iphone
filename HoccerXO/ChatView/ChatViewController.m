@@ -39,7 +39,6 @@
 #import "ImageAttachmentSection.h"
 #import "TextSection.h"
 #import "GenericAttachmentSection.h"
-#import "ProfileViewController.h"
 #import "LabelWithLED.h"
 #import "UpDownLoadControl.h"
 #import "DateSectionHeaderView.h"
