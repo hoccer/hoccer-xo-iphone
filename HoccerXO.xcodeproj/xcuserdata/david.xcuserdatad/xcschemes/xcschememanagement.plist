@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>SchemeUserState</key>
+	<dict>
+		<key>Hoccer XO Dev.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>1</integer>
+		</dict>
+		<key>Hoccer XO Testing.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>Hoccer XO.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>6302A99B18DA89F700B2D04F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>6302A9B218DA8A9500B2D04F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>63334F3518C24AF20032005A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>633A99A41779EB2200E066EF</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>63AEE2D316CA4D0200522F92</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+	</dict>
+</dict>
+</plist>

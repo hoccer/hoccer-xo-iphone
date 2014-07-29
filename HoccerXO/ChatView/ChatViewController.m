@@ -43,7 +43,6 @@
 #import "ImageAttachmentSection.h"
 #import "AudioAttachmentSection.h"
 #import "GenericAttachmentSection.h"
-#import "ProfileViewController.h"
 #import "LabelWithLED.h"
 #import "UpDownLoadControl.h"
 #import "DateSectionHeaderView.h"

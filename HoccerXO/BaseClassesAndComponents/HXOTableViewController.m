@@ -7,7 +7,6 @@
 //
 
 #import "HXOTableViewController.h"
-#import "UserDefaultsCells.h"
 
 @interface HXOTableViewController ()
 
