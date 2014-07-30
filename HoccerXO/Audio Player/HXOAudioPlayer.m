@@ -83,6 +83,11 @@
     }
 }
 
+- (void) stop {
+    [self pause];
+    [self playAttachment:nil];
+}
+
 - (void) skipBack {
     if (self.currentTime > 3.0){
         self.currentTime = 0.0;
@@ -196,11 +201,6 @@
     
     [self updateNowPlayingInfo];
     return self.isPlaying;
-}
-
-- (void) stop {
-    [self pause];
-    [self playAttachment:nil];
 }
 
 - (void) setAttachment:(Attachment *)attachment {

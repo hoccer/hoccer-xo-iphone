@@ -376,6 +376,7 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 + (void) setRecordingAudioSession {
+    [[HXOAudioPlayer sharedInstance] stop];
     [AppDelegate setAudioSessionWithCategory:AVAudioSessionCategoryPlayAndRecord];
     [AppDelegate requestRecordPermission];
 }

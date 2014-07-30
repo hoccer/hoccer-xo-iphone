@@ -28,6 +28,7 @@ typedef NS_ENUM (NSUInteger, HXOAudioPlayerRepeatState) {
 - (BOOL) play;
 - (void) pause;
 - (void) togglePlayPause;
+- (void) stop;
 
 - (void) skipBack;
 - (void) skipForward;
