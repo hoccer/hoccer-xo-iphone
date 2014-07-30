@@ -223,7 +223,6 @@
 }
 
 - (void) updateNowPlayingInfo {
-    MPNowPlayingInfoCenter *infoCenter = [MPNowPlayingInfoCenter defaultCenter];
     if (self.attachment) {
         AttachmentInfo *attachmentInfo = [AttachmentInfo infoForAttachment:self.attachment];
         NSMutableDictionary *nowPlayingInfo = [NSMutableDictionary dictionary];
@@ -246,10 +245,10 @@
                 [nowPlayingInfo setObject:artwork forKey:MPMediaItemPropertyArtwork];
             }
             
-            infoCenter.nowPlayingInfo = nowPlayingInfo;
+            [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:nowPlayingInfo];
         }];
     } else {
-        infoCenter.nowPlayingInfo = nil;
+        [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:nil];
     }
 }
 
