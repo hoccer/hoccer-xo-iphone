@@ -189,10 +189,6 @@
     self.attachment = attachment;
     
     if (self.player) {
-        [AppDelegate setMusicAudioSession];
-        [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
-        [[AppDelegate instance] becomeFirstResponder];
-        
         [self.player play];
         self.isPlaying = YES;
     } else {
@@ -208,10 +204,17 @@
         _attachment = attachment;
 
         if (attachment) {
+            [[UIApplication sharedApplication] beginReceivingRemoteControlEvents];
+            [[AppDelegate instance] becomeFirstResponder];
+            [AppDelegate setMusicAudioSession];
+
             self.player = [[AVAudioPlayer alloc] initWithContentsOfURL:attachment.contentURL error:nil];
             [self.player setDelegate:self];
         } else {
             self.player = nil;
+
+            [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+            [AppDelegate setDefaultAudioSession];
         }
     }
 }
