@@ -240,7 +240,14 @@
             [nowPlayingInfo setValue:attachmentInfo.audioAlbum forKey:MPMediaItemPropertyAlbumTitle];
         }
 
-        infoCenter.nowPlayingInfo = nowPlayingInfo;
+        [self.attachment loadImage:^(UIImage *image, NSError *error) {
+            if (image) {
+                MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
+                [nowPlayingInfo setObject:artwork forKey:MPMediaItemPropertyArtwork];
+            }
+            
+            infoCenter.nowPlayingInfo = nowPlayingInfo;
+        }];
     } else {
         infoCenter.nowPlayingInfo = nil;
     }
