@@ -394,19 +394,21 @@ BOOL sameObjects(id obj1, id obj2) {
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
-    [session setActive:NO error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@", myError);
-    }
-    
-    [session setCategory:category error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category '%@', error=%@", category, myError);
-    }
-    
-    [session setActive:YES error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category '%@', error=%@", category, myError);
+    if (![session.category isEqualToString:category]) {
+        [session setActive:NO error:&myError];
+        if (myError != nil) {
+            NSLog(@"ERROR: failed to deactivate prior audio session, error=%@", myError);
+        }
+        
+        [session setCategory:category error:&myError];
+        if (myError != nil) {
+            NSLog(@"ERROR: failed to set audio category '%@', error=%@", category, myError);
+        }
+        
+        [session setActive:YES error:&myError];
+        if (myError != nil) {
+            NSLog(@"ERROR: failed to activate audio session for category '%@', error=%@", category, myError);
+        }
     }
 }
 
