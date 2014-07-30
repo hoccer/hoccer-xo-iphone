@@ -194,12 +194,13 @@
         self.isPlaying = NO;
     }
     
+    [self updateNowPlayingInfo];
     return self.isPlaying;
 }
 
 - (void) stop {
     [self pause];
-    self.attachment = nil;
+    [self playAttachment:nil];
 }
 
 - (void) setAttachment:(Attachment *)attachment {
@@ -213,8 +214,6 @@
             self.player = nil;
         }
     }
-    
-    [self updateNowPlayingInfo];
 }
 
 - (void) setCurrentTime:(NSTimeInterval)currentTime {
