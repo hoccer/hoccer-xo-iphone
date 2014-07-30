@@ -372,90 +372,41 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 + (void) setDefaultAudioSession {
-    if (AUDIOSESSION_DEBUG) NSLog(@"setDefaultAudioSession");
-    //NSLog(@"%@", [NSThread callStackSymbols]);
-    NSError * myError = nil;
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    
-    [session setActive:NO error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
-    }
-
-    [session setCategory:AVAudioSessionCategoryAmbient error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryAmbient, error=%@",myError);
-    }
-    
-    [session setActive:YES error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryAmbient, error=%@",myError);
-    }
+    [AppDelegate setAudioSessionWithCategory:AVAudioSessionCategoryAmbient];
 }
 
 + (void) setRecordingAudioSession {
-    if (AUDIOSESSION_DEBUG) NSLog(@"setRecordingAudioSession");
-
-    NSError * myError = nil;
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    
-    [session setActive:NO error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
-    }
-    
-    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryPlayAndRecord, error=%@",myError);
-    }
-    
-    [session setActive:YES error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryPlayAndRecord, error=%@",myError);
-    }
+    [AppDelegate setAudioSessionWithCategory:AVAudioSessionCategoryPlayAndRecord];
     [AppDelegate requestRecordPermission];
 }
 
 + (void) setProcessingAudioSession {
-    if (AUDIOSESSION_DEBUG) NSLog(@"setProcessingAudioSession");
-    NSError * myError = nil;
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    
-    [session setActive:NO error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
-    }
-    
-    [session setCategory:AVAudioSessionCategoryAudioProcessing error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryAudioProcessing, error=%@",myError);
-    }
-    
-    [session setActive:YES error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryAudioProcessing, error=%@",myError);
-    }
+    [AppDelegate setAudioSessionWithCategory:AVAudioSessionCategoryAudioProcessing];
 }
 
 
 + (void) setMusicAudioSession {
-    if (AUDIOSESSION_DEBUG) NSLog(@"setMusicAudioSession");
+    [AppDelegate setAudioSessionWithCategory:AVAudioSessionCategoryPlayback];
+}
+
++ (void) setAudioSessionWithCategory:(NSString *)category {
+    if (AUDIOSESSION_DEBUG) NSLog(@"setAudioSessionWithCategory:%@", category);
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
     [session setActive:NO error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
+        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@", myError);
     }
     
-    [session setCategory:AVAudioSessionCategoryPlayback error:&myError];
+    [session setCategory:category error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryPlayback, error=%@",myError);
+        NSLog(@"ERROR: failed to set audio category '%@', error=%@", category, myError);
     }
     
     [session setActive:YES error:&myError];
     if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryPlayback, error=%@",myError);
+        NSLog(@"ERROR: failed to activate audio session for category '%@', error=%@", category, myError);
     }
 }
 
