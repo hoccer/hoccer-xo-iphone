@@ -62,6 +62,7 @@
 #define TRACE_NEARBY_ACTIVATION     NO
 #define TRACE_LOCKING               NO
 #define TRACE_DELIVERY_SAVES        NO
+#define TRACE_CONTACT_SAVES         NO
 
 
 #ifdef HOCCER_DEV
@@ -566,19 +567,43 @@ BOOL sameObjects(id obj1, id obj2) {
     //NSLog(@"------ done %@", where);
 }
 
-- (void)checkObjectsInContext2:(NSManagedObjectContext*)context info:(NSString*)where {
+- (void)checkObjectsInContextForDeliveries:(NSManagedObjectContext*)context info:(NSString*)where {
     NSSet * insertedObjects = context.insertedObjects;
     for (NSManagedObject * obj in insertedObjects) {
         if ([obj isKindOfClass:[Delivery class]]) {
             Delivery * delivery = (Delivery*)obj;
-            NSLog(@"=== insert delivery messageId %@ receiverId %@ state %@ changed %@", delivery.message.messageId, delivery.receiver.clientId, delivery.state, delivery.timeChangedMillis);
+            NSLog(@"=== insert delivery messageId %@ receiverId %@ state %@ changed %@ in %@", delivery.message.messageId, delivery.receiver.clientId, delivery.state, delivery.timeChangedMillis, where);
         }
     }
    NSSet * registeredObjects = context.updatedObjects;
     for (NSManagedObject * obj in registeredObjects) {
         if ([obj isKindOfClass:[Delivery class]]) {
             Delivery * delivery = (Delivery*)obj;
-            NSLog(@"=== updating delivery messageId %@ receiverId %@ state %@ changed %@", delivery.message.messageId, delivery.receiver.clientId, delivery.state, delivery.timeChangedMillis);
+            NSLog(@"=== updating delivery messageId %@ receiverId %@ state %@ changed %@ in %@", delivery.message.messageId, delivery.receiver.clientId, delivery.state, delivery.timeChangedMillis, where);
+        }
+    }
+}
+
+- (void)checkObjectsInContextForContacts:(NSManagedObjectContext*)context info:(NSString*)where {
+    NSSet * insertedObjects = context.insertedObjects;
+    for (NSManagedObject * obj in insertedObjects) {
+        if ([obj isKindOfClass:[Contact class]]) {
+            Contact * contact = (Contact*)obj;
+            NSLog(@"=== inserted contact id %@ nick %@ connectionStatus %@ objId %@ in %@", contact.clientId, contact.nickName, contact.connectionStatus, contact.objectID, where);
+        }
+    }
+    NSSet * updatedObjects = context.updatedObjects;
+    for (NSManagedObject * obj in updatedObjects) {
+        if ([obj isKindOfClass:[Contact class]]) {
+            Contact * contact = (Contact*)obj;
+            NSLog(@"=== updated contact id %@ nick %@ connectionStatus %@ objId %@ in %@", contact.clientId, contact.nickName, contact.connectionStatus, contact.objectID, where);
+        }
+    }
+    NSSet * deletedObjects = context.deletedObjects;
+    for (NSManagedObject * obj in deletedObjects) {
+        if ([obj isKindOfClass:[Contact class]]) {
+            Contact * contact = (Contact*)obj;
+            NSLog(@"=== deleted contact objId %@ in %@", contact.objectID, where);
         }
     }
 }
@@ -599,7 +624,8 @@ BOOL sameObjects(id obj1, id obj2) {
     }
     if (managedObjectContext != nil) {
         [self checkObjectsInContext:managedObjectContext info:@"before save"];
-        if (TRACE_DELIVERY_SAVES) [self checkObjectsInContext2:managedObjectContext info:@"saving main context:"];
+        if (TRACE_DELIVERY_SAVES) [self checkObjectsInContextForDeliveries:managedObjectContext info:@" main context saving"];
+        if (TRACE_CONTACT_SAVES) [self checkObjectsInContextForContacts:managedObjectContext info:@"main context saving"];
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -1098,6 +1124,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         start = [[NSDate alloc] init];
     }
     NSError *error = nil;
+    if (TRACE_CONTACT_SAVES) [self checkObjectsInContextForContacts:context info:[NSString stringWithFormat:@"saving context %@", context]];
     if ([context hasChanges] && ![context save:&error]) {
         // Replace this implementation with code to handle the error appropriately.
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
