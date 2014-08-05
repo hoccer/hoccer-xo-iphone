@@ -58,9 +58,9 @@
 #define TRACE_DELETES               NO
 #define TRACE_INSPECTION            NO
 #define TRACE_PENDING_CHANGES       NO
-#define TRACE_BACKGROUND_PROCESSING YES
+#define TRACE_BACKGROUND_PROCESSING NO
 #define TRACE_NEARBY_ACTIVATION     NO
-#define TRACE_LOCKING               YES
+#define TRACE_LOCKING               NO
 #define TRACE_DELIVERY_SAVES        NO
 
 

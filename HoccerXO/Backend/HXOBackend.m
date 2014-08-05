@@ -3639,7 +3639,7 @@ static NSTimer * _stateNotificationDelayTimer;
 // String[] getEncryptedGroupKeys(String groupId, String sharedKeyId, String sharedKeyIdSalt, String[] clientIds, String[] publicKeyIds);
 - (void) getEncryptedGroupKeys:(NSArray*)params withResponder:(ResultBlock)responder {
     
-    [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:@"crypto" inNewBackgroundContext:^(NSManagedObjectContext *context) {
     
         id failed = @[];
         
@@ -3736,15 +3736,23 @@ static NSTimer * _stateNotificationDelayTimer;
         for (int i = 0; i < clientIds.count;++i) {
             Contact * contact = (Contact*)contacts[i];
             SecKeyRef myReceiverKey = [contact getPublicKeyRef];
-            NSData * keyBox = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
-            if (keyBox == nil) {
-                NSLog(@"#ERROR: getEncryptedGroupKeys() Encryption failed for key %@ contact id: %@", publicKeyIds[i], clientIds[i]);
+            if (myReceiverKey != nil) {
+                NSData * keyBox = [rsa encryptWithKey:myReceiverKey plainData:group.groupKey];
+                if (keyBox == nil) {
+                    NSLog(@"#ERROR: getEncryptedGroupKeys() Encryption failed for key %@ contact id: %@", publicKeyIds[i], clientIds[i]);
+                    [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                        responder(failed);
+                    }];
+                    return;
+                }
+                [result addObject:[keyBox asBase64EncodedString]];
+            } else {
+                NSLog(@"#ERROR: getEncryptedGroupKeys() get receiver key of contact failed for key %@ contact id: %@", publicKeyIds[i], clientIds[i]);
                 [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                     responder(failed);
                 }];
                 return;
             }
-            [result addObject:[keyBox asBase64EncodedString]];
         }
         if (newSharedKeyId != nil && newSharedKeyIdSalt != nil) {
             [result addObject:newSharedKeyId];
