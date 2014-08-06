@@ -22,7 +22,9 @@ typedef void (^ContextBlock)(NSManagedObjectContext* context);
 typedef void (^ContextParameterBlock)(NSManagedObjectContext* context, NSArray * managedObjects);
 
 extern NSArray * objectIds(NSArray* managedObjects);
+extern NSArray * permanentObjectIds(NSArray* managedObjects);
 extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context);
+extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * context);
 
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;

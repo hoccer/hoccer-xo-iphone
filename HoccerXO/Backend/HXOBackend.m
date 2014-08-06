@@ -4747,23 +4747,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     return myResult;
 }
-/*
-NSArray * objectIds(NSArray* managedObjects) {
-    NSMutableArray * result = [NSMutableArray new];
-    for (NSManagedObject * obj in managedObjects) {
-        [result addObject:obj.objectID];
-    }
-    return result;
-}
 
-NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
-    NSMutableArray * result = [NSMutableArray new];
-    for (NSManagedObjectID * objId in objectIds) {
-        [result addObject:[context objectWithID:objId]];
-    }
-    return result;
-}
-*/
 // client calls this method to send a Talkmessage along with the intended recipients in the deliveries array
 // the return result contains an array with updated deliveries
 - (void) outDeliveryRequest: (HXOMessage*) message withDeliveries: (NSArray*) deliveries withCompletion:(GenericResultHandler)completion {
@@ -4791,16 +4775,35 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     
     [_serverConnection invoke: @"outDeliveryRequest" withParams: @[messageDict, deliveryDicts] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
-            NSManagedObjectID * messageObjId = message.objectID;
-            NSArray * deliveryIds = objectIds(deliveries);
+            NSArray * messageObjIds = permanentObjectIds(@[message]);
+            if (messageObjIds == nil) {
+                NSLog(@"outDeliveryRequest: could not obtain permanent id for message, ignoring result");
+                return;
+            }
+
+            NSManagedObjectID * messageObjId = messageObjIds[0];;
+            NSArray * deliveryIds = permanentObjectIds(deliveries);
+            if (deliveryIds == nil) {
+                NSLog(@"outDeliveryRequest: could not obtain permanent ids for some deliveries, ignoring result");
+                return;
+            }
             NSArray * resultDeliveryDicts = (NSArray*)responseOrError;
             NSDictionary * dict = resultDeliveryDicts[0];
             
             NSString * lockid = [self chatLockForSenderId:dict[@"messageId"] andGroupId:dict[@"groupId"]];
             
             [self.delegate performWithLockingId:lockid inNewBackgroundContext:^(NSManagedObjectContext *context) {
-                NSArray * deliveries = managedObjects(deliveryIds,context);
-                HXOMessage * message = (HXOMessage*)[context objectWithID:messageObjId];
+                NSArray * deliveries = existingManagedObjects(deliveryIds,context);
+                if (deliveries == nil) {
+                    NSLog(@"outDeliveryRequest: some deliveries are gone, igonring result");
+                    return;
+                }
+                NSError * error = nil;
+                HXOMessage * message = (HXOMessage*)[context existingObjectWithID:messageObjId error:&error];
+                if (message == nil || error != nil) {
+                    NSLog(@"outDeliveryRequest: message is gone, ignoring result");
+                    return;
+                }
                 
                 NSArray * updatedDeliveryDicts = (NSArray*)responseOrError;
                 if (deliveries.count == 1) { // we did send 1 delivery
@@ -5905,13 +5908,21 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 
 - (void) outDeliveryAcknowledgeAttachmentState:(NSString*)attachmentState forDelivery:(Delivery*)myDelivery withFileId:(NSString*)myFileId forReceiver:(NSString*)receiverId {
     
-    NSArray * myObjIds = objectIds(@[myDelivery]);
+    NSArray * myObjIds = permanentObjectIds(@[myDelivery]);
+    if (myObjIds == nil) {
+        NSLog(@"outDeliveryAcknowledgeAttachmentState: can not obtain permanent id for delivery, not acknowledging");
+        return;
+    }
     [self outDeliveryAcknowledgeAttachmentState:attachmentState
                                      withFileId:myFileId
                                     forReceiver:receiverId
                                     withHandler:^(NSString *result, BOOL ok)
      {
-         NSArray * myObjects = managedObjects(myObjIds, self.delegate.mainObjectContext);
+         NSArray * myObjects = existingManagedObjects(myObjIds, self.delegate.mainObjectContext);
+         if (myObjects == nil) {
+             NSLog(@"outDeliveryAcknowledgeAttachmentState: can not obtain existing object for delivery, not processing result");
+             return;
+         }
          Delivery * myDelivery = (Delivery *)myObjects[0];
          if (DELIVERY_TRACE) NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
          if (ok) {

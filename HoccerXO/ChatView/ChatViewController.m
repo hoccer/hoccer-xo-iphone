@@ -522,13 +522,21 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) askDeleteMessages:(NSArray*)messages {
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            NSArray * ids = objectIds(messages);
-            [AppDelegate.instance performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
-                NSArray * messages = managedObjects(ids, context);
-                for (HXOMessage * message in messages) {
-                    [AppDelegate.instance deleteObject:message inContext:context];
-                }
-            }];
+            NSArray * ids = permanentObjectIds(messages);
+            if (ids != nil) {
+                [AppDelegate.instance performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+                    NSArray * messages = existingManagedObjects(ids, context);
+                    if (messages) {
+                        for (HXOMessage * message in messages) {
+                            [AppDelegate.instance deleteObject:message inContext:context];
+                        }
+                    } else {
+                        NSLog(@"#ERROR: askDeleteMessages: one or more messages to delete are already gone, not deleting anything");
+                    }
+                }];
+            } else {
+                NSLog(@"#ERROR: askDeleteMessages: could not obtain permanent object ids for some messages, not deleting anything");
+            }
         }
     };
     

@@ -1051,6 +1051,31 @@ NSArray * objectIds(NSArray* managedObjects) {
     return nil;
 }
 
+NSArray * permanentObjectIds(NSArray* managedObjects) {
+    NSManagedObjectContext * currentContext = AppDelegate.instance.currentObjectContext;
+    NSArray * inserted = currentContext.insertedObjects.allObjects;
+    if (inserted.count > 0) {
+        NSError * error = nil;
+        [currentContext obtainPermanentIDsForObjects:inserted error:&error];
+        if (error != nil) {
+            NSLog(@"Could not obtain permanent ids for inserted objects, error=%@", error);
+            return nil;
+        }
+    }
+    NSError * error = nil;
+    [currentContext obtainPermanentIDsForObjects:managedObjects error:&error];
+    if (error == nil) {
+        NSMutableArray * result = [NSMutableArray new];
+        for (NSManagedObject * obj in managedObjects) {
+            [result addObject:obj.objectID];
+        }
+        return result;
+    } else {
+        NSLog(@"permanentObjectIds: could not obtain permanent ids for managed objects, error=%@", error);
+    }
+    return nil;
+}
+
 NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     NSMutableArray * result = [NSMutableArray new];
     NSError * error = nil;
