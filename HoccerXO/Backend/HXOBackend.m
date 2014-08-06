@@ -4842,6 +4842,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
                                     acceptedTime = [HXOBackend dateFromMillis:deliveryDict[@"timeAccepted"]];
                                 }
                             }
+                            message.timeAccepted = acceptedTime;
 
                             // be aware that the following block will be probably executed
                             // before the above outgoingDeliveryUpdated will have finished
