@@ -68,9 +68,9 @@
 }
 
 - (void) createPeopleList {
-    self.peopleList = [(__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(self.addressBook) sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        return [[self name: (__bridge ABRecordRef)(obj1)] caseInsensitiveCompare: [self name: (__bridge ABRecordRef)(obj2)]];
-    }];
+    ABRecordRef source = ABAddressBookCopyDefaultSource(self.addressBook);
+    self.peopleList = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(self.addressBook, source, ABPersonGetSortOrdering());
+    CFRelease(source);
     [self.tableView reloadData];
 }
 
@@ -140,24 +140,11 @@
     }
 }
 
+
 - (NSString *)name: (ABRecordRef) personRecordRef {
-	NSString *firstName = CFBridgingRelease(ABRecordCopyValue(personRecordRef, kABPersonFirstNameProperty));
-	NSString *lastName = CFBridgingRelease(ABRecordCopyValue(personRecordRef, kABPersonLastNameProperty));
-
-	if (lastName == NULL && firstName == NULL) {
-		return nil;
-	}
-
-	if (lastName != NULL && firstName == NULL) {
-		return lastName;
-	}
-
-	if (lastName == NULL && firstName != NULL) {
-		return firstName;
-	}
-
-	return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+    return CFBridgingRelease(ABRecordCopyCompositeName(personRecordRef));
 }
+
 
 - (NSArray*) pickableProperties {
     return self.mode == PeoplePickerModeMail ? @[@(kABPersonEmailProperty)] : @[@(kABPersonPhoneProperty), @(kABPersonEmailProperty)];
