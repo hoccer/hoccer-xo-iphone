@@ -740,7 +740,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }
         
         if (![deliveryDictionary[@"keyCiphertext"] isKindOfClass:[NSString class]]) {
-            NSLog(@"ERROR: receiveMessage: aborting received message without keyCiphertext, id= %@", vars[@"messageId"]);
+            NSLog(@"ERROR: receiveMessage: rejecting received message without keyCiphertext, id= %@", vars[@"messageId"]);
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                 [self inDeliveryReject:messageDictionary[@"messageId"] withReason:@"no keyCiphertext in message"];
             }];
@@ -749,9 +749,9 @@ static NSTimer * _stateNotificationDelayTimer;
         
         SecKeyRef myPrivateKeyRef = [[CCRSA sharedInstance] getPrivateKeyRefForPublicKeyIdString:deliveryDictionary[@"keyId"]];
         if (myPrivateKeyRef == NULL) {
-            NSLog(@"ERROR: receiveMessage: aborting received message with bad keyId (I have no matching private key) = %@, my keyId = %@", deliveryDictionary[@"keyId"],[[UserProfile sharedProfile] publicKeyId]);
+            NSLog(@"ERROR: receiveMessage: rejecting received message with bad keyId (I have no matching private key) = %@, my keyId = %@", deliveryDictionary[@"keyId"],[[UserProfile sharedProfile] publicKeyId]);
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                [self inDeliveryReject:messageDictionary[@"messageId"] withReason:@"bad keyId (no matching private key to decrypt message)"];
+                [self inDeliveryReject:messageDictionary[@"messageId"] withReason:@"bad keyId (no matching private key to decrypt incoming message)"];
             }];
             return;
         }
@@ -4354,10 +4354,10 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate.mainObjectContext refreshObject: theAttachment.message mergeChanges:YES];
     [self.delegate saveDatabase];
     if (theAttachment.state == kAttachmentTransfersExhausted) {
-        [self pausedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+        [self failedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
         }];
     } else {
-        [self failedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
+        [self pausedFileUpload:theAttachment.message.attachmentFileId withhandler:^(NSString *result, BOOL ok) {
         }];
     }
     [self dequeueUploadOfAttachment:theAttachment];
@@ -5729,7 +5729,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
 -(Delivery *) getDeliveryByMessageIdAndReceiverId:(NSString *) theMessageId withReceiver: (NSString *) theReceiverId inContext:(NSManagedObjectContext*)context {
     NSDictionary * vars = @{ @"messageId" : theMessageId,
                              @"receiverId" : theReceiverId};
-    if (DELIVERY_TRACE, YES) NSLog(@"getDeliveryByMessageIdAndReceiverId vars = %@", vars);
+    if (DELIVERY_TRACE) NSLog(@"getDeliveryByMessageIdAndReceiverId vars = %@", vars);
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageIdAndReceiverId" substitutionVariables: vars];
     NSError *error;
     NSArray *deliveries = [context executeFetchRequest:fetchRequest error:&error];
