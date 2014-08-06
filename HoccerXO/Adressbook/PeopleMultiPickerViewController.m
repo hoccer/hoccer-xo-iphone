@@ -103,6 +103,7 @@
 
     NSUInteger index = [self.selectedPeople indexOfObject: (__bridge id)(person)];
     if (index == NSNotFound) {
+        // XXX kind of duplicate with numberOfContactPoints
         NSArray * properties = [self pickableProperties];
         NSUInteger total = 0;
         ABPropertyID selectedProperty = 0;
@@ -140,6 +141,18 @@
     }
 }
 
+- (NSUInteger) numberOfContactPoints: (ABRecordRef) person {
+    NSArray * properties = [self pickableProperties];
+    NSUInteger total = 0;
+    for (id property in properties) {
+        ABMultiValueRef multiValue = ABRecordCopyValue(person, [property integerValue]);
+        NSUInteger count = ABMultiValueGetCount(multiValue);
+        total += count;
+        CFRelease(multiValue);
+    }
+    return total;
+}
+
 
 - (NSString *)name: (ABRecordRef) personRecordRef {
     return CFBridgingRelease(ABRecordCopyCompositeName(personRecordRef));
@@ -169,6 +182,7 @@
 - (void) configureCell: (UITableViewCell*) cell withPerson: (ABRecordRef) person {
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = [self name: person];
+    cell.textLabel.enabled = [self numberOfContactPoints: person] != 0;
 
     BOOL isSelected = [self.selectedPeople indexOfObject: (__bridge id)(person)] == NSNotFound;
     cell.accessoryType = isSelected ? UITableViewCellAccessoryNone : UITableViewCellAccessoryCheckmark;
