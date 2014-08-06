@@ -148,6 +148,29 @@ NSString * const kGroupTypeNearby   = @"nearby";
     return latestDate;
 }
 
+// look for member matching memberClientId in group members
+- (GroupMembership*) membershipWithClientId:(NSString*)clientId {
+    if ([clientId isEqual:[UserProfile sharedProfile].clientId]) {
+        return self.myGroupMembership;
+    }
+    NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        BOOL result = [clientId isEqualToString: obj.contact.clientId];
+        //NSLog(@"memberWithClientId: filtering: result=%d, obj.contact.clientId=%@, clientId=%@",result,obj.contact.clientId,clientId);
+        return result;
+    }];
+    if (theMemberSet.count == 1) {
+        return theMemberSet.anyObject;
+    }
+    if (theMemberSet.count == 0) {
+        return nil;
+    }
+    if (theMemberSet.count > 1) {
+        NSLog(@"#ERROR: memberWithClientId: multiple members with same clientId %@", clientId);
+    }
+    return nil;
+}
+
+
 -(void)changeIdTo:(NSString*)newId {
     //NSSet * myMembers = self.members;
     self.clientId = newId;

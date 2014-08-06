@@ -44,8 +44,6 @@ FOUNDATION_EXPORT NSString * const kGroupTypeNearby;
 @property (nonatomic, retain) NSNumber    * lastChangedMillis;
 @property (nonatomic, retain) NSNumber    * keyDateMillis;
 
-// @property (nonatomic, readonly) GroupMembership * myGroupMemberShip;
-
 - (BOOL) iAmAdmin;
 - (BOOL) iJoined;
 - (NSSet*) otherMembers;
@@ -73,6 +71,8 @@ FOUNDATION_EXPORT NSString * const kGroupTypeNearby;
 - (BOOL)isExistingGroup;
 - (BOOL)isNearbyGroup;
 - (BOOL)isIncompleteGroup;
+
+- (GroupMembership*) membershipWithClientId:(NSString*)clientId;
 
 -(void)changeIdTo:(NSString*)newId;
 
