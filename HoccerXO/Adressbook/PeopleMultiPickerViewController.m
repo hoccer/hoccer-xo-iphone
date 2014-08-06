@@ -68,9 +68,9 @@
 }
 
 - (void) createPeopleList {
-    self.peopleList = [(__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(self.addressBook) sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        return [[self name: (__bridge ABRecordRef)(obj1)] caseInsensitiveCompare: [self name: (__bridge ABRecordRef)(obj2)]];
-    }];
+    ABRecordRef source = ABAddressBookCopyDefaultSource(self.addressBook);
+    self.peopleList = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(self.addressBook, source, ABPersonGetSortOrdering());
+    CFRelease(source);
     [self.tableView reloadData];
 }
 
@@ -103,6 +103,7 @@
 
     NSUInteger index = [self.selectedPeople indexOfObject: (__bridge id)(person)];
     if (index == NSNotFound) {
+        // XXX kind of duplicate with numberOfContactPoints
         NSArray * properties = [self pickableProperties];
         NSUInteger total = 0;
         ABPropertyID selectedProperty = 0;
@@ -140,24 +141,23 @@
     }
 }
 
-- (NSString *)name: (ABRecordRef) personRecordRef {
-	NSString *firstName = CFBridgingRelease(ABRecordCopyValue(personRecordRef, kABPersonFirstNameProperty));
-	NSString *lastName = CFBridgingRelease(ABRecordCopyValue(personRecordRef, kABPersonLastNameProperty));
-
-	if (lastName == NULL && firstName == NULL) {
-		return nil;
-	}
-
-	if (lastName != NULL && firstName == NULL) {
-		return lastName;
-	}
-
-	if (lastName == NULL && firstName != NULL) {
-		return firstName;
-	}
-
-	return [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+- (NSUInteger) numberOfContactPoints: (ABRecordRef) person {
+    NSArray * properties = [self pickableProperties];
+    NSUInteger total = 0;
+    for (id property in properties) {
+        ABMultiValueRef multiValue = ABRecordCopyValue(person, [property integerValue]);
+        NSUInteger count = ABMultiValueGetCount(multiValue);
+        total += count;
+        CFRelease(multiValue);
+    }
+    return total;
 }
+
+
+- (NSString *)name: (ABRecordRef) personRecordRef {
+    return CFBridgingRelease(ABRecordCopyCompositeName(personRecordRef));
+}
+
 
 - (NSArray*) pickableProperties {
     return self.mode == PeoplePickerModeMail ? @[@(kABPersonEmailProperty)] : @[@(kABPersonPhoneProperty), @(kABPersonEmailProperty)];
@@ -182,6 +182,7 @@
 - (void) configureCell: (UITableViewCell*) cell withPerson: (ABRecordRef) person {
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = [self name: person];
+    cell.textLabel.enabled = [self numberOfContactPoints: person] != 0;
 
     BOOL isSelected = [self.selectedPeople indexOfObject: (__bridge id)(person)] == NSNotFound;
     cell.accessoryType = isSelected ? UITableViewCellAccessoryNone : UITableViewCellAccessoryCheckmark;

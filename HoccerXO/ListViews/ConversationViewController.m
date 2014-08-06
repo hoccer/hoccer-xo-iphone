@@ -204,13 +204,12 @@
         } else if ([segue.identifier isEqualToString:@"showContact"] || [segue.identifier isEqualToString: @"showGroup"]) {
             ((DatasheetViewController*)segue.destinationViewController).inspectedObject = contact;
         }
-    } else {
-        // catch
-        if ([segue.identifier isEqualToString:@"showChat"] && self.caughtMessage != nil) {
+    } else if ([segue.identifier isEqualToString:@"showChat"] && self.caughtMessage != nil) {
             _chatViewController = [segue destinationViewController];
             _chatViewController.inspectedObject = self.caughtMessage.contact;
             self.caughtMessage = nil;
-        }
+    } else {
+        [super prepareForSegue: segue sender: sender];
     }
 }
 
