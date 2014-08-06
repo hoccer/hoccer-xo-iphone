@@ -742,7 +742,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (![deliveryDictionary[@"keyCiphertext"] isKindOfClass:[NSString class]]) {
             NSLog(@"ERROR: receiveMessage: aborting received message without keyCiphertext, id= %@", vars[@"messageId"]);
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                [self outDeliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"] onReady:nil];
+                [self inDeliveryReject:messageDictionary[@"messageId"] withReason:@"no keyCiphertext in message"];
             }];
             return;
         }
@@ -751,7 +751,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (myPrivateKeyRef == NULL) {
             NSLog(@"ERROR: receiveMessage: aborting received message with bad keyId (I have no matching private key) = %@, my keyId = %@", deliveryDictionary[@"keyId"],[[UserProfile sharedProfile] publicKeyId]);
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                [self outDeliveryAbort:messageDictionary[@"messageId"] forClient:deliveryDictionary[@"receiverId"] onReady:nil];
+                [self inDeliveryReject:messageDictionary[@"messageId"] withReason:@"bad keyId (no matching private key to decrypt message)"];
             }];
             return;
         }
