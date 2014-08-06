@@ -1066,6 +1066,22 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     return result;
 }
 
+NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
+    NSMutableArray * result = [NSMutableArray new];
+    NSError * error = nil;
+    int num = 0;
+    for (NSManagedObjectID * objId in objectIds) {
+        NSManagedObject *  obj = [context existingObjectWithID:objId error:&error];
+        if (obj == nil || error != nil) {
+            NSLog(@"could not fetch managed object %d from id %@, error=%@", num, objId, error);
+            return nil;
+        }
+        [result addObject:obj];
+        num++;
+    }
+    return result;
+}
+
 // our temporary background context is a serial context, so calling this method will result in this block excecuted after
 // the temporary context has finished it's main processing
 - (void)performAfterCurrentContextFinishedInMainContext:(ContextBlock)contextBlock {
@@ -1086,17 +1102,27 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     if ([currentContext isEqual:self.mainObjectContext]) {
         NSLog(@"performAfterCurrentContextFinishedInMainContext called from main context, don't do that");
     }
-    //[self saveContext:currentContext];
-    //NSArray * testids = objectIds(objects);
-    //NSArray * obtained = managedObjects(testids, currentContext);
-    //[self saveContext:currentContext];
-
+    NSArray * inserted = currentContext.insertedObjects.allObjects;
+    if (inserted.count > 0) {
+        NSError * error = nil;
+        [currentContext obtainPermanentIDsForObjects:inserted error:&error];
+        if (error != nil) {
+            NSLog(@"Could not obtain permanent ids for inserted objects, error=%@", error);
+        }
+    }
     [currentContext performBlock:^{
         NSArray * ids = objectIds(objects);
+
         NSManagedObjectContext * mainMOC = [self mainObjectContext];
         [mainMOC performBlock:^{
             //[self saveContext:mainMOC];
-            contextBlock(mainMOC, managedObjects(ids, mainMOC));
+            //contextBlock(mainMOC, managedObjects(ids, mainMOC));
+            NSArray * objects = existingManagedObjects(ids, mainMOC);
+            if (objects != nil) {
+                contextBlock(mainMOC, objects);
+            } else {
+                NSLog(@"Could not execute block in main context, parameter objects not available");
+            }
         }];
     }];
 }
