@@ -311,7 +311,9 @@
     return [formatter stringFromDate: theDate];
 }
 
-/*
+#ifdef DEBUG_LATEST_MESSAGE
+
+
 - (HXOMessage*)latestMessageForContact:(Contact*)contact {
     NSFetchRequest *fetchRequest = [NSFetchRequest new];
     NSEntityDescription *entity = [NSEntityDescription entityForName:[HXOMessage entityName] inManagedObjectContext:AppDelegate.instance.mainObjectContext];
@@ -320,7 +322,10 @@
     //NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(contact == %@) AND (timeAccepted == contact.latestMessageTime)", contact];
     NSPredicate *predicate = [NSPredicate predicateWithFormat:@"contact == %@", contact];
     [fetchRequest setPredicate: predicate];
-    fetchRequest.sortDescriptors = [NSArray array];
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeAccepted" ascending: NO];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    [fetchRequest setSortDescriptors:sortDescriptors];
 
     NSError *error = nil;
     NSArray *array = [AppDelegate.instance.mainObjectContext executeFetchRequest:fetchRequest error:&error];
@@ -329,7 +334,26 @@
     }
     return nil;
 }
+
+/*
+ 
+ This is a reminder because bugs concerning missing latest messages seen
+ to reappear from time to time.
+ 
+ When the latest message does not appear in the cell for group messages,
+ then the cause is probably not here, but in the backend code.
+ 
+ Typically the reason is that message.timeAccepted does not match
+ contact.lastMessageTime because one of them has not been properly
+ set after acceptedTime in Delivery has been sent by the server.
+ 
+ The debug code above and below can be used to find out which value
+ is wrong by comparing the millis with those that came over the wire.
+ 
 */
+
+#endif
+
 
 - (void)configureCell:(ConversationCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ConversationViewController:configureCell %@ path %@, self class = %@",  [cell class],indexPath, [self class]);
@@ -339,10 +363,13 @@
     }
     [super configureCell: cell atIndexPath: indexPath];
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
-    //NSLog(@"contact class %@ nick %@, latestCount=%d group.latestMessageTime=%@ millis=%@", contact.class, contact.nickName, contact.latestMessage.count, contact.latestMessageTime, [HXOBackend millisFromDate:contact.latestMessageTime]);
+
+#ifdef DEBUG_LATEST_MESSAGE
+    NSLog(@"contact class %@ nick %@, latestCount=%d group.latestMessageTime=%@ millis=%@", contact.class, contact.nickName, contact.latestMessage.count, contact.latestMessageTime, [HXOBackend millisFromDate:contact.latestMessageTime]);
     
-    //HXOMessage * myLatestMessage = [self latestMessageForContact:contact];
-    //NSLog(@"myLatestMessage: %@ %@, millis=%@", myLatestMessage.body, myLatestMessage.timeAccepted, [HXOBackend millisFromDate:myLatestMessage.timeAccepted]);
+    HXOMessage * myLatestMessage = [self latestMessageForContact:contact];
+    NSLog(@"myLatestMessage: %@ %@, millis=%@", myLatestMessage.body, myLatestMessage.timeAccepted, [HXOBackend millisFromDate:myLatestMessage.timeAccepted]);
+#endif
     
     cell.delegate = self;
     cell.avatar.badgeText = [HXOUI messageCountBadgeText: contact.unreadMessages.count];
