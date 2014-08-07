@@ -70,6 +70,9 @@
 
 const NSString * const kHXOProtocol = @"com.hoccer.talk.v4";
 
+const NSString * kqMessaging = @"messaging";
+const NSString * kqContacts = @"contacts";
+
 static const NSUInteger kHXOMaxCertificateVerificationErrors = 3;
 
 static const NSUInteger     kHXOPairingTokenMaxUseCount = 10;
@@ -576,7 +579,8 @@ static NSTimer * _stateNotificationDelayTimer;
     NSManagedObjectID * privateContactId = privateGroupMessageContact.objectID;
     NSManagedObjectID * attachmentId = attachment.objectID;
     
-    [self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    //[self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
         
         Contact * contact = (Contact *)[context objectWithID:contactId];
         Contact * privateGroupMessageContact = privateContactId == nil ? nil : (Contact *)[context objectWithID:privateContactId];
@@ -728,7 +732,8 @@ static NSTimer * _stateNotificationDelayTimer;
     // (when acceptedTime is set, the timesection of other messages will be touched, too)
     NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
     
-    [self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    //[self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
         if (DELIVERY_TRACE) NSLog(@"receiveMessage");
         if (USE_VALIDATOR) [self validateObject: messageDictionary forEntity:@"RPC_TalkMessage_in"];  // TODO: Handle Validation Error
         if (USE_VALIDATOR) [self validateObject: deliveryDictionary forEntity:@"RPC_TalkDelivery_in"];  // TODO: Handle Validation Error
@@ -1112,7 +1117,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     [self finishFirstConnectionAfterCrashOrUpdate];
     [self flushPendingMessages];
-    [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
         [self flushIncomingDeliveriesInContext:context];
     }];
     [self flushPendingFiletransfers];
@@ -1232,7 +1237,7 @@ static NSTimer * _stateNotificationDelayTimer;
                         if (ok3) {
                             [self finishFirstConnectionAfterCrashOrUpdate];
                             [self flushPendingMessages];
-                            [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+                            [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
                                 [self flushIncomingDeliveriesInContext:context];
                             }];
                             [self flushPendingFiletransfers];
@@ -1748,7 +1753,8 @@ static NSTimer * _stateNotificationDelayTimer;
         NSLog(@"ERROR: updateRelationship: missing clientId");
         return;
     }
-    [self.delegate performWithLockingId:clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    //[self.delegate performWithLockingId:clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
         
         if (USE_VALIDATOR) [self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
         if (LOCKING_TRACE) NSLog(@"Entering synchronized updateRelationship %@",clientId);
@@ -2164,7 +2170,8 @@ static NSTimer * _stateNotificationDelayTimer;
 
     // NSLog(@"latest date %@", latestChange);
     [self getPresences: latestChange presenceHandler:^(NSArray * changedPresences) {
-        [self.delegate performWithLockingId:@"presences" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        //[self.delegate performWithLockingId:@"presences" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
             for (id presence in changedPresences) {
                 // NSLog(@"updatePresences presence=%@",presence);
                 [self presenceUpdated:presence inContext:context];
@@ -2198,7 +2205,8 @@ static NSTimer * _stateNotificationDelayTimer;
         }
         
         NSManagedObjectID * contactObjId = theContact.objectID;
-        [self.delegate performWithLockingId:theContact.clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        //[self.delegate performWithLockingId:theContact.clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
             if (USE_VALIDATOR) [self validateObject: keyRecord forEntity:@"RPC_TalkKey_in"];  // TODO: Handle Validation Error
             Contact * theContact = (Contact *)[context objectWithID:contactObjId];
             if (theContact != nil) {
@@ -2240,7 +2248,8 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) presenceUpdatedInBackground:(NSDictionary *) thePresence {
     NSString * myClient = thePresence[@"clientId"];
     if (myClient != nil) {
-        [self.delegate performWithLockingId:myClient inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        //[self.delegate performWithLockingId:myClient inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
             [self presenceUpdated:thePresence inContext:context];
         }];
     }
@@ -2338,7 +2347,8 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) presenceModifiedInBackground:(NSDictionary *) thePresence {
     NSString * myClient = thePresence[@"clientId"];
     if (myClient != nil) {
-        [self.delegate performWithLockingId:myClient inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        //[self.delegate performWithLockingId:myClient inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
             [self presenceModified:thePresence inContext:context];
         }];
     }
@@ -2445,7 +2455,8 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) groupUpdated:(NSArray*) group_param {
     NSString * groupId = group_param[0][@"groupId"];
     if (groupId != nil) {
-        [self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        //[self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
             [self updateGroupHere: group_param[0] inContext:context];
         }];
     } else {
@@ -2457,7 +2468,8 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) groupMemberUpdated:(NSArray*) groupMember_param {
     NSString * groupId = groupMember_param[0][@"groupId"];
     if (groupId != nil) {
-        [self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        //[self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
             [self updateGroupMemberHere: groupMember_param[0] inContext:context];
         }];
     } else {
@@ -2534,7 +2546,8 @@ static NSTimer * _stateNotificationDelayTimer;
          if (success) {
              NSString * groupId = responseOrError[@"groupId"];
              if (groupId != nil) {
-                 [self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                 //[self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                 [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
                      [self updateGroupHere: responseOrError inContext:context];
                      [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                          Group * group = [self getGroupById:groupId inContext:context];
@@ -2624,7 +2637,8 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     [self getGroups: latestChange groupsHandler:^(NSArray * changedGroupsDicts) {
-        [self.delegate performWithLockingId:@"groups" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        //[self.delegate performWithLockingId:@"groups" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
             if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroupsDicts);
             if ([changedGroupsDicts isKindOfClass:[NSArray class]]) {
                 BOOL ok = YES;
@@ -2928,7 +2942,8 @@ static NSTimer * _stateNotificationDelayTimer;
 {
     [self getGroupMembers: group lastKnown:lastKnown membershipsHandler:^(NSArray * changedMembers) {
         if (changedMembers != nil) {
-            [self.delegate performWithLockingId:group.clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            //[self.delegate performWithLockingId:group.clientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 for (NSDictionary * memberDict in changedMembers) {
                     [self updateGroupMemberHere: memberDict inContext:context];
                 }
@@ -2962,7 +2977,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 // Boolean[] isMemberInGroups(String[] groupIds);
 - (void) checkGroupMembershipsWithCompletion:(GenericResultHandler)completion {
-    [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
         
         NSArray * groupArray = [self getActiveGroupsInContext:context];
         
@@ -2973,7 +2988,8 @@ static NSTimer * _stateNotificationDelayTimer;
         if (groupsToCheck.count > 0) {
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *mainContext) {
                 [_serverConnection invoke: @"isMemberInGroups" withParams: @[groupsToCheck] onResponse: ^(id responseOrError, BOOL success) {
-                    [self.delegate performWithLockingId:@"groups" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                    //[self.delegate performWithLockingId:@"groups" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                    [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
                         if (success) {
                             NSArray * memberFlags = responseOrError;
                             if (memberFlags.count != groupsToCheck.count) {
@@ -3016,7 +3032,7 @@ static NSTimer * _stateNotificationDelayTimer;
 // Boolean[] isContactOf  (String[] clientIds);
 - (void) checkContactsWithCompletion:(GenericResultHandler)completion
 {
-    [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
         NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
         NSEntityDescription *entity = [NSEntityDescription entityForName:@"Contact" inManagedObjectContext: context];
         [fetchRequest setEntity:entity];
@@ -3039,7 +3055,8 @@ static NSTimer * _stateNotificationDelayTimer;
         if (contactsToCheck.count > 0) {
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *mainContext) {
                 [_serverConnection invoke: @"isContactOf" withParams: @[contactsToCheck] onResponse: ^(id responseOrError, BOOL success) {
-                    [self.delegate performWithLockingId:@"contacts" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                    //[self.delegate performWithLockingId:@"contacts" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                    [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
                         if (success) {
                             NSArray * contactFlags = responseOrError;
                             if (contactFlags.count != contactsToCheck.count || contactFlags.count != contactArray.count) {
@@ -3093,7 +3110,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) getGroup:(Group *)group {
     [self getGroup: group.clientId onResult:^(NSDictionary * groupDict) {
         if (groupDict) {
-            [self.delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+            [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 //[self updateGroupHereLocking:groupDict inContext:context];
                 [self updateGroupHere:groupDict inContext:context];
             }];
@@ -3118,7 +3135,8 @@ static NSTimer * _stateNotificationDelayTimer;
     NSString * groupId = member.group.clientId;
     [self getGroupMember:groupId clientId:member.contactClientId onResult:^(NSDictionary *memberDict) {
         if (memberDict != nil) {
-            [self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            //[self.delegate performWithLockingId:groupId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 [self updateGroupMemberHere: memberDict inContext:context];
             }];
         }
@@ -3313,7 +3331,8 @@ static NSTimer * _stateNotificationDelayTimer;
         if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"updateGroupMemberHere: schedule deleting member with state '%@', nick=%@", groupMemberDict[@"state"], memberContact.nickName);
         NSDate * myMemberVersion = myMembership.lastChanged;
         [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-            [self.delegate performWithLockingId:memberClientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            //[self.delegate performWithLockingId:memberClientId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 Group * group = [self getGroupById:groupId inContext:context];
                 GroupMembership * myMembership = [group membershipWithClientId:memberClientId];
                 Contact * memberContact = myMembership.contact;
@@ -3797,7 +3816,8 @@ static NSTimer * _stateNotificationDelayTimer;
 // String[] getEncryptedGroupKeys(String groupId, String sharedKeyId, String sharedKeyIdSalt, String[] clientIds, String[] publicKeyIds);
 - (void) getEncryptedGroupKeys:(NSArray*)params withResponder:(ResultBlock)responder {
     
-    [self.delegate performWithLockingId:@"crypto" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    //[self.delegate performWithLockingId:@"crypto" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
     
         id failed = @[];
         
@@ -4814,7 +4834,8 @@ static NSTimer * _stateNotificationDelayTimer;
             
             NSString * lockid = [self chatLockForSenderId:dict[@"messageId"] andGroupId:dict[@"groupId"]];
             
-            [self.delegate performWithLockingId:lockid inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            //[self.delegate performWithLockingId:lockid inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
                 NSArray * deliveries = existingManagedObjects(deliveryIds,context);
                 if (deliveries == nil) {
                     NSLog(@"outDeliveryRequest: some deliveries are gone, igonring result");
@@ -5000,7 +5021,6 @@ static NSTimer * _stateNotificationDelayTimer;
              if (![expected isEqualToString: responseOrError[@"state"]]) {
                  NSLog(@"ERROR: outDeliveryAcknowledgeMethod (%@), unexpected response state %@, expected %@", method, responseOrError[@"state"], expected);
              }
-             // TODO: put in background
              [self outgoingDeliveryUpdated:@[responseOrError] isResult:YES onDone:done];
          } else {
              NSLog(@" outDeliveryAcknowledgeMethod (%@) failed, response: %@", method, responseOrError);
@@ -5079,6 +5099,38 @@ static NSTimer * _stateNotificationDelayTimer;
      }];
 }
 
+// tell that a delivery is unknown to you as sender
+//void outDeliveryUnknown(String messageId, String recipientId);
+- (void) outDeliveryUnknown: (NSString*) theMessageId forClient:(NSString*) theReceiverClientId onReady:(DoneBlock)done {
+    // NSLog(@"deliveryAbort: %@", delivery);
+    [_serverConnection invoke: @"outDeliveryUnknown" withParams: @[theMessageId, theReceiverClientId]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSLog(@"outDeliveryUnknown() repsonse ok");
+         } else {
+             NSLog(@"outDeliveryUnknown() failed: %@", responseOrError);
+         }
+     }];
+}
+
+// tell that a delivery is unknown to you as receiver
+//void outDeliveryUnknown(String messageId, String recipientId);
+- (void) inDeliveryUnknown: (NSString*) theMessageId onReady:(DoneBlock)done {
+    // NSLog(@"deliveryAbort: %@", delivery);
+    [_serverConnection invoke: @"inDeliveryUnknown" withParams: @[theMessageId]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             NSLog(@"inDeliveryUnknown() repsonse ok");
+         } else {
+             NSLog(@"inDeliveryUnknown() failed: %@", responseOrError);
+         }
+     }];
+}
+
+
+
 // reject a delivery as receiver
 // shoould be called when something is fishy with a message
 // TalkDelivery inDeliveryReject(String messageId, String reason);
@@ -5117,7 +5169,7 @@ static NSTimer * _stateNotificationDelayTimer;
             // NSLog(@"%@() got result: %@", method, responseOrError);
             if (handler) handler(responseOrError, YES);
         } else {
-            NSLog(@"%@() failed: %@", method, responseOrError);
+            NSLog(@"%@(fileId=%@) failed: %@", method, fileId, responseOrError);
             if (handler) handler(responseOrError, NO);
         }
     }];
@@ -5130,7 +5182,7 @@ static NSTimer * _stateNotificationDelayTimer;
             // NSLog(@"%@() got result: %@", method, responseOrError);
             if (handler) handler(responseOrError, YES);
         } else {
-            NSLog(@"%@() failed: %@", method, responseOrError);
+            NSLog(@"%@(fileId=%@,receiverId=%@) failed: %@", method, fileId, receiverId, responseOrError);
             if (handler) handler(responseOrError, NO);
         }
     }];
@@ -5679,10 +5731,16 @@ static NSTimer * _stateNotificationDelayTimer;
         NSLog(@"#ERROR: incomingDeliveryUpdated: delivery has not message or receiver id");
         return;
     }
-    [self.delegate performWithLockingId:messageId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+   // NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
+    
+    // [self.delegate performWithLockingId:messageId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
         HXOMessage * message = [self getMessageById:messageId inContext:context];
         if (message == nil) {
-            NSLog(@"#ERROR: incomingDeliveryUpdated: message for delivery not found");
+            NSLog(@"#ERROR: incomingDeliveryUpdated: message with id %@ not found",messageId);
+            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                [self inDeliveryUnknown:messageId onReady:^{}];
+            }];
             return;
         }
         Delivery * delivery = message.deliveries.anyObject;
@@ -5690,9 +5748,9 @@ static NSTimer * _stateNotificationDelayTimer;
             NSLog(@"#ERROR: incomingDeliveryUpdated: no delivery attached to message");
             return;
         }
-       
-        //[delivery updateWithDictionary:deliveryDict];
-        [delivery updateWithDictionary:deliveryDict withKeys:[Delivery updateRpcKeys]];
+        
+        //[delivery updateStatesWithDictionary:deliveryDict];
+        [delivery updateWithDictionary:deliveryDict withKeys:[Delivery minimumUpdateRpcKeys]];
         
         if (delivery.message.attachment != nil) {
             NSString * fileId = delivery.message.attachmentFileId;
@@ -5856,14 +5914,6 @@ static NSTimer * _stateNotificationDelayTimer;
     if ([_pendingDeliveryUpdates containsObject:updateKey]) {
         return;
     }
-    /*
-    Delivery * delivery = [self getDeliveryByMessageIdAndReceiverId:messageId withReceiver:receiverId inContext:self.delegate.currentObjectContext];
-    if (delivery == nil) {
-        NSLog(@"#ERROR: outDeliveryAcknowledgeState: delivery not found for messageId %@ receiverId %@", messageId, receiverId);
-        return;
-    }
-    state = delivery.state;
-     */
     
     if ([Delivery shouldAcknowledgeStateForOutgoing:state]) {
         [_pendingDeliveryUpdates addObject:updateKey];
@@ -5912,9 +5962,10 @@ static NSTimer * _stateNotificationDelayTimer;
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                 Delivery * delivery = [self getDeliveryByAttachmentFileIdAndReceiverId:myFileId withReceiver:receiverId inContext:context];
                 NSLog(@"outDeliveryAcknowledgeAttachmentState: acknowledge delivery in state '%@'", delivery.attachmentState);
-                if ([kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:delivery.attachmentState]) {
+ //               if ([kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:delivery.attachmentState] ||
+ //                   [kDelivery_ATTACHMENT_STATE_RECEIVED_ACKNOWLEDGED isEqualToString:delivery.attachmentState]) {
                     [self acknowledgeReceivedFile: myFileId forReceiver:receiverId withhandler:handler];
-                }
+ //               }
             }];
         } else if ([kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED isEqualToString:attachmentState]) {
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
@@ -5940,28 +5991,30 @@ static NSTimer * _stateNotificationDelayTimer;
                                     forReceiver:receiverId
                                     withHandler:^(NSString *result, BOOL ok)
      {
-         NSArray * myObjects = existingManagedObjects(myObjIds, self.delegate.mainObjectContext);
-         if (myObjects == nil) {
-             NSLog(@"outDeliveryAcknowledgeAttachmentState: can not obtain existing object for delivery, not processing result");
-             return;
-         }
-         Delivery * myDelivery = (Delivery *)myObjects[0];
-         if (DELIVERY_TRACE) NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
-         if (ok) {
-             myDelivery.attachmentState = result;
-         } else {
-             // it might happen that a delivery is gone on the server, but we still have it
-             // in these cases we will get an error with result code 0 and set the attachment delivery state to unknown so
-             // we do not try to confirm it again and again on startup
-             if ([result isKindOfClass:[NSDictionary class]]) {
-                 NSDictionary * myDict = (NSDictionary*)result;
-                 NSNumber * errorCode = myDict[@"code"];
-                 if (errorCode != nil && errorCode.intValue == 0) {
-                     NSLog(@"outDeliveryAcknowledgeAttachmentState: setting attachmentState to 'unknown'");
-                     myDelivery.attachmentState = @"unknown";
+         [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
+             NSArray * myObjects = existingManagedObjects(myObjIds, context);
+             if (myObjects == nil) {
+                 NSLog(@"outDeliveryAcknowledgeAttachmentState: can not obtain existing object for delivery, not processing result");
+                 return;
+             }
+             Delivery * myDelivery = (Delivery *)myObjects[0];
+             if (DELIVERY_TRACE) NSLog(@"outDeliveryAcknowledgeAttachmentState returned %@ type %@", result, result.class);
+             if (ok) {
+                 myDelivery.attachmentState = result;
+             } else {
+                 // it might happen that a delivery is gone on the server, but we still have it
+                 // in these cases we will get an error with result code 0 and set the attachment delivery state to unknown so
+                 // we do not try to confirm it again and again on startup
+                 if ([result isKindOfClass:[NSDictionary class]]) {
+                     NSDictionary * myDict = (NSDictionary*)result;
+                     NSNumber * errorCode = myDict[@"code"];
+                     if (errorCode != nil && errorCode.intValue == 0) {
+                         NSLog(@"outDeliveryAcknowledgeAttachmentState: setting attachmentState to 'unknown'");
+                         myDelivery.attachmentState = @"unknown";
+                     }
                  }
              }
-         }
+         }];
      }];
 }
 
@@ -6000,7 +6053,8 @@ static NSTimer * _stateNotificationDelayTimer;
     // (when acceptedTime is set, the timesection of other messages will be touched, too)
     NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
     
-    [self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    //[self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
         
         NSString * myMessageTag = deliveryDict[@"messageTag"];
         NSString * myReceiverId = deliveryDict[@"receiverId"];
@@ -6034,8 +6088,9 @@ static NSTimer * _stateNotificationDelayTimer;
         if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%d",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries.count);
         
         if (myDelivery != nil && myMessage != nil) {
+             /*
             if (myDelivery.isInFinalState && !isResult) {
-                NSLog(@"#WARNING: outgoingDelivery Notification received for delivery in final state '%@', attachmentState '%@', messageId: %@",
+                NSLog(@"#WARNING: outgoingDeliveryUpdated: outdated Notification received for delivery already in final state '%@', attachmentState '%@', messageId: %@",
                       myDelivery.state, myDelivery.attachmentState, deliveryDict[@"messageId"]);
                 
                 // acknowledge the state again just to satisfy the server although we already have received a newer state
@@ -6052,6 +6107,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 }
                 return;
             }
+             */
             if ([myDelivery.state isEqualToString:deliveryDict[@"state"]] && [myDelivery.attachmentState isEqualToString:deliveryDict[@"attachmentState"]]) {
                 NSLog(@"#WARNING: outgoingDelivery notification received with unchanged state '%@', attachmentState '%@', messageId: %@",
                       myDelivery.state, myDelivery.attachmentState, deliveryDict[@"messageId"]);
@@ -6059,8 +6115,8 @@ static NSTimer * _stateNotificationDelayTimer;
             if (DELIVERY_TRACE) {NSLog(@"outgoingDelivery Notification: Delivery state '%@'->'%@' attachmentState '%@'->'%@'for messageTag %@ id %@",myDelivery.state, deliveryDict[@"state"], myDelivery.attachmentState, deliveryDict[@"attachmentState"],myMessageTag, deliveryDict[@"messageId"]);}
             
             //[myDelivery updateWithDictionary: deliveryDict];
-            [myDelivery updateWithDictionary:deliveryDict withKeys:[Delivery updateRpcKeys]];
-            
+            [myDelivery updateWithDictionary:deliveryDict withKeys:[Delivery minimumUpdateRpcKeys]];
+
             [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[myDelivery.message]
                                                                         withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)
              {
@@ -6080,35 +6136,37 @@ static NSTimer * _stateNotificationDelayTimer;
                 }
             }
             
-            [self outDeliveryAcknowledgeState:myDelivery.state withMessageId:myMessageId withReceiverId:myReceiverId];
+            if ([myDelivery isInMoreAdvancedStateThan:deliveryDict[@"state"]]) {
+                // acknowledge incoming outdated state
+                if (![Delivery isAcknowledgedState:deliveryDict[@"state"]]) {
+                    [self outDeliveryAcknowledgeState:deliveryDict[@"state"] withMessageId:myMessageId withReceiverId:myReceiverId];
+                }
+            } else {
+                [self outDeliveryAcknowledgeState:myDelivery.state withMessageId:myMessageId withReceiverId:myReceiverId];
+            }
             
-            [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState forDelivery:myDelivery withFileId:myMessage.attachmentFileId forReceiver:myReceiverId];
+            if ([myDelivery isInMoreAdvancedAttachmentStateThan:deliveryDict[@"attachmentState"]]) {
+                // acknowledge incoming outdated attachment state
+                if (![Delivery isAcknowledgedAttachmentState:deliveryDict[@"attachmentState"]]) {
+                    [self outDeliveryAcknowledgeAttachmentState:deliveryDict[@"attachmentState"] forDelivery:myDelivery withFileId:myMessage.attachmentFileId forReceiver:myReceiverId];
+                }
+            } else {
+                [self outDeliveryAcknowledgeAttachmentState:myDelivery.attachmentState forDelivery:myDelivery withFileId:myMessage.attachmentFileId forReceiver:myReceiverId];
+            }
             
         } else {
             // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user,
             // so we just acknowledge or abort if we can
             
-            NSLog(@"#WARNING, message or delivery not found, myMessageId=%@, myReceiverId=%@", myMessageId, myReceiverId);
+            NSLog(@"#WARNING, outgoing message or delivery not found, myMessageId=%@, myReceiverId=%@", myMessageId, myReceiverId);
             
             if (myMessageId == nil || myReceiverId == nil) {
                 NSLog(@"#WARNING, myMessageId or myReceiverId is nil, myMessageId=%@, myReceiverId=%@", myMessageId, myReceiverId);
-                if (done != nil) {
-                    [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                        done();
-                    }];
-                }
-                return;
-            }
-            
-            NSString * state = deliveryDict[@"state"];
-            if ([Delivery shouldAcknowledgeStateForOutgoing:state]) {
-                // acknowledge state if we can
-                [self outDeliveryAcknowledgeState:state withMessageId:myMessageId withReceiverId:myReceiverId];
             } else {
-                // abort if we can
-                if ([kDeliveryStateDelivering isEqualToString:state]) {
-                    [self outDeliveryAbort:myMessageId forClient:myReceiverId onReady:nil];
-                }
+                [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                    [self outDeliveryUnknown:myMessageId forClient:myReceiverId onReady:^{
+                    }];
+                }];
             }
         }
         if (done != nil) {
