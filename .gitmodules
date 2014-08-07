@@ -25,3 +25,6 @@
 [submodule "3rdParty/openssl-xcode"]
 	path = 3rdParty/openssl-xcode
 	url = git@github.com:hoccer/openssl-xcode.git
+[submodule "3rdParty/CTAssetsPickerController"]
+	path = 3rdParty/CTAssetsPickerController
+	url = http://github.com/chiunam/CTAssetsPickerController
