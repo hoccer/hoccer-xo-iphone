@@ -61,10 +61,11 @@
 #define TRACE_DELETES               NO
 #define TRACE_INSPECTION            NO
 #define TRACE_PENDING_CHANGES       NO
-#define TRACE_BACKGROUND_PROCESSING YES
+#define TRACE_BACKGROUND_PROCESSING NO
 #define TRACE_NEARBY_ACTIVATION     NO
-#define TRACE_LOCKING               YES
+#define TRACE_LOCKING               NO
 #define TRACE_DELIVERY_SAVES        NO
+#define TRACE_CONTACT_SAVES         NO
 
 
 #ifdef HOCCER_DEV
@@ -530,19 +531,43 @@ BOOL sameObjects(id obj1, id obj2) {
     //NSLog(@"------ done %@", where);
 }
 
-- (void)checkObjectsInContext2:(NSManagedObjectContext*)context info:(NSString*)where {
+- (void)checkObjectsInContextForDeliveries:(NSManagedObjectContext*)context info:(NSString*)where {
     NSSet * insertedObjects = context.insertedObjects;
     for (NSManagedObject * obj in insertedObjects) {
         if ([obj isKindOfClass:[Delivery class]]) {
             Delivery * delivery = (Delivery*)obj;
-            NSLog(@"=== insert delivery messageId %@ receiverId %@ state %@ changed %@", delivery.message.messageId, delivery.receiver.clientId, delivery.state, delivery.timeChangedMillis);
+            NSLog(@"=== insert delivery messageId %@ receiverId %@ state %@ changed %@ in %@", delivery.message.messageId, delivery.receiver.clientId, delivery.state, delivery.timeChangedMillis, where);
         }
     }
    NSSet * registeredObjects = context.updatedObjects;
     for (NSManagedObject * obj in registeredObjects) {
         if ([obj isKindOfClass:[Delivery class]]) {
             Delivery * delivery = (Delivery*)obj;
-            NSLog(@"=== updating delivery messageId %@ receiverId %@ state %@ changed %@", delivery.message.messageId, delivery.receiver.clientId, delivery.state, delivery.timeChangedMillis);
+            NSLog(@"=== updating delivery messageId %@ receiverId %@ state %@ changed %@ in %@", delivery.message.messageId, delivery.receiver.clientId, delivery.state, delivery.timeChangedMillis, where);
+        }
+    }
+}
+
+- (void)checkObjectsInContextForContacts:(NSManagedObjectContext*)context info:(NSString*)where {
+    NSSet * insertedObjects = context.insertedObjects;
+    for (NSManagedObject * obj in insertedObjects) {
+        if ([obj isKindOfClass:[Contact class]]) {
+            Contact * contact = (Contact*)obj;
+            NSLog(@"=== inserted contact id %@ nick %@ connectionStatus %@ objId %@ in %@", contact.clientId, contact.nickName, contact.connectionStatus, contact.objectID, where);
+        }
+    }
+    NSSet * updatedObjects = context.updatedObjects;
+    for (NSManagedObject * obj in updatedObjects) {
+        if ([obj isKindOfClass:[Contact class]]) {
+            Contact * contact = (Contact*)obj;
+            NSLog(@"=== updated contact id %@ nick %@ connectionStatus %@ objId %@ in %@", contact.clientId, contact.nickName, contact.connectionStatus, contact.objectID, where);
+        }
+    }
+    NSSet * deletedObjects = context.deletedObjects;
+    for (NSManagedObject * obj in deletedObjects) {
+        if ([obj isKindOfClass:[Contact class]]) {
+            Contact * contact = (Contact*)obj;
+            NSLog(@"=== deleted contact objId %@ in %@", contact.objectID, where);
         }
     }
 }
@@ -563,7 +588,8 @@ BOOL sameObjects(id obj1, id obj2) {
     }
     if (managedObjectContext != nil) {
         [self checkObjectsInContext:managedObjectContext info:@"before save"];
-        if (TRACE_DELIVERY_SAVES) [self checkObjectsInContext2:managedObjectContext info:@"saving main context:"];
+        if (TRACE_DELIVERY_SAVES) [self checkObjectsInContextForDeliveries:managedObjectContext info:@" main context saving"];
+        if (TRACE_CONTACT_SAVES) [self checkObjectsInContextForContacts:managedObjectContext info:@"main context saving"];
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -989,6 +1015,31 @@ NSArray * objectIds(NSArray* managedObjects) {
     return nil;
 }
 
+NSArray * permanentObjectIds(NSArray* managedObjects) {
+    NSManagedObjectContext * currentContext = AppDelegate.instance.currentObjectContext;
+    NSArray * inserted = currentContext.insertedObjects.allObjects;
+    if (inserted.count > 0) {
+        NSError * error = nil;
+        [currentContext obtainPermanentIDsForObjects:inserted error:&error];
+        if (error != nil) {
+            NSLog(@"Could not obtain permanent ids for inserted objects, error=%@", error);
+            return nil;
+        }
+    }
+    NSError * error = nil;
+    [currentContext obtainPermanentIDsForObjects:managedObjects error:&error];
+    if (error == nil) {
+        NSMutableArray * result = [NSMutableArray new];
+        for (NSManagedObject * obj in managedObjects) {
+            [result addObject:obj.objectID];
+        }
+        return result;
+    } else {
+        NSLog(@"permanentObjectIds: could not obtain permanent ids for managed objects, error=%@", error);
+    }
+    return nil;
+}
+
 NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     NSMutableArray * result = [NSMutableArray new];
     NSError * error = nil;
@@ -1000,6 +1051,22 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
             return nil;
         }
         [result addObject:obj];
+    }
+    return result;
+}
+
+NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
+    NSMutableArray * result = [NSMutableArray new];
+    NSError * error = nil;
+    int num = 0;
+    for (NSManagedObjectID * objId in objectIds) {
+        NSManagedObject *  obj = [context existingObjectWithID:objId error:&error];
+        if (obj == nil || error != nil) {
+            NSLog(@"could not fetch managed object %d from id %@, error=%@", num, objId, error);
+            return nil;
+        }
+        [result addObject:obj];
+        num++;
     }
     return result;
 }
@@ -1024,17 +1091,27 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
     if ([currentContext isEqual:self.mainObjectContext]) {
         NSLog(@"performAfterCurrentContextFinishedInMainContext called from main context, don't do that");
     }
-    //[self saveContext:currentContext];
-    //NSArray * testids = objectIds(objects);
-    //NSArray * obtained = managedObjects(testids, currentContext);
-    //[self saveContext:currentContext];
-
+    NSArray * inserted = currentContext.insertedObjects.allObjects;
+    if (inserted.count > 0) {
+        NSError * error = nil;
+        [currentContext obtainPermanentIDsForObjects:inserted error:&error];
+        if (error != nil) {
+            NSLog(@"Could not obtain permanent ids for inserted objects, error=%@", error);
+        }
+    }
     [currentContext performBlock:^{
         NSArray * ids = objectIds(objects);
+
         NSManagedObjectContext * mainMOC = [self mainObjectContext];
         [mainMOC performBlock:^{
             //[self saveContext:mainMOC];
-            contextBlock(mainMOC, managedObjects(ids, mainMOC));
+            //contextBlock(mainMOC, managedObjects(ids, mainMOC));
+            NSArray * objects = existingManagedObjects(ids, mainMOC);
+            if (objects != nil) {
+                contextBlock(mainMOC, objects);
+            } else {
+                NSLog(@"Could not execute block in main context, parameter objects not available");
+            }
         }];
     }];
 }
@@ -1062,6 +1139,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         start = [[NSDate alloc] init];
     }
     NSError *error = nil;
+    if (TRACE_CONTACT_SAVES) [self checkObjectsInContextForContacts:context info:[NSString stringWithFormat:@"saving context %@", context]];
     if ([context hasChanges] && ![context save:&error]) {
         // Replace this implementation with code to handle the error appropriately.
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
