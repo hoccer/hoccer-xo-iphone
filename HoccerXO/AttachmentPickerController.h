@@ -14,6 +14,8 @@
 #import "GeoLocationPicker.h"
 #import "UIActionSheet+BlockExtensions.h"
 
+#import "CTAssetsPickerController.h"
+
 @class Attachment;
 @class RecordViewController;
 
