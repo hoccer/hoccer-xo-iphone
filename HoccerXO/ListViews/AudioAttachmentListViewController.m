@@ -263,7 +263,7 @@
 
             for (Contact *contact in contacts) {
                 for (Attachment *attachment in selectedAttachments) {
-                    [[[AppDelegate instance] chatBackend] sendMessage:nil toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:[attachment clone]];
+                    [[[AppDelegate instance] chatBackend] sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:[attachment clone]];
                 }
             }
         

@@ -516,6 +516,11 @@ static NSTimer * _stateNotificationDelayTimer;
 // TODO: contact should be an array of contacts
 - (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment {
     
+    if (text == nil) {
+        NSLog(@"ERROR: sendMessage text is nil");
+        return;
+    }
+    
     if (contact == nil) {
         NSLog(@"ERROR: sendMessage contact is nil");
         return;
