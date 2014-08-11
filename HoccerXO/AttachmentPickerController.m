@@ -75,6 +75,11 @@
     }
 #endif
 
+    AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+    item.localizedButtonTitle = NSLocalizedString(@"attachment_src_multi_dummy", nil);
+    item.type = AttachmentPickerTypeMulti;
+    [_supportedItems addObject: item];
+
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromLibrary]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
@@ -306,6 +311,8 @@
     BOOL wantsVideo = YES;
     // NSLog(@"showPickerForType=%d",type);
     switch (type) {
+        case AttachmentPickerTypeMulti:
+            [self pickMultipleImages: @[]];
         case AttachmentPickerTypePhotoFromLibrary:
             wantsVideo = NO;
             // no break
@@ -604,6 +611,30 @@
     [app endBackgroundTask:_backgroundTask];
     _backgroundTask = UIBackgroundTaskInvalid;
 }
+
+
+#pragma mark - Multi Image/Video Picking
+
+- (void) pickMultipleImages: (NSArray*) selectedURLs {
+    CTAssetsPickerController * picker = [[CTAssetsPickerController alloc] init];
+    picker.delegate = self;
+    NSMutableArray * selectedAssets = [NSMutableArray array];
+    for (NSURL * assetURL in selectedURLs) {
+        NSLog(@"multi images: TODO - construct ALAsset from URL %@", assetURL);
+        // [selectedAssets addObject: /* Construct ALAsset from URL here */];
+    }
+    picker.selectedAssets = selectedAssets;
+    [_viewController presentViewController: picker animated: YES completion: nil];
+}
+
+- (void)assetsPickerController:(CTAssetsPickerController *)picker didFinishPickingAssets:(NSArray *)assets {
+    for (ALAsset * asset in assets) {
+        NSLog(@"multi images: picked %@", asset);
+    }
+    [self.delegate didPickAttachment: nil]; // <--- replace with... not nil
+    [_viewController dismissViewControllerAnimated: YES completion: nil];
+}
+
 
 @end
 

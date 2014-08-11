@@ -20,6 +20,7 @@
 @class RecordViewController;
 
 typedef enum AttachmentPickerTypes {
+    AttachmentPickerTypeMulti, // <--- dummy
     AttachmentPickerTypePhotoFromLibrary,
     AttachmentPickerTypePhotoVideoFromLibrary,
     AttachmentPickerTypePhotoFromCamera,
@@ -59,7 +60,7 @@ typedef enum AttachmentPickerTypes {
 
 @end
 
-@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate, AudioRecorderDelegate,ABPeoplePickerNavigationControllerDelegate,GeoLocationPickerDelegate>
+@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate, AudioRecorderDelegate, ABPeoplePickerNavigationControllerDelegate, GeoLocationPickerDelegate, CTAssetsPickerControllerDelegate>
 
 @property (nonatomic, weak) id<AttachmentPickerControllerDelegate> delegate;
 
