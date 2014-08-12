@@ -71,6 +71,8 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 
 + (UIActionSheet*) actionSheetWithTitle: (NSString*) title completionBlock: (HXOActionSheetCompletionBlock) completion cancelButtonTitle: (NSString*) cancelTitle destructiveButtonTitle: (NSString*) destructiveTitle otherButtonTitles: (NSString*) otherTitles, ... ;
 
++ (UIActionSheet*) actionSheetWithTitle: (NSString*) title completionBlock: (HXOActionSheetCompletionBlock) completion cancelButtonTitle: (NSString*) cancelTitle destructiveButtonTitle: (NSString*) destructiveTitle otherButtonTitleArray: (NSArray*) otherTitles;
+
 
 + (NSString*) formatKeyFingerprint: (NSString*) rawKeyIdString;
 + (void) showErrorAlertWithMessage: (NSString *) message withTitle:(NSString *) title;

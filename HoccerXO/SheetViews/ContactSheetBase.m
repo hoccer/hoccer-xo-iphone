@@ -25,14 +25,11 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 @interface ContactSheetBase ()
 
-@property (nonatomic, readonly) AttachmentPickerController * imagePicker;
-@property (nonatomic, assign)   BOOL                         avatarModified;
+@property (nonatomic, assign)   BOOL avatarModified;
 
 @end
 
 @implementation ContactSheetBase
-
-@synthesize imagePicker = _imagePicker;
 
 @synthesize avatarView = _avatarView;
 @synthesize commonSection = _commonSection;
@@ -239,26 +236,65 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (IBAction)avatarPressed:(id)sender {
     if (self.mode == DatasheetModeEdit && [self isItemEnabled: self.avatarItem]) {
-        [self.imagePicker showInView: [(id)self.delegate view]]; // XXX
+        [self editAvatar];
     } else if (self.avatarItem.currentValue) {
-        [(id)self.delegate performSegueWithIdentifier: self.avatarItem.segueIdentifier sender: self]; // XXX
+        [(id)self.delegate performSegueWithIdentifier: self.avatarItem.segueIdentifier sender: self];
     }
 }
 
-- (AttachmentPickerController*) imagePicker {
-    if (_imagePicker == nil) {
-        _imagePicker = [[AttachmentPickerController alloc] initWithViewController: (id)self.delegate delegate: self]; // XXX
+- (void) editAvatar {
+    NSMutableArray * buttons = [NSMutableArray array];
+    NSMutableArray * handlers = [NSMutableArray array];
+
+    BOOL hasAvatar = _avatarItem.currentValue != nil;
+
+    if (hasAvatar) {
+        [handlers addObject: ^(){ [self deleteAvatar]; }];
     }
-    return _imagePicker;
+
+    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
+        [handlers addObject: ^(){ [self pickAvatarFromSource: UIImagePickerControllerSourceTypePhotoLibrary]; }];
+        [buttons addObject: NSLocalizedString(@"attachment_src_photo_album_btn_title",nil)];
+    }
+
+    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
+        [handlers addObject: ^(){ [self pickAvatarFromSource: UIImagePickerControllerSourceTypePhotoLibrary]; }];
+        [buttons addObject: NSLocalizedString(@"attachment_src_camera_btn_title",nil)];
+    }
+
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * sheet) {
+        ((void(^)())handlers[buttonIndex])();
+    };
+
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"profile_avatar_option_sheet_title", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: hasAvatar ? NSLocalizedString(@"profile_avatar_option_delete_btn_title", nil) : nil
+                                      otherButtonTitleArray: buttons];
+    [sheet showInView: self.delegate.view];
 }
 
-- (BOOL) allowsEditing {
-    return YES;
+- (void) deleteAvatar {
+    self.avatarItem.currentValue = nil;
+    [self didChangeValueForItem: self.avatarItem];
+    self.avatarModified = YES;
 }
 
-- (void) didPickAttachment:(id)attachmentInfo {
-    if (attachmentInfo != nil) {
-        UIImage * image = attachmentInfo[UIImagePickerControllerEditedImage];
+- (void) pickAvatarFromSource: (UIImagePickerControllerSourceType) source {
+    UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+    picker.sourceType = source;
+    picker.allowsEditing = YES;
+    picker.delegate = self;
+    [self.delegate presentViewController: picker animated: YES completion: nil];
+}
+
+- (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    if (info != nil) {
+        if (picker.sourceType == UIImagePickerControllerSourceTypeCamera) {
+            UIImageWriteToSavedPhotosAlbum(info[UIImagePickerControllerOriginalImage], nil, nil, nil);
+        }
+
+        UIImage * image = info[UIImagePickerControllerEditedImage];
 
         // TODO: proper size handling
         CGFloat scale;
@@ -274,37 +310,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
         [self didChangeValueForItem: self.avatarItem];
         self.avatarModified = YES;
     }
-}
-
-- (BOOL) wantsAttachmentsOfType:(AttachmentPickerType)type {
-    switch (type) {
-        case AttachmentPickerTypePhotoFromCamera:
-        case AttachmentPickerTypePhotoFromLibrary:
-            return YES;
-        default:
-            return NO;
-    }
-}
-
-- (BOOL) shouldSaveImagesToAlbum {
-    return YES;
-}
-
-- (NSString*) attachmentPickerActionSheetTitle {
-    return NSLocalizedString(@"profile_avatar_option_sheet_title", "Profile View Avatar Chooser Action Sheet Title");
-}
-
-- (void) prependAdditionalActionButtons:(UIActionSheet *)actionSheet {
-    if (_avatarItem.currentValue != nil) {
-        actionSheet.destructiveButtonIndex = [actionSheet addButtonWithTitle: NSLocalizedString(@"profile_avatar_option_delete_btn_title", nil)];
-    }
-}
-
-- (void) additionalButtonPressed:(NSUInteger)buttonIndex {
-    // delete avatarImage
-    self.avatarItem.currentValue = nil;
-    [self didChangeValueForItem: self.avatarItem];
-    self.avatarModified = YES;
+    [self.delegate dismissViewControllerAnimated: YES completion: nil];
 }
 
 @end
