@@ -83,6 +83,7 @@
             MFMessageComposeViewController * messageView = [[MFMessageComposeViewController alloc] init];
             vc = messageView;
             messageView.messageComposeDelegate = self;
+            messageView.recipients = recipients;
 
             NSString * smsText = NSLocalizedString(@"invite_sms_text", nil);
             messageView.body = [NSString stringWithFormat: smsText, [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
