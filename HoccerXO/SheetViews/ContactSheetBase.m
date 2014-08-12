@@ -258,7 +258,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
     }
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
-        [handlers addObject: ^(){ [self pickAvatarFromSource: UIImagePickerControllerSourceTypePhotoLibrary]; }];
+        [handlers addObject: ^(){ [self pickAvatarFromSource: UIImagePickerControllerSourceTypeCamera]; }];
         [buttons addObject: NSLocalizedString(@"attachment_src_camera_btn_title",nil)];
     }
 
