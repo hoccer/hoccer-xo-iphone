@@ -23,7 +23,6 @@
 {
     NSMutableArray * _supportedItems;
     UIViewController * _viewController;
-    NSUInteger _firstPickerButton;
     UIBackgroundTaskIdentifier _backgroundTask;
 }
 
@@ -46,8 +45,7 @@
     if (self != nil) {
         self.delegate = delegate;
         _viewController = viewController;
-        _supportedItems = [[NSMutableArray alloc] init];
-        _firstPickerButton = 0;
+        _supportedItems = [NSMutableArray array];
         [self probeAttachmentTypes];
     }
     return self;
@@ -258,35 +256,19 @@
 }
 
 - (BOOL) delegateWantsAttachmentsOfType: (AttachmentPickerType) type {
-    if ([self.delegate respondsToSelector:@selector(wantsAttachmentsOfType:)]) {
-        return [self.delegate wantsAttachmentsOfType: type];
-    }
     return YES;
 }
 
 - (void) showInView: (UIView*) view {
-    NSString * title;
-    if ([self.delegate respondsToSelector:@selector(attachmentPickerActionSheetTitle)]) {
-        title = [self.delegate attachmentPickerActionSheetTitle];
-    } else {
-        title = NSLocalizedString(@"attachment_add_sheet_title", nil);
-    }
-    UIActionSheet *attachmentSheet = [[UIActionSheet alloc] initWithTitle: title
+    UIActionSheet *attachmentSheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"attachment_add_sheet_title", nil)
                                                                  delegate: self
                                                         cancelButtonTitle: nil
                                                    destructiveButtonTitle: nil
                                                         otherButtonTitles: nil];
     attachmentSheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 
-    if ([self.delegate respondsToSelector:@selector(prependAdditionalActionButtons:)]) {
-        [self.delegate prependAdditionalActionButtons: attachmentSheet];
-    }
-    _firstPickerButton = attachmentSheet.numberOfButtons;
     for (AttachmentPickerItem * item in _supportedItems) {
         [attachmentSheet addButtonWithTitle: item.localizedButtonTitle];
-    }
-    if ([self.delegate respondsToSelector:@selector(appendAdditionalActionButtons:)]) {
-        [self.delegate appendAdditionalActionButtons: attachmentSheet];
     }
     attachmentSheet.cancelButtonIndex = [attachmentSheet addButtonWithTitle: NSLocalizedString(@"cancel", nil)];
     
@@ -296,14 +278,9 @@
 -(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         [self.delegate didPickAttachment: nil];
-        return;
-    }
-    // NSLog(@"buttonIndex=%d, firstPicker=%d",buttonIndex, _firstPickerButton);
-    if (buttonIndex >= _firstPickerButton && buttonIndex < _firstPickerButton + _supportedItems.count) {
-        AttachmentPickerItem * item = _supportedItems[buttonIndex - _firstPickerButton];
+    } else {
+        AttachmentPickerItem * item = _supportedItems[buttonIndex];
         [self showPickerForType: item.type];
-    } else if ([self.delegate respondsToSelector:@selector(additionalButtonPressed:)]) {
-        [self.delegate additionalButtonPressed: buttonIndex];
     }
 }
 
@@ -519,9 +496,6 @@
     UIImagePickerController * picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
     picker.sourceType = sourceType;
-    if ([self.delegate respondsToSelector:@selector(allowsEditing)]) {
-        picker.allowsEditing = [self.delegate allowsEditing];
-    }
     NSInteger videoQuality = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"videoQuality"] integerValue];
 
     if (sourceType == UIImagePickerControllerSourceTypeCamera){
