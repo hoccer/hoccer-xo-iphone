@@ -580,7 +580,7 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
     
-    NSString * lockId = [self chatLockForSenderId:[UserProfile sharedProfile].clientId andGroupId: contact.isGroup ? contact.clientId : nil];
+    //NSString * lockId = [self chatLockForSenderId:[UserProfile sharedProfile].clientId andGroupId: contact.isGroup ? contact.clientId : nil];
     
     NSManagedObjectID * contactId = contact.objectID;
     NSManagedObjectID * privateContactId = privateGroupMessageContact.objectID;
@@ -737,7 +737,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     // we need to log all message in chat to avoid timeSection problems
     // (when acceptedTime is set, the timesection of other messages will be touched, too)
-    NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
+    //NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
     
     //[self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
     [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
@@ -4875,10 +4875,10 @@ static NSTimer * _stateNotificationDelayTimer;
                 NSLog(@"outDeliveryRequest: could not obtain permanent ids for some deliveries, ignoring result");
                 return;
             }
-            NSArray * resultDeliveryDicts = (NSArray*)responseOrError;
-            NSDictionary * dict = resultDeliveryDicts[0];
+            //NSArray * resultDeliveryDicts = (NSArray*)responseOrError;
+            //NSDictionary * dict = resultDeliveryDicts[0];
             
-            NSString * lockid = [self chatLockForSenderId:dict[@"messageId"] andGroupId:dict[@"groupId"]];
+            //NSString * lockid = [self chatLockForSenderId:dict[@"messageId"] andGroupId:dict[@"groupId"]];
             
             //[self.delegate performWithLockingId:lockid inNewBackgroundContext:^(NSManagedObjectContext *context) {
             [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
@@ -6092,12 +6092,12 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
     
-    NSString * groupId = deliveryDict[@"groupId"];
-    NSString * senderId = deliveryDict[@"senderId"];
+    //NSString * groupId = deliveryDict[@"groupId"];
+    //NSString * senderId = deliveryDict[@"senderId"];
 
     // we need to log all message in chat to avoid timeSection problems
     // (when acceptedTime is set, the timesection of other messages will be touched, too)
-    NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
+    //NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
     
     //[self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
     [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {

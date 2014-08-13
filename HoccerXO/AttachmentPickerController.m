@@ -605,7 +605,7 @@
     for (ALAsset * asset in assets) {
         NSLog(@"multi images: picked %@", asset);
     }
-    [self.delegate didPickAttachment: nil]; // <--- replace with... not nil
+    [self.delegate didPickAttachment: assets];
     [_viewController dismissViewControllerAnimated: YES completion: nil];
 }
 

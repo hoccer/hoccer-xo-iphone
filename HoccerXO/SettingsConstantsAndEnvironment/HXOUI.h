@@ -29,6 +29,7 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 
 + (HXOUI*) theme;
 
+@property (nonatomic, readonly) UIColor * tintColor;
 @property (nonatomic, readonly) UIColor * navigationBarBackgroundColor;
 @property (nonatomic, readonly) UIColor * navigationBarTintColor;
 @property (nonatomic, readonly) UIColor * ledColor;
