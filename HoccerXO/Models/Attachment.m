@@ -598,6 +598,7 @@ NSArray * TransferStateName = @[@"detached",
         self.mimeType = @"audio/mp4";
     }
     
+    [self determinePlayability];
     [self loadPreviewImageIntoCacheWithCompletion: completion];
 }
 

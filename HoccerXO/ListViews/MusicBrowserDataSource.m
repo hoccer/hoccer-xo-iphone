@@ -40,7 +40,7 @@
 + (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
     NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null] };
     
-    NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestFromTemplateWithName:@"ReceivedAudioAttachments" substitutionVariables:vars];
+    NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestFromTemplateWithName:@"AudioAttachments" substitutionVariables:vars];
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"message.timeReceived" ascending: NO];
     NSArray *sortDescriptors = @[sortDescriptor];
     [fetchRequest setSortDescriptors:sortDescriptors];
