@@ -187,6 +187,9 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void)checkDowloadQueue;
 - (void)checkUploadQueue;
 
+- (GCNetworkQueue *)attachmentUploadQueue;
+- (GCNetworkQueue *)attachmentDownloadQueue;
+
 - (void) updateEnvironment:(HXOEnvironment *) environment withHandler:(UpdateEnvironmentHandler)handler;
 - (void) destroyEnvironmentType:(NSString*)type withHandler:(GenericResultHandler)handler;
 
@@ -226,6 +229,7 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 + (BOOL) isInvalid:(NSData*)theData;
 
 + (NSString*)checkForceFilecacheUrl:(NSString*)theURL;
++ (void) checkUploadStatus:(NSString*)theURL hasSize:(long long)expectedSize withCompletion:(DataURLStatusHandler)handler;
 
 // messages >= sinceTime && < beforeTime
 + (NSArray *) messagesByContact:(Contact*)contact inIntervalSinceTime:(NSDate *)sinceTime beforeTime:(NSDate*)beforeTime;

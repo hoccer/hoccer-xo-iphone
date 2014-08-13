@@ -869,7 +869,7 @@ BOOL sameObjects(id obj1, id obj2) {
     }
 }
 
-- (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock  {
+- (void)performWithLockingId:(const NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock  {
     if (lockId == nil) {
         NSLog(@"#ERROR: performWithLockingId called with nil lockId, stack=%@", [NSThread callStackSymbols]);
         lockId = @"NIL-LOCK";
@@ -912,7 +912,7 @@ BOOL sameObjects(id obj1, id obj2) {
     }
 }
 
-- (NSManagedObjectContext*) backGroundContextForId:(NSString*)name {
+- (NSManagedObjectContext*) backGroundContextForId:(const NSString*)name {
     
     if (name == nil) {
         NSLog(@"#ERROR: backGroundContextForId called with nil name, stack=%@", [NSThread callStackSymbols]);

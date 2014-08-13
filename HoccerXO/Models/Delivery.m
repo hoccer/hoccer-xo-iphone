@@ -66,6 +66,142 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
 @dynamic keyId;
 @dynamic attachmentState;
 
+
++(int)attachmentStateLevel:(NSString*) state {
+    static NSDictionary * levels = nil;
+    if (levels == nil) {
+        levels = @{kDelivery_ATTACHMENT_STATE_NONE:@(0),
+                   kDelivery_ATTACHMENT_STATE_NEW:@(1),
+                   kDelivery_ATTACHMENT_STATE_UPLOADING:@(2),
+                   kDelivery_ATTACHMENT_STATE_UPLOAD_PAUSED:@(2),
+                   kDelivery_ATTACHMENT_STATE_UPLOADED:@(3),
+                   kDelivery_ATTACHMENT_STATE_RECEIVED:@(4),
+                   kDelivery_ATTACHMENT_STATE_RECEIVED_ACKNOWLEDGED:@(5),
+                   kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED:@(3),
+                   kDelivery_ATTACHMENT_STATE_UPLOAD_FAILED_ACKNOWLEDGED:@(4),
+                   kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED:@(3),
+                   kDelivery_ATTACHMENT_STATE_UPLOAD_ABORTED_ACKNOWLEDGED:@(4),
+                   kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED:@(4),
+                   kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED_ACKNOWLEDGED:@(5),
+                   kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED:@(4),
+                   kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED:@(5)
+                   };
+    }
+    if (state == nil) {
+        return -1;
+    }
+    NSNumber * result = levels[state];
+    if (result == nil) {
+        return -1;
+    }
+    return [result intValue];
+}
+
++(int)stateLevel:(NSString*) state {
+    static NSDictionary * levels = nil;
+    if (levels == nil) {
+        levels = @{kDeliveryStateNew:@(1),
+                   kDeliveryStateDelivering:@(2),
+                   kDeliveryStateDeliveredPrivate:@(3),
+                   kDeliveryStateDeliveredPrivateAcknowledged:@(4),
+                   kDeliveryStateDeliveredUnseen:@(3),
+                   kDeliveryStateDeliveredUnseenAcknowledged:@(4),
+                   kDeliveryStateDeliveredSeen:@(5),
+                   kDeliveryStateDeliveredSeenAcknowledged:@(6),
+                   kDeliveryStateFailed:@(3),
+                   kDeliveryStateRejected:@(3),
+                   kDeliveryStateAborted:@(3),
+                   kDeliveryStateAbortedAcknowledged:@(4),
+                   kDeliveryStateFailedAcknowledged:@(4),
+                   kDeliveryStateRejectedAcknowledged:@(4)
+                   };
+    }
+    if (state == nil) {
+        return -1;
+    }
+    NSNumber * result = levels[state];
+    if (result == nil) {
+        return -1;
+    }
+    return [result intValue];
+}
+
++ (BOOL)shouldUpdateState:(NSString *)currentState toNewState:(NSString *)newState {
+    
+    int nextStateLevel = [Delivery stateLevel:newState];
+    int currentStateLevel = [Delivery stateLevel:currentState];
+    
+    if (nextStateLevel >= 0) {
+        if (nextStateLevel >= currentStateLevel) {
+            NSLog(@"#INFO: Delivery shouldUpdateState: updating state %@ (level %d), with state %@ (level %d)",
+                  currentState, currentStateLevel, newState, nextStateLevel);
+            return YES;
+        } else {
+            NSLog(@"#WARNING: Delivery shouldUpdateState: keeping state %@ (level %d), not changing to lower state %@ (level %d)",
+                  currentState, currentStateLevel, newState, nextStateLevel);
+        }
+    } else {
+        NSLog(@"#ERROR: Delivery shouldUpdateState: keeping state %@ (level %d), not changing to illegal state %@ (level %d)",
+              currentState, currentStateLevel, newState, nextStateLevel);
+    }
+    return NO;
+}
+
++ (BOOL)shouldUpdateAttachmentState:(NSString *)currentState toNewState:(NSString *)newAttachmentState {
+    
+    int nextAttachmentStateLevel = [Delivery attachmentStateLevel:newAttachmentState];
+    int currentAttachmentStateLevel = [Delivery attachmentStateLevel:currentState];
+    
+    if (nextAttachmentStateLevel >= 0) {
+        if (nextAttachmentStateLevel >= currentAttachmentStateLevel) {
+            NSLog(@"#INFO: Delivery shouldUpdateAttachmentState: should update attachmentState %@ (level %d), with attachmentState %@ (level %d)",
+                  currentState, currentAttachmentStateLevel, newAttachmentState, nextAttachmentStateLevel);
+            return YES;
+        } else {
+            NSLog(@"#WARNING: Delivery shouldUpdateAttachmentState: should keep attachmentState %@ (level %d), not changing to lower attachmentState %@ (level %d)",
+                  currentState, currentAttachmentStateLevel, newAttachmentState, nextAttachmentStateLevel);
+        }
+    } else {
+        NSLog(@"#ERROR: Delivery shouldUpdateAttachmentState: should keep attachmentState %@ (level %d), not changing illegal attachmentState %@ (level %d)",
+              currentState, currentAttachmentStateLevel, newAttachmentState, nextAttachmentStateLevel);
+    }
+    return NO;
+}
+
+- (BOOL)isInMoreAdvancedStateThan:(NSString*)state {
+    int nextStateLevel = [Delivery stateLevel:state];
+    int currentStateLevel = [Delivery stateLevel:self.state];
+    return currentStateLevel > nextStateLevel;
+}
+
+- (BOOL)isInMoreAdvancedAttachmentStateThan:(NSString*)state {
+    int nextAttachmentStateLevel = [Delivery attachmentStateLevel:state];
+    int currentAttachmentStateLevel = [Delivery attachmentStateLevel:self.attachmentState];
+    return currentAttachmentStateLevel > nextAttachmentStateLevel;
+}
+
+- (void) setAttachmentState:(NSString *)newAttachmentState {
+    NSString * oldAttachmentState = self.attachmentState;
+    if (![newAttachmentState isEqualToString:oldAttachmentState]) {
+        if ([Delivery shouldUpdateAttachmentState:oldAttachmentState toNewState:newAttachmentState]) {
+            [self willChangeValueForKey:@"attachmentState"];
+            [self setPrimitiveValue: newAttachmentState forKey: @"attachmentState"];
+            [self didChangeValueForKey:@"attachmentState"];
+        }
+    }
+}
+
+- (void) setState:(NSString *)newState {
+    NSString * oldState = self.state;
+    if (![newState isEqualToString:oldState]) {
+        if ([Delivery shouldUpdateState:oldState toNewState:newState]) {
+            [self willChangeValueForKey:@"state"];
+            [self setPrimitiveValue: newState forKey: @"state"];
+            [self didChangeValueForKey:@"state"];
+        }
+    }
+}
+
 -(BOOL)isGroupDelivery {
     return self.group != nil && self.receiver == nil;
 }
@@ -386,6 +522,13 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
               @"timeChanged"   : @"timeChangedMillis",
               @"keyId"         : @"receiverKeyId",
               @"keyCiphertext" : @"keyCiphertextString",
+              @"attachmentState" : @"attachmentState"
+              };
+}
+
++ (NSDictionary*) minimumUpdateRpcKeys {
+    return @{ @"state"         : @"state",
+              @"timeChanged"   : @"timeChangedMillis",
               @"attachmentState" : @"attachmentState"
               };
 }

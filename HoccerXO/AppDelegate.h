@@ -86,7 +86,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 - (BOOL)deleteObject:(id)object;
 - (BOOL)deleteObject:(id)object inContext:(NSManagedObjectContext *) context;
 
-- (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock;
+- (void)performWithLockingId:(const NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock;
 - (void)performWithoutLockingInNewBackgroundContext:(ContextBlock)backgroundBlock;
 - (void)performWithoutLockingInMainContext:(ContextBlock)contextBlock;
 - (void)performAfterCurrentContextFinishedInMainContext:(ContextBlock)contextBlock;
