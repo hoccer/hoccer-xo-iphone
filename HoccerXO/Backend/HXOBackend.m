@@ -129,6 +129,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSMutableSet * _pendingGroupDeletions;
     NSMutableSet * _pendingDeliveryUpdates;
     NSMutableSet * _pendingAttachmentDeliveryUpdates;
+    NSMutableSet * _postponedAttachmentDeliveryUpdates;
     NSMutableSet * _groupsNotYetPresentedInvitation;
     NSMutableSet * _groupsPresentingInvitation;
     NSMutableSet * _contactPresentingFriendMessage;
@@ -161,6 +162,7 @@ static NSTimer * _stateNotificationDelayTimer;
         _pendingGroupDeletions = [NSMutableSet new];
         _pendingDeliveryUpdates = [NSMutableSet new];
         _pendingAttachmentDeliveryUpdates = [NSMutableSet new];
+        _postponedAttachmentDeliveryUpdates = [NSMutableSet new];
         _groupsNotYetPresentedInvitation = [NSMutableSet new];
         _contactPresentingFriendMessage = [NSMutableSet new];
         _contactPresentingFriendInvitation = [NSMutableSet new];
@@ -1064,11 +1066,12 @@ static NSTimer * _stateNotificationDelayTimer;
         [self setState: kBackendReady];
         if (HXOEnvironment.sharedInstance.isActive) {
             NSLog(@"Nearby active, defering sync until environment update ready");
+            __block __typeof(self) __weak weakSelf = self;
             _firstEnvironmentUpdateHandler = ^(BOOL ok) {
                 if (ok) {
-                    [self startSync];
+                    [weakSelf startSync];
                 } else {
-                    [self stopAndRetry];
+                    [weakSelf stopAndRetry];
                 }
             };
         } else {
@@ -4330,12 +4333,20 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) updateAttachmentInDeliveryStateIfNecessary:(Attachment *)theAttachment {
     NSString * fileId = theAttachment.message.attachmentFileId;
-    if ([_pendingAttachmentDeliveryUpdates containsObject:fileId]) {
+    
+    BOOL pending;
+    @synchronized(_pendingAttachmentDeliveryUpdates) {pending = [_pendingAttachmentDeliveryUpdates containsObject:fileId];}
+    if (pending) {
         if (DELIVERY_TRACE) NSLog(@"updateAttachmentInDeliveryStateIfNecessary: postponing attachment state update for fileId '%@'", fileId);
+        
+        @synchronized(_postponedAttachmentDeliveryUpdates) {[_postponedAttachmentDeliveryUpdates addObject:fileId];}
+        /*
+        // TODO: move to when request ready instead of delay
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             [self updateAttachmentInDeliveryStateIfNecessary:theAttachment];
         });
+         */
     } else {
         Delivery * delivery = theAttachment.message.deliveries.anyObject;
         AttachmentState state = theAttachment.state;
@@ -4345,28 +4356,58 @@ static NSTimer * _stateNotificationDelayTimer;
         if ([kDelivery_ATTACHMENT_STATE_UPLOADING isEqualToString:delivery.attachmentState] ||
             [kDelivery_ATTACHMENT_STATE_UPLOADED isEqualToString:delivery.attachmentState]) {
             if (state == kAttachmentTransfered) {
-                [_pendingAttachmentDeliveryUpdates addObject:fileId];
+                @synchronized(_pendingAttachmentDeliveryUpdates) {[_pendingAttachmentDeliveryUpdates addObject:fileId];}
                 [self receivedFile:fileId withhandler:^(NSString *result, BOOL ok) {
                     if (ok) {
                         if (![kDelivery_ATTACHMENT_STATE_RECEIVED isEqualToString:result]) {
                             NSLog(@"receivedFile for file %@ returned strange attachment state %@",fileId, result);
                         }
-                        delivery.attachmentState = result;
-                        [self.delegate saveDatabase];
+                        NSArray * ids = permanentObjectIds(@[delivery]);
+                        [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                            NSArray * object = existingManagedObjects(ids, context);
+                            if (object) {
+                                Delivery * delivery = object[0];
+                                delivery.attachmentState = result;
+                            }
+                            @synchronized(_pendingAttachmentDeliveryUpdates) {[_pendingAttachmentDeliveryUpdates removeObject:fileId];}
+                            @synchronized(_postponedAttachmentDeliveryUpdates) {
+                                if ([_postponedAttachmentDeliveryUpdates containsObject:fileId]) {
+                                    [_postponedAttachmentDeliveryUpdates removeObject:fileId];
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        [self updateAttachmentInDeliveryStateIfNecessary:theAttachment];
+                                    });
+                                };
+                            }
+                        }];
                     }
-                    [_pendingAttachmentDeliveryUpdates removeObject:fileId];
                 }];
             } else if (state == kAttachmentTransfersExhausted) {
-                [_pendingAttachmentDeliveryUpdates addObject:fileId];
+                
+                @synchronized(_pendingAttachmentDeliveryUpdates) {[_pendingAttachmentDeliveryUpdates addObject:fileId];}
+
                 [self failedFileDownload:fileId withhandler:^(NSString *result, BOOL ok) {
                     if (ok) {
                         if (![kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED isEqualToString:result]) {
                             NSLog(@"failedFileDownload for file %@ returned strange attachment state %@",fileId, result);
                         }
-                        delivery.attachmentState = result;
-                        [self.delegate saveDatabase];
+                        NSArray * ids = permanentObjectIds(@[delivery]);
+                        [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
+                            NSArray * object = existingManagedObjects(ids, context);
+                            if (object) {
+                                Delivery * delivery = object[0];
+                                delivery.attachmentState = result;
+                            }
+                            @synchronized(_pendingAttachmentDeliveryUpdates) {[_pendingAttachmentDeliveryUpdates removeObject:fileId];}
+                            @synchronized(_postponedAttachmentDeliveryUpdates) {
+                                if ([_postponedAttachmentDeliveryUpdates containsObject:fileId]) {
+                                    [_postponedAttachmentDeliveryUpdates removeObject:fileId];
+                                    dispatch_async(dispatch_get_main_queue(), ^{
+                                        [self updateAttachmentInDeliveryStateIfNecessary:theAttachment];
+                                    });
+                                };
+                            }
+                        }];
                     }
-                    [_pendingAttachmentDeliveryUpdates removeObject:fileId];
                 }];
             }
         }
