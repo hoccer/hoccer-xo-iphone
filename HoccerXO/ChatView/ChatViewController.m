@@ -866,12 +866,370 @@ nil
     return nil;
 }
 
+- (void) didPickGeoAttachment: (id) attachmentInfo {
+    MKPointAnnotation * placemark = attachmentInfo[@"com.hoccer.xo.geolocation"];
+    NSLog(@"got geolocation %f %f", placemark.coordinate.latitude, placemark.coordinate.longitude);
+    
+    UIImage * preview = attachmentInfo[@"com.hoccer.xo.previewImage"];
+    //float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+    //NSData * previewData = UIImageJPEGRepresentation( preview, photoQualityCompressionSetting/10.0);
+    NSData * previewData = UIImagePNGRepresentation( preview );
+    
+    NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike: @"location.json"];
+    NSDictionary * json = @{ @"location": @{ @"type": @"point",
+                                             @"coordinates": @[ @(placemark.coordinate.latitude), @(placemark.coordinate.longitude)]},
+                             @"previewImage": [previewData asBase64EncodedString]};
+    NSError * error;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
+    if ( jsonData == nil) {
+        NSLog(@"failed to generate geojson: %@", error);
+        [self finishPickedAttachmentProcessingWithImage: nil withError: error];
+        return;
+    }
+    [jsonData writeToURL:myLocalURL atomically:NO];
+    
+    
+    [self.currentAttachment makeGeoLocationAttachment: [myLocalURL absoluteString] anOtherURL: nil withCompletion:^(NSError *theError) {
+        [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError: theError];
+    }];
+}
+
+- (void) didPickVCardAttachment: (id) attachmentInfo {
+    NSData * vcardData = attachmentInfo[@"com.hoccer.xo.vcard.data"];
+    // NSString * vcardString = [NSString stringWithData:vcardData usingEncoding:NSUTF8StringEncoding];
+    NSString * personName = attachmentInfo[@"com.hoccer.xo.vcard.name"];
+    
+    // find a suitable unique file name and path
+    NSString * newFileName = [NSString stringWithFormat:@"%@.vcf",personName];
+    NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+    
+    [vcardData writeToURL:myLocalURL atomically:NO];
+    CompletionBlock completion  = ^(NSError *myerror) {
+        UIImage * preview = self.currentAttachment.previewImage != nil ? self.currentAttachment.previewImage : [UIImage imageNamed: @"attachment_icon_contact"];
+        [self finishPickedAttachmentProcessingWithImage: preview withError:myerror];
+    };
+    self.currentAttachment.humanReadableFileName = [myLocalURL lastPathComponent];
+    [self.currentAttachment makeVcardAttachment:[myLocalURL absoluteString] anOtherURL:nil withCompletion:completion];
+}
+
+- (void) didPickPasteboardAttachment: (id) attachmentInfo {
+    NSString * myMediaType = attachmentInfo[@"com.hoccer.xo.mediaType"];
+    self.currentAttachment.mimeType = attachmentInfo[@"com.hoccer.xo.mimeType"];
+    self.currentAttachment.humanReadableFileName = attachmentInfo[@"com.hoccer.xo.fileName"];
+    
+    CompletionBlock completion  = ^(NSError *myerror) {
+        [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:myerror];
+    };
+    
+    if ([myMediaType isEqualToString:@"image"]) {
+        [self.currentAttachment makeImageAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] image:nil withCompletion:completion];
+    } else if ([myMediaType isEqualToString:@"video"]) {
+        [self.currentAttachment makeVideoAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+    } else if ([myMediaType isEqualToString:@"audio"]) {
+        [self.currentAttachment makeAudioAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+    } else if ([myMediaType isEqualToString:@"vcard"]) {
+        [self.currentAttachment makeVcardAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+    } else if ([myMediaType isEqualToString:@"geolocation"]) {
+        [self.currentAttachment makeGeoLocationAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+    } else if ([myMediaType isEqualToString:@"data"]) {
+        [self.currentAttachment makeDataAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+    }
+}
+
+- (BOOL) didPickPasteboardImageAttachment: (id) attachmentInfo {
+    // check if pasted image
+    id myImageObject = attachmentInfo[@"com.hoccer.xo.pastedImage"];
+    if (myImageObject != nil) {
+        UIImage * myImage = nil;
+        if ([myImageObject isKindOfClass: [NSData class]]) {
+            myImage = [UIImage imageWithData:myImageObject];
+        } else if ([myImageObject isKindOfClass: [UIImage class]]) {
+            myImage = (UIImage*) myImageObject;
+        }
+        if (myImage != nil) {
+            // handle image from pasteboard
+            
+            // find a suitable unique file name and path
+            NSString * newFileName = @"pastedImage.jpg";
+            NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+            
+            // write the image
+            myImage = [Attachment qualityAdjustedImage:myImage];
+            float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+            [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myLocalURL atomically:NO];
+            
+            [self.currentAttachment makeImageAttachment: [myLocalURL absoluteString] anOtherURL:nil
+                                                  image: myImage
+                                         withCompletion:^(NSError *theError) {
+                                             [self finishPickedAttachmentProcessingWithImage: myImage withError:theError];
+                                         }];
+            return YES;
+        } else {
+            NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: com.hoccer.xo.pastedImage is not an image, object is of class = %@", [myImageObject class]];
+            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 555 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            
+            [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void) didPickMPMediaAttachment: (id) attachmentInfo {
+    // probably an audio item media library
+    MPMediaItem * song = (MPMediaItem*)attachmentInfo;
+    
+    // make a nice and unique filename
+    NSString * newFileName = [NSString stringWithFormat:@"%@ - %@.%@",[song valueForProperty:MPMediaItemPropertyArtist],[song valueForProperty:MPMediaItemPropertyTitle],@"m4a" ];
+    
+    NSURL * myExportURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+    
+    NSURL *assetURL = [song valueForProperty:MPMediaItemPropertyAssetURL];
+    // NSLog(@"audio assetURL = %@", assetURL);
+    
+    AVURLAsset *songAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
+    
+    if ([songAsset hasProtectedContent] == YES) {
+        // TODO: user dialog here
+        NSLog(@"Media is protected by DRM");
+        NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: Media is protected by DRM"];
+        NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 557 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+        return;
+    }
+    if (_currentExportSession != nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
+        NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+        return;
+    }
+    
+    _currentExportSession = [[AVAssetExportSession alloc]
+                             initWithAsset: songAsset
+                             presetName: AVAssetExportPresetAppleM4A];
+    
+    
+    _currentExportSession.outputURL = myExportURL;
+    _currentExportSession.outputFileType = AVFileTypeAppleM4A;
+    _currentExportSession.shouldOptimizeForNetworkUse = YES;
+    
+    AVMutableMetadataItem * titleItem = [AVMutableMetadataItem metadataItem];
+    titleItem.keySpace = AVMetadataKeySpaceCommon;
+    titleItem.key = AVMetadataCommonKeyTitle;
+    titleItem.value = [song valueForProperty:MPMediaItemPropertyTitle];
+    
+    AVMutableMetadataItem * artistItem = [AVMutableMetadataItem metadataItem];
+    artistItem.keySpace = AVMetadataKeySpaceCommon;
+    artistItem.key = AVMetadataCommonKeyArtist;
+    artistItem.value = [song valueForProperty:MPMediaItemPropertyArtist];
+    
+    AVMutableMetadataItem * albumItem = [AVMutableMetadataItem metadataItem];
+    albumItem.keySpace = AVMetadataKeySpaceCommon;
+    albumItem.key = AVMetadataCommonKeyAlbumName;
+    albumItem.value = [song valueForProperty:MPMediaItemPropertyAlbumTitle];
+    
+    MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
+    UIImage * artworkImage = [artwork imageWithSize:artwork.bounds.size];
+    
+    AVMutableMetadataItem * artworkItem = [AVMutableMetadataItem metadataItem];
+    artworkItem.keySpace = AVMetadataKeySpaceCommon;
+    artworkItem.key = AVMetadataCommonKeyArtwork;
+    artworkItem.value = UIImageJPEGRepresentation(artworkImage, 0.6);
+    
+    _currentExportSession.metadata = @[titleItem, artistItem, albumItem, artworkItem];
+    
+    [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
+        int exportStatus = _currentExportSession.status;
+        switch (exportStatus) {
+            case AVAssetExportSessionStatusFailed: {
+                NSLog (@"AVAssetExportSessionStatusFailed");
+                // log error to text view
+                NSString * myDescription = [NSString stringWithFormat:@"Audio export failed (AVAssetExportSessionStatusFailed)"];
+                NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                _currentExportSession = nil;
+                [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                break;
+            }
+            case AVAssetExportSessionStatusCompleted: {
+                if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted");
+                [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
+                    _currentExportSession = nil;
+                    self.currentAttachment.humanReadableFileName = [myExportURL lastPathComponent];
+                    if (self.currentAttachment.previewImage == nil) {
+                        if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: makeAudioAttachment - creating preview image from db artwork");
+                        // In case we fail getting the artwork from file try get artwork from Media Item
+                        // However, this only displays the artwork on the upload side. The artwork is *not*
+                        // included in the exported file.
+                        // It should be possible to add the image using _currentExportSession.metadata. But
+                        // merging with existing metadata is non trivial and we should tackle it later.
+                        MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
+                        if (artwork != nil) {
+                            if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: got artwork, creating preview image");
+                            self.currentAttachment.previewImage = [artwork imageWithSize:CGSizeMake(400,400)];
+                        } else {
+                            if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: no artwork");
+                        }
+                    } else {
+                        if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: artwork is in media file");
+                    }
+                    [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
+                }];
+                break;
+            }
+            case AVAssetExportSessionStatusUnknown: {
+                NSLog (@"AVAssetExportSessionStatusUnknown"); break;}
+            case AVAssetExportSessionStatusExporting: {
+                NSLog (@"AVAssetExportSessionStatusExporting"); break;}
+            case AVAssetExportSessionStatusCancelled: {
+                _currentExportSession = nil;
+                [self finishPickedAttachmentProcessingWithImage: nil withError:_currentExportSession.error];
+                // NSLog (@"AVAssetExportSessionStatusCancelled");
+                break;
+            }
+            case AVAssetExportSessionStatusWaiting: {
+                NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
+            default: { NSLog (@"ERROR: AVAssetExportSessionStatusWaiting: didn't get export status"); break;}
+        }
+    }];
+}
+
+- (void) didPickCameraOrAlbumImageAttachment: (id) attachmentInfo {
+    __block NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
+    if (attachmentInfo[UIImagePickerControllerMediaMetadata] != nil) {
+        // Image was just taken and is not yet in album
+        
+        UIImage * myOriginalImage = attachmentInfo[UIImagePickerControllerOriginalImage];
+        NSURL * myFileURL = nil;
+        
+        // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
+        UIImage * myImage = [Attachment qualityAdjustedImage:myOriginalImage];
+        NSString * newFileName = @"reducedSnapshotImage.jpg";
+        myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+        
+        float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+        [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
+        
+        // funky method using ALAssetsLibrary
+        ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
+            if (!error) {
+                if (myFileURL == nil) {
+                    myURL = assetURL;
+                } else {
+                    myURL = myFileURL;
+                }
+                
+                // create attachment with lower quality image dependend on settings
+                [self.currentAttachment makeImageAttachment: [myURL absoluteString]
+                                                 anOtherURL:nil
+                                                      image: myImage
+                                             withCompletion:^(NSError *theError) {
+                                                 [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:error];
+                                             }];
+            } else {
+                NSLog(@"Error saving image in Library, error = %@", error);
+                [self finishPickedAttachmentProcessingWithImage: nil withError:error];
+            }
+        };
+        
+        // write full size full quality image to library
+        if(myImage) {
+            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+            [library writeImageToSavedPhotosAlbum:[myOriginalImage CGImage]
+                                      orientation:(ALAssetOrientation)[myOriginalImage imageOrientation]
+                                  completionBlock:completeBlock];
+        }
+    } else {
+        // image from album
+        UIImage * myImage = attachmentInfo[UIImagePickerControllerOriginalImage];
+        // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
+        //if ([Attachment tooLargeImage:myImage]) {
+        myImage = [Attachment qualityAdjustedImage:myImage];
+        NSString * newFileName = @"reducedSnapshotImage.jpg";
+        myURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+        
+        float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+        [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
+        //} else {
+        //  TODO: save a local copy of the image without JPEG reencoding
+        //}
+        [self.currentAttachment makeImageAttachment: [myURL absoluteString]
+                                         anOtherURL:nil
+                                              image: myImage
+                                     withCompletion:^(NSError *theError) {
+                                         [self finishPickedAttachmentProcessingWithImage: myImage
+                                                                               withError:theError];
+                                     }];
+    }
+}
+
+- (void) didPickCameraOrAlbumMovieAttachment: (id) attachmentInfo {
+    NSURL * referenceURL = attachmentInfo[UIImagePickerControllerReferenceURL];
+    NSURL * mediaURL = attachmentInfo[UIImagePickerControllerMediaURL];
+    
+    NSString * newFileName = @"video.mp4";
+    NSURL * outputURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+    
+    if (_currentExportSession != nil) {
+        NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
+        NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+        return;
+    }
+    
+    AVURLAsset * asset = [AVURLAsset assetWithURL:mediaURL];
+    _currentExportSession = [AVAssetExportSession exportSessionWithAsset:asset presetName:AVAssetExportPresetPassthrough];
+    _currentExportSession.outputURL = outputURL;
+    _currentExportSession.outputFileType = AVFileTypeMPEG4;
+    
+    [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
+        if (_currentExportSession.status == AVAssetExportSessionStatusCompleted) {
+            _currentExportSession = nil;
+            
+            if (referenceURL == nil) { // video was just recorded
+                NSString *outputFilePath = [outputURL path];
+                
+                if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFilePath)) {
+                    UISaveVideoAtPathToSavedPhotosAlbum(outputFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+                    NSLog(@"Saved new video at %@ to album",outputFilePath);
+                } else {
+                    NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",outputFilePath];
+                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                    NSLog(@"%@", myDescription);
+                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                    return;
+                }
+            }
+            
+            NSString * outputURLString = [outputURL absoluteString];
+            self.currentAttachment.ownedURL = outputURLString;
+            
+            [self.currentAttachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
+                [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:theError];
+            }];
+        } else {
+            [self finishPickedAttachmentProcessingWithImage:nil withError:_currentExportSession.error];
+            _currentExportSession = nil;
+        }
+        
+        NSError * myError = nil;
+        [[NSFileManager defaultManager] removeItemAtURL:mediaURL error:&myError];
+        
+        if (myError != nil) {
+            NSLog(@"Deleting media file failed: %@", myError);
+        }
+    }];
+}
+
 - (void) didPickAttachment: (id) attachmentInfo {
     if (attachmentInfo == nil) {
         return;
     }
     [self startPickedAttachmentProcessingForObject:attachmentInfo];
     //NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
+    
+    if ([attachmentInfo isKindOfClass:[NSArray class]]) {
+        // multi attachment
+    }
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: AppDelegate.instance.mainObjectContext];
@@ -881,52 +1239,14 @@ nil
         [attachmentInfo[@"com.hoccer.xo.mediaType"] isEqualToString: @"geolocation"] &&
         [attachmentInfo[@"com.hoccer.xo.previewImage"] isKindOfClass: [UIImage class]])
     {
-        MKPointAnnotation * placemark = attachmentInfo[@"com.hoccer.xo.geolocation"];
-        NSLog(@"got geolocation %f %f", placemark.coordinate.latitude, placemark.coordinate.longitude);
-
-        UIImage * preview = attachmentInfo[@"com.hoccer.xo.previewImage"];
-        //float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-        //NSData * previewData = UIImageJPEGRepresentation( preview, photoQualityCompressionSetting/10.0);
-        NSData * previewData = UIImagePNGRepresentation( preview );
-
-        NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike: @"location.json"];
-        NSDictionary * json = @{ @"location": @{ @"type": @"point",
-                                                 @"coordinates": @[ @(placemark.coordinate.latitude), @(placemark.coordinate.longitude)]},
-                                 @"previewImage": [previewData asBase64EncodedString]};
-        NSError * error;
-        NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
-        if ( jsonData == nil) {
-            NSLog(@"failed to generate geojson: %@", error);
-            [self finishPickedAttachmentProcessingWithImage: nil withError: error];
-            return;
-        }
-        [jsonData writeToURL:myLocalURL atomically:NO];
-
-
-        [self.currentAttachment makeGeoLocationAttachment: [myLocalURL absoluteString] anOtherURL: nil withCompletion:^(NSError *theError) {
-            [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError: theError];
-        }];
+        [self didPickGeoAttachment:attachmentInfo];
         return;
     }
 
     // handle vcard picked from adressbook
     if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
         if (attachmentInfo[@"com.hoccer.xo.vcard.data"] != nil) {
-            NSData * vcardData = attachmentInfo[@"com.hoccer.xo.vcard.data"];
-            // NSString * vcardString = [NSString stringWithData:vcardData usingEncoding:NSUTF8StringEncoding];
-            NSString * personName = attachmentInfo[@"com.hoccer.xo.vcard.name"];
-            
-            // find a suitable unique file name and path
-            NSString * newFileName = [NSString stringWithFormat:@"%@.vcf",personName];
-            NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-            
-            [vcardData writeToURL:myLocalURL atomically:NO];
-            CompletionBlock completion  = ^(NSError *myerror) {
-                UIImage * preview = self.currentAttachment.previewImage != nil ? self.currentAttachment.previewImage : [UIImage imageNamed: @"attachment_icon_contact"];
-                [self finishPickedAttachmentProcessingWithImage: preview withError:myerror];
-            };
-            self.currentAttachment.humanReadableFileName = [myLocalURL lastPathComponent];
-            [self.currentAttachment makeVcardAttachment:[myLocalURL absoluteString] anOtherURL:nil withCompletion:completion];
+            [self didPickVCardAttachment:attachmentInfo];
             return;
         }
     }
@@ -935,317 +1255,28 @@ nil
     if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
         if (attachmentInfo[@"com.hoccer.xo.mediaType"] != nil) {
             // attachment from pasteBoard
-            NSString * myMediaType = attachmentInfo[@"com.hoccer.xo.mediaType"];
-            self.currentAttachment.mimeType = attachmentInfo[@"com.hoccer.xo.mimeType"];
-            self.currentAttachment.humanReadableFileName = attachmentInfo[@"com.hoccer.xo.fileName"];
-            
-            CompletionBlock completion  = ^(NSError *myerror) {
-                [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:myerror];
-            };
-            
-            if ([myMediaType isEqualToString:@"image"]) {
-                [self.currentAttachment makeImageAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] image:nil withCompletion:completion];
-            } else if ([myMediaType isEqualToString:@"video"]) {
-                [self.currentAttachment makeVideoAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
-            } else if ([myMediaType isEqualToString:@"audio"]) {
-                [self.currentAttachment makeAudioAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
-            } else if ([myMediaType isEqualToString:@"vcard"]) {
-                [self.currentAttachment makeVcardAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
-            } else if ([myMediaType isEqualToString:@"geolocation"]) {
-                [self.currentAttachment makeGeoLocationAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
-            } else if ([myMediaType isEqualToString:@"data"]) {
-                [self.currentAttachment makeDataAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
-            }
+            [self didPickPasteboardAttachment:attachmentInfo];
             return;
         }
-        
-        // check if pasted image
-        id myImageObject = attachmentInfo[@"com.hoccer.xo.pastedImage"];
-        if (myImageObject != nil) {
-            UIImage * myImage = nil;
-            if ([myImageObject isKindOfClass: [NSData class]]) {
-                myImage = [UIImage imageWithData:myImageObject];
-            } else if ([myImageObject isKindOfClass: [UIImage class]]) {
-                myImage = (UIImage*) myImageObject;
-            }
-            if (myImage != nil) {
-                // handle image from pasteboard
-                
-                // find a suitable unique file name and path
-                NSString * newFileName = @"pastedImage.jpg";
-                NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-                                
-                // write the image
-                myImage = [Attachment qualityAdjustedImage:myImage];
-                float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-                [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myLocalURL atomically:NO];
-                                
-                [self.currentAttachment makeImageAttachment: [myLocalURL absoluteString] anOtherURL:nil
-                                                      image: myImage
-                                             withCompletion:^(NSError *theError) {
-                                                 [self finishPickedAttachmentProcessingWithImage: myImage withError:theError];
-                                             }];
-                return;
-            } else {
-                NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: com.hoccer.xo.pastedImage is not an image, object is of class = %@", [myImageObject class]];
-                NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 555 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-               
-                [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-                return;
-            }
+        if ([self didPickPasteboardImageAttachment:attachmentInfo]) {
+            return;
         }
     }
     
     if ([attachmentInfo isKindOfClass: [MPMediaItem class]]) {
-
-        // probably an audio item media library
-        MPMediaItem * song = (MPMediaItem*)attachmentInfo;
-        
-        // make a nice and unique filename
-        NSString * newFileName = [NSString stringWithFormat:@"%@ - %@.%@",[song valueForProperty:MPMediaItemPropertyArtist],[song valueForProperty:MPMediaItemPropertyTitle],@"m4a" ];
-
-        NSURL * myExportURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-        
-        NSURL *assetURL = [song valueForProperty:MPMediaItemPropertyAssetURL];
-        // NSLog(@"audio assetURL = %@", assetURL);
-        
-        AVURLAsset *songAsset = [AVURLAsset URLAssetWithURL:assetURL options:nil];
-        
-        if ([songAsset hasProtectedContent] == YES) {
-            // TODO: user dialog here
-            NSLog(@"Media is protected by DRM");
-            NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: Media is protected by DRM"];
-            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 557 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-            [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-            return;
-        }
-        if (_currentExportSession != nil) {
-            NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
-            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-            [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-            return;
-        }
-        
-        _currentExportSession = [[AVAssetExportSession alloc]
-                                  initWithAsset: songAsset
-                                  presetName: AVAssetExportPresetAppleM4A];
-        
-        
-        _currentExportSession.outputURL = myExportURL;
-        _currentExportSession.outputFileType = AVFileTypeAppleM4A;
-        _currentExportSession.shouldOptimizeForNetworkUse = YES;
-
-        AVMutableMetadataItem * titleItem = [AVMutableMetadataItem metadataItem];
-        titleItem.keySpace = AVMetadataKeySpaceCommon;
-        titleItem.key = AVMetadataCommonKeyTitle;
-        titleItem.value = [song valueForProperty:MPMediaItemPropertyTitle];
-
-        AVMutableMetadataItem * artistItem = [AVMutableMetadataItem metadataItem];
-        artistItem.keySpace = AVMetadataKeySpaceCommon;
-        artistItem.key = AVMetadataCommonKeyArtist;
-        artistItem.value = [song valueForProperty:MPMediaItemPropertyArtist];
-
-        AVMutableMetadataItem * albumItem = [AVMutableMetadataItem metadataItem];
-        albumItem.keySpace = AVMetadataKeySpaceCommon;
-        albumItem.key = AVMetadataCommonKeyAlbumName;
-        albumItem.value = [song valueForProperty:MPMediaItemPropertyAlbumTitle];
-        
-        MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
-        UIImage * artworkImage = [artwork imageWithSize:artwork.bounds.size];
-        
-        AVMutableMetadataItem * artworkItem = [AVMutableMetadataItem metadataItem];
-        artworkItem.keySpace = AVMetadataKeySpaceCommon;
-        artworkItem.key = AVMetadataCommonKeyArtwork;
-        artworkItem.value = UIImageJPEGRepresentation(artworkImage, 0.6);
-        
-        _currentExportSession.metadata = @[titleItem, artistItem, albumItem, artworkItem];
-        
-        [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
-            int exportStatus = _currentExportSession.status;
-            switch (exportStatus) {
-                case AVAssetExportSessionStatusFailed: {
-                    NSLog (@"AVAssetExportSessionStatusFailed");
-                    // log error to text view
-                    NSString * myDescription = [NSString stringWithFormat:@"Audio export failed (AVAssetExportSessionStatusFailed)"];
-                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                    _currentExportSession = nil;
-                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-                    break;
-                }
-                case AVAssetExportSessionStatusCompleted: {
-                    if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted");
-                    [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
-                        _currentExportSession = nil;
-                        self.currentAttachment.humanReadableFileName = [myExportURL lastPathComponent];
-                        if (self.currentAttachment.previewImage == nil) {
-                            if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: makeAudioAttachment - creating preview image from db artwork");
-                            // In case we fail getting the artwork from file try get artwork from Media Item
-                            // However, this only displays the artwork on the upload side. The artwork is *not*
-                            // included in the exported file.
-                            // It should be possible to add the image using _currentExportSession.metadata. But
-                            // merging with existing metadata is non trivial and we should tackle it later.
-                            MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
-                            if (artwork != nil) {
-                                if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: got artwork, creating preview image");
-                                self.currentAttachment.previewImage = [artwork imageWithSize:CGSizeMake(400,400)];
-                            } else {
-                                if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: no artwork");
-                            }
-                        } else {
-                            if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: artwork is in media file");
-                        }
-                        [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:theError];
-                    }];
-                    break;
-                }
-                case AVAssetExportSessionStatusUnknown: {
-                    NSLog (@"AVAssetExportSessionStatusUnknown"); break;}
-                case AVAssetExportSessionStatusExporting: {
-                    NSLog (@"AVAssetExportSessionStatusExporting"); break;}
-                case AVAssetExportSessionStatusCancelled: {
-                    _currentExportSession = nil;
-                    [self finishPickedAttachmentProcessingWithImage: nil withError:_currentExportSession.error];
-                    // NSLog (@"AVAssetExportSessionStatusCancelled");
-                    break;
-                } 
-                case AVAssetExportSessionStatusWaiting: {
-                    NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
-                default: { NSLog (@"ERROR: AVAssetExportSessionStatusWaiting: didn't get export status"); break;}
-            }
-        }];
-        return;
+        [self didPickMPMediaAttachment:attachmentInfo];
+         return;
         
     } else if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
-        // image or movie form camera or album
+        // image or movie from camera or album
         
         NSString * mediaType = attachmentInfo[UIImagePickerControllerMediaType];
                 
         if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeImage)) {
-            __block NSURL * myURL = attachmentInfo[UIImagePickerControllerReferenceURL];
-            if (attachmentInfo[UIImagePickerControllerMediaMetadata] != nil) {
-                // Image was just taken and is not yet in album
-                
-                
-                UIImage * myOriginalImage = attachmentInfo[UIImagePickerControllerOriginalImage];
-                NSURL * myFileURL = nil;
-                
-                // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
-                UIImage * myImage = [Attachment qualityAdjustedImage:myOriginalImage];
-                NSString * newFileName = @"reducedSnapshotImage.jpg";
-                myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-                
-                float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-                [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
-                
-                // funky method using ALAssetsLibrary
-                ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
-                    if (!error) {
-                        if (myFileURL == nil) {
-                            myURL = assetURL;
-                        } else {
-                            myURL = myFileURL;
-                        }
-
-                        // create attachment with lower quality image dependend on settings
-                        [self.currentAttachment makeImageAttachment: [myURL absoluteString]
-                                                         anOtherURL:nil
-                                                              image: myImage
-                                                     withCompletion:^(NSError *theError) {
-                                                         [self finishPickedAttachmentProcessingWithImage: self.currentAttachment.previewImage withError:error];
-                                                     }];
-                    } else {
-                        NSLog(@"Error saving image in Library, error = %@", error);
-                        [self finishPickedAttachmentProcessingWithImage: nil withError:error];
-                    }
-                };
-                
-                // write full size full quality image to library
-                if(myImage) {
-                    ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-                    [library writeImageToSavedPhotosAlbum:[myOriginalImage CGImage]
-                                              orientation:(ALAssetOrientation)[myOriginalImage imageOrientation]
-                                          completionBlock:completeBlock];
-                }
-            } else {
-                // image from album
-                UIImage * myImage = attachmentInfo[UIImagePickerControllerOriginalImage];
-                // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
-                //if ([Attachment tooLargeImage:myImage]) {
-                    myImage = [Attachment qualityAdjustedImage:myImage];
-                    NSString * newFileName = @"reducedSnapshotImage.jpg";
-                    myURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-                    
-                    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-                    [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
-                //} else {
-                //  TODO: save a local copy of the image without JPEG reencoding
-                //}
-                [self.currentAttachment makeImageAttachment: [myURL absoluteString]
-                                                 anOtherURL:nil
-                                                      image: myImage
-                                             withCompletion:^(NSError *theError) {
-                                                 [self finishPickedAttachmentProcessingWithImage: myImage
-                                                                                       withError:theError];
-                                             }];
-            }
+            [self didPickCameraOrAlbumImageAttachment:attachmentInfo];
             return;
         } else if (UTTypeConformsTo((__bridge CFStringRef)(mediaType), kUTTypeVideo) || [mediaType isEqualToString:@"public.movie"]) {
-            NSURL * referenceURL = attachmentInfo[UIImagePickerControllerReferenceURL];
-            NSURL * mediaURL = attachmentInfo[UIImagePickerControllerMediaURL];
-
-            NSString * newFileName = @"video.mp4";
-            NSURL * outputURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
-
-            if (_currentExportSession != nil) {
-                NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
-                NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-                return;
-            }
-
-            AVURLAsset * asset = [AVURLAsset assetWithURL:mediaURL];
-            _currentExportSession = [AVAssetExportSession exportSessionWithAsset:asset presetName:AVAssetExportPresetPassthrough];
-            _currentExportSession.outputURL = outputURL;
-            _currentExportSession.outputFileType = AVFileTypeMPEG4;
-            
-            [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
-                if (_currentExportSession.status == AVAssetExportSessionStatusCompleted) {
-                    _currentExportSession = nil;
-
-                    if (referenceURL == nil) { // video was just recorded
-                        NSString *outputFilePath = [outputURL path];
-
-                        if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFilePath)) {
-                            UISaveVideoAtPathToSavedPhotosAlbum(outputFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
-                            NSLog(@"Saved new video at %@ to album",outputFilePath);
-                        } else {
-                            NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",outputFilePath];
-                            NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                            NSLog(@"%@", myDescription);
-                            [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-                            return;
-                        }
-                    }
-                    
-                    NSString * outputURLString = [outputURL absoluteString];
-                    self.currentAttachment.ownedURL = outputURLString;
-                    
-                    [self.currentAttachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
-                        [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:theError];
-                    }];
-                } else {
-                    [self finishPickedAttachmentProcessingWithImage:nil withError:_currentExportSession.error];
-                    _currentExportSession = nil;
-                }
-                
-                NSError * myError = nil;
-                [[NSFileManager defaultManager] removeItemAtURL:mediaURL error:&myError];
-
-                if (myError != nil) {
-                    NSLog(@"Deleting media file failed: %@", myError);
-                }
-            }];
-            
+            [self didPickCameraOrAlbumMovieAttachment:attachmentInfo];
             return;
         }
     }
