@@ -132,7 +132,7 @@
 
 - (void)updateFooter {
     if (self.tableView.isEditing) {
-        [self.tabBarController.tabBar.superview insertSubview:self.footerContainerView aboveSubview:self.tabBarController.view];
+        [self.tabBarController.view.superview insertSubview:self.footerContainerView aboveSubview:self.tabBarController.view];
     } else {
         [self.footerContainerView removeFromSuperview];
     }
