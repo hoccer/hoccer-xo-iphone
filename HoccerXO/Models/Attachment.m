@@ -31,6 +31,10 @@
 #import "Vcard.h"
 #import "GCHTTPRequestOperation.h"
 #import "GCNetworkRequest.h"
+#import "Collection.h"
+#import "CollectionItem.h"
+#import "GCNetworkQueue.h"
+
 #import "Contact.h"
 
 #import "HXOUI.h"
@@ -91,9 +95,11 @@
 @dynamic cipherTransferSize;
 @dynamic cipheredSize;
 @dynamic transferFailures;
+@dynamic playable;
 @dynamic previewImageData;
 
 @dynamic message;
+@dynamic collectionItems;
 
 @dynamic sourceMAC;
 @dynamic destinationMAC;
@@ -462,8 +468,7 @@ NSArray * TransferStateName = @[@"detached",
         }  else if ([self.mediaType isEqualToString: @"geolocation"]) {
             largeIconName = @"chatbar-attachment-icon-location";
         }  else if ([self.mediaType isEqualToString: @"audio"]) {
-            NSRange findResult = [self.humanReadableFileName rangeOfString:@"recording"];
-            if (findResult.length == @"recording".length && findResult.location == 0) {
+            if ([self.humanReadableFileName hasPrefix:@"recording"]) {
                 largeIconName = @"chatbar-attachment-icon-record";
             } else {
                 largeIconName = @"chatbar-attachment-icon-music";
@@ -732,8 +737,7 @@ NSArray * TransferStateName = @[@"detached",
         UIImage * myfirstImage = myArtworkImages[0];
         block(myfirstImage, nil);
     } else {
-        // block([UIImage imageNamed:@"audio-default.png"], nil);
-        block([[UIImage alloc]init], nil);
+        block([UIImage imageNamed:@"cover-art-fallback.png"], nil);
     }
 }
 
@@ -945,6 +949,8 @@ NSArray * TransferStateName = @[@"detached",
                                        IV:nil
                                        error:&myError];
             CryptingInputStream * myEncryptingStream = [[CryptingInputStream alloc] initWithInputStream:myStream cryptoEngine:encryptionEngine skipOutputBytes:0];
+#define ORIG
+#ifdef ORIG
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
                                                          absoluteURI:[HXOBackend checkForceFilecacheUrl:[self uploadURL]]
                                                          payloadData:nil
@@ -955,12 +961,94 @@ NSArray * TransferStateName = @[@"detached",
             [self registerBackgroundTask];
             [self notifyTransferStarted];
             [self.chatBackend uploadStarted:self];
+#else
+            [self uploadFullStream:myEncryptingStream inQueue:[HXOBackend.instance attachmentUploadQueue] withLength:[self.cipheredSize longLongValue]
+                        onProgress:^(NSUInteger bytesWritten, NSUInteger totalBytesWritten, NSUInteger totalBytesExpectedToWrite) {
+                if ([self.cipherTransferSize integerValue] == 0) {
+                    [self notifyTransferStarted];
+                }
+                self.cipherTransferSize = @([self.cipherTransferSize integerValue]+bytesWritten);
+                [self notifyTransferProgress: [self.cipherTransferSize floatValue] / [self.cipheredSize floatValue]];
+                
+            } withCompletion:^(NSError *theError) {
+                if (theError == nil) {
+                    if (CONNECTION_TRACE) {NSLog(@"Attachment withUploadStream successfully uploaded attachment, size=%@", self.contentSize);}
+                    // upload finished
+                    if (![self.cipheredSize isEqualToNumber:self.cipherTransferSize]) {
+                        NSLog(@"INFO: finishing upload, fixing cipherTransferSize mismatch");
+                        self.cipherTransferSize = self.cipheredSize;
+                    }
+                    self.transferSize = self.contentSize;
+                    [self.chatBackend uploadFinished:self];
+                } else {
+                    self.transferError = theError;
+                    [self.chatBackend uploadFailed:self];
+                }
+                [self notifyTransferFinished];
+            }];
+#endif
         } else {
             NSLog(@"ERROR: Attachment:upload error=%@",myError);
         }
     }];
 }
 
+- (void) uploadFullStream:(NSInputStream *)myStream inQueue:(GCNetworkQueue*)queue withLength:(long long)length onProgress:(UploadProgessBlock)progressBlock withCompletion:(CompletionBlock)handler {
+    
+    NSString * toURL = [HXOBackend checkForceFilecacheUrl:self.uploadURL];
+    GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:toURL HTTPMethod:@"PUT" parameters:nil];
+    NSDictionary * headers = [self uploadHttpHeadersWithCrypto];
+    for (NSString *key in headers) {
+        [request addValue:[headers objectForKey:key] forHTTPHeaderField:key];
+    }
+    [request addValue:AppDelegate.instance.userAgent forHTTPHeaderField:@"User-Agent"];
+    [request setHTTPBodyStream:myStream];
+    
+    if (CONNECTION_TRACE) {NSLog(@"uploadFullStream: request header= %@",request.allHTTPHeaderFields);}
+    GCHTTPRequestOperation *operation =
+    [GCHTTPRequestOperation HTTPRequest:request
+                          callBackQueue:nil
+                      completionHandler:^(NSData *data, NSHTTPURLResponse *response) {
+                          if (CONNECTION_TRACE) {
+                              NSLog(@"uploadFullStream got response status = %d,(%@) headers=%@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
+                              NSLog(@"uploadFullStream response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
+                          }
+                          if (response.statusCode == 301 || response.statusCode == 308 || response.statusCode == 200) {
+                              if (CONNECTION_TRACE) {NSLog(@"uploadFullStream: seems ok, lets check");}
+                              [HXOBackend checkUploadStatus:toURL hasSize:length withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
+                                  if (ok) {
+                                      handler(nil);
+                                  } else {
+                                      NSString * myDescription = @"uploadFullStream check failed";
+                                      // NSLog(@"%@", myDescription);
+                                      NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment.upload" code: 947 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                                      handler(myError);
+                                  }
+                              }];
+                              
+                          } else {
+                              NSString * myDescription = [NSString stringWithFormat:@"uploadAvatar irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields];
+                              // NSLog(@"%@", myDescription);
+                              NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment.upload" code: 945 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                              handler(myError);
+                          }
+                      }
+                           errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
+                               NSLog(@"uploadFullStream error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                               handler(error);
+                               
+                           }
+                       challengeHandler:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {
+                           [self connection:connection willSendRequestForAuthenticationChallenge:challenge];
+                       }
+     ];
+    [operation uploadProgressHandler:progressBlock];
+    if (queue == nil) {
+        [operation startRequest];
+    } else {
+        [queue enqueueOperation:operation];
+    }
+}
 
 - (void) checkResumeUploadStream {
     if (CONNECTION_TRACE) {NSLog(@"checkResumeUploadStream uploadURL=%@, attachment=%@", self.uploadURL, self );}
@@ -2012,6 +2100,7 @@ NSArray * TransferStateName = @[@"detached",
                 if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);}
                 self.localURL = self.ownedURL;
                 [self computeDestMac];
+                [self determinePlayability];
                 [self.chatBackend downloadFinished:self];
                 if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"autoSaveMedia"] boolValue]) {
                     [self trySaveToAlbum];
@@ -2039,6 +2128,13 @@ NSArray * TransferStateName = @[@"detached",
         [self notifyTransferFinished];
     } else {
         NSLog(@"ERROR: Attachment transferConnection connectionDidFinishLoading without valid connection");
+    }
+}
+
+- (void) determinePlayability {
+    if ([self.mediaType isEqualToString:@"audio"] && self.contentURL) {
+        AVURLAsset *asset = [AVURLAsset assetWithURL:self.contentURL];
+        self.playable = asset.playable ? @"YES" : @"NO";
     }
 }
 
@@ -2208,9 +2304,15 @@ NSArray * TransferStateName = @[@"detached",
             }
         }        
     }
+
     // remove from transfer queues
     [self.chatBackend dequeueDownloadOfAttachment:self];
     [self.chatBackend dequeueUploadOfAttachment:self];
+    
+    // remove attachment from collections
+    for (CollectionItem *item in self.collectionItems) {
+        [item.collection removeItemAtIndex:item.index];
+    }
 }
 
 
@@ -2270,6 +2372,20 @@ NSArray * TransferStateName = @[@"detached",
 - (id)activityViewControllerPlaceholderItem:(UIActivityViewController *)activityViewController {
     NSLog(@"activityViewControllerPlaceholderItem %@", self.contentURL);
     return self.contentURL;
+}
+
+#pragma mark - Clone
+
+- (Attachment *) clone {
+    Attachment *attachment = [NSEntityDescription insertNewObjectForEntityForName:[[self class] entityName] inManagedObjectContext:self.managedObjectContext];
+    
+    attachment.mediaType = self.mediaType;
+    attachment.mimeType = self.mimeType;
+    attachment.humanReadableFileName = self.humanReadableFileName;
+    
+    [attachment useURLs:self.localURL anOtherURL:self.assetURL];
+    
+    return attachment;
 }
 
 @end

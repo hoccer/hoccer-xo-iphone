@@ -9,12 +9,14 @@
 #import <Foundation/Foundation.h>
 
 @class AvatarView;
+@protocol ContactCellDelegate;
 
 @protocol ContactCell <NSObject>
 
 @property (nonatomic, readonly) AvatarView * avatar;
 @property (nonatomic, readonly) UILabel    * titleLabel;
 @property (nonatomic, readonly) UILabel    * subtitleLabel;
+@property (nonatomic, weak)    id<ContactCellDelegate>   delegate;
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification;
 

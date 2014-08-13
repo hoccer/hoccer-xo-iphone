@@ -39,7 +39,7 @@
 @property (weak, nonatomic) id<MessageViewControllerDelegate> delegate;
 
 @property (nonatomic,readonly) UILabel *             subtitle;
-@property (nonatomic,readonly) AvatarView *   avatar;
+@property (nonatomic,readonly) AvatarView *          avatar;
 @property (nonatomic,assign)   HXOMessageDirection   messageDirection;
 @property (nonatomic,readonly) NSMutableArray *      sections;
 @property (nonatomic,assign)   HXOBubbleColorScheme  colorScheme;

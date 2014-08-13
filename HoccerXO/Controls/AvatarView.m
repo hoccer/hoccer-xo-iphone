@@ -54,9 +54,21 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
 
 - (id) initWithFrame:(CGRect)frame {
     self = [super initWithFrame: frame];
-    if (self != nil) {
+
+    if (self) {
         [self commonInit];
     }
+
+    return self;
+}
+
+- (id) initWithCoder:(NSCoder *)decoder {
+    self = [super initWithCoder:decoder];
+
+    if (self) {
+        [self commonInit];
+    }
+
     return self;
 }
 

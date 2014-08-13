@@ -11,7 +11,6 @@
 #import "MessageCell.h"
 #import "UpDownLoadControl.h"
 #import "HXOUI.h"
-#import "HXOUI.h"
 
 @implementation GenericAttachmentSection
 

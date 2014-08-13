@@ -30,7 +30,7 @@
 
 "language_code" = "en";
 
-"ok"       = "Ok";
+"ok"       = "OK";
 "cancel"   = "Cancel";
 "done"     = "Done";
 "save"     = "Save";
@@ -98,6 +98,7 @@
 "attachment_type_image"                  = "Image";
 "attachment_type_video"                  = "Video";
 "attachment_type_audio"                  = "Audio";
+"attachment_type_audio_recording"        = "Voice Recording";
 "attachment_type_vcard"                  = "Adress";
 "attachment_type_geolocation"            = "Location";
 "attachment_type_data"                   = "Document";
@@ -111,6 +112,9 @@
 "attachment_save_to_album_failed_title"  = "Save in Album Failed";
 "attachment_incompatible_video_message"  = "Video is not compatible with Album";
 
+"attachment_cannot_play_title"           = "Cannot Play Audio Attachment";
+"attachment_cannot_play_message"         = "The audio attachment cannot be played on this device.";
+
 // Not cleaned up - these have to go...
 "Paste Image Attachment" = "Pasteboard (Image)";
 "Paste Video Attachment" = "Pasteboard (Video)";
@@ -120,6 +124,29 @@
 "Paste Image" = "Pasteboard (Image)";
 "Paste data Attachment"="Pasteboard (%@)";
 "Opened data Attachment %@"="External (%@)";
+
+//==============================================================================
+// Audio Attachment List
+//==============================================================================
+
+"audio_attachment_list_nav_title"                  = "Media";
+"audio_attachment_list_footer_send"                = "send";
+"audio_attachment_list_footer_delete"              = "delete";
+"audio_attachment_list_footer_add"                 = "add";
+
+"audio_attachment_list_count_attachments"          = "%u songs";
+"audio_attachment_list_count_attachments (one)"    = "one song";
+"audio_attachment_list_confirm_delete_title"       = "Delete %@?";
+"audio_attachment_list_remove_from_collection"     = "Remove from Collection";
+
+"audio_attachment_list_search_section_senders"     = "Senders";
+"audio_attachment_list_search_section_attachments" = "Songs";
+
+//==============================================================================
+// Audio Player
+//==============================================================================
+
+"audio_player_playlist_status" = "%u of %u";
 
 //==============================================================================
 // Backend
@@ -199,6 +226,14 @@
 "chat_group_clone_nearby"                       = "Create permanent group";
 
 //==============================================================================
+// Collection
+//==============================================================================
+
+"collection_list_nav_title"         = "Collections";
+"collection_new_collection_title"   = "New Collection";
+"collection_new_collection_message" = "Please enter a name for the new collection:";
+
+//==============================================================================
 // Contact - uses strings from profile
 //==============================================================================
 
@@ -208,6 +243,7 @@
 "contact_alias_title"                           = "Alias:";
 "contact_alias_placeholder"                     = "Alternative Name";
 "contact_chat_title"                            = "Chat:";
+"contact_attachment_title"                      = "Media:";
 "contact_key_btn_title"                         = "Key:";
 
 "contact_unblock_btn_title_format"              = "Unblock %@";
@@ -218,6 +254,8 @@
 
 "contact_message_count_format"                  = "%@ messages";
 "contact_message_count_format (one)"            = "%@ message";
+"contact_audio_attachment_count_format"         = "%@ songs";
+"contact_audio_attachment_count_format (one)"   = "%@ song";
 
 "contact_delete_btn_title"                      = "Delete contact";
 "contact_delete_safety_question"                = "Delete contact, chat and attachments?";

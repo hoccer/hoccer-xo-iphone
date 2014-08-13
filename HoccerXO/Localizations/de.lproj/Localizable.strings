@@ -30,7 +30,7 @@
 
 "language_code" = "de";
 
-"ok"       = "Ok";
+"ok"       = "OK";
 "cancel"   = "Abbrechen";
 "done"     = "Fertig";
 "save"     = "Speichern";
@@ -98,6 +98,7 @@
 "attachment_type_image"                  = "Bild";
 "attachment_type_video"                  = "Video";
 "attachment_type_audio"                  = "Audio";
+"attachment_type_audio_recording"        = "Sprachaufnahme";
 "attachment_type_vcard"                  = "Adresse";
 "attachment_type_geolocation"            = "Ort";
 "attachment_type_data"                   = "Dokument";
@@ -111,6 +112,9 @@
 "attachment_save_to_album_failed_title"  = "Speichern fehlgeschlagen";
 "attachment_incompatible_video_message"  = "Videoformat ist inkompatibel mit dem Album";
 
+"attachment_cannot_play_title"           = "Anhang kann nicht abgespielt werden";
+"attachment_cannot_play_message"         = "Das Format der Audiodatei wird auf diesem Gerät nicht unterstützt.";
+
 // Not cleaned up - these have to go...
 "Paste Image Attachment" = "Ablage (Bild)";
 "Paste Video Attachment" = "Ablage (Video)";
@@ -120,6 +124,29 @@
 "Paste Image" = "Ablage (Bild)";
 "Paste data Attachment %@"="Ablage (%@)";
 "Opened data Attachment %@"="Extern (%@)";
+
+//==============================================================================
+// Audio Attachment List
+//==============================================================================
+
+"audio_attachment_list_nav_title"                  = "Medien";
+"audio_attachment_list_footer_send"                = "senden";
+"audio_attachment_list_footer_delete"              = "löschen";
+"audio_attachment_list_footer_add"                 = "hinzufügen";
+
+"audio_attachment_list_count_attachments"          = "%u Songs";
+"audio_attachment_list_count_attachments (one)"    = "Einen Song";
+"audio_attachment_list_confirm_delete_title"       = "%@ löschen?";
+"audio_attachment_list_remove_from_collection"     = "Aus Sammlung entfernen";
+
+"audio_attachment_list_search_section_senders"     = "Absender";
+"audio_attachment_list_search_section_attachments" = "Songs";
+
+//==============================================================================
+// Audio Player
+//==============================================================================
+
+"audio_player_playlist_status" = "%u von %u";
 
 //==============================================================================
 // Backend
@@ -199,6 +226,14 @@
 "chat_group_clone_nearby"                       = "Permanente Gruppe erstellen";
 
 //==============================================================================
+// Collection
+//==============================================================================
+
+"collection_list_nav_title"         = "Sammlungen";
+"collection_new_collection_title"   = "Neue Sammlung";
+"collection_new_collection_message" = "Bitte gib einen Namen für die neue Sammlung ein:";
+
+//==============================================================================
 // Contact - uses strings from profile
 //==============================================================================
 
@@ -209,6 +244,7 @@
 "contact_alias_placeholder"                           = "Alternativer Name";
 
 "contact_chat_title"                                  = "Chat:";
+"contact_attachment_title"                            = "Medien:";
 "contact_key_btn_title"                               = "Schlüssel:";
 
 "contact_unblock_btn_title_format"                    = "Entblockiere %@";
@@ -217,8 +253,10 @@
 "contact_invite_btn_title_format"                     = "Als Freund einladen";
 "contact_disinvite_btn_title_format"                  = "Einladung zurückziehen";
 
-"contact_message_count_format (one)"                  = "%@ Nachricht";
 "contact_message_count_format"                        = "%@ Nachrichten";
+"contact_message_count_format (one)"                  = "%@ Nachricht";
+"contact_audio_attachment_count_format"               = "%@ Songs";
+"contact_audio_attachment_count_format (one)"         = "%@ Song";
 
 "contact_delete_btn_title"                            = "Kontakt löschen";
 "contact_delete_safety_question"                      = "Kontakt, Chat und Attachments löschen?";
@@ -429,7 +467,7 @@
 "invite_option_mail_btn_title"    = "Einladen per Mail";
 "invite_option_code_btn_title"    = "Einladen per Code";
 
-"invite_recipient_picker_title"   = "Recipients";
+"invite_recipient_picker_title"   = "Empfänger";
 
 "invite_mail_subject"             = "Einladung zu Hoccer XO";
 "invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer XO“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";

@@ -95,6 +95,9 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_A
 
 -(BOOL)isMissingAttachment;
 
+-(BOOL)isInMoreAdvancedStateThan:(NSString*)state;
+-(BOOL)isInMoreAdvancedAttachmentStateThan:(NSString*)state;
+
 +(BOOL)isDeliveredState:(NSString*) state;
 +(BOOL)isFailureState:(NSString*) state;
 +(BOOL)isAcknowledgedState:(NSString*) state;
@@ -116,7 +119,11 @@ FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_A
 +(BOOL)shouldAcknowledgeAttachmentStateForOutgoing:(NSString*) attachmentState;
 +(BOOL)shouldAcknowledgeAttachmentStateForIncoming:(NSString*) attachmentState;
 
++(int)attachmentStateLevel:(NSString*) state;
++(int)stateLevel:(NSString*)state;
+
 +(NSDictionary*) updateRpcKeys;
++(NSDictionary*) minimumUpdateRpcKeys;
 
 
 @end

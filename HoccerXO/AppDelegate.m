@@ -11,6 +11,7 @@
 #import "ConversationViewController.h"
 #import "Contact.h"
 #import "Attachment.h"
+#import "AttachmentMigration.h"
 #import "HXOMessage.h"
 #import "NSString+UUID.h"
 #import "NSData+HexString.h"
@@ -25,6 +26,8 @@
 #import "ModalTaskHUD.h"
 #import "GesturesInterpreter.h"
 #import "HXOEnvironment.h"
+#import "HXOAudioPlayer.h"
+#import "AudioAttachmentListViewController.h"
 
 #import "Delivery.h" //DEBUG
 
@@ -330,6 +333,7 @@ BOOL sameObjects(id obj1, id obj2) {
     if (dumpRecordsForEntity.length > 0) {
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
     }
+
 #ifdef PASSWORD_BASELINE
     unsigned char salt[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16,
         17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
@@ -337,6 +341,12 @@ BOOL sameObjects(id obj1, id obj2) {
     NSData * myKey = [Crypto make256BitKeyFromPassword:@"myPassword" withSalt:mySalt];
     NSLog(@"myKey=%@", [myKey hexadecimalString]);
 #endif
+
+    [AttachmentMigration determinePlayabilityForAllAudioAttachments];
+
+    NSAssert([self.window.rootViewController isKindOfClass:[UITabBarController class]], @"Expecting UITabBarController");
+    ((UITabBarController *)self.window.rootViewController).delegate = self;
+    
     return YES;
 }
 
@@ -363,90 +373,44 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 + (void) setDefaultAudioSession {
-    if (AUDIOSESSION_DEBUG) NSLog(@"setDefaultAudioSession");
-    //NSLog(@"%@", [NSThread callStackSymbols]);
-    NSError * myError = nil;
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    
-    [session setActive:NO error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
-    }
-
-    [session setCategory:AVAudioSessionCategoryAmbient error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryAmbient, error=%@",myError);
-    }
-    
-    [session setActive:YES error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryAmbient, error=%@",myError);
-    }
+    [AppDelegate setAudioSessionWithCategory:AVAudioSessionCategoryAmbient];
 }
 
 + (void) setRecordingAudioSession {
-    if (AUDIOSESSION_DEBUG) NSLog(@"setRecordingAudioSession");
-
-    NSError * myError = nil;
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    
-    [session setActive:NO error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
-    }
-    
-    [session setCategory:AVAudioSessionCategoryPlayAndRecord error:&myError];
-    //[session setCategory:AVAudioSessionCategoryRecord error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryRecord, error=%@",myError);
-    }
-    
-    [session setActive:YES error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryRecord, error=%@",myError);
-    }
+    [[HXOAudioPlayer sharedInstance] stop];
+    [AppDelegate setAudioSessionWithCategory:AVAudioSessionCategoryPlayAndRecord];
     [AppDelegate requestRecordPermission];
 }
 
 + (void) setProcessingAudioSession {
-    if (AUDIOSESSION_DEBUG) NSLog(@"setProcessingAudioSession");
-    NSError * myError = nil;
-    AVAudioSession *session = [AVAudioSession sharedInstance];
-    
-    [session setActive:NO error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
-    }
-    
-    [session setCategory:AVAudioSessionCategoryAudioProcessing error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategoryRecord, error=%@",myError);
-    }
-    
-    [session setActive:YES error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategoryRecord, error=%@",myError);
-    }
+    [AppDelegate setAudioSessionWithCategory:AVAudioSessionCategoryAudioProcessing];
 }
 
 
 + (void) setMusicAudioSession {
-    if (AUDIOSESSION_DEBUG) NSLog(@"setMusicAudioSession");
+    [AppDelegate setAudioSessionWithCategory:AVAudioSessionCategoryPlayback];
+}
+
++ (void) setAudioSessionWithCategory:(NSString *)category {
+    if (AUDIOSESSION_DEBUG) NSLog(@"setAudioSessionWithCategory:%@", category);
     NSError * myError = nil;
     AVAudioSession *session = [AVAudioSession sharedInstance];
     
-    [session setActive:NO error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to deactivate prior audio session, error=%@",myError);
-    }
-    
-    [session setCategory:AVAudioSessionCategoryPlayback error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to set audio category AVAudioSessionCategorySoloAmbient, error=%@",myError);
-    }
-    [session setActive:YES error:&myError];
-    if (myError != nil) {
-        NSLog(@"ERROR: failed to activate audio session for category AVAudioSessionCategorySoloAmbient, error=%@",myError);
+    if (![session.category isEqualToString:category]) {
+        [session setActive:NO error:&myError];
+        if (myError != nil) {
+            NSLog(@"ERROR: failed to deactivate prior audio session, error=%@", myError);
+        }
+        
+        [session setCategory:category error:&myError];
+        if (myError != nil) {
+            NSLog(@"ERROR: failed to set audio category '%@', error=%@", category, myError);
+        }
+        
+        [session setActive:YES error:&myError];
+        if (myError != nil) {
+            NSLog(@"ERROR: failed to activate audio session for category '%@', error=%@", category, myError);
+        }
     }
 }
 
@@ -905,7 +869,7 @@ BOOL sameObjects(id obj1, id obj2) {
     }
 }
 
-- (void)performWithLockingId:(NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock  {
+- (void)performWithLockingId:(const NSString*)lockId inNewBackgroundContext:(ContextBlock)backgroundBlock  {
     if (lockId == nil) {
         NSLog(@"#ERROR: performWithLockingId called with nil lockId, stack=%@", [NSThread callStackSymbols]);
         lockId = @"NIL-LOCK";
@@ -948,7 +912,7 @@ BOOL sameObjects(id obj1, id obj2) {
     }
 }
 
-- (NSManagedObjectContext*) backGroundContextForId:(NSString*)name {
+- (NSManagedObjectContext*) backGroundContextForId:(const NSString*)name {
     
     if (name == nil) {
         NSLog(@"#ERROR: backGroundContextForId called with nil name, stack=%@", [NSThread callStackSymbols]);
@@ -2140,6 +2104,53 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         freeifaddrs(interfaces);
     }
     return [addresses count] ? addresses : nil;
+}
+
+#pragma mark - Remote control event handling
+
+- (void) remoteControlReceivedWithEvent:(UIEvent *)event {
+    if (event.type == UIEventTypeRemoteControl) {
+        HXOAudioPlayer *player = [HXOAudioPlayer sharedInstance];
+
+        switch (event.subtype) {
+            case UIEventSubtypeRemoteControlPause:
+                [player pause];
+                break;
+
+            case UIEventSubtypeRemoteControlPlay:
+                [player play];
+                break;
+                
+            case UIEventSubtypeRemoteControlTogglePlayPause:
+                [player togglePlayPause];
+                break;
+                
+            case UIEventSubtypeRemoteControlPreviousTrack:
+                [player skipBack];
+                break;
+                
+            case UIEventSubtypeRemoteControlNextTrack:
+                [player skipForward];
+                break;
+                
+            default:
+                break;
+        }
+    }
+}
+
+#pragma mark - TabBarControllerDelegate
+
+- (void) tabBarController:(UITabBarController *)tabBarController didSelectViewController:(UIViewController *)viewController {
+    UIViewController *destinationViewController = viewController;
+    
+    if ([viewController isKindOfClass:[UINavigationController class]]) {
+        destinationViewController = ((UINavigationController *)viewController).topViewController;
+    }
+
+    if ([destinationViewController respondsToSelector:@selector(wasSelectedByTabBarController:)]) {
+        [(id)destinationViewController wasSelectedByTabBarController:tabBarController];
+    }
 }
 
 @end

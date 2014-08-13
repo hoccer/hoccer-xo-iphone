@@ -176,17 +176,13 @@ NSString * const kPresenceStateTyping = @"typing";
 }
 
 - (NSString*) nickNameOrAlias {
-    return self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
-}
-
-- (NSString*) nickNameWithStatus {
-
     if (self.isGroup && self.isNearby) {
         if (self.isKeptGroup) {
             return NSLocalizedString(@"group_name_nearby_kept", nil);
         } else {
             Group * group = (Group*)self;
             NSUInteger otherCount = group.otherMembers.count;
+
             if (otherCount > 0) {
                 return [NSString stringWithFormat:NSLocalizedString(@"group_name_nearby_active", nil), otherCount];
             } else {
@@ -194,7 +190,11 @@ NSString * const kPresenceStateTyping = @"typing";
             }
         }
     }
-    NSString * name = self.nickNameOrAlias;
+
+    return self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
+}
+
+- (NSString*) nickNameWithStatus {
     NSString * statusString = nil;
     if (self.isInvited) {
         statusString = @"✪";
@@ -223,6 +223,8 @@ NSString * const kPresenceStateTyping = @"typing";
         // show special connection status
         statusString = [NSString stringWithFormat:@"[%@]", self.connectionStatus];
     }
+
+    NSString * name = self.nickNameOrAlias;
     return statusString ? [NSString stringWithFormat: @"%@ %@", name, statusString] : name;
 }
 

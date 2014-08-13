@@ -151,6 +151,7 @@
     <fetchRequest name="MessagesByContactSinceTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt; $beforeTime"/>
     <fetchRequest name="MessagesByContactSinceTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt;= $untilTime"/>
     <fetchRequest name="MessagesByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
+    <fetchRequest name="ReceivedAttachmentsByMediaType" entity="Attachment" predicateString="mediaType == $mediaType AND contentSize == transferSize AND message.isOutgoing == 0 AND ($contact == nil OR message.contact == $contact)"/>
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="390"/>
         <element name="Contact" positionX="0" positionY="0" width="128" height="434"/>

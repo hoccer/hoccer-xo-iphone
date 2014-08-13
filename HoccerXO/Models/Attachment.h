@@ -25,6 +25,9 @@ typedef void(^CompletionBlock)(NSError* theError);
 typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 typedef void(^MACSetterBlock)(NSData* theMAC,NSError* theError);
 
+typedef void(^UploadProgessBlock)(NSUInteger bytesWritten, NSUInteger totalBytesWritten, NSUInteger totalBytesExpectedToWrite);
+typedef void(^DownloadProgessBlock)(NSUInteger bytesRead, NSUInteger totalBytesRead, NSUInteger totalBytesExpectedToRead);
+
 typedef enum AttachmentStates {
     kAttachmentDetached,
     kAttachmentEmpty,
@@ -70,11 +73,13 @@ typedef enum AttachmentStates {
 @property (nonatomic)         NSNumber * cipherTransferSize;    // number of ciphertext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipheredSize;          // number of ciphertext bytes
 @property (nonatomic)         NSInteger  transferFailures;      // number of upload or download failures
+@property (nonatomic)         NSString * playable;              // whether the attachment can be played on the device (can be "YES", "NO", "UNKNOWN")
 @property (nonatomic, strong) NSData   * previewImageData;      // remote URL where the file should/was uploaded
 @property (nonatomic, strong) NSDate   * transferPaused;        // if not nil it containes the date the transfer was paused by the user
 @property (nonatomic, strong) NSDate   * transferAborted;       // if not nil it containes the date the transfer was aborted by the user
 @property (nonatomic, strong) NSDate   * transferFailed;        // if not nil it containes the date the transfer has failed the last time
 @property (nonatomic, strong) HXOMessage *message;
+@property (nonatomic, strong) NSSet * collectionItems;
 @property (nonatomic, strong) NSData * sourceMAC;               // Message Authentication Code computed at data source
 @property (nonatomic, strong) NSData * destinationMAC;          // Message Authentication Code computed at data destination
 @property (nonatomic, strong) NSString * origCryptedJsonString; // the original encrypted json rep. of the incoming attachment for hmac calculation
@@ -161,7 +166,9 @@ typedef enum AttachmentStates {
 
 - (BOOL) overTransferLimit:(BOOL)isOutgoing;
 - (void) trySaveToAlbum;
+- (void) determinePlayability;
 
+- (Attachment *) clone;
 
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;

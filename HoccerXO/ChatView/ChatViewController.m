@@ -16,6 +16,7 @@
 #import <AVFoundation/AVAsset.h>
 #import <AVFoundation/AVAssetExportSession.h>
 #import <AVFoundation/AVMediaFormat.h>
+#import <AVFoundation/AVMetadataItem.h>
 
 #import "HXOMessage.h"
 #import "Delivery.h"
@@ -33,16 +34,20 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "TextMessageCell.h"
 #import "ImageAttachmentMessageCell.h"
+#import "AudioAttachmentMessageCell.h"
 #import "GenericAttachmentMessageCell.h"
 #import "ImageAttachmentWithTextMessageCell.h"
+#import "AudioAttachmentWithTextMessageCell.h"
 #import "GenericAttachmentWithTextMessageCell.h"
-#import "ImageAttachmentSection.h"
 #import "TextSection.h"
+#import "ImageAttachmentSection.h"
+#import "AudioAttachmentSection.h"
 #import "GenericAttachmentSection.h"
 #import "LabelWithLED.h"
 #import "UpDownLoadControl.h"
 #import "DateSectionHeaderView.h"
-#import "MessageItems.h"
+#import "MessageItem.h"
+#import "AttachmentInfo.h"
 #import "HXOHyperLabel.h"
 #import "paper_dart.h"
 #import "paper_clip.h"
@@ -52,6 +57,8 @@
 #import "AttachmentButton.h"
 #import "GroupInStatuNascendi.h"
 #import "HXOPluralocalization.h"
+#import "HXOAudioPlaybackButtonController.h"
+#import "NSString+FromTimeInterval.h"
 
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
@@ -69,25 +76,25 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @interface ChatViewController ()
 
-@property (nonatomic, strong)   UIPopoverController *masterPopoverController;
-@property (nonatomic, readonly) AttachmentPickerController    * attachmentPicker;
-//@property (nonatomic, strong)   UIView                        * attachmentPreview;
-@property (nonatomic, strong)   NSIndexPath                   * firstNewMessage;
-@property (nonatomic, strong)   NSMutableDictionary           * cellPrototypes;
-@property (nonatomic, strong)   MPMoviePlayerViewController   *  moviePlayerViewController;
-@property (nonatomic, readonly) ImageViewController           * imageViewController;
-@property (nonatomic, readonly) ABUnknownPersonViewController * vcardViewController;
-@property (nonatomic, strong)   LabelWithLED                  * titleLabel;
+@property (nonatomic, strong)   UIPopoverController            * masterPopoverController;
+@property (nonatomic, readonly) AttachmentPickerController     * attachmentPicker;
+//@property (nonatomic, strong)   UIView                         * attachmentPreview;
+@property (nonatomic, strong)   NSIndexPath                    * firstNewMessage;
+@property (nonatomic, strong)   NSMutableDictionary            * cellPrototypes;
+@property (nonatomic, strong)   MPMoviePlayerViewController    *  moviePlayerViewController;
+@property (nonatomic, readonly) ImageViewController            * imageViewController;
+@property (nonatomic, readonly) ABUnknownPersonViewController  * vcardViewController;
+@property (nonatomic, strong)   LabelWithLED                   * titleLabel;
 
-@property (strong, nonatomic)   HXOMessage                    * messageToForward;
+@property (strong, nonatomic)   HXOMessage                     * messageToForward;
 
-@property (nonatomic, readonly) NSMutableDictionary           * messageItems;
-@property (nonatomic, readonly) NSDateFormatter               * dateFormatter;
-@property (nonatomic, readonly) NSByteCountFormatter          * byteCountFormatter;
+@property (nonatomic, readonly) NSMutableDictionary            * messageItems;
+@property (nonatomic, readonly) NSDateFormatter                * dateFormatter;
+@property (nonatomic, readonly) NSByteCountFormatter           * byteCountFormatter;
 
-@property (nonatomic, strong)   UITextField                   * autoCorrectTriggerHelper;
-@property (nonatomic, strong)   UILabel                       * messageFieldPlaceholder;
-@property (nonatomic, strong)   NSTimer                       * typingTimer;
+@property (nonatomic, strong)   UITextField                    * autoCorrectTriggerHelper;
+@property (nonatomic, strong)   UILabel                        * messageFieldPlaceholder;
+@property (nonatomic, strong)   NSTimer                        * typingTimer;
 
 @property  BOOL                                                keyboardShown;
 
@@ -155,8 +162,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     [self registerCellClass: [TextMessageCell class]];
     [self registerCellClass: [ImageAttachmentMessageCell class]];
+    [self registerCellClass: [AudioAttachmentMessageCell class]];
     [self registerCellClass: [GenericAttachmentMessageCell class]];
     [self registerCellClass: [ImageAttachmentWithTextMessageCell class]];
+    [self registerCellClass: [AudioAttachmentWithTextMessageCell class]];
     [self registerCellClass: [GenericAttachmentWithTextMessageCell class]];
     [self.tableView registerClass: [DateSectionHeaderView class] forHeaderFooterViewReuseIdentifier: @"date_header"];
 
@@ -166,7 +175,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     // XXX do this in a more general way...
     self.titleLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-
+    
     [self configureView];
 }
 
@@ -1025,9 +1034,31 @@ nil
         _currentExportSession.outputURL = myExportURL;
         _currentExportSession.outputFileType = AVFileTypeAppleM4A;
         _currentExportSession.shouldOptimizeForNetworkUse = YES;
-        // exporter.shouldOptimizeForNetworkUse = NO;
+
+        AVMutableMetadataItem * titleItem = [AVMutableMetadataItem metadataItem];
+        titleItem.keySpace = AVMetadataKeySpaceCommon;
+        titleItem.key = AVMetadataCommonKeyTitle;
+        titleItem.value = [song valueForProperty:MPMediaItemPropertyTitle];
+
+        AVMutableMetadataItem * artistItem = [AVMutableMetadataItem metadataItem];
+        artistItem.keySpace = AVMetadataKeySpaceCommon;
+        artistItem.key = AVMetadataCommonKeyArtist;
+        artistItem.value = [song valueForProperty:MPMediaItemPropertyArtist];
+
+        AVMutableMetadataItem * albumItem = [AVMutableMetadataItem metadataItem];
+        albumItem.keySpace = AVMetadataKeySpaceCommon;
+        albumItem.key = AVMetadataCommonKeyAlbumName;
+        albumItem.value = [song valueForProperty:MPMediaItemPropertyAlbumTitle];
         
-        [AppDelegate setProcessingAudioSession];
+        MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
+        UIImage * artworkImage = [artwork imageWithSize:artwork.bounds.size];
+        
+        AVMutableMetadataItem * artworkItem = [AVMutableMetadataItem metadataItem];
+        artworkItem.keySpace = AVMetadataKeySpaceCommon;
+        artworkItem.key = AVMetadataCommonKeyArtwork;
+        artworkItem.value = UIImageJPEGRepresentation(artworkImage, 0.6);
+        
+        _currentExportSession.metadata = @[titleItem, artistItem, albumItem, artworkItem];
         
         [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
             int exportStatus = _currentExportSession.status;
@@ -1038,13 +1069,11 @@ nil
                     NSString * myDescription = [NSString stringWithFormat:@"Audio export failed (AVAssetExportSessionStatusFailed)"];
                     NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                     _currentExportSession = nil;
-                    [AppDelegate setDefaultAudioSession];
                     [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
                     break;
                 }
                 case AVAssetExportSessionStatusCompleted: {
                     if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted");
-                    [AppDelegate setDefaultAudioSession];
                     [self.currentAttachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
                         _currentExportSession = nil;
                         self.currentAttachment.humanReadableFileName = [myExportURL lastPathComponent];
@@ -1396,10 +1425,14 @@ nil
 - (NSString*) cellIdentifierForMessage: (HXOMessage*) message {
     BOOL hasAttachment = message.attachment != nil;
     BOOL hasText = message.body != nil && ! [message.body isEqualToString: @""];
-    if (hasAttachment && hasText) {
-        return [self hasImageAttachment: message] ? [ImageAttachmentWithTextMessageCell reuseIdentifier] : [GenericAttachmentWithTextMessageCell reuseIdentifier];
-    } else if (hasAttachment) {
-        return [self hasImageAttachment: message] ? [ImageAttachmentMessageCell reuseIdentifier] : [GenericAttachmentMessageCell reuseIdentifier];
+    if (hasAttachment) {
+        if ([self hasImageAttachment: message]) {
+            return hasText ? [ImageAttachmentWithTextMessageCell reuseIdentifier] : [ImageAttachmentMessageCell reuseIdentifier];
+        } else if ([self hasAudioAttachment: message]) {
+            return hasText ? [AudioAttachmentWithTextMessageCell reuseIdentifier] : [AudioAttachmentMessageCell reuseIdentifier];
+        } else {
+            return hasText ? [GenericAttachmentWithTextMessageCell reuseIdentifier] : [GenericAttachmentMessageCell reuseIdentifier];
+        }
     } else if (hasText) {
         return [TextMessageCell reuseIdentifier];
     } else {
@@ -1410,6 +1443,10 @@ nil
 
 - (BOOL) hasImageAttachment: (HXOMessage*) message {
     return [message.attachment.mediaType isEqualToString: @"image"] || [message.attachment.mediaType isEqualToString: @"video"];
+}
+
+- (BOOL) hasAudioAttachment: (HXOMessage*) message {
+    return [message.attachment.mediaType isEqualToString: @"audio"];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -1825,6 +1862,8 @@ nil
             [self configureTextSection: (TextSection*)section forMessage: message];
         } else if ([section isKindOfClass: [ImageAttachmentSection class]]) {
             [self configureImageAttachmentSection: (ImageAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
+        } else if ([section isKindOfClass: [AudioAttachmentSection class]]) {
+            [self configureAudioAttachmentSection: (AudioAttachmentSection*)section forMessage: message];
         } else if ([section isKindOfClass: [GenericAttachmentSection class]]) {
             [self configureGenericAttachmentSection: (GenericAttachmentSection*)section forMessage: message withAttachmentPreview:loadPreview];
         }
@@ -1919,6 +1958,21 @@ nil
         }
         imageSection.subtitle.hidden = imageSection.image != nil;
         imageSection.showPlayButton = [attachment.mediaType isEqualToString: @"video"] && imageSection.image != nil;
+    }
+}
+
+- (void) configureAudioAttachmentSection: (AudioAttachmentSection*) section forMessage: (HXOMessage*) message {
+    [self configureAttachmentSection: section forMessage: message];
+    section.title.text = [self attachmentTitle: message];
+    
+    Attachment *attachment = message.attachment;
+    
+    if (attachment.state == kAttachmentTransfered) {
+        section.playbackButtonController = [[HXOAudioPlaybackButtonController alloc] initWithButton:section.playbackButton attachment:attachment];
+        section.playbackButton.hidden = NO;
+    } else {
+        section.playbackButtonController = nil;
+        section.playbackButton.hidden = YES;
     }
 }
 
@@ -2250,8 +2304,7 @@ ready:;
     }  else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
         iconName = @"cnt-location";
     }  else if ([attachment.mediaType isEqualToString: @"audio"]) {
-        NSRange findResult = [attachment.humanReadableFileName rangeOfString:@"recording"];
-        if (findResult.length == @"recording".length && findResult.location == 0) {
+        if ([attachment.humanReadableFileName hasPrefix:@"recording"]) {
             iconName = @"cnt-record";
         } else {
             iconName = @"cnt-music";
@@ -2287,14 +2340,11 @@ ready:;
     NSString * title;
     if (isComplete || isOutgoing) {
         if ([attachment.mediaType isEqualToString: @"vcard"]) {
-            title = item.vcardName;
+            title = item.attachmentInfo.vcardName;
         } else if ([attachment.mediaType isEqualToString: @"geolocation"]) {
             title = NSLocalizedString(@"attachment_type_geolocation", nil);
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
-            NSRange findResult = [message.attachment.humanReadableFileName rangeOfString:@"recording"];
-            if ( ! (findResult.length == @"recording".length && findResult.location == 0)) {
-                title = item.audioTitle;
-            }
+            title = item.attachmentInfo.audioTitle;
         }
     } else if (message.attachment.state == kAttachmentTransferOnHold) {
         NSString * attachment_type = [NSString stringWithFormat: @"attachment_type_%@", message.attachment.mediaType];
@@ -2337,21 +2387,17 @@ ready:;
     }
 
     NSString * subtitle;
-    if (item.attachmentInfoLoaded) {
+    if (item.attachmentInfo) {
+        AttachmentInfo *attachmentInfo = item.attachmentInfo;
+
         if ([attachment.mediaType isEqualToString: @"vcard"]) {
-            NSString * info = item.vcardEmail;
+            NSString * info = attachmentInfo.vcardEmail;
             if (! info) {
-                info = item.vcardOrganization;
+                info = attachmentInfo.vcardOrganization;
             }
             subtitle = info;
         } else if ([attachment.mediaType isEqualToString: @"audio"]) {
-            NSString * duration = [self stringFromTimeInterval: item.audioDuration];
-            if (item.audioArtist && item.audioAlbum) {
-                subtitle = [NSString stringWithFormat:@"%@ – %@ – %@", item.audioArtist, item.audioAlbum, duration];
-            } else if (item.audioArtist || item.audioAlbum) {
-                NSString * name = item.audioAlbum ? item.audioAlbum : item.audioArtist;
-                subtitle = [NSString stringWithFormat:@"%@ – %@", name, duration];
-            }
+            subtitle = attachmentInfo.audioArtistAlbumAndDuration;
         }
             
     }
@@ -2361,18 +2407,6 @@ ready:;
         subtitle = [NSString stringWithFormat: @"%@ – %@", name, sizeString];
      }
     return subtitle;
-}
-
-- (NSString *)stringFromTimeInterval:(NSTimeInterval)interval {
-    NSInteger ti = (NSInteger)interval;
-    NSInteger seconds = ti % 60;
-    NSInteger minutes = (ti / 60) % 60;
-    NSInteger hours = (ti / 3600);
-    if (hours) {
-        return [NSString stringWithFormat: @"%i:%02i:%02i", hours, minutes, seconds];
-    } else {
-        return [NSString stringWithFormat: @"%i:%02i", minutes, seconds];
-    }
 }
 
 #pragma mark - MessageViewControllerDelegate methods
@@ -2605,27 +2639,6 @@ ready:;
         _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
         _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
         _moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
-        [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
-    } else  if ([myAttachment.mediaType isEqual: @"audio"]) {
-        _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
-        _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
-        _moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
-        
-        UIView * myView = [[UIImageView alloc] initWithImage:myAttachment.previewImage];
-        
-        CGRect myFrame = myView.frame;
-        myFrame.size = CGSizeMake(320,320);
-        myView.frame = myFrame;
-        
-        myView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin |
-                                  UIViewAutoresizingFlexibleRightMargin |
-                                  UIViewAutoresizingFlexibleTopMargin |
-                                  UIViewAutoresizingFlexibleBottomMargin;
-        
-        //[_moviePlayerViewController.moviePlayer.view addSubview:myView];
-        [_moviePlayerViewController.moviePlayer.backgroundView addSubview:myView];
-        [AppDelegate setMusicAudioSession]; // TODO: set default audio session when playback has ended
-
         [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
         // used with old DB entries preventing https://github.com/hoccer/hoccer-xo-iphone/issues/211

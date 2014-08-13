@@ -10,12 +10,14 @@
 
 #import "Contact.h"
 #import "Group.h"
+#import "AudioAttachmentListViewController.h"
 #import "ChatViewController.h"
 #import "HXOUserDefaults.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "AvatarView.h"
 #import "HXOUI.h"
+#import "MusicBrowserDataSource.h"
 #import "avatar_contact.h"
 #import "avatar_group.h"
 #import "avatar_location.h"
@@ -46,6 +48,7 @@ static int  groupMemberContext;
 
 @property (nonatomic, readonly) DatasheetItem              * chatItem;
 @property (nonatomic, readonly) DatasheetItem              * aliasItem;
+@property (nonatomic, readonly) DatasheetItem              * attachmentItem;
 @property (nonatomic, readonly) DatasheetItem              * blockContactItem;
 
 @property (nonatomic, readonly) DatasheetSection           * inviteContactSection;
@@ -72,7 +75,6 @@ static int  groupMemberContext;
 @property (nonatomic, readonly) AppDelegate                * appDelegate;
 
 @property (nonatomic, strong)   NSFetchedResultsController * fetchedResultsController;
-//@property (nonatomic, readonly) NSManagedObjectContext     * managedObjectContext;
 
 @property (nonatomic, strong)   id                           profileObserver;
 
@@ -83,6 +85,7 @@ static int  groupMemberContext;
 @implementation ContactSheetController
 
 @synthesize chatItem = _chatItem;
+@synthesize attachmentItem = _attachmentItem;
 @synthesize blockContactItem = _blockContactItem;
 @synthesize inviteContactSection = _inviteContactSection;
 @synthesize inviteContactItem = _inviteContactItem;
@@ -178,7 +181,7 @@ static int  groupMemberContext;
 
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
-    section.items = @[/*self.relationshipItem,*/ self.nicknameItem, self.aliasItem, self.chatItem, self.keyItem];
+    section.items = @[self.nicknameItem, self.aliasItem, self.chatItem, self.attachmentItem, self.keyItem];
     return section;
 }
 
@@ -200,6 +203,14 @@ static int  groupMemberContext;
         _aliasItem.valuePlaceholder = NSLocalizedString(@"contact_alias_placeholder", nil);
     }
     return _aliasItem;
+}
+
+- (DatasheetItem*) attachmentItem {
+    if (! _attachmentItem) {
+        _attachmentItem = [self itemWithIdentifier:@"contact_attachment_title" cellIdentifier:@"DatasheetKeyValueCell"];
+        _attachmentItem.accessoryStyle = DatasheetAccessoryDisclosure;
+    }
+    return _attachmentItem;
 }
 
 - (DatasheetItem*) blockContactItem {
@@ -238,6 +249,11 @@ static int  groupMemberContext;
 - (id) valueForItem: (DatasheetItem*) item {
     if ([item isEqual: self.chatItem]) {
         return @(self.contact.messages.count);
+    } else if ([item isEqual: self.attachmentItem]) {
+        NSFetchRequest *fetchRequest = [MusicBrowserDataSource fetchRequestForContact:self.contact managedObjectModel:AppDelegate.instance.managedObjectModel];
+        fetchRequest.includesPropertyValues = NO;
+        fetchRequest.includesSubentities = NO;
+        return @([AppDelegate.instance.mainObjectContext countForFetchRequest:fetchRequest error:nil]);
     } else if ([item isEqual: self.keyItem]) {
         return [self keyItemTitle];
     }
@@ -253,6 +269,9 @@ static int  groupMemberContext;
         
     } else if ([item isEqual: self.aliasItem]) {
         return (self.contact.alias && ! [self.contact.alias isEqualToString: @""]) || [super isItemVisible:item];
+
+    } else if ([item isEqual: self.attachmentItem]) {
+        return ! self.groupInStatuNascendi && [super isItemVisible: item];
 
     } else if ([item isEqual: self.blockContactItem]) {
         if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible blockContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
@@ -302,6 +321,8 @@ static int  groupMemberContext;
 - (NSString*) valueFormatStringForItem:(DatasheetItem *)item {
     if ([item isEqual: self.chatItem]) {
         return HXOPluralocalizedKey(@"contact_message_count_format", self.contact.messages.count, NO);
+    } else if ([item isEqual: self.attachmentItem]) {
+        return HXOPluralocalizedKey(@"contact_audio_attachment_count_format", [[self valueForItem:item] intValue], NO);
     }
     return nil;
 }
@@ -431,6 +452,8 @@ static int  groupMemberContext;
         return [self groupMemberSegueIdentifier: groupMemeberIndex];
     } else if ([item isEqual: self.chatItem]) {
         return [self chatItemSegueIdentifier];
+    } else if ([item isEqual: self.attachmentItem]) {
+        return [self attachmentItemSegueIdentifier];
     }
     return nil;
 }
@@ -481,6 +504,10 @@ static int  groupMemberContext;
     } else {
         return @"showChat";
     }
+}
+
+- (NSString*) attachmentItemSegueIdentifier {
+    return @"showAttachments";
 }
 
 - (void) inspectedObjectWillChange {
@@ -553,6 +580,9 @@ static int  groupMemberContext;
     } else if ([segue.identifier isEqualToString: @"showChat"]) {
         ChatViewController * chatView = segue.destinationViewController;
         chatView.inspectedObject = self.contact;
+    } else if ([segue.identifier isEqualToString: @"showAttachments"]) {
+        AudioAttachmentListViewController * attachmentView = segue.destinationViewController;
+        attachmentView.contact = self.contact;
     }
 }
 
@@ -1182,9 +1212,8 @@ static int  groupMemberContext;
         predicate = [NSPredicate predicateWithFormat:@"(type == %@) AND SUBQUERY(groupMemberships, $g, $g.group == %@).@count == 0", [Contact entityName], self.group];
     }
 
-
     id picker = [ContactPicker contactPickerWithTitle: NSLocalizedString(@"Invite:", nil)
-                                                types: 0
+                                                types: ContactPickerTypeContact
                                                 style: ContactPickerStyleMulti
                                             predicate: predicate
                                            completion: completion];
@@ -1256,13 +1285,5 @@ static int  groupMemberContext;
     }
     return _appDelegate;
 }
-/*
-@synthesize managedObjectContext = _managedObjectContext;
-- (NSManagedObjectContext*) managedObjectContext {
-    if ( ! _managedObjectContext) {
-        _managedObjectContext = ((AppDelegate *)[[UIApplication sharedApplication] delegate]).managedObjectContext;
-    }
-    return _managedObjectContext;
-}
-*/
+
 @end

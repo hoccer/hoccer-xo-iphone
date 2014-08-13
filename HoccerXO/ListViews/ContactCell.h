@@ -8,16 +8,18 @@
 
 #import <UIKit/UIKit.h>
 
+#import "ContactCellProtocol.h"
 #import "HXOTableViewCell.h"
 
 @class AvatarView;
+@class Contact;
 @class ContactCell;
 
 @protocol ContactCellDelegate <NSObject>
 - (void) contactCellDidPressAvatar: (ContactCell*) cell;
 @end
 
-@interface ContactCell : HXOTableViewCell
+@interface ContactCell : HXOTableViewCell <ContactCell>
 
 @property (nonatomic,readonly) UILabel                 * titleLabel;
 @property (nonatomic,readonly) UILabel                 * subtitleLabel;
@@ -33,5 +35,9 @@
 - (CGFloat) verticalPadding;
 - (CGFloat) labelSpacing;
 
++ (void) configureCell:(UITableViewCell<ContactCell> *)cell forContact: (Contact *)contact;
+- (void) highlightText:(NSString *)highlightText;
+
++ (NSString*) statusStringForContact: (Contact*) contact;
 
 @end
