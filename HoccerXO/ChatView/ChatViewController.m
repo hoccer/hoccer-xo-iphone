@@ -867,14 +867,19 @@ nil
                                      withCompletion:^(NSError *theError) {
                                          if (theError == nil) {
                                              //[AppDelegate.instance saveContext:context];
-                                             NSArray * ids = permanentObjectIds(@[attachment]);
+                                             //NSArray * ids = permanentObjectIds(@[attachment]);
                                              //[AppDelegate.instance performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                                                  //[AppDelegate.instance saveContext:context];
-                                                 NSArray * attachments = existingManagedObjects(ids, context);
-                                                 if (attachments != nil) {
-                                                     Attachment * attachment = attachments[0];
-                                                     [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
-                                                 }
+                                                 //NSArray * attachments = existingManagedObjects(ids, context);
+                                                 //if (attachments != nil) {
+                                                     //Attachment * attachment = attachments[0];
+                                             if (attachment.contentSize > 0) {
+                                                 [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
+                                             } else {
+                                                 NSLog(@"#ERROR: video export error: contentSize is 0, attachment=%@", attachment);
+                                                 [AppDelegate.instance deleteObject:attachment];
+                                             }
+                                                 //}
                                              //}];
                                          }
                                      }];
@@ -891,6 +896,8 @@ nil
                     
                     //NSURL * sourceURL = [asset valueForProperty:ALAssetPropertyAssetURL];
                     //AVURLAsset * sourceAsset2 = [AVURLAsset assetWithURL:sourceURL];
+                    
+                    //TODO: make sure only compatible presets are used for export
                     //NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:sourceAsset];
                     AVAssetExportSession * exportSession = [AVAssetExportSession exportSessionWithAsset:sourceAsset presetName:[self videoQualityPreset]];
                     exportSession.outputURL = outputURL;
@@ -906,15 +913,20 @@ nil
                                 [attachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
                                     if (theError == nil) {
                                         //[AppDelegate.instance saveContext:context];
-                                        NSArray * ids = permanentObjectIds(@[attachment]);
+                                        //NSArray * ids = permanentObjectIds(@[attachment]);
                                         //[AppDelegate.instance performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                                             //[AppDelegate.instance saveContext:context];
-                                            NSArray * attachments = existingManagedObjects(ids, context);
-                                            if (attachments != nil) {
-                                                Attachment * attachment = attachments[0];
-                                                NSLog(@"attachment = %@", attachment);
-                                                [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
-                                            }
+                                            //NSArray * attachments = existingManagedObjects(ids, context);
+                                            //if (attachments != nil) {
+                                                //Attachment * attachment = attachments[0];
+                                                //NSLog(@"attachment = %@", attachment);
+                                                if (attachment.contentSize > 0) {
+                                                    [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
+                                                } else {
+                                                    NSLog(@"#ERROR: video export error: contentSize is 0, attachment=%@", attachment);
+                                                    [AppDelegate.instance deleteObject:attachment];
+                                                }
+                                            //}
                                         //}];
                                     }
                                 }];
@@ -924,6 +936,7 @@ nil
                                 NSLog (@"AVAssetExportSessionStatusCancelled");
                             case AVAssetExportSessionStatusFailed: {
                                 NSLog (@"AVAssetExportSessionStatusFailed error=%@", exportSession.error);
+                                [AppDelegate.instance deleteObject:attachment];
                                 NSError * myError = nil;
                                 [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&myError];
                                 if (myError != nil) {
