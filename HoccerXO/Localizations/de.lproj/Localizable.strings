@@ -79,6 +79,7 @@
 
 "attachment_add_sheet_title"             = "Anhang hinzufügen aus:";
 "attachment_src_photo_album_btn_title"   = "Album";
+"attachment_src_multi_album_btn_title"   = "Album (Mehrfachauswahl)";
 "attachment_src_camera_btn_title"        = "Kamera";
 "attachment_src_music_library_btn_title" = "Musikbibliothek";
 "attachment_src_recorder_btn_title"      = "Audiorecorder";
@@ -89,6 +90,12 @@
 "attachment_option_remove_btn_title"     = "Anhang entfernen";
 "attachment_option_choose_new_btn_title" = "Anhang neu auswählen";
 "attachment_option_view_btn_title"       = "Anhang anzeigen";
+
+"attachment_option_sheet_title_pl"          = "Anhänge";
+"attachment_option_remove_btn_title_pl"     = "Anhänge entfernen";
+"attachment_option_choose_new_btn_title_pl" = "Anhang neu auswählen";
+"attachment_option_view_btn_title_pl"       = "Anhänge zeigen/ändern";
+
 
 "attachment_download_failed_title"       = "Download fehlgeschlagen";
 "attachment_download_failed_message"     = "Ein Anhang konnte nicht herunter geladen werden.";

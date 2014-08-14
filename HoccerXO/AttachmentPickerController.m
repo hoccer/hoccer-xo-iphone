@@ -73,10 +73,6 @@
     }
 #endif
 
-    AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-    item.localizedButtonTitle = NSLocalizedString(@"attachment_src_multi_dummy", nil);
-    item.type = AttachmentPickerTypeMulti;
-    [_supportedItems addObject: item];
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromLibrary]) {
@@ -91,6 +87,18 @@
             [_supportedItems addObject: item];
         }
     }
+
+    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
+        if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromLibrary] &&
+            [self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoFromLibrary]) {
+            AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
+            item.localizedButtonTitle = NSLocalizedString(@"attachment_src_multi_album_btn_title", nil);
+            item.type = AttachmentPickerTypeMulti;
+            [_supportedItems addObject: item];
+        }
+    }
+
+    
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromCamera]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
@@ -589,15 +597,17 @@
 
 #pragma mark - Multi Image/Video Picking
 
-- (void) pickMultipleImages: (NSArray*) selectedURLs {
+- (void) pickMultipleImages: (NSArray*) selectedAssets {
     CTAssetsPickerController * picker = [[CTAssetsPickerController alloc] init];
     picker.delegate = self;
+    /*
     NSMutableArray * selectedAssets = [NSMutableArray array];
     for (NSURL * assetURL in selectedURLs) {
         NSLog(@"multi images: TODO - construct ALAsset from URL %@", assetURL);
-        // [selectedAssets addObject: /* Construct ALAsset from URL here */];
+        // [selectedAssets addObject: // Construct ALAsset from URL here ];
     }
-    picker.selectedAssets = selectedAssets;
+    */
+    picker.selectedAssets = [NSMutableArray arrayWithArray: selectedAssets];
     [_viewController presentViewController: picker animated: YES completion: nil];
 }
 

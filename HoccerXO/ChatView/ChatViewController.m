@@ -978,6 +978,8 @@ nil
     [self.messageField resignFirstResponder]; // XXX :-/
     if (_currentPickInfo || _currentAttachment) {
         [self showAttachmentOptions];
+    } else if (_currentMultiAttachment != nil) {
+        [self showAttachmentOptions];
     } else {
         [self.attachmentPicker showInView: self.view];
     }
@@ -1409,6 +1411,8 @@ nil
         UIImage * preview = [ChatViewController imageFromView:label withScale:4.0];
         [self finishPickedAttachmentProcessingWithImage:preview withError:nil];
         return;
+    } else {
+        self.currentMultiAttachment = nil;
     }
 
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
@@ -1531,14 +1535,26 @@ nil
 }
 
 - (void) showAttachmentOptions {
-    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"attachment_option_sheet_title", nil)
-                                                        delegate: self
-                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
-                                          destructiveButtonTitle: nil
-                                               otherButtonTitles: NSLocalizedString(@"attachment_option_remove_btn_title", nil),
-                                                                  NSLocalizedString(@"attachment_option_choose_new_btn_title", nil),
-                                                                  NSLocalizedString(@"attachment_option_view_btn_title", nil),
-                                                                  nil];
+    UIActionSheet * sheet = nil;
+    if (self.currentMultiAttachment) {
+        sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"attachment_option_sheet_title_pl", nil)
+                                            delegate: self
+                                   cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                              destructiveButtonTitle: nil
+                                   otherButtonTitles: NSLocalizedString(@"attachment_option_remove_btn_title_pl", nil),
+                 NSLocalizedString(@"attachment_option_choose_new_btn_title_pl", nil),
+                 NSLocalizedString(@"attachment_option_view_btn_title_pl", nil),
+                 nil];
+    } else {
+        sheet = [[UIActionSheet alloc] initWithTitle: NSLocalizedString(@"attachment_option_sheet_title", nil)
+                                            delegate: self
+                                   cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                              destructiveButtonTitle: nil
+                                   otherButtonTitles: NSLocalizedString(@"attachment_option_remove_btn_title", nil),
+                 NSLocalizedString(@"attachment_option_choose_new_btn_title", nil),
+                 NSLocalizedString(@"attachment_option_view_btn_title", nil),
+                 nil];
+    }
     sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
     [sheet showInView: self.view];
 }
@@ -1558,7 +1574,11 @@ nil
             // NSLog(@"Pick new attachment");
             break;
         case 2:
-            [self presentViewForAttachment: self.currentAttachment];
+            if (self.currentMultiAttachment != nil) {
+                [self.attachmentPicker pickMultipleImages:self.currentMultiAttachment];
+            } else {
+                [self presentViewForAttachment: self.currentAttachment];
+            }
             // NSLog(@"Viewing current attachment");
             break;
         default:

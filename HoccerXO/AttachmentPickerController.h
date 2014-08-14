@@ -60,6 +60,7 @@ typedef enum AttachmentPickerTypes {
 
 - (id) initWithViewController: (UIViewController*) viewController delegate: (id<AttachmentPickerControllerDelegate>) delegate;
 - (void) showInView: (UIView*) view;
+- (void) pickMultipleImages: (NSArray*) selectedAssets;
 
 @property (readonly, strong, nonatomic) RecordViewController * recordViewController;
 //@property (readonly, nonatomic) GeoLocationPicker * geoLocationViewController;
