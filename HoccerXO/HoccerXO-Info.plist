@@ -51,7 +51,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>14419</string>
+	<string>14426</string>
 	<key>HXOClientDevelopers</key>
 	<array>
 		<string>Pavel Mayer</string>
@@ -63,7 +63,7 @@
 		<string>Peter Amende</string>
 	</array>
 	<key>HXOReleaseName</key>
-	<string>Cleats</string>
+	<string>Gumboots</string>
 	<key>HXOServerDevelopers</key>
 	<array/>
 	<key>LSRequiresIPhoneOS</key>
