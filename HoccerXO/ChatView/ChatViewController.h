@@ -44,6 +44,7 @@ UIDocumentInteractionControllerDelegate
 
 @property (nonatomic, strong) NSManagedObjectModel            * managedObjectModel;
 @property (nonatomic, strong) Attachment                      * currentAttachment;
+@property (nonatomic, strong) NSArray                         * currentMultiAttachment;
 @property (nonatomic, strong) AVAssetExportSession            * currentExportSession;
 @property (nonatomic, strong) id                                currentPickInfo;
 

@@ -14,10 +14,13 @@
 #import "GeoLocationPicker.h"
 #import "UIActionSheet+BlockExtensions.h"
 
+#import "CTAssetsPickerController.h"
+
 @class Attachment;
 @class RecordViewController;
 
 typedef enum AttachmentPickerTypes {
+    AttachmentPickerTypeMulti, // <--- dummy
     AttachmentPickerTypePhotoFromLibrary,
     AttachmentPickerTypePhotoVideoFromLibrary,
     AttachmentPickerTypePhotoFromCamera,
@@ -46,23 +49,18 @@ typedef enum AttachmentPickerTypes {
 
 @optional
 
-- (BOOL) wantsAttachmentsOfType: (AttachmentPickerType) type;
-- (NSString*) attachmentPickerActionSheetTitle;
-- (BOOL) allowsEditing;
-- (void) prependAdditionalActionButtons: (UIActionSheet*) actionSheet;
-- (void) appendAdditionalActionButtons: (UIActionSheet*) actionSheet;
-- (void) additionalButtonPressed: (NSUInteger) buttonIndex;
 - (BOOL) shouldSaveImagesToAlbum;
 - (BOOL) shouldSaveVideosToAlbum;
 
 @end
 
-@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate, AudioRecorderDelegate,ABPeoplePickerNavigationControllerDelegate,GeoLocationPickerDelegate>
+@interface AttachmentPickerController : NSObject <UIActionSheetDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, UINavigationControllerDelegate, AudioRecorderDelegate, ABPeoplePickerNavigationControllerDelegate, GeoLocationPickerDelegate, CTAssetsPickerControllerDelegate>
 
 @property (nonatomic, weak) id<AttachmentPickerControllerDelegate> delegate;
 
 - (id) initWithViewController: (UIViewController*) viewController delegate: (id<AttachmentPickerControllerDelegate>) delegate;
 - (void) showInView: (UIView*) view;
+- (void) pickMultipleImages: (NSArray*) selectedAssets;
 
 @property (readonly, strong, nonatomic) RecordViewController * recordViewController;
 //@property (readonly, nonatomic) GeoLocationPicker * geoLocationViewController;

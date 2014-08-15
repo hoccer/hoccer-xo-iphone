@@ -14,7 +14,7 @@
 
 @class AvatarView;
 
-@interface ContactSheetBase : DatasheetController <AttachmentPickerControllerDelegate>
+@interface ContactSheetBase : DatasheetController <UINavigationControllerDelegate,UIImagePickerControllerDelegate>
 
 @property (nonatomic, readonly) id<HXOClientProtocol> client;
 

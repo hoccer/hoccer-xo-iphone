@@ -349,9 +349,6 @@ static HXOUI * _currentTheme;
                                           destructiveButtonTitle: nil
                                                otherButtonTitles: nil];
 
-
-
-
 	if (sheet) {
 		if (destructiveTitle) {
 			sheet.destructiveButtonIndex = [sheet addButtonWithTitle: destructiveTitle];
@@ -373,10 +370,42 @@ static HXOUI * _currentTheme;
 		}
 	}
 
-    // Apply xo settings
-    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
+    [self applyXoActionSheetStyle: sheet];
 
     return sheet;
+}
+
+
+// XXX duplicate... someday i'll learn to interface NSArray and va_list.
++ (UIActionSheet*) actionSheetWithTitle: (NSString*) title completionBlock: (HXOActionSheetCompletionBlock) completion cancelButtonTitle: (NSString*) cancelTitle destructiveButtonTitle: (NSString*) destructiveTitle otherButtonTitleArray: (NSArray*) otherTitles
+{
+
+    UIActionSheet * sheet = [[UIActionSheet alloc] initWithTitle: title
+                                                 completionBlock: completion
+                                               cancelButtonTitle: nil
+                                          destructiveButtonTitle: nil
+                                               otherButtonTitles: nil];
+
+	if (sheet) {
+		if (destructiveTitle) {
+			sheet.destructiveButtonIndex = [sheet addButtonWithTitle: destructiveTitle];
+		}
+
+        for (NSString * title in otherTitles) {
+            [sheet addButtonWithTitle: title];
+        }
+		if (cancelTitle) {
+			sheet.cancelButtonIndex = [sheet addButtonWithTitle: cancelTitle];
+		}
+	}
+
+    [self applyXoActionSheetStyle: sheet];
+
+    return sheet;
+}
+
++ (void) applyXoActionSheetStyle: (UIActionSheet*) sheet {
+    sheet.actionSheetStyle = UIActionSheetStyleBlackTranslucent;
 }
 
 NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comment) {

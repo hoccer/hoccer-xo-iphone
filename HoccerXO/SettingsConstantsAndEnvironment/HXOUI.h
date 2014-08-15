@@ -29,6 +29,7 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 
 + (HXOUI*) theme;
 
+@property (nonatomic, readonly) UIColor * tintColor;
 @property (nonatomic, readonly) UIColor * navigationBarBackgroundColor;
 @property (nonatomic, readonly) UIColor * navigationBarTintColor;
 @property (nonatomic, readonly) UIColor * ledColor;
@@ -70,6 +71,8 @@ NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comm
 - (void) setupTheming;
 
 + (UIActionSheet*) actionSheetWithTitle: (NSString*) title completionBlock: (HXOActionSheetCompletionBlock) completion cancelButtonTitle: (NSString*) cancelTitle destructiveButtonTitle: (NSString*) destructiveTitle otherButtonTitles: (NSString*) otherTitles, ... ;
+
++ (UIActionSheet*) actionSheetWithTitle: (NSString*) title completionBlock: (HXOActionSheetCompletionBlock) completion cancelButtonTitle: (NSString*) cancelTitle destructiveButtonTitle: (NSString*) destructiveTitle otherButtonTitleArray: (NSArray*) otherTitles;
 
 
 + (NSString*) formatKeyFingerprint: (NSString*) rawKeyIdString;
