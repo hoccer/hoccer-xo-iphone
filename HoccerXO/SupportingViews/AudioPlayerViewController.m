@@ -150,8 +150,8 @@
             self.view.layer.contentsRect = CGRectMake(0.5 * (1 - aspectRatio), 0, aspectRatio, 1);
         }];
 
-        Contact *sender = attachment.message.isOutgoing ? [UserProfile sharedProfile] : attachment.message.contact;
-        self.avatarView.image = sender.avatarImage;
+        UIImage *avatarImage = attachment.message.isOutgoing ? [[UserProfile sharedProfile] avatarImage] : attachment.message.contact.avatarImage;
+        self.avatarView.image = avatarImage;
         self.avatarView.defaultIcon = [attachment.message.contact.type isEqualToString: [Group entityName]] ? [((Group*)attachment.message.contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
         self.avatarView.isBlocked = [attachment.message.contact isBlocked];
         self.avatarView.isPresent  = attachment.message.contact.isPresent && !attachment.message.contact.isKept;
