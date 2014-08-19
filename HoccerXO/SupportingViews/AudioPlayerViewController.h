@@ -16,6 +16,7 @@
 @property (nonatomic, strong) Attachment *audioAttachment;
 
 @property (nonatomic, strong) IBOutlet UILabel *playlistStatusLabel;
+@property (nonatomic, strong) IBOutlet UILabel *senderLabel;
 @property (nonatomic, strong) IBOutlet UILabel *titleLabel;
 @property (nonatomic, strong) IBOutlet UILabel *artistLabel;
 @property (nonatomic, strong) IBOutlet UILabel *currentTimeLabel;
@@ -30,6 +31,5 @@
 @property (nonatomic, strong) IBOutlet UIImageView *artworkImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *volumeDownImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *volumeUpImageView;
-@property (nonatomic, strong) IBOutlet AvatarView *avatarView;
 
 @end
