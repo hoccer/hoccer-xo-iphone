@@ -2383,6 +2383,7 @@ NSArray * TransferStateName = @[@"detached",
     attachment.mediaType = self.mediaType;
     attachment.mimeType = self.mimeType;
     attachment.humanReadableFileName = self.humanReadableFileName;
+    attachment.ownedURL = self.ownedURL;
     
     [attachment useURLs:self.localURL anOtherURL:self.assetURL];
     
