@@ -78,8 +78,8 @@
 //==============================================================================
 
 "attachment_add_sheet_title"             = "Add Attachement from:";
-"attachment_src_photo_album_btn_title"   = "Album";
-"attachment_src_multi_album_btn_title"   = "Album (Multi-Select)";
+//"attachment_src_photo_album_btn_title"   = "Album";
+"attachment_src_media_btn_title"         = "Media";
 "attachment_src_camera_btn_title"        = "Camera";
 "attachment_src_music_library_btn_title" = "Music Library";
 "attachment_src_recorder_btn_title"      = "Audio Recorder";
@@ -120,6 +120,10 @@
 
 "attachment_cannot_play_title"           = "Cannot Play Audio Attachment";
 "attachment_cannot_play_message"         = "The audio attachment cannot be played on this device.";
+
+"attachment_browse_album"                = "Album";
+"attachment_browse_library"              = "Library";
+
 
 // Not cleaned up - these have to go...
 "Paste Image Attachment" = "Pasteboard (Image)";

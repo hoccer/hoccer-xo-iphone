@@ -19,3 +19,5 @@
 // get rid of warning in DDTTYLogger.m
 # define kCGImageAlphaNoneSkipLast ((CGBitmapInfo)kCGImageAlphaNoneSkipLast)
 #endif
+
+#define HXO_UNDERGROUND_MUSIC
