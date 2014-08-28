@@ -298,6 +298,7 @@
     switch (type) {
         case AttachmentPickerTypeMulti:
             [self pickMultipleImages: @[]];
+            break;
         case AttachmentPickerTypePhotoFromLibrary:
             wantsVideo = NO;
             // no break
