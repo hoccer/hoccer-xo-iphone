@@ -28,3 +28,6 @@
 [submodule "3rdParty/CTAssetsPickerController"]
 	path = 3rdParty/CTAssetsPickerController
 	url = git@github.com:hoccer/CTAssetsPickerController.git
+[submodule "3rdParty/JGMediaPicker"]
+	path = 3rdParty/JGMediaPicker
+	url = git@github.com:hoccer/JGMediaPicker.git
