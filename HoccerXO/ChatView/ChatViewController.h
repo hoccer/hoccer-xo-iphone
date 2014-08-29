@@ -18,6 +18,8 @@
 @class ChatBar;
 @class AttachmentButton;
 
+typedef void (^ImageCompletionBlock)(UIImage * image, NSError* error);
+
 @interface ChatViewController : UIViewController
 <
 UISplitViewControllerDelegate, AttachmentPickerControllerDelegate, UIActionSheetDelegate,
@@ -46,6 +48,7 @@ UIDocumentInteractionControllerDelegate
 @property (nonatomic, strong) Attachment                      * currentAttachment;
 @property (nonatomic, strong) NSArray                         * currentMultiAttachment;
 @property (nonatomic, strong) AVAssetExportSession            * currentExportSession;
+@property (nonatomic, strong) AVAssetExportSession            * currentMultiExportSession;
 @property (nonatomic, strong) id                                currentPickInfo;
 
 @property (nonatomic, strong) id                                connectionInfoObserver;
