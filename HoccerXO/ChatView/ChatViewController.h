@@ -37,6 +37,7 @@ UIDocumentInteractionControllerDelegate
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint     * chatbarHeight;
 @property (nonatomic, strong) UITextView                      * messageField;
 @property (nonatomic, strong) AttachmentButton                * attachmentButton;
+@property (nonatomic, strong) UIImageView                     * attachmentExportProgress;
 @property (nonatomic, strong) UIButton                        * sendButton;
 
 @property (nonatomic, strong) Contact                         * partner;
@@ -47,6 +48,7 @@ UIDocumentInteractionControllerDelegate
 @property (nonatomic, strong) NSManagedObjectModel            * managedObjectModel;
 @property (nonatomic, strong) Attachment                      * currentAttachment;
 @property (nonatomic, strong) NSArray                         * currentMultiAttachment;
+@property (nonatomic, strong) NSArray                         * multiAttachmentExportItems;
 @property (nonatomic, strong) AVAssetExportSession            * currentExportSession;
 @property (nonatomic, strong) AVAssetExportSession            * currentMultiExportSession;
 @property (nonatomic, strong) id                                currentPickInfo;
