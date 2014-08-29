@@ -598,6 +598,7 @@ NSArray * TransferStateName = @[@"detached",
         self.mimeType = @"audio/mp4";
     }
     
+    [self determinePlayability];
     [self loadPreviewImageIntoCacheWithCompletion: completion];
 }
 
@@ -2285,14 +2286,14 @@ NSArray * TransferStateName = @[@"detached",
         AppDelegate * delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         NSError *error;
         NSDictionary * vars = @{ @"ownedURL" : self.ownedURL};
-        NSFetchRequest *fetchRequest = [delegate.managedObjectModel fetchRequestFromTemplateWithName:@"MessagesByOwnedURL" substitutionVariables: vars];
-        NSArray *messages = [delegate.currentObjectContext executeFetchRequest:fetchRequest error:&error];
-        if (messages == nil) {
+        NSFetchRequest *fetchRequest = [delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AttachmentsByOwnedURL" substitutionVariables: vars];
+        NSArray *attachments = [delegate.currentObjectContext executeFetchRequest:fetchRequest error:&error];
+        if (attachments == nil) {
             NSLog(@"Fetch request failed: %@", error);
             abort();
         }
-        if (messages.count > 0) {
-            if (messages.count == 1) {
+        if (attachments.count > 0) {
+            if (attachments.count == 1) {
                 // delete ownedURL because it is only referenced by one message
                 NSLog(@"Deleting ownedURL %@, not referenced by other messages", self.ownedURL);
                 NSURL * myURL = [NSURL URLWithString:self.ownedURL];
@@ -2382,6 +2383,7 @@ NSArray * TransferStateName = @[@"detached",
     attachment.mediaType = self.mediaType;
     attachment.mimeType = self.mimeType;
     attachment.humanReadableFileName = self.humanReadableFileName;
+    attachment.ownedURL = self.ownedURL;
     
     [attachment useURLs:self.localURL anOtherURL:self.assetURL];
     
