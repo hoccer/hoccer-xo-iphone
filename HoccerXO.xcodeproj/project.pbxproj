@@ -187,6 +187,32 @@
 		63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
 		63DC01511713976B00609513 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC01501713976B00609513 /* ImageViewController.m */; };
 		63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC015A17147B1600609513 /* HXOTableViewCell.m */; };
+		63DEC01519B0A720003804E8 /* JGAlbumTrackTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEBFF119B0A720003804E8 /* JGAlbumTrackTableViewCell.m */; };
+		63DEC01619B0A720003804E8 /* JGAlbumViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEBFF319B0A720003804E8 /* JGAlbumViewController.m */; };
+		63DEC01719B0A720003804E8 /* JGMediaPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEBFF519B0A720003804E8 /* JGMediaPickerController.m */; };
+		63DEC01819B0A720003804E8 /* JGMediaQueryTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEBFF719B0A720003804E8 /* JGMediaQueryTableViewCell.m */; };
+		63DEC01919B0A720003804E8 /* JGMediaQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEBFF919B0A720003804E8 /* JGMediaQueryViewController.m */; };
+		63DEC01A19B0A720003804E8 /* MPMediaItem+JGExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEBFFB19B0A720003804E8 /* MPMediaItem+JGExtensions.m */; };
+		63DEC01B19B0A720003804E8 /* MPMediaItemCollection+JGExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEBFFD19B0A720003804E8 /* MPMediaItemCollection+JGExtensions.m */; };
+		63DEC01C19B0A720003804E8 /* MPMediaPlaylist+JGExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEBFFF19B0A720003804E8 /* MPMediaPlaylist+JGExtensions.m */; };
+		63DEC01D19B0A720003804E8 /* UIImage+JGExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEC00119B0A720003804E8 /* UIImage+JGExtensions.m */; };
+		63DEC01E19B0A720003804E8 /* AlbumArtPlaceholder.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00319B0A720003804E8 /* AlbumArtPlaceholder.png */; };
+		63DEC01F19B0A720003804E8 /* AlbumArtPlaceholder@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00419B0A720003804E8 /* AlbumArtPlaceholder@2x.png */; };
+		63DEC02019B0A720003804E8 /* AlbumArtPlaceholderLarge.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00519B0A720003804E8 /* AlbumArtPlaceholderLarge.png */; };
+		63DEC02119B0A720003804E8 /* AlbumArtPlaceholderLarge@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00619B0A720003804E8 /* AlbumArtPlaceholderLarge@2x.png */; };
+		63DEC02219B0A720003804E8 /* Albums.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00719B0A720003804E8 /* Albums.png */; };
+		63DEC02319B0A720003804E8 /* Albums@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00819B0A720003804E8 /* Albums@2x.png */; };
+		63DEC02419B0A720003804E8 /* Artists.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00919B0A720003804E8 /* Artists.png */; };
+		63DEC02519B0A720003804E8 /* Artists@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00A19B0A720003804E8 /* Artists@2x.png */; };
+		63DEC02619B0A720003804E8 /* Playlists.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00B19B0A720003804E8 /* Playlists.png */; };
+		63DEC02719B0A720003804E8 /* Playlists@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00C19B0A720003804E8 /* Playlists@2x.png */; };
+		63DEC02819B0A720003804E8 /* Songs.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00D19B0A720003804E8 /* Songs.png */; };
+		63DEC02919B0A720003804E8 /* Songs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00E19B0A720003804E8 /* Songs@2x.png */; };
+		63DEC02A19B0A720003804E8 /* JGMediaPicker.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00F19B0A720003804E8 /* JGMediaPicker.podspec */; };
+		63DEC02B19B0A720003804E8 /* JGAlbumTrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01119B0A720003804E8 /* JGAlbumTrackTableViewCell.xib */; };
+		63DEC02C19B0A720003804E8 /* JGAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01219B0A720003804E8 /* JGAlbumViewController.xib */; };
+		63DEC02D19B0A720003804E8 /* JGMediaQueryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01319B0A720003804E8 /* JGMediaQueryViewController.xib */; };
+		63DEC02E19B0A720003804E8 /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01419B0A720003804E8 /* README.markdown */; };
 		63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
 		63E5698C196353B0007E06BF /* HXOPluralocalization.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5698B196353B0007E06BF /* HXOPluralocalization.m */; };
 		63E9B00118F314AB00EFF829 /* disclosure_arrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9AFFD18F314AB00EFF829 /* disclosure_arrow.m */; };
@@ -806,6 +832,41 @@
 		63DC01501713976B00609513 /* ImageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewController.m; sourceTree = "<group>"; };
 		63DC015917147B1600609513 /* HXOTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTableViewCell.h; sourceTree = "<group>"; };
 		63DC015A17147B1600609513 /* HXOTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTableViewCell.m; sourceTree = "<group>"; };
+		63DEBFF019B0A720003804E8 /* JGAlbumTrackTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGAlbumTrackTableViewCell.h; sourceTree = "<group>"; };
+		63DEBFF119B0A720003804E8 /* JGAlbumTrackTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGAlbumTrackTableViewCell.m; sourceTree = "<group>"; };
+		63DEBFF219B0A720003804E8 /* JGAlbumViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGAlbumViewController.h; sourceTree = "<group>"; };
+		63DEBFF319B0A720003804E8 /* JGAlbumViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGAlbumViewController.m; sourceTree = "<group>"; };
+		63DEBFF419B0A720003804E8 /* JGMediaPickerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGMediaPickerController.h; sourceTree = "<group>"; };
+		63DEBFF519B0A720003804E8 /* JGMediaPickerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGMediaPickerController.m; sourceTree = "<group>"; };
+		63DEBFF619B0A720003804E8 /* JGMediaQueryTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGMediaQueryTableViewCell.h; sourceTree = "<group>"; };
+		63DEBFF719B0A720003804E8 /* JGMediaQueryTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGMediaQueryTableViewCell.m; sourceTree = "<group>"; };
+		63DEBFF819B0A720003804E8 /* JGMediaQueryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JGMediaQueryViewController.h; sourceTree = "<group>"; };
+		63DEBFF919B0A720003804E8 /* JGMediaQueryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JGMediaQueryViewController.m; sourceTree = "<group>"; };
+		63DEBFFA19B0A720003804E8 /* MPMediaItem+JGExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPMediaItem+JGExtensions.h"; sourceTree = "<group>"; };
+		63DEBFFB19B0A720003804E8 /* MPMediaItem+JGExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPMediaItem+JGExtensions.m"; sourceTree = "<group>"; };
+		63DEBFFC19B0A720003804E8 /* MPMediaItemCollection+JGExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPMediaItemCollection+JGExtensions.h"; sourceTree = "<group>"; };
+		63DEBFFD19B0A720003804E8 /* MPMediaItemCollection+JGExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPMediaItemCollection+JGExtensions.m"; sourceTree = "<group>"; };
+		63DEBFFE19B0A720003804E8 /* MPMediaPlaylist+JGExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MPMediaPlaylist+JGExtensions.h"; sourceTree = "<group>"; };
+		63DEBFFF19B0A720003804E8 /* MPMediaPlaylist+JGExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MPMediaPlaylist+JGExtensions.m"; sourceTree = "<group>"; };
+		63DEC00019B0A720003804E8 /* UIImage+JGExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+JGExtensions.h"; sourceTree = "<group>"; };
+		63DEC00119B0A720003804E8 /* UIImage+JGExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+JGExtensions.m"; sourceTree = "<group>"; };
+		63DEC00319B0A720003804E8 /* AlbumArtPlaceholder.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AlbumArtPlaceholder.png; sourceTree = "<group>"; };
+		63DEC00419B0A720003804E8 /* AlbumArtPlaceholder@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AlbumArtPlaceholder@2x.png"; sourceTree = "<group>"; };
+		63DEC00519B0A720003804E8 /* AlbumArtPlaceholderLarge.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AlbumArtPlaceholderLarge.png; sourceTree = "<group>"; };
+		63DEC00619B0A720003804E8 /* AlbumArtPlaceholderLarge@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "AlbumArtPlaceholderLarge@2x.png"; sourceTree = "<group>"; };
+		63DEC00719B0A720003804E8 /* Albums.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Albums.png; sourceTree = "<group>"; };
+		63DEC00819B0A720003804E8 /* Albums@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Albums@2x.png"; sourceTree = "<group>"; };
+		63DEC00919B0A720003804E8 /* Artists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Artists.png; sourceTree = "<group>"; };
+		63DEC00A19B0A720003804E8 /* Artists@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Artists@2x.png"; sourceTree = "<group>"; };
+		63DEC00B19B0A720003804E8 /* Playlists.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Playlists.png; sourceTree = "<group>"; };
+		63DEC00C19B0A720003804E8 /* Playlists@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Playlists@2x.png"; sourceTree = "<group>"; };
+		63DEC00D19B0A720003804E8 /* Songs.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Songs.png; sourceTree = "<group>"; };
+		63DEC00E19B0A720003804E8 /* Songs@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Songs@2x.png"; sourceTree = "<group>"; };
+		63DEC00F19B0A720003804E8 /* JGMediaPicker.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = JGMediaPicker.podspec; sourceTree = "<group>"; };
+		63DEC01119B0A720003804E8 /* JGAlbumTrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JGAlbumTrackTableViewCell.xib; sourceTree = "<group>"; };
+		63DEC01219B0A720003804E8 /* JGAlbumViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JGAlbumViewController.xib; sourceTree = "<group>"; };
+		63DEC01319B0A720003804E8 /* JGMediaQueryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JGMediaQueryViewController.xib; sourceTree = "<group>"; };
+		63DEC01419B0A720003804E8 /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
 		63E0B2151721FF75006058C6 /* KeychainItemWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KeychainItemWrapper.h; sourceTree = "<group>"; };
 		63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KeychainItemWrapper.m; sourceTree = "<group>"; };
 		63E5698A196353B0007E06BF /* HXOPluralocalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOPluralocalization.h; sourceTree = "<group>"; };
@@ -1975,11 +2036,12 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
-				6318FB401999057000D018A8 /* CTAssetsPickerController */,
 				E9E92F2018733B15007B8042 /* CocoaHttpServer */,
+				6318FB401999057000D018A8 /* CTAssetsPickerController */,
 				E95A75A518D257FD0027AE3E /* fmemopen */,
 				E9D1147A1736702E00737EF7 /* GCNetworkRequest */,
 				E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */,
+				63DEBFEE19B0A720003804E8 /* JGMediaPicker */,
 				6302A99218DA88F200B2D04F /* openssl.xcodeproj */,
 				63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */,
 				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
@@ -2001,6 +2063,72 @@
 				637DA53418D0BECF00B11AB9 /* VectorArtView.m */,
 			);
 			path = VectorArt;
+			sourceTree = "<group>";
+		};
+		63DEBFEE19B0A720003804E8 /* JGMediaPicker */ = {
+			isa = PBXGroup;
+			children = (
+				63DEBFEF19B0A720003804E8 /* Classes */,
+				63DEC00219B0A720003804E8 /* Images */,
+				63DEC00F19B0A720003804E8 /* JGMediaPicker.podspec */,
+				63DEC01019B0A720003804E8 /* Nibs */,
+				63DEC01419B0A720003804E8 /* README.markdown */,
+			);
+			path = JGMediaPicker;
+			sourceTree = "<group>";
+		};
+		63DEBFEF19B0A720003804E8 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				63DEBFF019B0A720003804E8 /* JGAlbumTrackTableViewCell.h */,
+				63DEBFF119B0A720003804E8 /* JGAlbumTrackTableViewCell.m */,
+				63DEBFF219B0A720003804E8 /* JGAlbumViewController.h */,
+				63DEBFF319B0A720003804E8 /* JGAlbumViewController.m */,
+				63DEBFF419B0A720003804E8 /* JGMediaPickerController.h */,
+				63DEBFF519B0A720003804E8 /* JGMediaPickerController.m */,
+				63DEBFF619B0A720003804E8 /* JGMediaQueryTableViewCell.h */,
+				63DEBFF719B0A720003804E8 /* JGMediaQueryTableViewCell.m */,
+				63DEBFF819B0A720003804E8 /* JGMediaQueryViewController.h */,
+				63DEBFF919B0A720003804E8 /* JGMediaQueryViewController.m */,
+				63DEBFFA19B0A720003804E8 /* MPMediaItem+JGExtensions.h */,
+				63DEBFFB19B0A720003804E8 /* MPMediaItem+JGExtensions.m */,
+				63DEBFFC19B0A720003804E8 /* MPMediaItemCollection+JGExtensions.h */,
+				63DEBFFD19B0A720003804E8 /* MPMediaItemCollection+JGExtensions.m */,
+				63DEBFFE19B0A720003804E8 /* MPMediaPlaylist+JGExtensions.h */,
+				63DEBFFF19B0A720003804E8 /* MPMediaPlaylist+JGExtensions.m */,
+				63DEC00019B0A720003804E8 /* UIImage+JGExtensions.h */,
+				63DEC00119B0A720003804E8 /* UIImage+JGExtensions.m */,
+			);
+			path = Classes;
+			sourceTree = "<group>";
+		};
+		63DEC00219B0A720003804E8 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				63DEC00319B0A720003804E8 /* AlbumArtPlaceholder.png */,
+				63DEC00419B0A720003804E8 /* AlbumArtPlaceholder@2x.png */,
+				63DEC00519B0A720003804E8 /* AlbumArtPlaceholderLarge.png */,
+				63DEC00619B0A720003804E8 /* AlbumArtPlaceholderLarge@2x.png */,
+				63DEC00719B0A720003804E8 /* Albums.png */,
+				63DEC00819B0A720003804E8 /* Albums@2x.png */,
+				63DEC00919B0A720003804E8 /* Artists.png */,
+				63DEC00A19B0A720003804E8 /* Artists@2x.png */,
+				63DEC00B19B0A720003804E8 /* Playlists.png */,
+				63DEC00C19B0A720003804E8 /* Playlists@2x.png */,
+				63DEC00D19B0A720003804E8 /* Songs.png */,
+				63DEC00E19B0A720003804E8 /* Songs@2x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		63DEC01019B0A720003804E8 /* Nibs */ = {
+			isa = PBXGroup;
+			children = (
+				63DEC01119B0A720003804E8 /* JGAlbumTrackTableViewCell.xib */,
+				63DEC01219B0A720003804E8 /* JGAlbumViewController.xib */,
+				63DEC01319B0A720003804E8 /* JGMediaQueryViewController.xib */,
+			);
+			path = Nibs;
 			sourceTree = "<group>";
 		};
 		63E9AFF218F3137E00EFF829 /* Avatar */ = {
@@ -2669,6 +2797,7 @@
 				63B1C9DD1843E4FD00B75CD8 /* cnt-download.png in Resources */,
 				C576EC4C1934CCB200C0D254 /* player_next.svg in Resources */,
 				E95175E41909191F00EFD1C6 /* Kleistr.gpx in Resources */,
+				63DEC02D19B0A720003804E8 /* JGMediaQueryViewController.xib in Resources */,
 				63B1C9E01843E4FD00B75CD8 /* cnt-location@2x.png in Resources */,
 				63D670EE193634C700CBF1C3 /* placeholder-chats@2x.png in Resources */,
 				E9A85DA2184FD1AD00EB9B68 /* chatbar-attachment-icon-photo.png in Resources */,
@@ -2678,6 +2807,7 @@
 				C576EC521934CCB200C0D254 /* player_prev.svg in Resources */,
 				C576EC5C1934CCB200C0D254 /* player_shuffle_on.svg in Resources */,
 				63B1C9DE1843E4FD00B75CD8 /* cnt-download@2x.png in Resources */,
+				63DEC02719B0A720003804E8 /* Playlists@2x.png in Resources */,
 				63AE4516170350750099F0CB /* Default.png in Resources */,
 				C576EC761934CD2E00C0D254 /* tab_attachments.svg in Resources */,
 				C576EC341934CCB200C0D254 /* fullscreen-button-play.png in Resources */,
@@ -2698,6 +2828,7 @@
 				C576EC5E1934CCB200C0D254 /* player_volume_down.svg in Resources */,
 				C576EC621934CCB200C0D254 /* slider-thumb@2x.png in Resources */,
 				C576EC581934CCB200C0D254 /* player_repeat_title.svg in Resources */,
+				63DEC02919B0A720003804E8 /* Songs@2x.png in Resources */,
 				C576EC551934CCB200C0D254 /* player_repeat_off.pcvd in Resources */,
 				C576EC2B1934CCB200C0D254 /* button-play@2x.png in Resources */,
 				63B1C9DF1843E4FD00B75CD8 /* cnt-location.png in Resources */,
@@ -2712,28 +2843,37 @@
 				E9A85DA4184FD1AD00EB9B68 /* chatbar-attachment-icon-record.png in Resources */,
 				63B1C9E31843E4FD00B75CD8 /* cnt-photo.png in Resources */,
 				63B1C9E21843E4FD00B75CD8 /* cnt-music@2x.png in Resources */,
+				63DEC02619B0A720003804E8 /* Playlists.png in Resources */,
 				C576EC631934CCB200C0D254 /* slider-track.png in Resources */,
 				C576EC381934CCB200C0D254 /* fullscreen-icon-volume-up.png in Resources */,
 				C576EC2E1934CCB200C0D254 /* fullscreen-button-back.png in Resources */,
 				63B1C9E51843E4FD00B75CD8 /* cnt-record.png in Resources */,
 				E92FAEC4186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png in Resources */,
+				63DEC01E19B0A720003804E8 /* AlbumArtPlaceholder.png in Resources */,
+				63DEC02119B0A720003804E8 /* AlbumArtPlaceholderLarge@2x.png in Resources */,
 				C576EC371934CCB200C0D254 /* fullscreen-icon-volume-down@2x.png in Resources */,
 				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
 				E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */,
 				C576EC351934CCB200C0D254 /* fullscreen-button-play@2x.png in Resources */,
 				C576EC5B1934CCB200C0D254 /* player_shuffle_on.pcvd in Resources */,
 				E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */,
+				63DEC02B19B0A720003804E8 /* JGAlbumTrackTableViewCell.xib in Resources */,
 				C576EC2F1934CCB200C0D254 /* fullscreen-button-back@2x.png in Resources */,
 				C576EC611934CCB200C0D254 /* slider-thumb.png in Resources */,
 				E99886F517282C950089A510 /* throw_sound.wav in Resources */,
+				63DEC02019B0A720003804E8 /* AlbumArtPlaceholderLarge.png in Resources */,
+				63DEC02C19B0A720003804E8 /* JGAlbumViewController.xib in Resources */,
 				63D670EF193634C700CBF1C3 /* placeholder-nearby@2x.png in Resources */,
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
 				631070EB1730106900D3936F /* new_message.aif in Resources */,
 				C576EC5A1934CCB200C0D254 /* player_shuffle_off.svg in Resources */,
+				63DEC02419B0A720003804E8 /* Artists.png in Resources */,
 				C576EC4B1934CCB200C0D254 /* player_next.pcvd in Resources */,
+				63DEC02E19B0A720003804E8 /* README.markdown in Resources */,
 				63B1C9E61843E4FD00B75CD8 /* cnt-record@2x.png in Resources */,
 				C576EC591934CCB200C0D254 /* player_shuffle_off.pcvd in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
+				63DEC02819B0A720003804E8 /* Songs.png in Resources */,
 				E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
 				C576EC391934CCB200C0D254 /* fullscreen-icon-volume-up@2x.png in Resources */,
@@ -2749,6 +2889,8 @@
 				C576EC601934CCB200C0D254 /* player_volume_up.svg in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
 				C576EC541934CCB200C0D254 /* player_repeat_all.svg in Resources */,
+				63DEC02A19B0A720003804E8 /* JGMediaPicker.podspec in Resources */,
+				63DEC02319B0A720003804E8 /* Albums@2x.png in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
 				6382545117503531000347CD /* server_production.der in Resources */,
 				C576EC4D1934CCB200C0D254 /* player_pause.pcvd in Resources */,
@@ -2757,13 +2899,16 @@
 				C576EC331934CCB200C0D254 /* fullscreen-button-pause@2x.png in Resources */,
 				E9A85DA1184FD1AD00EB9B68 /* chatbar-attachment-icon-music@2x.png in Resources */,
 				E9DFD23C1922749800CC1202 /* talkserver.talk.hoccer.de.der in Resources */,
+				63DEC01F19B0A720003804E8 /* AlbumArtPlaceholder@2x.png in Resources */,
 				C576EC311934CCB200C0D254 /* fullscreen-button-forward@2x.png in Resources */,
 				C576EC2A1934CCB200C0D254 /* button-play.png in Resources */,
+				63DEC02519B0A720003804E8 /* Artists@2x.png in Resources */,
 				C576EC5F1934CCB200C0D254 /* player_volume_up.pcvd in Resources */,
 				E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */,
 				E9DFD23B1922749800CC1202 /* filecache.talk.hoccer.de.der in Resources */,
 				63B1C9E81843E4FD00B75CD8 /* cnt-video@2x.png in Resources */,
 				63B1C9E41843E4FD00B75CD8 /* cnt-photo@2x.png in Resources */,
+				63DEC02219B0A720003804E8 /* Albums.png in Resources */,
 				E9A85DA6184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png in Resources */,
 				C576EC501934CCB200C0D254 /* player_play.svg in Resources */,
 				C576EC751934CD2E00C0D254 /* tab_attachments.pcvd in Resources */,
@@ -2849,6 +2994,7 @@
 				6318FB651999057000D018A8 /* ALAssetsGroup+isEqual.m in Sources */,
 				E9AF289F1927BDAA00E29A03 /* NSData+GZIP.m in Sources */,
 				C576EC3F1934CCB200C0D254 /* player_button_prev.m in Sources */,
+				63DEC01A19B0A720003804E8 /* MPMediaItem+JGExtensions.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
 				6318FB6E1999057000D018A8 /* CTAssetsSupplementaryView.m in Sources */,
 				637FD6BA18FDCDCD0057F854 /* ProfileViewTabItemHelper.m in Sources */,
@@ -2890,6 +3036,7 @@
 				634010F6191AAA44007A2C67 /* avatar_location.m in Sources */,
 				6302A98E18DA870400B2D04F /* SRPVerifierGenerator.m in Sources */,
 				630CAB8B18E22EBC00782507 /* HXOLabel.m in Sources */,
+				63DEC01519B0A720003804E8 /* JGAlbumTrackTableViewCell.m in Sources */,
 				E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */,
 				C55E0A3419658798009A7238 /* CollectionDataSource.m in Sources */,
 				6302A98B18DA870400B2D04F /* SRPClient.m in Sources */,
@@ -2908,6 +3055,7 @@
 				C576EC3C1934CCB200C0D254 /* player_button_next.m in Sources */,
 				E9AF289E1927BDAA00E29A03 /* NSData+Compression.m in Sources */,
 				C576EC4A1934CCB200C0D254 /* player_icon_volume_up.m in Sources */,
+				63DEC01719B0A720003804E8 /* JGMediaPickerController.m in Sources */,
 				C576EC6F1934CD1500C0D254 /* AudioAttachmentWithTextMessageCell.m in Sources */,
 				636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */,
 				636492D71711E97900E35514 /* AvatarView.m in Sources */,
@@ -2934,8 +3082,10 @@
 				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
 				6318FB701999057000D018A8 /* CTAssetsViewController.m in Sources */,
+				63DEC01819B0A720003804E8 /* JGMediaQueryTableViewCell.m in Sources */,
 				632502AD1866500800543D80 /* HXOHyperLabel.m in Sources */,
 				63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */,
+				63DEC01C19B0A720003804E8 /* MPMediaPlaylist+JGExtensions.m in Sources */,
 				C576EBCD1934CC6100C0D254 /* NSString+FromTimeInterval.m in Sources */,
 				1FA4DE52195D9B400008C9DD /* AudioAttachmentListViewController.m in Sources */,
 				631FE51A1919A3B60073E980 /* HXOActivityIndicatorView.m in Sources */,
@@ -2966,6 +3116,7 @@
 				E951760E1913EB6100EFD1C6 /* FeatureHistory.m in Sources */,
 				E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */,
 				6318FB631999057000D018A8 /* ALAsset+assetType.m in Sources */,
+				63DEC01619B0A720003804E8 /* JGAlbumViewController.m in Sources */,
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
 				E9DBE3E31865C0A000880252 /* CryptoJSON.m in Sources */,
 				C576EBCE1934CC6100C0D254 /* UIImage+Tint.m in Sources */,
@@ -3022,12 +3173,14 @@
 				C576EBB61934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m in Sources */,
 				E9E92F6E18733D01007B8042 /* HTTPAuthenticationRequest.m in Sources */,
 				E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */,
+				63DEC01B19B0A720003804E8 /* MPMediaItemCollection+JGExtensions.m in Sources */,
 				E951807818C7AE2A009DFBDA /* DDTTYLogger.m in Sources */,
 				6302A98818DA870400B2D04F /* Digest.m in Sources */,
 				E9E92F3918733B7A007B8042 /* GCDAsyncSocket.m in Sources */,
 				C51B1148194858EC00FBCD2B /* NSArray+RemoveObject.m in Sources */,
 				C576EBCC1934CC6100C0D254 /* NSMutableArray+Shuffle.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
+				63DEC01919B0A720003804E8 /* JGMediaQueryViewController.m in Sources */,
 				C576EC401934CCB200C0D254 /* player_button_repeat_all.m in Sources */,
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,
 				63C1E88C18EB2B450066D5C6 /* ProfileSheetController.m in Sources */,
@@ -3037,6 +3190,7 @@
 				C5B167E21963ECF6004D3A28 /* AudioAttachmentDataSource.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
 				E9E92F7118733D01007B8042 /* HTTPServer.m in Sources */,
+				63DEC01D19B0A720003804E8 /* UIImage+JGExtensions.m in Sources */,
 				63CED3E018F9A24F0095110B /* KeyStatusCell.m in Sources */,
 				6318FB711999057000D018A8 /* CTAssetsViewControllerTransition.m in Sources */,
 				6318FB661999057000D018A8 /* CTAssetItemViewController.m in Sources */,
@@ -3258,6 +3412,8 @@
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -3280,7 +3436,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO";
-				PROVISIONING_PROFILE = "8EEEE62E-B205-4CC4-9179-FEF2F21E0674";
+				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
@@ -3295,7 +3451,8 @@
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Hoccer GmbH (SK64A5FJ3Z)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -3318,6 +3475,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO";
+				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
@@ -3366,6 +3524,8 @@
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -3388,7 +3548,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO Dev";
-				PROVISIONING_PROFILE = "CF4492EC-E848-4EF4-9944-1183738AAF42";
+				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
@@ -3469,7 +3629,8 @@
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Hoccer GmbH (SK64A5FJ3Z)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -3492,7 +3653,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO Dev";
-				PROVISIONING_PROFILE = "1ee887f0-f2bb-4385-ae8f-e0248750a171";
+				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
