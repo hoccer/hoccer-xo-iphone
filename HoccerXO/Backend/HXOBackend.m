@@ -603,6 +603,7 @@ static NSTimer * _stateNotificationDelayTimer;
         message.messageId = @"";
         //message.messageTag = [NSString stringWithUUID];
         message.senderId = [UserProfile sharedProfile].clientId;
+        message.isRead = @YES;
         
         Delivery * delivery =  (Delivery*)[NSEntityDescription insertNewObjectForEntityForName: [Delivery entityName] inManagedObjectContext: context];
         [message.deliveries addObject: delivery];
