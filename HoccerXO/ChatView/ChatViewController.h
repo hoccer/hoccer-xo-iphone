@@ -37,7 +37,7 @@ UIDocumentInteractionControllerDelegate
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint     * chatbarHeight;
 @property (nonatomic, strong) UITextView                      * messageField;
 @property (nonatomic, strong) AttachmentButton                * attachmentButton;
-@property (nonatomic, strong) UIImageView                     * attachmentExportProgress;
+@property (nonatomic, strong) UILabel                         * attachmentExportProgress;
 @property (nonatomic, strong) UIButton                        * sendButton;
 
 @property (nonatomic, strong) Contact                         * partner;

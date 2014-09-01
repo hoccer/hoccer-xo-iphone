@@ -248,11 +248,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     //sendButton.enabled = NO;
     [self.chatbar addSubview: self.sendButton];
     
-    self.attachmentExportProgress = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, s/4, s/4)];
-    self.attachmentExportProgress.frame = CGRectMake(0, 0, s/4, s/4);
-    //self.attachmentExportProgress.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    //self.attachmentExportProgress = [UIColor orangeColor];
-    //[self.attachmentExportProgress setImage: icon forState: UIControlStateNormal];
+    self.attachmentExportProgress = [[UILabel alloc] initWithFrame:CGRectMake(2, 2, 2*kHXOGridSpacing, 2*kHXOGridSpacing)];
+    self.attachmentExportProgress.hidden = YES;
+    self.attachmentExportProgress.backgroundColor = [HXOUI theme].tintColor;
+    self.attachmentExportProgress.textColor = [HXOUI theme].navigationBarBackgroundColor;
+    self.attachmentExportProgress.textAlignment = NSTextAlignmentCenter;
+    self.attachmentExportProgress.layer.masksToBounds = YES;
+    self.attachmentExportProgress.layer.cornerRadius = kHXOGridSpacing;
     [self.chatbar addSubview: self.attachmentExportProgress];
     
 }
@@ -841,19 +843,8 @@ nil
 }
 
 -(void)updateMultiAttachmentExportProgress {
-    if (self.multiAttachmentExportItems != nil) {
-        UILabel * label = [UILabel new];
-        label.frame = CGRectMake(0,0,15,15);
-        label.textAlignment = NSTextAlignmentCenter;
-        label.backgroundColor = [HXOUI theme].tintColor;
-        label.textColor = [HXOUI theme].navigationBarBackgroundColor;
-        label.text = [NSString stringWithFormat:@"%d",self.multiAttachmentExportItems.count];
-        UIImage * progressImage = [ChatViewController imageFromView:label withScale:2.0];
-        self.attachmentExportProgress.image = progressImage;
-        self.attachmentExportProgress.hidden = NO;
-    } else {
-        self.attachmentExportProgress.hidden = YES;
-    }
+    self.attachmentExportProgress.hidden = self.multiAttachmentExportItems == nil;
+    self.attachmentExportProgress.text = [NSString stringWithFormat:@"%d",self.multiAttachmentExportItems.count];
 }
 
 
