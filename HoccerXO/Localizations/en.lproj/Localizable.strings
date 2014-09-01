@@ -574,6 +574,7 @@
 "profile_nav_title"                      = "Profile";
 
 "profile_avatar_option_sheet_title"      = "Get Avatar Image from:";
+"profile_avatar_option_album_btn_title"  = "Album";
 "profile_avatar_option_delete_btn_title" = "Delete Avatar";
 
 "profile_name_label"                     = "Name:";

@@ -255,7 +255,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         [handlers addObject: ^(){ [self pickAvatarFromSource: UIImagePickerControllerSourceTypePhotoLibrary]; }];
-        [buttons addObject: NSLocalizedString(@"attachment_src_photo_album_btn_title",nil)];
+        [buttons addObject: NSLocalizedString(@"profile_avatar_option_album_btn_title",nil)];
     }
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
