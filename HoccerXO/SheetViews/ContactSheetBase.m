@@ -263,6 +263,8 @@ static const NSUInteger kHXOMaxNameLength = 25;
         [buttons addObject: NSLocalizedString(@"attachment_src_camera_btn_title",nil)];
     }
 
+    [handlers addObject: ^(){ /* canceled */ }];
+
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * sheet) {
         ((void(^)())handlers[buttonIndex])();
     };
