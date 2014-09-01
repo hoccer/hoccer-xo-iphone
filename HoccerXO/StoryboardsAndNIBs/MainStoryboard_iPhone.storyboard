@@ -1268,7 +1268,6 @@
         <image name="fullscreen-icon-volume-down.png" width="22" height="17"/>
         <image name="fullscreen-icon-volume-up.png" width="26" height="17"/>
     </resources>
-    <color key="tintColor" red="0.47843140360000003" green="0.78823536630000002" blue="0.7254902124" alpha="1" colorSpace="deviceRGB"/>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
