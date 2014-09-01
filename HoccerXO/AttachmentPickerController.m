@@ -74,6 +74,7 @@
 #endif
 
 
+#if 0 // old single selection
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromLibrary]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
@@ -87,12 +88,13 @@
             [_supportedItems addObject: item];
         }
     }
+#endif
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoVideoFromLibrary] &&
             [self delegateWantsAttachmentsOfType: AttachmentPickerTypePhotoFromLibrary]) {
             AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
-            item.localizedButtonTitle = NSLocalizedString(@"attachment_src_multi_album_btn_title", nil);
+            item.localizedButtonTitle = NSLocalizedString(@"attachment_src_media_btn_title", nil);
             item.type = AttachmentPickerTypeMulti;
             [_supportedItems addObject: item];
         }
@@ -112,12 +114,14 @@
             [_supportedItems addObject: item];
         }
     }
+#ifndef HXO_UNDERGROUND_MUSIC
     if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeMediaFromLibrary]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"attachment_src_music_library_btn_title", nil);
         item.type = AttachmentPickerTypeMediaFromLibrary;
         [_supportedItems addObject: item];
     }
+#endif
     if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeAudioRecorder]) {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"attachment_src_recorder_btn_title", nil);
@@ -298,6 +302,7 @@
     switch (type) {
         case AttachmentPickerTypeMulti:
             [self pickMultipleImages: @[]];
+            break;
         case AttachmentPickerTypePhotoFromLibrary:
             wantsVideo = NO;
             // no break

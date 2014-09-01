@@ -119,6 +119,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @synthesize imageViewController = _imageViewController;
 @synthesize vcardViewController = _vcardViewController;
 @synthesize currentExportSession = _currentExportSession;
+@synthesize currentMultiExportSession = _currentMultiExportSession;
 @synthesize currentPickInfo = _currentPickInfo;
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize messageItems = _messageItems;
@@ -126,6 +127,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @synthesize byteCountFormatter = _byteCountFormatter;
 @synthesize observedContacts = _observedContacts;
 @synthesize observedMembersGroups = _observedMembersGroups;
+@synthesize multiAttachmentExportItems = _multiAttachmentExportItems;
 
 -(NSMutableSet *)observedContacts {
     if (_observedContacts == nil) {
@@ -245,6 +247,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self.sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
     //sendButton.enabled = NO;
     [self.chatbar addSubview: self.sendButton];
+    
+    self.attachmentExportProgress = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, s/4, s/4)];
+    self.attachmentExportProgress.frame = CGRectMake(0, 0, s/4, s/4);
+    //self.attachmentExportProgress.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    //self.attachmentExportProgress = [UIColor orangeColor];
+    //[self.attachmentExportProgress setImage: icon forState: UIControlStateNormal];
+    [self.chatbar addSubview: self.attachmentExportProgress];
+    
 }
 
 - (UIMenuController *)setupLongPressMenu {
@@ -830,22 +840,68 @@ nil
     }
 }
 
+-(void)updateMultiAttachmentExportProgress {
+    if (self.multiAttachmentExportItems != nil) {
+        UILabel * label = [UILabel new];
+        label.frame = CGRectMake(0,0,15,15);
+        label.textAlignment = NSTextAlignmentCenter;
+        label.backgroundColor = [HXOUI theme].tintColor;
+        label.textColor = [HXOUI theme].navigationBarBackgroundColor;
+        label.text = [NSString stringWithFormat:@"%d",self.multiAttachmentExportItems.count];
+        UIImage * progressImage = [ChatViewController imageFromView:label withScale:2.0];
+        self.attachmentExportProgress.image = progressImage;
+        self.attachmentExportProgress.hidden = NO;
+    } else {
+        self.attachmentExportProgress.hidden = YES;
+    }
+}
 
--(void)createAndSendMultiAttachments {
-    int i = 0;
-    // now send the attachments
-    NSArray * multiAttachments = self.currentMultiAttachment;
-    for (ALAsset * asset in multiAttachments) {
+
+-(void)exportAndSendMultiAttachmentsToContactOrGroup:(Contact*)contact {
+    if (self.multiAttachmentExportItems.count == 0) {
+        self.multiAttachmentExportItems = nil;
+        [self updateMultiAttachmentExportProgress];
+    
+    } else {
         
-        double delayInSeconds = 1.5 * i++;
+        id mediaItemOrPartner = self.multiAttachmentExportItems[0];
+        self.multiAttachmentExportItems = [self.multiAttachmentExportItems subarrayWithRange:NSMakeRange(1, self.multiAttachmentExportItems.count-1)];
+        
+        if ([mediaItemOrPartner isKindOfClass:[Contact class]]) {
+            Contact* contact = mediaItemOrPartner;
+            [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
+            return;
+        }
+        [self updateMultiAttachmentExportProgress];
+        
+        double delayInSeconds = 0.5;
+        
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-  
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+            
             NSManagedObjectContext * context = [AppDelegate.instance currentObjectContext];
-//            [AppDelegate.instance performWithLockingId:@"multiattachment" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            Attachment * attachment =  (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
+                                                                                  inManagedObjectContext: context];
+            
+            if ([mediaItemOrPartner isKindOfClass:[MPMediaItem class]]) {
                 
-                Attachment * attachment =  (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
-                                                                                      inManagedObjectContext: context];
+                MPMediaItem * item = mediaItemOrPartner;
+                
+                [self didPickMPMediaAttachment:item into:attachment inSession:&_currentMultiExportSession withCompletion:^(UIImage *image, NSError *error) {
+                    if (error == nil) {
+                        if (attachment.contentSize > 0) {
+                            [self.chatBackend sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:attachment];
+                        } else {
+                            NSLog(@"#ERROR: media export error: contentSize is 0, attachment=%@", attachment);
+                            [AppDelegate.instance deleteObject:attachment];
+                        }
+                        [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
+                    }
+                }];
+                
+            } else if ([mediaItemOrPartner isKindOfClass:[ALAsset class]]) {
+                ALAsset * asset = mediaItemOrPartner;
+                
                 
                 NSString * type = [asset valueForProperty:ALAssetPropertyType];
                 if ([type isEqualToString:ALAssetTypePhoto]) {
@@ -866,22 +922,14 @@ nil
                                               image: myImage
                                      withCompletion:^(NSError *theError) {
                                          if (theError == nil) {
-                                             //[AppDelegate.instance saveContext:context];
-                                             //NSArray * ids = permanentObjectIds(@[attachment]);
-                                             //[AppDelegate.instance performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                                                 //[AppDelegate.instance saveContext:context];
-                                                 //NSArray * attachments = existingManagedObjects(ids, context);
-                                                 //if (attachments != nil) {
-                                                     //Attachment * attachment = attachments[0];
                                              if (attachment.contentSize > 0) {
                                                  [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
                                              } else {
                                                  NSLog(@"#ERROR: video export error: contentSize is 0, attachment=%@", attachment);
                                                  [AppDelegate.instance deleteObject:attachment];
                                              }
-                                                 //}
-                                             //}];
                                          }
+                                         [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                                      }];
                     
                 } else if ([type isEqualToString:ALAssetTypeVideo]) {
@@ -889,9 +937,9 @@ nil
                     NSURL * outputURL = [self acquireAndReserveFileUrlFor:@"video.mp4"];
                     
                     AVAsset *sourceAsset = [AVAsset assetWithURL:
-                                      [NSURL URLWithString:
-                                       [NSString stringWithFormat:@"%@",
-                                        [[asset defaultRepresentation] url]]]];
+                                            [NSURL URLWithString:
+                                             [NSString stringWithFormat:@"%@",
+                                              [[asset defaultRepresentation] url]]]];
                     
                     
                     //NSURL * sourceURL = [asset valueForProperty:ALAssetPropertyAssetURL];
@@ -912,22 +960,12 @@ nil
                                 
                                 [attachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
                                     if (theError == nil) {
-                                        //[AppDelegate.instance saveContext:context];
-                                        //NSArray * ids = permanentObjectIds(@[attachment]);
-                                        //[AppDelegate.instance performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                                            //[AppDelegate.instance saveContext:context];
-                                            //NSArray * attachments = existingManagedObjects(ids, context);
-                                            //if (attachments != nil) {
-                                                //Attachment * attachment = attachments[0];
-                                                //NSLog(@"attachment = %@", attachment);
-                                                if (attachment.contentSize > 0) {
-                                                    [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
-                                                } else {
-                                                    NSLog(@"#ERROR: video export error: contentSize is 0, attachment=%@", attachment);
-                                                    [AppDelegate.instance deleteObject:attachment];
-                                                }
-                                            //}
-                                        //}];
+                                        if (attachment.contentSize > 0) {
+                                            [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
+                                        } else {
+                                            NSLog(@"#ERROR: video export error: contentSize is 0, attachment=%@", attachment);
+                                            [AppDelegate.instance deleteObject:attachment];
+                                        }
                                     }
                                 }];
                                 break;
@@ -952,11 +990,27 @@ nil
                                 NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
                             default: { NSLog (@"ERROR: AVAssetExportSessionStatusWaiting: didn't get export status"); break;}
                         }
-                        
+                        [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                     }];
                 }
-            //}];
+            }
         });
+    }
+}
+
+
+-(void)createAndSendMultiAttachments {
+    
+    if (self.multiAttachmentExportItems == nil) {
+        // no export in progress, start one with items to export
+        self.multiAttachmentExportItems = [NSArray arrayWithArray:self.currentMultiAttachment];
+        [self exportAndSendMultiAttachmentsToContactOrGroup:self.partner];
+    } else {
+        // export in progress, append new partner and items to export
+        NSMutableArray * extendedQueue = [NSMutableArray arrayWithArray:self.multiAttachmentExportItems];
+        [extendedQueue addObject:self.partner];
+        [extendedQueue addObjectsFromArray:self.currentMultiAttachment];
+        self.multiAttachmentExportItems = extendedQueue;
     }
 }
 
@@ -1147,7 +1201,7 @@ nil
     return NO;
 }
 
-- (void) didPickMPMediaAttachment: (id) attachmentInfo into:(Attachment*)attachment {
+- (void) didPickMPMediaAttachment: (id) attachmentInfo into:(Attachment*)attachment inSession:(AVAssetExportSession* __strong *)exportSession withCompletion:(ImageCompletionBlock)completion {
     // probably an audio item media library
     MPMediaItem * song = (MPMediaItem*)attachmentInfo;
     
@@ -1166,24 +1220,24 @@ nil
         NSLog(@"Media is protected by DRM");
         NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: Media is protected by DRM"];
         NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 557 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-        [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+        completion(nil,myError);
         return;
     }
-    if (_currentExportSession != nil) {
+    if (*exportSession != nil) {
         NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
         NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-        [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+        completion(nil,myError);
         return;
     }
     
-    _currentExportSession = [[AVAssetExportSession alloc]
+    *exportSession = [[AVAssetExportSession alloc]
                              initWithAsset: songAsset
                              presetName: AVAssetExportPresetAppleM4A];
     
     
-    _currentExportSession.outputURL = myExportURL;
-    _currentExportSession.outputFileType = AVFileTypeAppleM4A;
-    _currentExportSession.shouldOptimizeForNetworkUse = YES;
+    (*exportSession).outputURL = myExportURL;
+    (*exportSession).outputFileType = AVFileTypeAppleM4A;
+    (*exportSession).shouldOptimizeForNetworkUse = YES;
     
     AVMutableMetadataItem * titleItem = [AVMutableMetadataItem metadataItem];
     titleItem.keySpace = AVMetadataKeySpaceCommon;
@@ -1208,31 +1262,31 @@ nil
     artworkItem.key = AVMetadataCommonKeyArtwork;
     artworkItem.value = UIImageJPEGRepresentation(artworkImage, 0.6);
     
-    _currentExportSession.metadata = @[titleItem, artistItem, albumItem, artworkItem];
+    (*exportSession).metadata = @[titleItem, artistItem, albumItem, artworkItem];
     
-    [_currentExportSession exportAsynchronouslyWithCompletionHandler:^{
-        int exportStatus = _currentExportSession.status;
+    [*exportSession exportAsynchronouslyWithCompletionHandler:^{
+        int exportStatus = (*exportSession).status;
         switch (exportStatus) {
             case AVAssetExportSessionStatusFailed: {
                 NSLog (@"AVAssetExportSessionStatusFailed");
                 // log error to text view
                 NSString * myDescription = [NSString stringWithFormat:@"Audio export failed (AVAssetExportSessionStatusFailed)"];
                 NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code: 559 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                _currentExportSession = nil;
-                [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                *exportSession = nil;
+                completion(nil,myError);
                 break;
             }
             case AVAssetExportSessionStatusCompleted: {
                 if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted");
-                [attachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[_currentExportSession.outputURL absoluteString] withCompletion:^(NSError *theError) {
-                    _currentExportSession = nil;
+                [attachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[(*exportSession).outputURL absoluteString] withCompletion:^(NSError *theError) {
+                    *exportSession = nil;
                     attachment.humanReadableFileName = [myExportURL lastPathComponent];
                     if (attachment.previewImage == nil) {
                         if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: makeAudioAttachment - creating preview image from db artwork");
                         // In case we fail getting the artwork from file try get artwork from Media Item
                         // However, this only displays the artwork on the upload side. The artwork is *not*
                         // included in the exported file.
-                        // It should be possible to add the image using _currentExportSession.metadata. But
+                        // It should be possible to add the image using (*exportSession).metadata. But
                         // merging with existing metadata is non trivial and we should tackle it later.
                         MPMediaItemArtwork * artwork = [song valueForProperty:MPMediaItemPropertyArtwork];
                         if (artwork != nil) {
@@ -1244,7 +1298,8 @@ nil
                     } else {
                         if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: artwork is in media file");
                     }
-                    [self finishPickedAttachmentProcessingWithImage: attachment.previewImage withError:theError];
+                    completion(attachment.previewImage,theError);
+                    //[self finishPickedAttachmentProcessingWithImage: attachment.previewImage withError:theError];
                 }];
                 break;
             }
@@ -1253,8 +1308,10 @@ nil
             case AVAssetExportSessionStatusExporting: {
                 NSLog (@"AVAssetExportSessionStatusExporting"); break;}
             case AVAssetExportSessionStatusCancelled: {
-                _currentExportSession = nil;
-                [self finishPickedAttachmentProcessingWithImage: nil withError:_currentExportSession.error];
+                NSError * error = (*exportSession).error;
+                *exportSession = nil;
+                //[self finishPickedAttachmentProcessingWithImage: nil withError:(*exportSession).error];
+                completion(nil,error);
                 // NSLog (@"AVAssetExportSessionStatusCancelled");
                 break;
             }
@@ -1461,8 +1518,10 @@ nil
     }
     
     if ([attachmentInfo isKindOfClass: [MPMediaItem class]]) {
-        [self didPickMPMediaAttachment:attachmentInfo into:self.currentAttachment];
-         return;
+        [self didPickMPMediaAttachment:attachmentInfo into:self.currentAttachment inSession:&_currentExportSession withCompletion:^(UIImage *image, NSError *error) {
+            [self finishPickedAttachmentProcessingWithImage: image withError:error];
+        }];
+        return;
         
     } else if ([attachmentInfo isKindOfClass: [NSDictionary class]]) {
         // image or movie from camera or album

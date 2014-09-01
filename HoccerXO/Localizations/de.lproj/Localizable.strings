@@ -78,8 +78,8 @@
 //==============================================================================
 
 "attachment_add_sheet_title"             = "Anhang hinzufügen aus:";
-"attachment_src_photo_album_btn_title"   = "Album";
-"attachment_src_multi_album_btn_title"   = "Album (Mehrfachauswahl)";
+//"attachment_src_photo_album_btn_title"   = "Album";
+"attachment_src_media_btn_title"         = "Medien";
 "attachment_src_camera_btn_title"        = "Kamera";
 "attachment_src_music_library_btn_title" = "Musikbibliothek";
 "attachment_src_recorder_btn_title"      = "Audiorecorder";
@@ -121,6 +121,9 @@
 
 "attachment_cannot_play_title"           = "Anhang kann nicht abgespielt werden";
 "attachment_cannot_play_message"         = "Das Format der Audiodatei wird auf diesem Gerät nicht unterstützt.";
+
+"attachment_browse_album"                = "Alben";
+"attachment_browse_library"              = "Bibliothek";
 
 // Not cleaned up - these have to go...
 "Paste Image Attachment" = "Ablage (Bild)";
