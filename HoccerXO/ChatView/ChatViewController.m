@@ -902,99 +902,96 @@ nil
             } else if ([mediaItemOrPartner isKindOfClass:[ALAsset class]]) {
                 ALAsset * asset = mediaItemOrPartner;
                 
-                
-                NSString * type = [asset valueForProperty:ALAssetPropertyType];
-                if ([type isEqualToString:ALAssetTypePhoto]) {
-                    
-                    // TODO: handle images from a photo stream/cloud
-                    UIImage * myImage = [UIImage imageWithCGImage:asset.defaultRepresentation.fullResolutionImage];
-                    
-                    // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
-                    myImage = [Attachment qualityAdjustedImage:myImage];
-                    
-                    NSURL * myURL = [self acquireAndReserveFileUrlFor:@"reducedSnapshotImage.jpg"];
-                    
-                    float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-                    [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
-                    
-                    [attachment makeImageAttachment: [myURL absoluteString]
-                                         anOtherURL:nil
-                                              image: myImage
-                                     withCompletion:^(NSError *theError) {
-                                         if (theError == nil) {
-                                             if (attachment.contentSize > 0) {
-                                                 [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
-                                             } else {
-                                                 NSLog(@"#ERROR: video export error: contentSize is 0, attachment=%@", attachment);
-                                                 [AppDelegate.instance deleteObject:attachment];
-                                             }
-                                         }
-                                         [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
-                                     }];
-                    
-                } else if ([type isEqualToString:ALAssetTypeVideo]) {
-                    
-                    NSURL * outputURL = [self acquireAndReserveFileUrlFor:@"video.mp4"];
-                    
-                    AVAsset *sourceAsset = [AVAsset assetWithURL:
-                                            [NSURL URLWithString:
-                                             [NSString stringWithFormat:@"%@",
-                                              [[asset defaultRepresentation] url]]]];
-                    
-                    
-                    //NSURL * sourceURL = [asset valueForProperty:ALAssetPropertyAssetURL];
-                    //AVURLAsset * sourceAsset2 = [AVURLAsset assetWithURL:sourceURL];
-                    
-                    //TODO: make sure only compatible presets are used for export
-                    //NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:sourceAsset];
-                    AVAssetExportSession * exportSession = [AVAssetExportSession exportSessionWithAsset:sourceAsset presetName:[self videoQualityPreset]];
-                    exportSession.outputURL = outputURL;
-                    exportSession.outputFileType = AVFileTypeMPEG4;
-                    
-                    [exportSession exportAsynchronouslyWithCompletionHandler:^{
-                        switch (exportSession.status) {
-                            case AVAssetExportSessionStatusCompleted: {
-                                NSLog (@"AVAssetExportSessionStatusCompleted");
-                                NSString * outputURLString = [outputURL absoluteString];
-                                attachment.ownedURL = outputURLString;
-                                
-                                [attachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
-                                    if (theError == nil) {
-                                        if (attachment.contentSize > 0) {
-                                            [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
-                                        } else {
-                                            NSLog(@"#ERROR: video export error: contentSize is 0, attachment=%@", attachment);
-                                            [AppDelegate.instance deleteObject:attachment];
-                                        }
-                                    }
-                                }];
-                                break;
-                            }
-                            case AVAssetExportSessionStatusCancelled:
-                                NSLog (@"AVAssetExportSessionStatusCancelled");
-                            case AVAssetExportSessionStatusFailed: {
-                                NSLog (@"AVAssetExportSessionStatusFailed error=%@", exportSession.error);
-                                [AppDelegate.instance deleteObject:attachment];
-                                NSError * myError = nil;
-                                [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&myError];
-                                if (myError != nil) {
-                                    NSLog(@"Deleting media file failed: %@", myError);
-                                }
-                                break;
-                            }
-                            case AVAssetExportSessionStatusUnknown: {
-                                NSLog (@"AVAssetExportSessionStatusUnknown"); break;}
-                            case AVAssetExportSessionStatusExporting: {
-                                NSLog (@"AVAssetExportSessionStatusExporting"); break;}
-                            case AVAssetExportSessionStatusWaiting: {
-                                NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
-                            default: { NSLog (@"ERROR: AVAssetExportSessionStatusWaiting: didn't get export status"); break;}
+                [self exportALAsset:asset intoAttachment:attachment onCompletion:^(NSError *theError) {
+                    if (theError == nil) {
+                        if (attachment.contentSize > 0) {
+                            [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
+                        } else {
+                            NSLog(@"#ERROR: photo/video export error: contentSize is 0, attachment=%@", attachment);
+                            [AppDelegate.instance deleteObject:attachment];
                         }
-                        [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
-                    }];
-                }
-            }
+                    }
+                    [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
+                }];
+             }
         });
+    }
+}
+
+-(void)exportALAsset:(ALAsset*)asset intoAttachment:(Attachment*)attachment onCompletion:(CompletionBlock)completion {
+    NSString * type = [asset valueForProperty:ALAssetPropertyType];
+    if ([type isEqualToString:ALAssetTypePhoto]) {
+        
+        // TODO: handle images from a photo stream/cloud
+        UIImage * myImage = [UIImage imageWithCGImage:asset.defaultRepresentation.fullResolutionImage];
+        
+        // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
+        myImage = [Attachment qualityAdjustedImage:myImage];
+        
+        NSURL * myURL = [self acquireAndReserveFileUrlFor:@"reducedSnapshotImage.jpg"];
+        
+        float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+        [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
+        
+        [attachment makeImageAttachment: [myURL absoluteString]
+                             anOtherURL:nil
+                                  image: myImage
+                         withCompletion:^(NSError *theError) {
+                              completion(theError);
+                         }];
+        
+    } else if ([type isEqualToString:ALAssetTypeVideo]) {
+        
+        NSURL * outputURL = [self acquireAndReserveFileUrlFor:@"video.mp4"];
+        
+        AVAsset *sourceAsset = [AVAsset assetWithURL:
+                                [NSURL URLWithString:
+                                 [NSString stringWithFormat:@"%@",
+                                  [[asset defaultRepresentation] url]]]];
+        
+        
+        //NSURL * sourceURL = [asset valueForProperty:ALAssetPropertyAssetURL];
+        //AVURLAsset * sourceAsset2 = [AVURLAsset assetWithURL:sourceURL];
+        
+        //TODO: make sure only compatible presets are used for export
+        //NSArray *compatiblePresets = [AVAssetExportSession exportPresetsCompatibleWithAsset:sourceAsset];
+        AVAssetExportSession * exportSession = [AVAssetExportSession exportSessionWithAsset:sourceAsset presetName:[self videoQualityPreset]];
+        exportSession.outputURL = outputURL;
+        exportSession.outputFileType = AVFileTypeMPEG4;
+        
+        [exportSession exportAsynchronouslyWithCompletionHandler:^{
+            NSError * myError = nil;
+            switch (exportSession.status) {
+                case AVAssetExportSessionStatusCompleted: {
+                    NSLog (@"AVAssetExportSessionStatusCompleted");
+                    NSString * outputURLString = [outputURL absoluteString];
+                    attachment.ownedURL = outputURLString;
+                    
+                    [attachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
+                        completion(theError);
+                     }];
+                    return;
+                }
+                case AVAssetExportSessionStatusCancelled:
+                    NSLog (@"AVAssetExportSessionStatusCancelled");
+                case AVAssetExportSessionStatusFailed: {
+                    NSLog (@"AVAssetExportSessionStatusFailed error=%@", exportSession.error);
+                    [[NSFileManager defaultManager] removeItemAtURL:outputURL error:&myError];
+                    if (myError != nil) {
+                        NSLog(@"Deleting media file failed: %@", myError);
+                    }
+                    completion(exportSession.error);
+                    break;
+                }
+                case AVAssetExportSessionStatusUnknown: {
+                    NSLog (@"AVAssetExportSessionStatusUnknown"); break;}
+                case AVAssetExportSessionStatusExporting: {
+                    NSLog (@"AVAssetExportSessionStatusExporting"); break;}
+                case AVAssetExportSessionStatusWaiting: {
+                    NSLog (@"AVAssetExportSessionStatusWaiting"); break;}
+                default: { NSLog (@"ERROR: AVAssetExportSessionStatusWaiting: didn't get export status"); break;}
+            }
+        }];
     }
 }
 
@@ -1470,17 +1467,34 @@ nil
     //NSLog(@"didPickAttachment: attachmentInfo = %@",attachmentInfo);
     
     if ([attachmentInfo isKindOfClass:[NSArray class]]) {
-        // multi attachment
-        self.currentMultiAttachment = attachmentInfo;
-        UILabel * label = [UILabel new];
-        label.frame = CGRectMake(0,0,30,30);
-        label.textAlignment = NSTextAlignmentCenter;
-        label.backgroundColor = [HXOUI theme].tintColor;
-        label.textColor = [HXOUI theme].navigationBarBackgroundColor;
-        label.text = [NSString stringWithFormat:@"%d",self.currentMultiAttachment.count];
-        UIImage * preview = [ChatViewController imageFromView:label withScale:4.0];
-        [self finishPickedAttachmentProcessingWithImage:preview withError:nil];
-        return;
+        NSArray * infos = attachmentInfo;
+        if (infos.count == 1) {
+            // only 1 item selected
+            id item = infos[0];
+            if ([item isKindOfClass: [MPMediaItem class]]) {
+                attachmentInfo = item;
+            } else if ([item isKindOfClass:[ALAsset class]]) {
+                attachmentInfo = item;
+            }
+        } else if (infos.count > 1) {
+            
+            // multi attachment
+            self.currentMultiAttachment = attachmentInfo;
+            UILabel * label = [UILabel new];
+            label.frame = CGRectMake(0,0,30,30);
+            label.textAlignment = NSTextAlignmentCenter;
+            label.backgroundColor = [HXOUI theme].tintColor;
+            label.textColor = [HXOUI theme].navigationBarBackgroundColor;
+            label.text = [NSString stringWithFormat:@"%d",self.currentMultiAttachment.count];
+            UIImage * preview = [ChatViewController imageFromView:label withScale:4.0];
+            [self finishPickedAttachmentProcessingWithImage:preview withError:nil];
+            return;
+        } else {
+            // zero size array returned
+            self.currentMultiAttachment = nil;
+            [self finishPickedAttachmentProcessingWithImage:nil withError:nil];
+            return;
+        }
     } else {
         self.currentMultiAttachment = nil;
     }
@@ -1488,6 +1502,19 @@ nil
     self.currentAttachment = (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                         inManagedObjectContext: AppDelegate.instance.mainObjectContext];
 
+    
+    if ([attachmentInfo isKindOfClass:[ALAsset class]]) {
+        ALAsset * asset = attachmentInfo;
+        [self exportALAsset:asset intoAttachment:self.currentAttachment onCompletion:^(NSError *theError) {
+            if (theError == nil) {
+                [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:nil];
+            } else {
+                [self finishPickedAttachmentProcessingWithImage:nil withError:theError];
+            }
+        }];
+        return;
+    }
+    
     // handle geolocation
     if ([attachmentInfo isKindOfClass: [NSDictionary class]] &&
         [attachmentInfo[@"com.hoccer.xo.mediaType"] isEqualToString: @"geolocation"] &&
