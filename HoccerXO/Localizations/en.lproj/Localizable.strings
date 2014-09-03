@@ -124,6 +124,10 @@
 "attachment_browse_album"                = "Album";
 "attachment_browse_library"              = "Library";
 
+"attachment_music_songs"                 = "Songs";
+"attachment_music_artists"               = "Artists";
+"attachment_music_albums"                = "Albums";
+"attachment_music_playlists"             = "Playlists";
 
 // Not cleaned up - these have to go...
 "Paste Image Attachment" = "Pasteboard (Image)";
@@ -370,6 +374,11 @@
 
 "credentials_and_database_really_delete_title" = "Really delete Credentials and Database?";
 "credentials_database_delete_btn_title"        = "Delete All";
+
+//==============================================================================
+// CTAssetsPickerController (3rd party)
+//==============================================================================
+
 
 
 //==============================================================================

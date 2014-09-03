@@ -125,6 +125,11 @@
 "attachment_browse_album"                = "Alben";
 "attachment_browse_library"              = "Bibliothek";
 
+"attachment_music_songs"                 = "Titel";
+"attachment_music_artists"               = "Interpreten";
+"attachment_music_albums"                = "Alben";
+"attachment_music_playlists"             = "Listen";
+
 // Not cleaned up - these have to go...
 "Paste Image Attachment" = "Ablage (Bild)";
 "Paste Video Attachment" = "Ablage (Video)";
