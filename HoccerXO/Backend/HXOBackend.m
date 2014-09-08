@@ -200,6 +200,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [_serverConnection registerIncomingCall: @"ping"                withSelector:@selector(ping) isNotification: NO];
         [_serverConnection registerIncomingCall: @"getEncryptedGroupKeys" withSelector:@selector(getEncryptedGroupKeys:withResponder:) asyncResult:YES];
         [_serverConnection registerIncomingCall: @"alertUser"           withSelector:@selector(alertUser:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"settingsChanged"      withSelector:@selector(settingsChanged:) isNotification: YES];
         
         _delegate = theAppDelegate;
         [self cleanupTablesInContext:theAppDelegate.mainObjectContext];
@@ -2456,6 +2457,36 @@ static NSTimer * _stateNotificationDelayTimer;
                                            otherButtonTitles: nil];
     [alert show];
     
+}
+
+//  void settingsChanged(String setting, String value, String message);
+- (void) settingsChanged:(NSArray*) param {
+    for (int i = 0; i < 3; i+=3) {
+        NSString * setting = param[i];
+        id value = param[i+1];
+        id currentValue = [[HXOUserDefaults standardUserDefaults] valueForKey:setting];
+        if (currentValue != nil) {
+            if (![currentValue isEqual:value]) {
+                [[HXOUserDefaults standardUserDefaults] setValue:value forKey: setting];
+                [[HXOUserDefaults standardUserDefaults] synchronize];
+                NSLog(@"#INFO: Setting %@ = %@ has been set to %@", setting, currentValue, [[HXOUserDefaults standardUserDefaults] valueForKey:setting]);
+                NSString * title = param[i+2];
+                if (title != nil && title.length>0) {
+                    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
+                                                                     message: nil
+                                                                    delegate: nil
+                                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                                           otherButtonTitles: nil];
+                    [alert show];
+                }
+            } else {
+                NSLog(@"#INFO: Setting %@ = %@ is already %@", setting, currentValue, value);
+            }
+            //NSLog(@"#INFO: bool value is %d", [[HXOUserDefaults standardUserDefaults] boolForKey:setting]);
+        } else {
+            NSLog(@"#ERROR: Setting %@ does not exist", setting);
+        }
+    }
 }
 
 #pragma mark - Group related rpc interfaces: notifications
