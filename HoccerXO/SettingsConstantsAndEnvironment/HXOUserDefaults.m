@@ -54,6 +54,9 @@ NSString * const kHXODebugAllowUntrustedCertificates = @"debugAllowUntrustedCert
 
 NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
 
+NSString * const kHXOMPMediaAccess = @"mpMediaAccess";
+
+
 @implementation HXOUserDefaults
 
 + (void) initialize {
