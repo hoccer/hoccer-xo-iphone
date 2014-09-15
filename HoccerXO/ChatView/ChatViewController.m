@@ -1476,7 +1476,7 @@ nil
             label.textAlignment = NSTextAlignmentCenter;
             label.backgroundColor = [HXOUI theme].tintColor;
             label.textColor = [HXOUI theme].navigationBarBackgroundColor;
-            label.text = [NSString stringWithFormat:@"%d",self.currentMultiAttachment.count];
+            label.text = @(self.currentMultiAttachment.count).stringValue;
             UIImage * preview = [ChatViewController imageFromView:label withScale:4.0];
             [self finishPickedAttachmentProcessingWithImage:preview withError:nil];
             return;
@@ -1872,7 +1872,7 @@ nil
     } else {
         if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:addContactKVO: nil contact");
     }
-    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO: self.observedContacts.count = %d", self.observedContacts.count);
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addContactKVO: self.observedContacts.count = %d", (int)self.observedContacts.count);
 }
 
 - (void) removeContactKVO: (Contact*) contact {
@@ -1890,13 +1890,13 @@ nil
     } else {
         if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:removeContactKVO: nil contact");
     }
-    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO: self.observedContacts.count = %d", self.observedContacts.count);
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeContactKVO: self.observedContacts.count = %d", (int)self.observedContacts.count);
 }
 
 - (void) removeAllContactKVOs {
     if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeAllContactKVOs");
     NSSet * registered = [NSSet setWithSet:self.observedContacts]; // avoid enumeration mutation exception
-    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeAllContactKVOs: registered.count = %d", registered.count);
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeAllContactKVOs: registered.count = %d", (int)registered.count);
     for (Contact * contact in registered) {
         [self removeContactKVO:contact];
     }
@@ -1915,7 +1915,7 @@ nil
     } else {
         if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:addMembersKVO: nil contact");
     }
-    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addMembersKVO: self.observedMembersGroups.count = %d", self.observedMembersGroups.count);
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:addMembersKVO: self.observedMembersGroups.count = %d", (int)self.observedMembersGroups.count);
 }
 
 - (void) removeMembersKVO: (Group*) group {
@@ -1930,13 +1930,13 @@ nil
     } else {
         if (DEBUG_OBSERVERS) NSLog(@"#ERROR: ChatViewController:removeMembersKVO: nil contact");
     }
-    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeMembersKVO: self.observedMembersGroups.count = %d", self.observedMembersGroups.count);
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeMembersKVO: self.observedMembersGroups.count = %d", (int)self.observedMembersGroups.count);
 }
 
 - (void) removeAllMembersKVOs {
     if (DEBUG_OBSERVERS) NSLog(@"ChatViewController: removeAllMembersKVOs");
     NSSet * registered = [NSSet setWithSet:self.observedMembersGroups]; // avoid enumeration mutation exception
-    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeAllMembersKVOs: registered.count = %d", registered.count);
+    if (DEBUG_OBSERVERS) NSLog(@"ChatViewController:removeAllMembersKVOs: registered.count = %d", (int)registered.count);
     for (Group * group in registered) {
         [self removeMembersKVO:group];
     }
@@ -2397,16 +2397,8 @@ nil
             }
         //}
     }
-    NSLog(@"ERROR: colorSchemeForMessage: strange deliveries for message id '%@', delivery count=%d", message.messageId, message.deliveries.count);
+    NSLog(@"ERROR: colorSchemeForMessage: strange deliveries for message id '%@', delivery count=%d", message.messageId, (int)message.deliveries.count);
     return HXOBubbleColorSchemeSuccess;
-}
-
-NSString * delimiter(NSString* currentString) {
-    if (currentString.length == 0) {
-        return @"";
-    } else {
-        return @",";
-    }
 }
 
 NSSet * intersectionOfSets(NSSet * a, NSSet * b) {
@@ -2476,15 +2468,15 @@ NSSet * differenceOfSets(NSSet * a, NSSet * b) {
     
 ready:;
 
-    NSString * info = @"";
+    NSMutableArray * info = [NSMutableArray array];
     if (newCount != 0) {
-        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), newCount, [self stateStringForDelivery:messagesNew.anyObject]]];
+        [info addObject: [NSString stringWithFormat:@"%d %@", (int)newCount, [self stateStringForDelivery:messagesNew.anyObject]]];
     }
     if (deliveringCount != 0) {
-        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), deliveringCount, [self stateStringForDelivery:messagesDelivering.anyObject]]];
+        [info addObject: [NSString stringWithFormat:@"%d %@", (int)deliveringCount, [self stateStringForDelivery:messagesDelivering.anyObject]]];
     }
     if (failedCount != 0) {
-        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), failedCount, [self stateStringForDelivery:messagesFailed.anyObject]]];
+        [info addObject: [NSString stringWithFormat:@"%d %@", (int)failedCount, [self stateStringForDelivery:messagesFailed.anyObject]]];
     }
     
     if (message.attachment != nil) {
@@ -2501,14 +2493,14 @@ ready:;
         //NSUInteger attachmentReceivedCount = attachmentsReceived.count;
         
         if (attachmentFailedCount != 0) {
-            info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), attachmentFailedCount, [self stateStringForDelivery:attachmentsFailed.anyObject]]];
+            [info addObject: [NSString stringWithFormat:@"%d %@", (int)attachmentFailedCount, [self stateStringForDelivery:attachmentsFailed.anyObject]]];
         }
         attachmentsPending = differenceOfSets(attachmentsPending, messagesDelivering);
         attachmentsPending = differenceOfSets(attachmentsPending, messagesNew);
         attachmentPendingCount = attachmentsPending.count;
         
         if (attachmentPendingCount != 0) {
-            info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), attachmentPendingCount, [self stateStringForDelivery:attachmentsPending.anyObject]]];
+            [info addObject: [NSString stringWithFormat:@"%d %@", (int)attachmentPendingCount, [self stateStringForDelivery:attachmentsPending.anyObject]]];
         }
         messagesSeen = intersectionOfSets(messagesSeen,attachmentsReceived);
         seenCount = messagesSeen.count;
@@ -2520,19 +2512,19 @@ ready:;
         privateCount = messagesPrivate.count;
     }
     if (seenCount != 0) {
-        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), seenCount, [self stateStringForDelivery:messagesSeen.anyObject]]];
+        [info addObject: [NSString stringWithFormat:@"%d %@", (int)seenCount, [self stateStringForDelivery:messagesSeen.anyObject]]];
     }
     if (unseenCount != 0) {
-        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), unseenCount, [self stateStringForDelivery:messagesUnseen.anyObject]]];
+        [info addObject: [NSString stringWithFormat:@"%d %@", (int)unseenCount, [self stateStringForDelivery:messagesUnseen.anyObject]]];
     }
     if (privateCount != 0) {
-        info = [info stringByAppendingString:[NSString stringWithFormat:@"%@ %d %@", delimiter(info), privateCount, [self stateStringForDelivery:messagesPrivate.anyObject]]];
+        [info addObject: [NSString stringWithFormat:@"%d %@", (int)privateCount, [self stateStringForDelivery:messagesPrivate.anyObject]]];
     }
     
 #ifdef DEBUG
-    info = [info stringByAppendingString:[NSString stringWithFormat:@" (%d)", totalDeliveries]];
+    [info addObject: [NSString stringWithFormat:@" (%d)", (int)totalDeliveries]];
 #endif
-    return info;
+    return [info componentsJoinedByString:@", "];
 }
 
 - (NSString*) stateStringForMessage: (HXOMessage*) message {

@@ -1553,7 +1553,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self.delegate deleteObject:message];
             }
         } else {
-            NSLog(@"removing message without bad number of deliveries=%d (must be 1), tag = %@",message.deliveries.count,  message.messageTag);
+            NSLog(@"removing message without bad number of deliveries=%d (must be 1), tag = %@", (int)message.deliveries.count,  message.messageTag);
             [self.delegate deleteObject:message];
         }
     }
@@ -1561,7 +1561,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) flushIncomingDeliveriesInContext:(NSManagedObjectContext*)context {
     NSArray * deliveries = [self getPendingIncomingDeliveries:context];
-    NSLog(@"flushIncomingDeliveriesInContext: found %d pending incoming deliveries", deliveries.count);
+    NSLog(@"flushIncomingDeliveriesInContext: found %d pending incoming deliveries", (int)deliveries.count);
     for (Delivery * delivery in deliveries) {
         if (delivery.message.isRead && delivery.isUnseen) {
             if (DELIVERY_TRACE) NSLog(@"flushIncomingDeliveriesInContext: confirming seen message %@", delivery.message.messageId);
@@ -1728,18 +1728,18 @@ static NSTimer * _stateNotificationDelayTimer;
         } else {
             message.timeSection = ((HXOMessage*)[messagesBefore objectAtIndex:0]).timeSection;
         }
-        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: other messages before (%@-%@) = %d",sinceTime,message.timeAccepted,[messagesBefore count]);}
+        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: other messages before (%@-%@) = %d",sinceTime,message.timeAccepted, (int)messagesBefore.count);}
     } else {
         // no other message before in interval, start new section
         message.timeSection = message.timeAccepted;
-        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: no other messages before in (%@-%@) count=%d, new section time%@", sinceTime,message.timeAccepted,[messagesBefore count],message.timeAccepted);}
+        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: no other messages before in (%@-%@) count=%d, new section time%@", sinceTime,message.timeAccepted, (int)messagesBefore.count, message.timeAccepted);}
     }
     // we have now processed all message with a time <= message.timeAccepted
     // adjust time section of messages after this section
     NSDate * untilTime = [NSDate dateWithTimeInterval:sectionInterval sinceDate:message.timeAccepted];
     
     NSArray * messagesAfter = [self messagesByContact:message.contact inIntervalAfterTime:message.timeAccepted untilTime:untilTime];
-    int count = [messagesAfter count];
+    int count = (int)[messagesAfter count];
     if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: other messages after (%@-%@) = %d",message.timeAccepted,untilTime,count);}
     if (count > 0) {
         for (int i = 0; i < count; ++i) {
@@ -6269,7 +6269,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
+    if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", (int)code, reason, wasClean);
     _uncleanConnectionShutdown = code != 0 || [_serverConnection numberOfOpenRequests] !=0 || [_serverConnection numberOfFlushedRequests] != 0;
     if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode _uncleanConnectionShutdown = %d, openRequests = %d, flushedRequests = %d", _uncleanConnectionShutdown, [_serverConnection numberOfOpenRequests], [_serverConnection numberOfFlushedRequests]);
     BackendState oldState = _state;
