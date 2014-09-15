@@ -166,15 +166,15 @@ out_err:
         goto cleanup;
     }
     
-    int publen = ftell(pubfp);
-    int privlen = ftell(privfp);
+    long publen = ftell(pubfp);
+    long privlen = ftell(privfp);
     
     if (publen <= 0) {
-        NSLog(@"makeRSAKeyPairPEMWithSize: bad publen %d", publen);
+        NSLog(@"makeRSAKeyPairPEMWithSize: bad publen %ld", publen);
         goto cleanup;
     }
     if (privlen <= 0) {
-        NSLog(@"makeRSAKeyPairPEMWithSize: bad privlen %d", privlen);
+        NSLog(@"makeRSAKeyPairPEMWithSize: bad privlen %ld", privlen);
         goto cleanup;
     }
     
