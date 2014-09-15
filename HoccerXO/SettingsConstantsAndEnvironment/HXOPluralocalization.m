@@ -17,7 +17,7 @@ NSString * const kPluralCategoryFew   = @"few";
 NSString * const kPluralCategoryMany  = @"many";
 NSString * const kPluralCategoryOther = nil;
 
-NSString * categoryForCount(int count) {
+NSString * categoryForCount(NSUInteger count) {
     NSString * code = NSLocalizedString(@"language_code", nil);
     if ([@[@"af", @"sq", @"asa", @"eu", @"bem", @"bez", @"bn", @"brx", @"bg",
            @"ca", @"chr", @"cgg", @"da", @"dv", @"nl", @"en", @"eo", @"et",
@@ -71,17 +71,17 @@ NSString * categoryForCount(int count) {
     return nil;
 }
 
-NSString * HXOPluralocalizedString(NSString * key, int count, BOOL explicitZero) {
+NSString * HXOPluralocalizedString(NSString * key, NSUInteger count, BOOL explicitZero) {
     NSString * keyWithCategory = HXOPluralocalizedKey(key, count, explicitZero);
     return NSLocalizedString(keyWithCategory, nil);
 }
 
-NSString * HXOPluralocalizedKey(NSString * key, int count, BOOL explicitZero) {
+NSString * HXOPluralocalizedKey(NSString * key, NSUInteger count, BOOL explicitZero) {
     NSString * category = explicitZero && count == 0 ? @"zero" : categoryForCount(count);
     return category ? [NSString stringWithFormat: @"%@ (%@)", key, category] : key;
 }
 
-NSString * HXOPluralocalizeInt(NSString * key, int count) {
+NSString * HXOPluralocalizeInt(NSString * key, NSUInteger count) {
     return [NSString stringWithFormat: HXOPluralocalizedString(key, count, NO), count];
 }
 

@@ -358,7 +358,7 @@ NSString * const kPresenceStateTyping = @"typing";
             [groups addObject: @"<is group itself>"];
         }
     }];
-    groups[0]=[NSString stringWithFormat:@"(%d)", groups.count-1];
+    groups[0]=[NSString stringWithFormat:@"(%@)", @(groups.count - 1)];
     if (groups.count == 0) {
         return @"-";
     }

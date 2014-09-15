@@ -669,7 +669,7 @@ BOOL sameObjects(id obj1, id obj2) {
                         msg = [NSString stringWithFormat:@"The text of the attribute '%@' doesn't match the required pattern.", attributeName];
                         break;
                     default:
-                        msg = [NSString stringWithFormat:@"Unknown error (code %i).", [error code]];
+                        msg = [NSString stringWithFormat:@"Unknown error (code %@).", @(error.code)];
                         break;
                 }
                 
@@ -1848,7 +1848,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             // NSLog(@"property '%@'", property.name);
             NSString * description = [[object valueForKey:property.name] description];
             if (description.length > 256) {
-                description = [NSString stringWithFormat:@"%@...(%d chars not shown)", [description substringToIndex:255],description.length-256];
+                description = [NSString stringWithFormat:@"%@...(%@ chars not shown)", [description substringToIndex:255], @(description.length - 256)];
             }
             NSLog(@"property '%@' = %@", property.name, description);
         }

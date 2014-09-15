@@ -844,7 +844,7 @@ nil
 
 -(void)updateMultiAttachmentExportProgress {
     self.attachmentExportProgress.hidden = self.multiAttachmentExportItems == nil;
-    self.attachmentExportProgress.text = [NSString stringWithFormat:@"%d",self.multiAttachmentExportItems.count];
+    self.attachmentExportProgress.text = [NSString stringWithFormat:@"%@", @(self.multiAttachmentExportItems.count)];
 }
 
 
@@ -1253,7 +1253,7 @@ nil
     (*exportSession).metadata = @[titleItem, artistItem, albumItem, artworkItem];
     
     [*exportSession exportAsynchronouslyWithCompletionHandler:^{
-        int exportStatus = (*exportSession).status;
+        AVAssetExportSessionStatus exportStatus = (*exportSession).status;
         switch (exportStatus) {
             case AVAssetExportSessionStatusFailed: {
                 NSLog (@"AVAssetExportSessionStatusFailed");

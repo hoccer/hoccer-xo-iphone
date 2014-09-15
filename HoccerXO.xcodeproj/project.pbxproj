@@ -1489,14 +1489,18 @@
 		631F6CDA170654A600FB28D5 /* UtilityCategories */ = {
 			isa = PBXGroup;
 			children = (
-				E9AF289A1927BDAA00E29A03 /* NSData+Compression.h */,
-				E9AF289B1927BDAA00E29A03 /* NSData+Compression.m */,
-				E9AF289C1927BDAA00E29A03 /* NSData+GZIP.h */,
-				E9AF289D1927BDAA00E29A03 /* NSData+GZIP.m */,
 				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
 				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
+				C51B1146194858EC00FBCD2B /* NSArray+RemoveObject.h */,
+				C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */,
 				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
 				E96CB03317145AC0005F8FFA /* NSData+Base64.m */,
+				E9AF289A1927BDAA00E29A03 /* NSData+Compression.h */,
+				E9AF289B1927BDAA00E29A03 /* NSData+Compression.m */,
+				E9AF28A01927CBFF00E29A03 /* NSData+DictCompression.h */,
+				E9AF28A11927CBFF00E29A03 /* NSData+DictCompression.mm */,
+				E9AF289C1927BDAA00E29A03 /* NSData+GZIP.h */,
+				E9AF289D1927BDAA00E29A03 /* NSData+GZIP.m */,
 				63AE454B1705ADAE0099F0CB /* NSData+HexString.h */,
 				63AE454C1705ADAF0099F0CB /* NSData+HexString.m */,
 				E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */,
@@ -1535,10 +1539,6 @@
 				C576EBCB1934CC6100C0D254 /* UIImage+Tint.m */,
 				E980E27318648D80004AF79D /* UIResponder+Debug.h */,
 				E980E27418648D80004AF79D /* UIResponder+Debug.m */,
-				E9AF28A01927CBFF00E29A03 /* NSData+DictCompression.h */,
-				E9AF28A11927CBFF00E29A03 /* NSData+DictCompression.mm */,
-				C51B1146194858EC00FBCD2B /* NSArray+RemoveObject.h */,
-				C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */,
 			);
 			path = UtilityCategories;
 			sourceTree = "<group>";
