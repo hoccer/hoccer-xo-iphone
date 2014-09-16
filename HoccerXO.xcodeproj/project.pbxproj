@@ -2611,9 +2611,9 @@
 			buildPhases = (
 				63AEE2D016CA4D0200522F92 /* Sources */,
 				63AEE2D116CA4D0200522F92 /* Frameworks */,
+				63AEE2D216CA4D0200522F92 /* Resources */,
 				6330492317019ED60045E64E /* Increment Build Number */,
 				633049241701A02B0045E64E /* Increment Patch Level When Archiving */,
-				63AEE2D216CA4D0200522F92 /* Resources */,
 				631A96FA18AB9E84003363F5 /* Inject Debug Settings Pane */,
 			);
 			buildRules = (
