@@ -176,13 +176,13 @@
 
 - (NSString *)createAddressLineFromDictonary: (CFDictionaryRef) address
 {
-	int size = CFDictionaryGetCount(address);
+	CFIndex size = CFDictionaryGetCount(address);
 	
 	CFStringRef values[size];
 	CFDictionaryGetKeysAndValues(address, NULL, (void *)&values);
 	
 	NSMutableString *addressLine = [NSMutableString stringWithString: (__bridge NSString *)values[0]];
-	for (int i = 1; i < size; i++) {
+	for (CFIndex i = 1; i < size; i++) {
 		[addressLine appendFormat: @";%@", (__bridge NSString *)values[i]];
 	}
 		
