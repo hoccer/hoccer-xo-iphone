@@ -2312,9 +2312,12 @@ NSArray * TransferStateName = @[@"detached",
     [self.chatBackend dequeueUploadOfAttachment:self];
     
     // remove attachment from collections
+    /* I think this is exactly a 'cascade' delete rule. I'll disable it and set
+     * the delete rule accordingly...
     for (CollectionItem *item in self.collectionItems) {
         [item.collection removeItemAtIndex:item.index];
     }
+    */
 }
 
 
