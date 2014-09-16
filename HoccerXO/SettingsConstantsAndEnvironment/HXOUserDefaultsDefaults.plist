@@ -52,5 +52,7 @@
 	<false/>
 	<key>quickStart</key>
 	<true/>
+	<key>mpMediaAccess</key>
+	<false/>
 </dict>
 </plist>

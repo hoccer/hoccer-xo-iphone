@@ -53,6 +53,8 @@ FOUNDATION_EXPORT NSString * const kHXOConfirmMessagesSeen;
 
 FOUNDATION_EXPORT NSString * const kHXODebugAllowUntrustedCertificates;
 
+FOUNDATION_EXPORT NSString * const kHXOMPMediaAccess;
+
 
 @interface HXOUserDefaults : NSObject
 
