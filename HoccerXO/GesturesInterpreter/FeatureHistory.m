@@ -103,7 +103,7 @@
 	NSArray *lineFeatures = [self featuresOnAxis:axis];
 	NSMutableArray *featureTypeArray= [NSMutableArray array];
 		
-	for (int i = [lineFeatures count]-1; i >= 0 && timeInterval > 0; i--) {
+	for (NSInteger i = [lineFeatures count]-1; i >= 0 && timeInterval > 0; i--) {
 		LineFeature *feature = [lineFeatures objectAtIndex:i];
         NSString *type = [feature type];
         if (type != nil) {
@@ -150,7 +150,7 @@
 {
 	NSArray *lineFeatures = [self featuresOnAxis: axis];
 	
-	for (int i = [lineFeatures count]-1; i >= 0; i--) {
+	for (NSInteger i = [lineFeatures count]-1; i >= 0; i--) {
 		LineFeature *lineFeature = [lineFeatures objectAtIndex:i];
 		if (lineFeature.newestPoint.y < targetValue || lineFeature.firstPoint.y < targetValue)
 			return YES;
@@ -168,7 +168,7 @@
 {
 	NSArray *lineFeatures = [self featuresOnAxis: axis];
 	
-	for (int i = [lineFeatures count]-1; i >= 0; i--) {
+	for (NSInteger i = [lineFeatures count]-1; i >= 0; i--) {
 		LineFeature *lineFeature = [lineFeatures objectAtIndex:i];
 		if (lineFeature.newestPoint.y > targetValue || lineFeature.firstPoint.y > targetValue)
 			return YES;

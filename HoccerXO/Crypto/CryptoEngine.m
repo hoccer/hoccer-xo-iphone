@@ -74,7 +74,7 @@ NSString *const kCryptoErrorDomain = @"com.hoccertalk.crypto";
 
 - (NSData *)addData:(NSData *)data error:(NSError **)error
 {
-  if (CRYPTO_ENGINE_DEBUG) {NSLog(@"CryptoEngine addData len %d", data.length);}
+  if (CRYPTO_ENGINE_DEBUG) {NSLog(@"CryptoEngine addData len %@", @(data.length));}
   NSMutableData *buffer = self.buffer;
   [buffer setLength:CCCryptorGetOutputLength(self.cryptor, [data length], true)]; // We'll reuse the buffer in -finish
 

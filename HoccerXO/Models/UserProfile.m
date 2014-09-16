@@ -373,7 +373,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 - (NSNumber*) keyLength {
-    return [NSNumber numberWithInt:[CCRSA getPublicKeySize: self.publicKey]];
+    return @([CCRSA getPublicKeySize: self.publicKey]);
 }
 
 - (NSData *) publicKeyIdData {

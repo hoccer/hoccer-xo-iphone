@@ -77,7 +77,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
                 }
                 [marks addObject: @(stack.count)];
                 [stack addObject: current];
-                for (int i = [current count] - 1; i >= 0; --i) {
+                for (NSInteger i = [current count] - 1; i >= 0; --i) {
                     [stack addObject: current[i]];
                 }
             }
@@ -470,32 +470,32 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 
     [self.delegate controllerWillChangeContent: self];
 
-    if (DEBUG_VALUE_UPDATING) NSLog(@"deletedSections=%d", deletedSectionsIndexPaths.count);
+    if (DEBUG_VALUE_UPDATING) NSLog(@"deletedSections=%@", @(deletedSectionsIndexPaths.count));
     for (NSIndexPath * indexPath in deletedSectionsIndexPaths) {
         [self.delegate controller: self didChangeSection: indexPath forChangeType: DatasheetChangeDelete];
     }
 
-    if (DEBUG_VALUE_UPDATING) NSLog(@"insertedSections=%d", insertedSections.count);
+    if (DEBUG_VALUE_UPDATING) NSLog(@"insertedSections=%@", @(insertedSections.count));
     for (DatasheetSection * section in insertedSections) {
         NSIndexPath * indexPath = [self indexPathForItem: section];
         if (DEBUG_VALUE_UPDATING) NSLog(@"insertedSection path=%@", indexPath);
         [self.delegate controller: self didChangeSection: indexPath forChangeType: DatasheetChangeInsert];
     }
 
-    if (DEBUG_VALUE_UPDATING) NSLog(@"insertedItems=%d", insertedItems.count);
+    if (DEBUG_VALUE_UPDATING) NSLog(@"insertedItems=%@", @(insertedItems.count));
     for (DatasheetItem * item in insertedItems) {
         NSIndexPath * indexPath = [self indexPathForItem: item];
         if (DEBUG_VALUE_UPDATING) NSLog(@"insertedItem path=%@", indexPath);
         [self.delegate controller: self didChangeObject: nil forChangeType: DatasheetChangeInsert newIndexPath: indexPath];
     }
     
-    if (DEBUG_VALUE_UPDATING) NSLog(@"deletedItemsIndexPaths=%d", deletedItemsIndexPaths.count);
+    if (DEBUG_VALUE_UPDATING) NSLog(@"deletedItemsIndexPaths=%@", @(deletedItemsIndexPaths.count));
     for (NSIndexPath * indexPath in deletedItemsIndexPaths) {
         if (DEBUG_VALUE_UPDATING) NSLog(@"deletedItem path=%@", indexPath);
         [self.delegate controller: self didChangeObject: indexPath forChangeType: DatasheetChangeDelete newIndexPath: nil];
     }
 
-    if (DEBUG_VALUE_UPDATING) NSLog(@"survivingItems=%d", survivingItems.count);
+    if (DEBUG_VALUE_UPDATING) NSLog(@"survivingItems=%@", @(survivingItems.count));
     for (DatasheetItem * item in survivingItems) {
         NSIndexPath * indexPath = [self indexPathForItem: item];
         if (DEBUG_VALUE_UPDATING) NSLog(@"survivingItem path=%@", indexPath);

@@ -62,8 +62,8 @@
 - (void) peopleMultiPicker: (PeopleMultiPickerViewController*) picker didFinishWithSelection: (NSArray*) selection {
     NSMutableArray * recipients = [NSMutableArray array];
     for (NSDictionary * item in selection) {
-        ABMultiValueRef multiValue = ABRecordCopyValue((__bridge ABRecordRef)(item[@"person"]), [item[@"property"] integerValue]);
-        int valueIndex = ABMultiValueGetIndexForIdentifier(multiValue, [item[@"identifier"] integerValue]);
+        ABMultiValueRef multiValue = ABRecordCopyValue((__bridge ABRecordRef)(item[@"person"]), [item[@"property"] intValue]);
+        CFIndex valueIndex = ABMultiValueGetIndexForIdentifier(multiValue, [item[@"identifier"] intValue]);
         [recipients addObject: CFBridgingRelease(ABMultiValueCopyValueAtIndex(multiValue, valueIndex))];
         CFRelease(multiValue);
     }

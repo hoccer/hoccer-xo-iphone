@@ -76,7 +76,7 @@
 + (NSData*)extractPrivateKeyBitsFromPEM:(NSString *)pemPrivateKeyString;
 
 
-+ (int)getPublicKeySize:(NSData*)keyBits;
++ (NSInteger)getPublicKeySize:(NSData*)keyBits;
 
 + (NSData *) calcKeyId:(NSData *) myKeyBits;
 + (NSString *) keyIdString:(NSData *) myKeyId;

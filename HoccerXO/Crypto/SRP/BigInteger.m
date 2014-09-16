@@ -89,7 +89,7 @@ static BN_CTX * ctx;
 
 + (BigInteger*) bigIntegerWithValue: (NSInteger) value {
     BigInteger * n = [[BigInteger alloc] init];
-    BN_set_word(n.n, value);
+    BN_set_word(n.n, (int)value);
     return n;
 }
 

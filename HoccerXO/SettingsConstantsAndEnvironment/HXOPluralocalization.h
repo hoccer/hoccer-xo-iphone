@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-NSString * HXOPluralocalizeInt(NSString * key, int count);
-NSString * HXOPluralocalizedString(NSString * key, int count, BOOL explicitZero);
-NSString * HXOPluralocalizedKey(NSString * key, int count, BOOL explicitZero);
+NSString * HXOPluralocalizeInt(NSString * key, NSUInteger count);
+NSString * HXOPluralocalizedString(NSString * key, NSUInteger count, BOOL explicitZero);
+NSString * HXOPluralocalizedKey(NSString * key, NSUInteger count, BOOL explicitZero);

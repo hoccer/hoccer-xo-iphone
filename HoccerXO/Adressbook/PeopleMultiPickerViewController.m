@@ -108,11 +108,11 @@
         NSUInteger total = 0;
         ABPropertyID selectedProperty = 0;
         for (id property in properties) {
-            ABMultiValueRef multiValue = ABRecordCopyValue(person, [property integerValue]);
+            ABMultiValueRef multiValue = ABRecordCopyValue(person, [property intValue]);
             NSUInteger count = ABMultiValueGetCount(multiValue);
             total += count;
             if (count == 1) {
-                selectedProperty = [property integerValue];
+                selectedProperty = [property intValue];
             }
             CFRelease(multiValue);
         }
@@ -145,7 +145,7 @@
     NSArray * properties = [self pickableProperties];
     NSUInteger total = 0;
     for (id property in properties) {
-        ABMultiValueRef multiValue = ABRecordCopyValue(person, [property integerValue]);
+        ABMultiValueRef multiValue = ABRecordCopyValue(person, [property intValue]);
         NSUInteger count = ABMultiValueGetCount(multiValue);
         total += count;
         CFRelease(multiValue);

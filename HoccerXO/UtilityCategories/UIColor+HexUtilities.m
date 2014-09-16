@@ -23,7 +23,7 @@
         case 8: break;
         default: return nil;
     }
-    return [UIColor colorWithHex: x];
+    return [UIColor colorWithHex: (UInt32)x];
 }
 
 + (UIColor *)colorWithHex: (UInt32) color {

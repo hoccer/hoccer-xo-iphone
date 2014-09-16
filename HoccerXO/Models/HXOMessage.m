@@ -399,7 +399,7 @@
     //CC_SHA256_Update(&ctx,[tagData bytes],[tagData length]);
 
     NSData * senderData = [self.senderId dataUsingEncoding:NSUTF8StringEncoding];
-    CC_SHA256_Update(&ctx,[senderData bytes],[senderData length]);
+    CC_SHA256_Update(&ctx,[senderData bytes], (unsigned)[senderData length]);
 
 #ifdef DEBUG_HMAC
     NSLog(@"checked sender='%@' len=%d", [NSString stringWithData:senderData usingEncoding:NSUTF8StringEncoding], [senderData length]);
@@ -407,14 +407,14 @@
 #endif
     
     NSData * timeSentData = [[self.timeSentMillis stringValue] dataUsingEncoding:NSUTF8StringEncoding];
-    CC_SHA256_Update(&ctx,[timeSentData bytes],[timeSentData length]);
+    CC_SHA256_Update(&ctx,[timeSentData bytes], (unsigned)[timeSentData length]);
 #ifdef DEBUG_HMAC
     NSLog(@"checked timeSentMillis='%@' len=%d", [NSString stringWithData:timeSentData usingEncoding:NSUTF8StringEncoding], [timeSentData length]);
     [self printHash:&ctx];
 #endif
 
     NSData * bodyData = [self.bodyCiphertext dataUsingEncoding:NSUTF8StringEncoding];
-    CC_SHA256_Update(&ctx,[bodyData bytes],[bodyData length]);
+    CC_SHA256_Update(&ctx,[bodyData bytes], (unsigned)[bodyData length]);
 #ifdef DEBUG_HMAC
     NSLog(@"checked body='%@' len=%d", [NSString stringWithData:bodyData usingEncoding:NSUTF8StringEncoding], [bodyData length]);
     [self printHash:&ctx];
@@ -427,7 +427,7 @@
         } else {
             attachmentData = [self.attachment.attachmentJsonStringCipherText dataUsingEncoding:NSUTF8StringEncoding];
         }
-        CC_SHA256_Update(&ctx,[attachmentData bytes],[attachmentData length]);
+        CC_SHA256_Update(&ctx,[attachmentData bytes], (unsigned)[attachmentData length]);
 #ifdef DEBUG_HMAC
         NSLog(@"checked attachment='%@' len=%d", [NSString stringWithData:attachmentData usingEncoding:NSUTF8StringEncoding], [attachmentData length]);
         [self printHash:&ctx];
@@ -443,7 +443,7 @@
 
     if (self.salt != nil && self.salt.length > 0) {
         NSData * saltData = [self.saltString dataUsingEncoding:NSUTF8StringEncoding];
-        CC_SHA256_Update(&ctx,[saltData bytes],[saltData length]);
+        CC_SHA256_Update(&ctx,[saltData bytes], (unsigned)[saltData length]);
 #ifdef DEBUG_HMAC
         NSLog(@"checked salt='%@' len=%d", [NSString stringWithData:saltData usingEncoding:NSUTF8StringEncoding], [saltData length]);
         [self printHash:&ctx];

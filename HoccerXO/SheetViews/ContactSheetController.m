@@ -314,7 +314,7 @@ static int  groupMemberContext;
 }
 
 - (BOOL) isItemDeletable:(DatasheetItem *)item {
-    int index = [self.groupMemberItems indexOfObject: item];
+    NSUInteger index = [self.groupMemberItems indexOfObject: item];
     return (self.group.iAmAdmin || self.groupInStatuNascendi) && index != NSNotFound && ! [item isEqual: [self myMembershipItem]];
 }
 
@@ -447,7 +447,7 @@ static int  groupMemberContext;
 }
 
 - (NSString*) segueIdentifierForItem:(DatasheetItem *)item {
-    int groupMemeberIndex = [self.groupMemberItems indexOfObject: item];
+    NSUInteger groupMemeberIndex = [self.groupMemberItems indexOfObject: item];
     if (groupMemeberIndex != NSNotFound) {
         return [self groupMemberSegueIdentifier: groupMemeberIndex];
     } else if ([item isEqual: self.chatItem]) {
@@ -519,7 +519,7 @@ static int  groupMemberContext;
         self.fetchedResultsController.delegate = nil;
         self.fetchedResultsController = nil;
     }
-    for (int i =  self.groupMemberItems.count - 1; i >= 0; --i) {
+    for (NSInteger i =  self.groupMemberItems.count - 1; i >= 0; --i) {
         if ([self.groupMemberItems[i] isEqual: [self myMembershipItem]]) {
             [self.groupMemberItems removeObjectAtIndex: i];
         } else {
@@ -1007,7 +1007,7 @@ static int  groupMemberContext;
 
 - (DatasheetItem*) createGroupMemberItem: (NSUInteger) index {
     Contact * contact = [self contactAtIndex: index];
-    if (GROUPVIEW_DEBUG) NSLog(@"createGroupMemberItem index %d for contact %@ objectId %@", index, contact.nickName, contact.objectID);
+    if (GROUPVIEW_DEBUG) NSLog(@"createGroupMemberItem index %@ for contact %@ objectId %@", @(index), contact.nickName, contact.objectID);
     NSString * identifier = [NSString stringWithFormat: @"%@", contact.objectID];
     DatasheetItem * item = [self itemWithIdentifier: identifier cellIdentifier: [SmallContactCell reuseIdentifier]];
     item.accessoryStyle = DatasheetAccessoryDisclosure;
@@ -1016,7 +1016,7 @@ static int  groupMemberContext;
 }
 
 - (void) removeGroupMemberItem: (NSUInteger) index contact: (Contact*) contact {
-    if (GROUPVIEW_DEBUG) NSLog(@"removeGroupMemberItem %d for contact %@", index, contact.nickName);
+    if (GROUPVIEW_DEBUG) NSLog(@"removeGroupMemberItem %@ for contact %@", @(index), contact.nickName);
     [self removeContactObservers: contact];
     if (index < self.groupMemberItems.count) {
         [self.groupMemberItems removeObjectAtIndex: index];
@@ -1060,7 +1060,7 @@ static int  groupMemberContext;
 - (void) removeAllContactObservers {
     if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController: removeAllContactObservers");
     NSSet * registered = [NSSet setWithSet:self.contactObserverRegistered]; // avoid enumeration mutation exception
-    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:removeAllContactObservers: registered.count = %d", registered.count);
+    if (DEBUG_OBSERVERS) NSLog(@"ContactSheetController:removeAllContactObservers: registered.count = %@", @(registered.count));
     for (Contact * contact in registered) {
         [self removeContactObservers:contact];
     }

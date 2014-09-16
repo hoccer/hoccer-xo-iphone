@@ -1554,7 +1554,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 [self.delegate deleteObject:message];
             }
         } else {
-            NSLog(@"removing message without bad number of deliveries=%d (must be 1), tag = %@",message.deliveries.count,  message.messageTag);
+            NSLog(@"removing message without bad number of deliveries=%d (must be 1), tag = %@", (int)message.deliveries.count,  message.messageTag);
             [self.delegate deleteObject:message];
         }
     }
@@ -1562,7 +1562,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) flushIncomingDeliveriesInContext:(NSManagedObjectContext*)context {
     NSArray * deliveries = [self getPendingIncomingDeliveries:context];
-    NSLog(@"flushIncomingDeliveriesInContext: found %d pending incoming deliveries", deliveries.count);
+    NSLog(@"flushIncomingDeliveriesInContext: found %d pending incoming deliveries", (int)deliveries.count);
     for (Delivery * delivery in deliveries) {
         if (delivery.message.isRead && delivery.isUnseen) {
             if (DELIVERY_TRACE) NSLog(@"flushIncomingDeliveriesInContext: confirming seen message %@", delivery.message.messageId);
@@ -1729,18 +1729,18 @@ static NSTimer * _stateNotificationDelayTimer;
         } else {
             message.timeSection = ((HXOMessage*)[messagesBefore objectAtIndex:0]).timeSection;
         }
-        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: other messages before (%@-%@) = %d",sinceTime,message.timeAccepted,[messagesBefore count]);}
+        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: other messages before (%@-%@) = %d",sinceTime,message.timeAccepted, (int)messagesBefore.count);}
     } else {
         // no other message before in interval, start new section
         message.timeSection = message.timeAccepted;
-        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: no other messages before in (%@-%@) count=%d, new section time%@", sinceTime,message.timeAccepted,[messagesBefore count],message.timeAccepted);}
+        if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: no other messages before in (%@-%@) count=%d, new section time%@", sinceTime,message.timeAccepted, (int)messagesBefore.count, message.timeAccepted);}
     }
     // we have now processed all message with a time <= message.timeAccepted
     // adjust time section of messages after this section
     NSDate * untilTime = [NSDate dateWithTimeInterval:sectionInterval sinceDate:message.timeAccepted];
     
     NSArray * messagesAfter = [self messagesByContact:message.contact inIntervalAfterTime:message.timeAccepted untilTime:untilTime];
-    int count = [messagesAfter count];
+    int count = (int)[messagesAfter count];
     if (SECTION_TRACE) {NSLog(@"adjustTimeSectionsForMessage: other messages after (%@-%@) = %d",message.timeAccepted,untilTime,count);}
     if (count > 0) {
         for (int i = 0; i < count; ++i) {
@@ -2768,7 +2768,7 @@ static NSTimer * _stateNotificationDelayTimer;
 -(Group*)singleNearbyGroupWithId:(NSString*)groupId inContext:(NSManagedObjectContext *)context {
     if (SINGLE_NEARBY_DEBUG) NSLog(@"singleNearbyGroupWithId: %@", groupId);
     NSArray * groups = [self getNearbyGroupsInContext:context];
-    if (SINGLE_NEARBY_DEBUG) NSLog(@"singleNearbyGroupWithId: %@, found %d nearby groups", groupId, groups.count);
+    if (SINGLE_NEARBY_DEBUG) NSLog(@"singleNearbyGroupWithId: %@, found %d nearby groups", groupId, (int)groups.count);
     if (groups.count > 0) {
         Group * inspectedGroup = [self findInspectedNearbyGroupInContext:context];
         if (inspectedGroup == nil) {
@@ -3033,7 +3033,7 @@ static NSTimer * _stateNotificationDelayTimer;
                         if (success) {
                             NSArray * memberFlags = responseOrError;
                             if (memberFlags.count != groupsToCheck.count) {
-                                NSLog(@"ERROR: isMemberInGroups(): return type mismatch, requested %d/%d flags, got %d",groupsToCheck.count,groupArray.count,memberFlags.count);
+                                NSLog(@"ERROR: isMemberInGroups(): return type mismatch, requested %d/%d flags, got %d", (int)groupsToCheck.count, (int)groupArray.count, (int)memberFlags.count);
                                 return;
                             }
                             for (int i = 0; i < memberFlags.count;++i) {
@@ -3100,7 +3100,7 @@ static NSTimer * _stateNotificationDelayTimer;
                         if (success) {
                             NSArray * contactFlags = responseOrError;
                             if (contactFlags.count != contactsToCheck.count || contactFlags.count != contactArray.count) {
-                                NSLog(@"ERROR: isContactOf(): return type mismatch, requested %d/%d flags, got %d",contactsToCheck.count,contactArray.count,contactFlags.count);
+                                NSLog(@"ERROR: isContactOf(): return type mismatch, requested %d/%d flags, got %d", (int)contactsToCheck.count, (int)contactArray.count, (int)contactFlags.count);
                                 return;
                             }
                             for (int i = 0; i < contactFlags.count;++i) {
@@ -3282,7 +3282,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r3) %@",groupId);
         return;
     }
-    if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: %d members, %d in filtered set",[group.members count], [theMemberSet count]);
+    if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: %d members, %d in filtered set",(int)group.members.count, (int)theMemberSet.count);
     
     GroupMembership * myMembership = nil;
     if ([theMemberSet count] == 0) {
@@ -3311,7 +3311,7 @@ static NSTimer * _stateNotificationDelayTimer;
             }
             //AUTOREL [group addMembersObject:myMembership];
             myMembership.group = group;
-            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: group has now %d members",[group.members count]);
+            if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: group has now %d members", (int)group.members.count);
         }
     } else {
         myMembership = [theMemberSet anyObject];
@@ -3722,7 +3722,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if (GROUP_DEBUG  || DEBUG_DELETION) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup id %@ nick %@", group.clientId, group.nickName);
     // NSManagedObjectContext * moc = self.delegate.managedObjectContext;
     NSSet * groupMembers = [NSSet setWithSet:group.members];
-    if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup found %d members", groupMembers.count);
+    if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"deleteInDatabaseAllMembersAndContactsofGroup found %d members", (int)groupMembers.count);
     for (GroupMembership * member in groupMembers) {
         if (member.contact != nil && ![group isEqual:member.contact]) {
             if (!member.contact.isDirectlyRelated &&
@@ -3862,7 +3862,7 @@ static NSTimer * _stateNotificationDelayTimer;
         id failed = @[];
         
         if (params.count != 5) {
-            NSLog(@"getEncryptedGroupKeys() bad number of argument in params: %@, expected 5, got %d", params, params.count);
+            NSLog(@"getEncryptedGroupKeys() bad number of argument in params: %@, expected 5, got %d", params, (int)params.count);
             [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                 responder(failed);
             }];
@@ -4042,8 +4042,8 @@ static NSTimer * _stateNotificationDelayTimer;
         NSLog(@"Fetch request 'AttachmentsNotUploaded' failed: %@", error);
         abort();
     }
-    if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", [unfinishedAttachments count]);
-    NSMutableArray * pendingAttachments = [[NSMutableArray alloc]init];
+    if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentUploads found %d unfinished uploads", (int)unfinishedAttachments.count);
+    NSMutableArray * pendingAttachments = [NSMutableArray array];
     for (Attachment * attachment in unfinishedAttachments) {
         Delivery * delivery = attachment.message.deliveries.anyObject;
         if (delivery.attachmentUploadable) {
@@ -4073,7 +4073,7 @@ static NSTimer * _stateNotificationDelayTimer;
         NSLog(@"Fetch request 'AttachmentsNotDownloaded' failed: %@", error);
         abort();
     }
-    if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", [unfinishedAttachments count]);
+    if (TRANSFER_DEBUG) NSLog(@"flushPendingAttachmentDownloads found %d unfinished downloads", (int)unfinishedAttachments.count);
     NSMutableArray * pendingAttachments = [[NSMutableArray alloc]init];
     for (Attachment * attachment in unfinishedAttachments) {
         Delivery * delivery = attachment.message.deliveries.anyObject;
@@ -4188,7 +4188,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) enqueueDownloadOfAttachment:(Attachment*) theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment %@ state %@", theAttachment.remoteURL, [Attachment getStateName:theAttachment.state]);
-    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment before active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment before active=%d, waiting=%d", (int)_attachmentDownloadsActive.count, (int)_attachmentDownloadsWaiting.count);
     if (_attachmentDownloadsActive.count >= kMaxConcurrentDownloads) {
         if ([_attachmentDownloadsWaiting indexOfObject:theAttachment] == NSNotFound) {
             [_attachmentDownloadsWaiting enqueue:theAttachment];
@@ -4203,13 +4203,13 @@ static NSTimer * _stateNotificationDelayTimer;
             if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment: already in active queue: %@", theAttachment.remoteURL);
         }
     }
-    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"enqueueDownloadOfAttachment after active=%d, waiting=%d", (int)_attachmentDownloadsActive.count, (int)_attachmentDownloadsWaiting.count);
     [self updateNetworkActivityIndicator];
 }
 
 - (void) enqueueUploadOfAttachment:(Attachment*) theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment %@", theAttachment.uploadURL);
-    if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment before active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment before active=%d, waiting=%d", (int)_attachmentUploadsActive.count, (int)_attachmentUploadsWaiting.count);
     if (_attachmentUploadsActive.count >= kMaxConcurrentUploads) {
         if ([_attachmentUploadsWaiting indexOfObject:theAttachment] == NSNotFound) {
             [_attachmentUploadsWaiting enqueue:theAttachment];
@@ -4224,7 +4224,7 @@ static NSTimer * _stateNotificationDelayTimer;
             if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment: already in active queue: %@", theAttachment.uploadURL);
         }
     }
-    if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"enqueueUploadOfAttachment after active=%d, waiting=%d", (int)_attachmentUploadsActive.count, (int)_attachmentUploadsWaiting.count);
     [self updateNetworkActivityIndicator];
 }
 
@@ -4234,7 +4234,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) dequeueDownloadOfAttachment:(Attachment*) theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment %@", theAttachment.remoteURL);
-    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment before active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment before active=%d, waiting=%d", (int)_attachmentDownloadsActive.count, (int)_attachmentDownloadsWaiting.count);
     NSUInteger index = [_attachmentDownloadsActive indexOfObject:theAttachment];
     if (index != NSNotFound) {
         [_attachmentDownloadsActive removeObjectAtIndex:index];
@@ -4242,18 +4242,18 @@ static NSTimer * _stateNotificationDelayTimer;
             [self sortByTransferDate:_attachmentDownloadsWaiting];
             [self enqueueDownloadOfAttachment:[_attachmentDownloadsWaiting dequeue]];
         }
-        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (a) after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (a) after active=%d, waiting=%d", (int)_attachmentDownloadsActive.count, (int)_attachmentDownloadsWaiting.count);
     } else {
         // in case it is in the waiting queue remove it from there
         [_attachmentDownloadsWaiting removeObject:theAttachment];
-        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (b) after active=%d, waiting=%d",_attachmentDownloadsActive.count,_attachmentDownloadsWaiting.count);
+        if (TRANSFER_DEBUG) NSLog(@"dequeueDownloadOfAttachment (b) after active=%d, waiting=%d", (int)_attachmentDownloadsActive.count, (int)_attachmentDownloadsWaiting.count);
     }
     [self updateNetworkActivityIndicator];
 }
 
 - (void) dequeueUploadOfAttachment:(Attachment*) theAttachment {
     if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment %@", theAttachment.uploadURL);
-    if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment before active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment before active=%d, waiting=%d", (int)_attachmentUploadsActive.count, (int)_attachmentUploadsWaiting.count);
     NSUInteger index = [_attachmentUploadsActive indexOfObject:theAttachment];
     if (index != NSNotFound) {
         [_attachmentUploadsActive removeObjectAtIndex:index];
@@ -4261,12 +4261,12 @@ static NSTimer * _stateNotificationDelayTimer;
             [self sortBySizeTodo:_attachmentUploadsWaiting];
             [self enqueueUploadOfAttachment:[_attachmentUploadsWaiting dequeue]];
         }
-        if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (a) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+        if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (a) after active=%d, waiting=%d", (int)_attachmentUploadsActive.count, (int)_attachmentUploadsWaiting.count);
     } else {
         // in case it is in the waiting queue remove it from there
         [_attachmentUploadsWaiting removeObject:theAttachment];
     }
-    if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (b) after active=%d, waiting=%d",_attachmentUploadsActive.count,_attachmentUploadsWaiting.count);
+    if (TRANSFER_DEBUG) NSLog(@"dequeueUploadOfAttachment (b) after active=%d, waiting=%d", (int)_attachmentUploadsActive.count, (int)_attachmentUploadsWaiting.count);
     [self updateNetworkActivityIndicator];
 }
 
@@ -4343,7 +4343,7 @@ static NSTimer * _stateNotificationDelayTimer;
             if ([data length] == [theAttachment.cipherTransferSize longValue]) {
                 NSLog(@"Download check ok for Attachment url %@",theAttachment.remoteURL);
             } else {
-                NSLog(@"Download check size mismtach for Attachment url %@, should be %@, was %uld", theAttachment.remoteURL,theAttachment.cipherTransferSize,data.length);
+                NSLog(@"Download check size mismtach for Attachment url %@, should be %@, was %@", theAttachment.remoteURL,theAttachment.cipherTransferSize, @(data.length));
             }
         } else {
             NSLog(@"Download check failed for Attachment url %@, error=%@, reason=%@",theAttachment.remoteURL,error.localizedDescription,error.localizedFailureReason);
@@ -4514,13 +4514,13 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     if (![self.delegate.internetReachabilty isReachable]) {
         // do not schedule retrys without internet connection
-        if (TRANSFER_DEBUG) NSLog(@"No Internet, not scheduling: scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.outgoing ? theAttachment.uploadURL: theAttachment.remoteURL, theAttachment.transferFailures, retryTime);
+        if (TRANSFER_DEBUG) NSLog(@"No Internet, not scheduling: scheduleNewTransferFor:%@ failures = %i, retry in = %f secs",theAttachment.outgoing ? theAttachment.uploadURL: theAttachment.remoteURL, (int)theAttachment.transferFailures, retryTime);
         return;
     }
     if (theAttachment.state == kAttachmentUploadIncomplete ||
         theAttachment.state == kAttachmentDownloadIncomplete ||
         theAttachment.state == kAttachmentWantsTransfer) {
-        if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@ , retry in = %f secs, failures = %i",theAttachment.outgoing ? theAttachment.uploadURL: theAttachment.remoteURL, retryTime, theAttachment.transferFailures);
+        if (TRANSFER_DEBUG) NSLog(@"scheduleNewTransferFor:%@ , retry in = %f secs, failures = %i",theAttachment.outgoing ? theAttachment.uploadURL: theAttachment.remoteURL, retryTime, (int)theAttachment.transferFailures);
         theAttachment.transferRetryTimer = [NSTimer scheduledTimerWithTimeInterval:retryTime
                                                                             target:theAttachment
                                                                           selector: theTransferSelector
@@ -4536,7 +4536,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                otherButtonTitles: nil];
         [alert show];
         if (TRANSFER_DEBUG) NSLog(@"scheduleTransferRetryFor:%@ max retry count reached, failures = %i, no transfer scheduled",
-              theAttachment.outgoing ? theAttachment.uploadURL : theAttachment.remoteURL, theAttachment.transferFailures);
+              theAttachment.outgoing ? theAttachment.uploadURL : theAttachment.remoteURL, (int)theAttachment.transferFailures);
     } else  if (theAttachment.state == kAttachmentTransfered) {
         NSLog(@"scheduleTransferRetryFor: attachment %@ already transfered, state=%@",
               theAttachment.outgoing ? theAttachment.uploadURL : theAttachment.remoteURL, [Attachment getStateName:theAttachment.state]);
@@ -5773,7 +5773,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) incomingDelivery: (NSArray*) params {
     if (params.count != 2) {
-        NSLog(@"incomingDelivery requires an array of two parameters (delivery, message), but got %d parameters.", params.count);
+        NSLog(@"incomingDelivery requires an array of two parameters (delivery, message), but got %d parameters.", (int)params.count);
         return;
     }
     if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
@@ -5792,7 +5792,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) incomingDeliveryUpdated: (NSArray*) params {
     if (params.count != 1) {
-        NSLog(@"incomingDelivery one parameter (delivery), but got %d parameters.", params.count);
+        NSLog(@"incomingDelivery one parameter (delivery), but got %d parameters.", (int)params.count);
         return;
     }
     if ( ! [params[0] isKindOfClass: [NSDictionary class]]) {
@@ -6104,7 +6104,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) outgoingDeliveryUpdated: (NSArray*) params isResult:(BOOL)isResult onDone:(DoneBlock)done {
         if (params.count != 1) {
-            NSLog(@"outgoingDeliveryUpdated: requires an array of one parameter (delivery), but got %d parameters.", params.count);
+            NSLog(@"outgoingDeliveryUpdated: requires an array of one parameter (delivery), but got %d parameters.", (int)params.count);
             if (done != nil) done();
             return;
         }
@@ -6163,7 +6163,7 @@ static NSTimer * _stateNotificationDelayTimer;
         
         HXOMessage * myMessage = [self getMessageByTag:myMessageTag inContext:context];
         
-        if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%d",myMessage.messageId, myMessage.messageTag, myMessage.senderId, myMessage.deliveries.count);
+        if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%d",myMessage.messageId, myMessage.messageTag, myMessage.senderId, (int)myMessage.deliveries.count);
         
         if (myDelivery != nil && myMessage != nil) {
              /*
@@ -6300,7 +6300,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", code, reason, wasClean);
+    if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", (int)code, reason, wasClean);
     _uncleanConnectionShutdown = code != 0 || [_serverConnection numberOfOpenRequests] !=0 || [_serverConnection numberOfFlushedRequests] != 0;
     if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode _uncleanConnectionShutdown = %d, openRequests = %d, flushedRequests = %d", _uncleanConnectionShutdown, [_serverConnection numberOfOpenRequests], [_serverConnection numberOfFlushedRequests]);
     BackendState oldState = _state;
@@ -6316,7 +6316,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) webSocketDidFailWithError: (NSError*) error {
-    NSLog(@"webSocketDidFailWithError: %@ %d", error, error.code);
+    NSLog(@"webSocketDidFailWithError: %@ %d", error, (int)error.code);
     DoneBlock done = ^{
         [self setState: kBackendStopped]; // XXX do we need/want a failed state?
         [self reconnectWithBackoff];
@@ -6425,7 +6425,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) uploadAvatar:(NSData*)avatar toURL: (NSString*)toURL withDownloadURL:(NSString*)downloadURL inQueue:(GCNetworkQueue*)queue withCompletion:(CompletionBlock)handler {
     [self.delegate assertMainContext];
-    if (CONNECTION_TRACE) {NSLog(@"uploadAvatar size %d uploadURL=%@, downloadURL=%@", avatar.length, toURL, downloadURL );}
+    if (CONNECTION_TRACE) {NSLog(@"uploadAvatar size %@ uploadURL=%@, downloadURL=%@", @(avatar.length), toURL, downloadURL );}
     
     toURL = [HXOBackend checkForceFilecacheUrl:toURL];
     GCNetworkRequest *request = [GCNetworkRequest requestWithURLString:toURL HTTPMethod:@"PUT" parameters:nil];
@@ -6442,7 +6442,7 @@ static NSTimer * _stateNotificationDelayTimer;
                           callBackQueue:nil
                       completionHandler:^(NSData *data, NSHTTPURLResponse *response) {
                           if (CONNECTION_TRACE) {
-                              NSLog(@"uploadAvatar got response status = %d,(%@) headers=%@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
+                              NSLog(@"uploadAvatar got response status = %d,(%@) headers=%@", (int)response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
                               NSLog(@"uploadAvatar response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
                           }
                           if (response.statusCode == 301 || response.statusCode == 308 || response.statusCode == 200) {
@@ -6459,14 +6459,14 @@ static NSTimer * _stateNotificationDelayTimer;
                               }];
                               
                           } else {
-                              NSString * myDescription = [NSString stringWithFormat:@"uploadAvatar irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields];
+                              NSString * myDescription = [NSString stringWithFormat:@"uploadAvatar irregular response status = %d, headers=%@", (int)response.statusCode, response.allHeaderFields];
                               // NSLog(@"%@", myDescription);
                               NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.avatar.upload" code: 945 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                               handler(myError);
                           }
                       }
                            errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
-                               NSLog(@"uploadAvatar error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                               NSLog(@"uploadAvatar error response status = %d, headers=%@, error=%@", (int)response.statusCode, response.allHeaderFields, error);
                                handler(error);
                                
                            }
@@ -6495,7 +6495,7 @@ static NSTimer * _stateNotificationDelayTimer;
                           callBackQueue:nil
                       completionHandler:^(NSData *data, NSHTTPURLResponse *response) {
                           if (CONNECTION_TRACE) {
-                              NSLog(@"downloadDataFromURL got response status = %d,(%@) headers=%@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
+                              NSLog(@"downloadDataFromURL got response status = %d,(%@) headers=%@", (int)response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
                               NSLog(@"downloadDataFromURL response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
                           }
                           if (response.statusCode == 200) {
@@ -6505,7 +6505,7 @@ static NSTimer * _stateNotificationDelayTimer;
                               }
                               NSString * contentLength = response.allHeaderFields[@"Content-Length"];
                               if (contentLength != nil && [contentLength integerValue] != data.length) {
-                                  NSString * myDescription = [NSString stringWithFormat:@"downloadDataFromURL content length mismatch, header Content-Lenght = %@, data length = %d, headers=%@", contentLength, data.length, response.allHeaderFields];
+                                  NSString * myDescription = [NSString stringWithFormat:@"downloadDataFromURL content length mismatch, header Content-Lenght = %@, data length = %@, headers=%@", contentLength, @(data.length), response.allHeaderFields];
                                   // NSLog(@"%@", myDescription);
                                   NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.download" code: 931 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                                   handler(data, myError);
@@ -6514,14 +6514,14 @@ static NSTimer * _stateNotificationDelayTimer;
                               }
                               
                           } else {
-                              NSString * myDescription = [NSString stringWithFormat:@"downloadDataFromURL irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields];
+                              NSString * myDescription = [NSString stringWithFormat:@"downloadDataFromURL irregular response status = %d, headers=%@", (int)response.statusCode, response.allHeaderFields];
                               // NSLog(@"%@", myDescription);
                               NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.download" code: 946 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
                               handler(nil, myError);
                           }
                       }
                            errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
-                               NSLog(@"downloadDataFromURL error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                               NSLog(@"downloadDataFromURL error response status = %d, headers=%@, error=%@", (int)response.statusCode, response.allHeaderFields, error);
                                handler(nil, error);
                                
                            }
@@ -6641,7 +6641,7 @@ static NSTimer * _stateNotificationDelayTimer;
 -(NSDictionary*) httpHeaderWithContentLength: (NSUInteger) theLength {
 	
     NSDictionary * headers = [NSDictionary dictionaryWithObjectsAndKeys:
-                              [NSString stringWithFormat:@"%u", theLength], @"Content-Length",
+                              @(theLength).stringValue, @"Content-Length",
                               nil
                               ];
     return headers;
@@ -6716,17 +6716,17 @@ static NSTimer * _stateNotificationDelayTimer;
             //SecTrustRef secTrust = (__bridge SecTrustRef)[aStream propertyForKey:(__bridge id)kCFStreamPropertySSLPeerTrust];
             if (secTrust) {
                 NSInteger numCerts = SecTrustGetCertificateCount(secTrust);
-                for (NSInteger i = 0; i < numCerts && !_pinnedCertFound; i++) {
+                for (int i = 0; i < numCerts && !_pinnedCertFound; i++) {
                     SecCertificateRef cert = SecTrustGetCertificateAtIndex(secTrust, i);
                     NSData *certData = CFBridgingRelease(SecCertificateCopyData(cert));
                     
                     //NSLog(@"certData %d = %@", i, certData);
-                    if (CHECK_CERTS_DEBUG) NSLog(@"Backend: connection: certData %d = len = %lu", i, (unsigned long)certData.length);
+                    if (CHECK_CERTS_DEBUG) NSLog(@"Backend: connection: certData %d = len = %@", i, @(certData.length));
                     for (id ref in sslCerts) {
                         SecCertificateRef trustedCert = (__bridge SecCertificateRef)ref;
                         NSData *trustedCertData = CFBridgingRelease(SecCertificateCopyData(trustedCert));
                         
-                        if (CHECK_CERTS_DEBUG) NSLog(@"Backend: connection: comparing with trustedCertData len %d", trustedCertData.length);
+                        if (CHECK_CERTS_DEBUG) NSLog(@"Backend: connection: comparing with trustedCertData len %@", @(trustedCertData.length));
                         if ([trustedCertData isEqualToData:certData]) {
                             if (CHECK_CERTS_DEBUG) NSLog(@"Backend: connection: found pinnned cert len %lu", (unsigned long)trustedCertData.length);
                             _pinnedCertFound = YES;
@@ -6837,7 +6837,7 @@ static NSTimer * _stateNotificationDelayTimer;
                           callBackQueue:nil
                       completionHandler:^(NSData *data, NSHTTPURLResponse *response) {
                           if (CHECK_URL_TRACE) {
-                              NSLog(@"checkUploadStatus got response status = %d,(%@) headers=%@", response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
+                              NSLog(@"checkUploadStatus got response status = %d,(%@) headers=%@", (int)response.statusCode, [NSHTTPURLResponse localizedStringForStatusCode:[response statusCode]], response.allHeaderFields );
                               NSLog(@"response content=%@", [NSString stringWithData:data usingEncoding:NSUTF8StringEncoding]);
                           }
                           if (response.statusCode != 404) {
@@ -6870,16 +6870,16 @@ static NSTimer * _stateNotificationDelayTimer;
                                   if (ContentLength != nil && [ContentLength integerValue] == 0) {
                                       NSLog(@"checkUploadStatus: empty data");
                                   } else {
-                                      NSLog(@"checkUploadStatus irregular Content-Length %@, response status = %d, headers=%@",ContentLength, response.statusCode, response.allHeaderFields);
+                                      NSLog(@"checkUploadStatus irregular Content-Length %@, response status = %d, headers=%@",ContentLength, (int)response.statusCode, response.allHeaderFields);
                                   }
                               }                              
                           } else {
-                              NSLog(@"checkUploadStatus irregular response status = %d, headers=%@", response.statusCode, response.allHeaderFields);
+                              NSLog(@"checkUploadStatus irregular response status = %d, headers=%@", (int)response.statusCode, response.allHeaderFields);
                           }
                           handler(theURL, -1, NO);
                       }
                            errorHandler:^(NSData *data, NSHTTPURLResponse *response, NSError *error) {
-                               NSLog(@"checkUploadStatus error response status = %d, headers=%@, error=%@", response.statusCode, response.allHeaderFields, error);
+                               NSLog(@"checkUploadStatus error response status = %d, headers=%@, error=%@", (int)response.statusCode, response.allHeaderFields, error);
                                handler(theURL, -1, NO);
                            }
                        challengeHandler:^(NSURLConnection *connection, NSURLAuthenticationChallenge *challenge) {

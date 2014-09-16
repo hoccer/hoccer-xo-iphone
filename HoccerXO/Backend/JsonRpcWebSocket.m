@@ -40,7 +40,7 @@ static const NSTimeInterval kResponseTimeout = 30;
     NSMutableDictionary * _responseHandlers;
     NSMutableDictionary * _rpcMethods;
     NSString * _verbosityLevel;
-    int _flushedRequests;
+    NSUInteger _flushedRequests;
 }
 
 - (void) serverDidNotRespond: (NSNumber*) jsonRpcId;
@@ -128,11 +128,11 @@ static const NSTimeInterval kResponseTimeout = 30;
 }
 
 - (int) numberOfOpenRequests {
-    return _responseHandlers.count;
+    return (int)_responseHandlers.count;
 }
 
 - (int) numberOfFlushedRequests {
-    return _flushedRequests;
+    return (int)_flushedRequests;
 }
 
 #pragma mark - JSON RPC
@@ -398,7 +398,7 @@ static const NSTimeInterval kResponseTimeout = 30;
 }
 
 - (void) flushOpenRequests {
-    NSLog(@"JsonRpc: connection was closed,  flushing %d open requests", _responseHandlers.count);
+    NSLog(@"JsonRpc: connection was closed,  flushing %d open requests", (int)_responseHandlers.count);
     _flushedRequests = _responseHandlers.count;
     NSArray * allResponses = [_responseHandlers allKeys];
     for (id key in allResponses) {

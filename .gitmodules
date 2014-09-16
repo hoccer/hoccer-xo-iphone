@@ -15,10 +15,10 @@
 	url = git@github.com:hoccer/GCNetworkRequest.git
 [submodule "3rdParty/InAppSettingsKit"]
 	path = 3rdParty/InAppSettingsKit
-	url = https://github.com/futuretap/InAppSettingsKit.git
+	url = git@github.com:hoccer/InAppSettingsKit.git
 [submodule "3rdParty/ZipArchive"]
 	path = 3rdParty/ZipArchive
-	url = git@github.com:mattconnolly/ZipArchive.git
+	url = git@github.com:hoccer/ZipArchive.git
 [submodule "3rdParty/CocoaHTTPServer"]
 	path = 3rdParty/CocoaHTTPServer
 	url = git@github.com:robbiehanson/CocoaHTTPServer.git
