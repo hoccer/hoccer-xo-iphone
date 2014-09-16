@@ -208,11 +208,9 @@
 		63DEC02719B0A720003804E8 /* Playlists@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00C19B0A720003804E8 /* Playlists@2x.png */; };
 		63DEC02819B0A720003804E8 /* Songs.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00D19B0A720003804E8 /* Songs.png */; };
 		63DEC02919B0A720003804E8 /* Songs@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00E19B0A720003804E8 /* Songs@2x.png */; };
-		63DEC02A19B0A720003804E8 /* JGMediaPicker.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC00F19B0A720003804E8 /* JGMediaPicker.podspec */; };
 		63DEC02B19B0A720003804E8 /* JGAlbumTrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01119B0A720003804E8 /* JGAlbumTrackTableViewCell.xib */; };
 		63DEC02C19B0A720003804E8 /* JGAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01219B0A720003804E8 /* JGAlbumViewController.xib */; };
 		63DEC02D19B0A720003804E8 /* JGMediaQueryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01319B0A720003804E8 /* JGMediaQueryViewController.xib */; };
-		63DEC02E19B0A720003804E8 /* README.markdown in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01419B0A720003804E8 /* README.markdown */; };
 		63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
 		63E5698C196353B0007E06BF /* HXOPluralocalization.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5698B196353B0007E06BF /* HXOPluralocalization.m */; };
 		63E9B00118F314AB00EFF829 /* disclosure_arrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9AFFD18F314AB00EFF829 /* disclosure_arrow.m */; };
@@ -263,33 +261,9 @@
 		C576EC431934CCB200C0D254 /* player_button_shuffle_off.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC021934CCB200C0D254 /* player_button_shuffle_off.m */; };
 		C576EC441934CCB200C0D254 /* player_button_shuffle_on.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC041934CCB200C0D254 /* player_button_shuffle_on.m */; };
 		C576EC451934CCB200C0D254 /* player_close.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC061934CCB200C0D254 /* player_close.m */; };
-		C576EC461934CCB200C0D254 /* player_close.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC071934CCB200C0D254 /* player_close.pcvd */; };
-		C576EC471934CCB200C0D254 /* player_close.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC081934CCB200C0D254 /* player_close.svg */; };
 		C576EC481934CCB200C0D254 /* player_icon_now_playing.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC0A1934CCB200C0D254 /* player_icon_now_playing.m */; };
 		C576EC491934CCB200C0D254 /* player_icon_volume_down.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC0C1934CCB200C0D254 /* player_icon_volume_down.m */; };
 		C576EC4A1934CCB200C0D254 /* player_icon_volume_up.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC0E1934CCB200C0D254 /* player_icon_volume_up.m */; };
-		C576EC4B1934CCB200C0D254 /* player_next.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC0F1934CCB200C0D254 /* player_next.pcvd */; };
-		C576EC4C1934CCB200C0D254 /* player_next.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC101934CCB200C0D254 /* player_next.svg */; };
-		C576EC4D1934CCB200C0D254 /* player_pause.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC111934CCB200C0D254 /* player_pause.pcvd */; };
-		C576EC4E1934CCB200C0D254 /* player_pause.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC121934CCB200C0D254 /* player_pause.svg */; };
-		C576EC4F1934CCB200C0D254 /* player_play.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC131934CCB200C0D254 /* player_play.pcvd */; };
-		C576EC501934CCB200C0D254 /* player_play.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC141934CCB200C0D254 /* player_play.svg */; };
-		C576EC511934CCB200C0D254 /* player_prev.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC151934CCB200C0D254 /* player_prev.pcvd */; };
-		C576EC521934CCB200C0D254 /* player_prev.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC161934CCB200C0D254 /* player_prev.svg */; };
-		C576EC531934CCB200C0D254 /* player_repeat_all.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC171934CCB200C0D254 /* player_repeat_all.pcvd */; };
-		C576EC541934CCB200C0D254 /* player_repeat_all.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC181934CCB200C0D254 /* player_repeat_all.svg */; };
-		C576EC551934CCB200C0D254 /* player_repeat_off.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC191934CCB200C0D254 /* player_repeat_off.pcvd */; };
-		C576EC561934CCB200C0D254 /* player_repeat_off.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC1A1934CCB200C0D254 /* player_repeat_off.svg */; };
-		C576EC571934CCB200C0D254 /* player_repeat_title.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC1B1934CCB200C0D254 /* player_repeat_title.pcvd */; };
-		C576EC581934CCB200C0D254 /* player_repeat_title.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC1C1934CCB200C0D254 /* player_repeat_title.svg */; };
-		C576EC591934CCB200C0D254 /* player_shuffle_off.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC1D1934CCB200C0D254 /* player_shuffle_off.pcvd */; };
-		C576EC5A1934CCB200C0D254 /* player_shuffle_off.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC1E1934CCB200C0D254 /* player_shuffle_off.svg */; };
-		C576EC5B1934CCB200C0D254 /* player_shuffle_on.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC1F1934CCB200C0D254 /* player_shuffle_on.pcvd */; };
-		C576EC5C1934CCB200C0D254 /* player_shuffle_on.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC201934CCB200C0D254 /* player_shuffle_on.svg */; };
-		C576EC5D1934CCB200C0D254 /* player_volume_down.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC211934CCB200C0D254 /* player_volume_down.pcvd */; };
-		C576EC5E1934CCB200C0D254 /* player_volume_down.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC221934CCB200C0D254 /* player_volume_down.svg */; };
-		C576EC5F1934CCB200C0D254 /* player_volume_up.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC231934CCB200C0D254 /* player_volume_up.pcvd */; };
-		C576EC601934CCB200C0D254 /* player_volume_up.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC241934CCB200C0D254 /* player_volume_up.svg */; };
 		C576EC611934CCB200C0D254 /* slider-thumb.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EC251934CCB200C0D254 /* slider-thumb.png */; };
 		C576EC621934CCB200C0D254 /* slider-thumb@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EC261934CCB200C0D254 /* slider-thumb@2x.png */; };
 		C576EC631934CCB200C0D254 /* slider-track.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EC271934CCB200C0D254 /* slider-track.png */; };
@@ -298,8 +272,6 @@
 		C576EC6E1934CD1500C0D254 /* AudioAttachmentSection.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC6A1934CD1500C0D254 /* AudioAttachmentSection.m */; };
 		C576EC6F1934CD1500C0D254 /* AudioAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC6C1934CD1500C0D254 /* AudioAttachmentWithTextMessageCell.m */; };
 		C576EC741934CD2E00C0D254 /* tab_attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC711934CD2E00C0D254 /* tab_attachments.m */; };
-		C576EC751934CD2E00C0D254 /* tab_attachments.pcvd in Resources */ = {isa = PBXBuildFile; fileRef = C576EC721934CD2E00C0D254 /* tab_attachments.pcvd */; };
-		C576EC761934CD2E00C0D254 /* tab_attachments.svg in Resources */ = {isa = PBXBuildFile; fileRef = C576EC731934CD2E00C0D254 /* tab_attachments.svg */; };
 		C576EC791934CDD900C0D254 /* MessageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC781934CDD900C0D254 /* MessageItem.m */; };
 		C5B167D01962B982004D3A28 /* AddToCollectionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */; };
 		C5B167E21963ECF6004D3A28 /* AudioAttachmentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E11963ECF6004D3A28 /* AudioAttachmentDataSource.m */; };
@@ -315,8 +287,6 @@
 		E92FAED71870A0F900D72D79 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E92FAED61870A0F900D72D79 /* libz.dylib */; };
 		E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */; };
 		E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = E951759818DE420200EFD1C6 /* HXOEnvironment.m */; };
-		E95175E41909191F00EFD1C6 /* Kleistr.gpx in Resources */ = {isa = PBXBuildFile; fileRef = E95175E31909191F00EFD1C6 /* Kleistr.gpx */; };
-		E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */ = {isa = PBXBuildFile; fileRef = E95175F31909920E00EFD1C6 /* Choriner.gpx */; };
 		E951760D1913EB6100EFD1C6 /* CatchDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176031913EB6100EFD1C6 /* CatchDetector.m */; };
 		E951760E1913EB6100EFD1C6 /* FeatureHistory.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176051913EB6100EFD1C6 /* FeatureHistory.m */; };
 		E951760F1913EB6100EFD1C6 /* GesturesInterpreter.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176071913EB6100EFD1C6 /* GesturesInterpreter.m */; };
@@ -2793,25 +2763,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9A85D9D184FD1AD00EB9B68 /* chatbar-attachment-icon-contact@2x.png in Resources */,
-				C576EC571934CCB200C0D254 /* player_repeat_title.pcvd in Resources */,
 				63B1C9DD1843E4FD00B75CD8 /* cnt-download.png in Resources */,
-				C576EC4C1934CCB200C0D254 /* player_next.svg in Resources */,
-				E95175E41909191F00EFD1C6 /* Kleistr.gpx in Resources */,
 				63DEC02D19B0A720003804E8 /* JGMediaQueryViewController.xib in Resources */,
 				63B1C9E01843E4FD00B75CD8 /* cnt-location@2x.png in Resources */,
 				63D670EE193634C700CBF1C3 /* placeholder-chats@2x.png in Resources */,
 				E9A85DA2184FD1AD00EB9B68 /* chatbar-attachment-icon-photo.png in Resources */,
-				C576EC531934CCB200C0D254 /* player_repeat_all.pcvd in Resources */,
 				6310C42119390E870029706A /* placeholder-groups@2x.png in Resources */,
 				E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */,
-				C576EC521934CCB200C0D254 /* player_prev.svg in Resources */,
-				C576EC5C1934CCB200C0D254 /* player_shuffle_on.svg in Resources */,
 				63B1C9DE1843E4FD00B75CD8 /* cnt-download@2x.png in Resources */,
 				63DEC02719B0A720003804E8 /* Playlists@2x.png in Resources */,
 				63AE4516170350750099F0CB /* Default.png in Resources */,
-				C576EC761934CD2E00C0D254 /* tab_attachments.svg in Resources */,
 				C576EC341934CCB200C0D254 /* fullscreen-button-play.png in Resources */,
-				C576EC4E1934CCB200C0D254 /* player_pause.svg in Resources */,
 				63AE4517170350750099F0CB /* Default@2x.png in Resources */,
 				63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */,
 				E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */,
@@ -2819,25 +2781,18 @@
 				E9A85D9F184FD1AD00EB9B68 /* chatbar-attachment-icon-location@2x.png in Resources */,
 				E9A85D9C184FD1AD00EB9B68 /* chatbar-attachment-icon-contact.png in Resources */,
 				63AE45511705E1440099F0CB /* MainStoryboard_iPhone.storyboard in Resources */,
-				C576EC471934CCB200C0D254 /* player_close.svg in Resources */,
 				63AE455A1705EE770099F0CB /* InfoPlist.strings in Resources */,
 				6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */,
 				63AE455D1705EE820099F0CB /* Localizable.strings in Resources */,
-				C576EC461934CCB200C0D254 /* player_close.pcvd in Resources */,
 				634C07F019B7B60F00808A85 /* MainStoryboard_iPad.storyboard in Resources */,
-				C576EC5E1934CCB200C0D254 /* player_volume_down.svg in Resources */,
 				C576EC621934CCB200C0D254 /* slider-thumb@2x.png in Resources */,
-				C576EC581934CCB200C0D254 /* player_repeat_title.svg in Resources */,
 				63DEC02919B0A720003804E8 /* Songs@2x.png in Resources */,
-				C576EC551934CCB200C0D254 /* player_repeat_off.pcvd in Resources */,
 				C576EC2B1934CCB200C0D254 /* button-play@2x.png in Resources */,
 				63B1C9DF1843E4FD00B75CD8 /* cnt-location.png in Resources */,
 				6318FB6B1999057000D018A8 /* CTAssetsPicker.xcassets in Resources */,
 				C576EC321934CCB200C0D254 /* fullscreen-button-pause.png in Resources */,
 				C576EC2C1934CCB200C0D254 /* cover-art-fallback.png in Resources */,
-				C576EC511934CCB200C0D254 /* player_prev.pcvd in Resources */,
 				636D40091710770A00304EDF /* HXOUserDefaultsDefaults.plist in Resources */,
-				C576EC4F1934CCB200C0D254 /* player_play.pcvd in Resources */,
 				C576EC361934CCB200C0D254 /* fullscreen-icon-volume-down.png in Resources */,
 				636D400B171081AB00304EDF /* Environment.plist in Resources */,
 				E9A85DA4184FD1AD00EB9B68 /* chatbar-attachment-icon-record.png in Resources */,
@@ -2855,7 +2810,6 @@
 				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
 				E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */,
 				C576EC351934CCB200C0D254 /* fullscreen-button-play@2x.png in Resources */,
-				C576EC5B1934CCB200C0D254 /* player_shuffle_on.pcvd in Resources */,
 				E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */,
 				63DEC02B19B0A720003804E8 /* JGAlbumTrackTableViewCell.xib in Resources */,
 				C576EC2F1934CCB200C0D254 /* fullscreen-button-back@2x.png in Resources */,
@@ -2866,34 +2820,23 @@
 				63D670EF193634C700CBF1C3 /* placeholder-nearby@2x.png in Resources */,
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
 				631070EB1730106900D3936F /* new_message.aif in Resources */,
-				C576EC5A1934CCB200C0D254 /* player_shuffle_off.svg in Resources */,
 				63DEC02419B0A720003804E8 /* Artists.png in Resources */,
-				C576EC4B1934CCB200C0D254 /* player_next.pcvd in Resources */,
-				63DEC02E19B0A720003804E8 /* README.markdown in Resources */,
 				63B1C9E61843E4FD00B75CD8 /* cnt-record@2x.png in Resources */,
-				C576EC591934CCB200C0D254 /* player_shuffle_off.pcvd in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
 				63DEC02819B0A720003804E8 /* Songs.png in Resources */,
-				E95175F41909920F00EFD1C6 /* Choriner.gpx in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
 				C576EC391934CCB200C0D254 /* fullscreen-icon-volume-up@2x.png in Resources */,
 				639094A11738751800DF889B /* server_development.der in Resources */,
 				C576EC301934CCB200C0D254 /* fullscreen-button-forward.png in Resources */,
 				C576EC281934CCB200C0D254 /* button-pause.png in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
-				C576EC5D1934CCB200C0D254 /* player_volume_down.pcvd in Resources */,
 				C576EC2D1934CCB200C0D254 /* cover-art-fallback@2x.png in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
 				63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */,
-				C576EC561934CCB200C0D254 /* player_repeat_off.svg in Resources */,
-				C576EC601934CCB200C0D254 /* player_volume_up.svg in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
-				C576EC541934CCB200C0D254 /* player_repeat_all.svg in Resources */,
-				63DEC02A19B0A720003804E8 /* JGMediaPicker.podspec in Resources */,
 				63DEC02319B0A720003804E8 /* Albums@2x.png in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
 				6382545117503531000347CD /* server_production.der in Resources */,
-				C576EC4D1934CCB200C0D254 /* player_pause.pcvd in Resources */,
 				E9A85DA3184FD1AD00EB9B68 /* chatbar-attachment-icon-photo@2x.png in Resources */,
 				63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */,
 				C576EC331934CCB200C0D254 /* fullscreen-button-pause@2x.png in Resources */,
@@ -2903,15 +2846,12 @@
 				C576EC311934CCB200C0D254 /* fullscreen-button-forward@2x.png in Resources */,
 				C576EC2A1934CCB200C0D254 /* button-play.png in Resources */,
 				63DEC02519B0A720003804E8 /* Artists@2x.png in Resources */,
-				C576EC5F1934CCB200C0D254 /* player_volume_up.pcvd in Resources */,
 				E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */,
 				E9DFD23B1922749800CC1202 /* filecache.talk.hoccer.de.der in Resources */,
 				63B1C9E81843E4FD00B75CD8 /* cnt-video@2x.png in Resources */,
 				63B1C9E41843E4FD00B75CD8 /* cnt-photo@2x.png in Resources */,
 				63DEC02219B0A720003804E8 /* Albums.png in Resources */,
 				E9A85DA6184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png in Resources */,
-				C576EC501934CCB200C0D254 /* player_play.svg in Resources */,
-				C576EC751934CD2E00C0D254 /* tab_attachments.pcvd in Resources */,
 				E9A85DA0184FD1AD00EB9B68 /* chatbar-attachment-icon-music.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
