@@ -125,7 +125,7 @@ static NSObject * instanceLock;
                                &cipherBufferSize);
         
         if (status != noErr) {
-            NSLog(@"RSA:encryptWithKey: Error encrypting, OSStatus = %d", (NSInteger)status);
+            NSLog(@"RSA:encryptWithKey: Error encrypting, OSStatus = %ld", (long)status);
         }
         
         cipher = [NSData dataWithBytes:(const void *)cipherBuffer length:(NSUInteger)cipherBufferSize];
@@ -158,7 +158,7 @@ static NSObject * instanceLock;
                                &plainBufferSize);
         
         if (status != noErr) {
-            NSLog(@"CCRSA:decryptWithKey: Error decrypting, OSStatus = %d", (NSInteger)status);
+            NSLog(@"CCRSA:decryptWithKey: Error decrypting, OSStatus = %ld", (long)status);
             NSNotification *notification = [NSNotification notificationWithName:@"decryptionError" object:self];
             [[NSNotificationCenter defaultCenter] postNotification:notification];
             if (RSA_DEBUG) NSLog(@"%@", [NSThread callStackSymbols]);
@@ -470,7 +470,7 @@ static NSObject * instanceLock;
     // Skip ASN.1 public key header
     if (d_key == nil) return(nil);
     
-    unsigned int len = [d_key length];
+    NSUInteger len = [d_key length];
     if (!len) return(nil);
     
     unsigned char *c_key = (unsigned char *)[d_key bytes];
@@ -697,7 +697,7 @@ static NSObject * instanceLock;
         
         if (status == 0 && resultObj != nil) {
             // do something with the result
-            int results = [resultObj count];
+            NSInteger results = [resultObj count];
             NSMutableDictionary *found = [[NSMutableDictionary alloc] init];
             NSString * privatePrefixString = [NSString stringWithUTF8String:[privatePrefix bytes]];
             NSString * publicPrefixString = [NSString stringWithUTF8String:[publicPrefix bytes]];
@@ -773,8 +773,8 @@ static NSObject * instanceLock;
         int deleted = 0;
         if (status == 0 && resultObj != nil) {
             // do something with the result
-            int results = [resultObj count];
-            if (RSA_DEBUG) NSLog(@"deleteAllRSAKeys: found %d keys",results);
+            NSInteger results = [resultObj count];
+            if (RSA_DEBUG) NSLog(@"deleteAllRSAKeys: found %@ keys", @(results));
             for (int i = 0; i < results;++i ) {
                 //NSLog(@"result %d = %@",i,resultObj[i]);
                 NSData * atag = resultObj[i][@"atag"];
@@ -784,7 +784,7 @@ static NSObject * instanceLock;
                     [dict setObject:atag forKey:(__bridge id)kSecAttrApplicationTag];
                     [dict setObject:(__bridge id) kSecAttrKeyTypeRSA forKey:(__bridge id)kSecAttrKeyType];
                     OSStatus myStatus = SecItemDelete((__bridge CFDictionaryRef)dict);
-                    if (RSA_DEBUG) NSLog(@"SecItemDelete returned %ld on dict %@", myStatus, dict);
+                    if (RSA_DEBUG) NSLog(@"SecItemDelete returned %ld on dict %@", (long)myStatus, dict);
                     if (myStatus == 0) {
                         ++deleted;
                     }
@@ -840,7 +840,7 @@ static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
 +(NSString *)makeX509FormattedPublicKey:(NSData *)publicKeyBits {
     unsigned char builder[15];
     NSMutableData *encKey = [[NSMutableData alloc] init];
-    int bitstringEncLength;
+    NSInteger bitstringEncLength;
     if ([publicKeyBits length ] + 1 < 128 )
         bitstringEncLength = 1 ;
     else
@@ -1072,7 +1072,7 @@ size_t encodeLength(unsigned char * buf, size_t length) {
     return [publicKeyBits subdataWithRange:NSMakeRange(iterator, mod_size)];
 }
 
-+ (int)getPublicKeySize:(NSData*)keyBits {
++ (NSInteger)getPublicKeySize:(NSData*)keyBits {
     @try {
         NSData * modulus = [CCRSA getPublicKeyMod:keyBits];
         return modulus.length * 8;

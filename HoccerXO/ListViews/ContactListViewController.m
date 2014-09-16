@@ -502,7 +502,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
         vc.inspectedObject = contact;
     } else if ([sid isEqualToString:@"showInviteMessageViewController"]) {
         ((UIViewController*)((UINavigationController*)segue.destinationViewController).viewControllers[0]).title = NSLocalizedString(@"invite_recipient_picker_title", nil);
-        ((BatchInviteViewController*)segue.destinationViewController).mode = [sender integerValue];
+        ((BatchInviteViewController*)segue.destinationViewController).mode = [sender intValue];
     }
 }
 

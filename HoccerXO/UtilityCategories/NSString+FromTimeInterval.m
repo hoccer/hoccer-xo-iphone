@@ -11,10 +11,10 @@
 @implementation NSString (FromTimeInterval)
 
 + (NSString *) stringFromTimeInterval: (NSTimeInterval)interval {
-    NSInteger ti = (NSInteger)abs(round(interval));
-    NSInteger seconds = ti % 60;
-    NSInteger minutes = (ti / 60) % 60;
-    NSInteger hours = (ti / 3600);
+    int ti = abs(round(interval));
+    int seconds = ti % 60;
+    int minutes = (ti / 60) % 60;
+    int hours = (ti / 3600);
     
     NSString *sign = interval <= -0.5 ? @"-" : @"";
     

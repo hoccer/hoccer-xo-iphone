@@ -134,7 +134,7 @@ NSString * const kPresenceStateTyping = @"typing";
 }
 
 - (NSNumber*) keyLength {
-    return [NSNumber numberWithInt:[CCRSA getPublicKeySize: self.publicKey]];
+    return @([CCRSA getPublicKeySize: self.publicKey]);
 }
 
 - (SecKeyRef) getPublicKeyRef {
