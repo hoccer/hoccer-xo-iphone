@@ -140,15 +140,6 @@
 "Paste data Attachment %@"="Ablage (%@)";
 "Opened data Attachment %@"="Extern (%@)";
 
-// asset picker strings
-"%ld Photos Selected" = "%ld Fotos ausgewählt";
-"%ld Photo Selected"  = "%ld Foto ausgewählt";
-"%ld Videos Selected" = "%ld Videos ausgewählt";
-"%ld Video Selected"  = "%ld Video ausgewählt";
-"%ld Songs Selected"  = "%ld Titel ausgewählt";
-"%ld Song Selected"   = "%ld Titel ausgewählt";
-"%ld Items Selected"  = "%ld Dinge ausgewählt";
-
 //==============================================================================
 // Audio Attachment List
 //==============================================================================
@@ -384,6 +375,17 @@
 
 "credentials_and_database_really_delete_title" = "Zugangsdaten und Datenbank wirklich löschen?";
 "credentials_database_delete_btn_title"        = "Alles löschen";
+
+//==============================================================================
+// CTAssetsPickerController (3rd party)
+//==============================================================================
+"%ld Photos Selected" = "%ld Fotos ausgewählt";
+"%ld Photo Selected"  = "%ld Foto ausgewählt";
+"%ld Videos Selected" = "%ld Videos ausgewählt";
+"%ld Video Selected"  = "%ld Video ausgewählt";
+"%ld Songs Selected"  = "%ld Titel ausgewählt";
+"%ld Song Selected"   = "%ld Titel ausgewählt";
+"%ld Items Selected"  = "%ld Dinge ausgewählt";
 
 //==============================================================================
 // Database
