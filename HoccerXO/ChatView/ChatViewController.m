@@ -914,7 +914,8 @@ nil
     if ([type isEqualToString:ALAssetTypePhoto]) {
         
         // TODO: handle images from a photo stream/cloud
-        UIImage * myImage = [UIImage imageWithCGImage:asset.defaultRepresentation.fullResolutionImage];
+        ALAssetRepresentation * rep = asset.defaultRepresentation;
+        UIImage * myImage = [UIImage imageWithCGImage: rep.fullResolutionImage scale: rep.scale orientation: (UIImageOrientation)rep.orientation];
         
         // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
         myImage = [Attachment qualityAdjustedImage:myImage];
