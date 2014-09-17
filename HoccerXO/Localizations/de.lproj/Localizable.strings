@@ -140,6 +140,15 @@
 "Paste data Attachment %@"="Ablage (%@)";
 "Opened data Attachment %@"="Extern (%@)";
 
+// asset picker strings
+"%ld Photos Selected" = "%ld Fotos ausgewählt";
+"%ld Photo Selected"  = "%ld Foto ausgewählt";
+"%ld Videos Selected" = "%ld Videos ausgewählt";
+"%ld Video Selected"  = "%ld Video ausgewählt";
+"%ld Songs Selected"  = "%ld Titel ausgewählt";
+"%ld Song Selected"   = "%ld Titel ausgewählt";
+"%ld Items Selected"  = "%ld Dinge ausgewählt";
+
 //==============================================================================
 // Audio Attachment List
 //==============================================================================
