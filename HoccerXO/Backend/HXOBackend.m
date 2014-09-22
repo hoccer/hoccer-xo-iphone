@@ -4582,7 +4582,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     // end hack
 	
-    // NSLog(@"httpRequest method: %@ url: %@", method, URLString);
+    //NSLog(@"httpRequest method: %@ url: %@", method, URLString);
     NSURL *url = [NSURL URLWithString:URLString];
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
 	
@@ -4600,7 +4600,10 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 	[request setTimeoutInterval:60];
 	[request setCachePolicy:NSURLRequestReloadIgnoringCacheData];
+    //[request setHTTPShouldUsePipelining:NO];
     
+    if (TRANSFER_DEBUG) NSLog(@"httpRequest method: %@ url: %@ headers: %@", method, URLString, headers);
+
     return request;
 }
 

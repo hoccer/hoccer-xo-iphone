@@ -50,6 +50,8 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED_ACKNOWLEDGED    = @"
 NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED                = @"downloadAborted";
 NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"downloadAbortedAcknowledged";
 
+#define DEBUG_DELIVERY NO
+
 @implementation Delivery
 
 @dynamic state;
@@ -133,7 +135,7 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
     
     if (nextStateLevel >= 0) {
         if (nextStateLevel >= currentStateLevel) {
-            NSLog(@"#INFO: Delivery shouldUpdateState: updating state %@ (level %d), with state %@ (level %d)",
+            if (DEBUG_DELIVERY) NSLog(@"#INFO: Delivery shouldUpdateState: updating state %@ (level %d), with state %@ (level %d)",
                   currentState, currentStateLevel, newState, nextStateLevel);
             return YES;
         } else {
@@ -154,7 +156,7 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
     
     if (nextAttachmentStateLevel >= 0) {
         if (nextAttachmentStateLevel >= currentAttachmentStateLevel) {
-            NSLog(@"#INFO: Delivery shouldUpdateAttachmentState: should update attachmentState %@ (level %d), with attachmentState %@ (level %d)",
+            if (DEBUG_DELIVERY) NSLog(@"#INFO: Delivery shouldUpdateAttachmentState: should update attachmentState %@ (level %d), with attachmentState %@ (level %d)",
                   currentState, currentAttachmentStateLevel, newAttachmentState, nextAttachmentStateLevel);
             return YES;
         } else {

@@ -43,6 +43,8 @@
 
 #import "NSString+StringWithData.h"
 
+#import "NSData+NSInputStream.h"
+
 #define TRANSFER_TRACE ([[self verbosityLevel]isEqualToString:@"moretrace"])
 #define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"] || TRANSFER_TRACE)
 
@@ -952,10 +954,22 @@ NSArray * TransferStateName = @[@"detached",
             CryptingInputStream * myEncryptingStream = [[CryptingInputStream alloc] initWithInputStream:myStream cryptoEngine:encryptionEngine skipOutputBytes:0];
 #define ORIG
 #ifdef ORIG
+
+// use TEST_WITH_DATA to find out whether our CryptingInputStream is causing upload problems in conjunction with NSURLRequest
+//#define TEST_WITH_DATA
+#ifdef TEST_WITH_DATA
+            NSData * myData = [NSData dataWithContentsOfStream:myEncryptingStream initialCapacity:0 error:&myError];
+            NSLog(@"myData length = %d, myError = %@", myData.length, myError);
+#endif
             NSURLRequest *myRequest  = [self.chatBackend httpRequest:@"PUT"
                                                          absoluteURI:[HXOBackend checkForceFilecacheUrl:[self uploadURL]]
+#ifdef TEST_WITH_DATA
+                                                         payloadData:myData
+                                                         payloadStream:nil
+#else
                                                          payloadData:nil
                                                          payloadStream:myEncryptingStream
+#endif
                                                          headers:[self uploadHttpHeadersWithCrypto]
                                         ];
             self.transferConnection = [NSURLConnection connectionWithRequest:myRequest delegate:[self uploadDelegate]];
@@ -1607,7 +1621,7 @@ NSArray * TransferStateName = @[@"detached",
 
 // WARNING: this version depends on remoteURLs to be unique, so is not suitable for remote URLs than are no UUIDs
 - (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory {
-    NSString * myRemoteURL = [NSURL URLWithString: [self remoteURL]];
+    NSURL * myRemoteURL = [NSURL URLWithString: [self remoteURL]];
     NSString * myRemoteFileName = myRemoteURL.lastPathComponent;
     NSURL * myNewFile = [NSURL URLWithString:myRemoteFileName relativeToURL:theDirectory];
     if (self.mimeType == nil) {

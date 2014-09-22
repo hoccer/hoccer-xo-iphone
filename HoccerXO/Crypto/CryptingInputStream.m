@@ -117,8 +117,55 @@
     return thisStreamStatus;
 }
 
+NSString* streamStatusName(NSStreamStatus theStatus) {
+    switch (theStatus) {
+
+        case NSStreamStatusNotOpen:
+            return @"NSStreamStatusNotOpen";
+        case NSStreamStatusOpening:
+            return @"NSStreamStatusOpening";
+        case NSStreamStatusOpen:
+            return @"NSStreamStatusOpen";
+        case NSStreamStatusReading:
+            return @"NSStreamStatusReading";
+        case NSStreamStatusWriting:
+            return @"NSStreamStatusWriting";
+        case NSStreamStatusAtEnd:
+            return @"NSStreamStatusAtEnd";
+        case NSStreamStatusClosed:
+            return @"NSStreamStatusClosed";
+        case NSStreamStatusError:
+            return @"NSStreamStatusError";
+        default:
+            return [NSString stringWithFormat:@"<unknown state %@>", @(theStatus)];
+            break;
+    }
+}
+
+NSString* streamEventName(NSStreamEvent theEvent) {
+    switch (theEvent) {
+            
+        case NSStreamEventNone:
+            return @"NSStreamEventNone";
+        case NSStreamEventOpenCompleted:
+            return @"NSStreamEventOpenCompleted";
+        case NSStreamEventHasBytesAvailable:
+            return @"NSStreamEventHasBytesAvailable";
+        case NSStreamEventHasSpaceAvailable:
+            return @"NSStreamEventHasSpaceAvailable";
+        case NSStreamEventErrorOccurred:
+            return @"NSStreamEventErrorOccurred";
+        case NSStreamEventEndEncountered:
+            return @"NSStreamEventEndEncountered";
+        default:
+            return [NSString stringWithFormat:@"<unknown event %@>", @(theEvent)];
+            break;
+    }
+}
+
 - (void) setThisStreamStatus:(NSStreamStatus)theNewStatus {
-    if (CRYPTO_STREAM_DEBUG) {NSLog(@"setThisStreamStatus from %@ to %@", @(thisStreamStatus),@(theNewStatus));}
+    //if (CRYPTO_STREAM_DEBUG) {NSLog(@"setThisStreamStatus from %@ to %@", @(thisStreamStatus),@(theNewStatus));}
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"setThisStreamStatus from %@ to %@", streamStatusName(thisStreamStatus),streamStatusName(theNewStatus));}
     if (theNewStatus != thisStreamStatus) {
         thisStreamStatus = theNewStatus;
         switch (thisStreamStatus) {
@@ -161,7 +208,7 @@
     NSMutableData * myBlockSkipData = [NSMutableData dataWithLength:blockSize];
     void * myBuffer = [myBlockSkipData mutableBytes];
     
-    if (CRYPTO_STREAM_DEBUG) {NSLog(@"NSInputStream: skipBytes=%@, blocksToSkip=%@, blockSkipSize=%@", @(skipBytes), @(blocksToSkip), @(blockSkipSize));}
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: skipBytes=%@, blocksToSkip=%@, blockSkipSize=%@", @(skipBytes), @(blocksToSkip), @(blockSkipSize));}
     while (totalBytesSkipped < blockSkipSize) {
         NSInteger skipped = [self do_read:myBuffer maxLength:blockSize];
         if (skipped <= 0) {
@@ -171,7 +218,7 @@
     }
     // skip rest now
     NSInteger restToSkip = skipBytes - totalBytesSkipped;
-    if (CRYPTO_STREAM_DEBUG) {NSLog(@"NSInputStream: skipBytes=%@, blocksToSkip=%@, blockSkipSize=%@, totalBytesSkipped=%@, restToSkip=%@", @(skipBytes), @(blocksToSkip), @(blockSkipSize), @(totalBytesSkipped), @(restToSkip));}
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: skipBytes=%@, blocksToSkip=%@, blockSkipSize=%@, totalBytesSkipped=%@, restToSkip=%@", @(skipBytes), @(blocksToSkip), @(blockSkipSize), @(totalBytesSkipped), @(restToSkip));}
     if (restToSkip <= blockSize) {
         if (restToSkip > 0) {
             NSInteger skipped = [self do_read:myBuffer maxLength:restToSkip];
@@ -184,12 +231,12 @@
         NSLog(@"#ERROR: restToSkip > blocksize, should not happen");
         return 0;
     }
-    if (CRYPTO_STREAM_DEBUG) {NSLog(@"NSInputStream: skipBytes=%@, totalBytesSkipped=%@", @(skipBytes), @(totalBytesSkipped));}
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: skipBytes=%@, totalBytesSkipped=%@", @(skipBytes), @(totalBytesSkipped));}
     return [self do_read:buffer maxLength:len];
 }
 
 - (NSInteger)do_read:(uint8_t *)buffer maxLength:(NSUInteger)len {
-    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: read len = %@, restBuffer = %@, status = %@, parentStreamStatus = %@", @(len), @(restBuffer.length), @(self.streamStatus), @(parentStream.streamStatus));}
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream:do_read len = %@, restBuffer = %@, status = %@, parentStreamStatus = %@", @(len), @(restBuffer.length), streamStatusName(self.streamStatus), streamStatusName(parentStream.streamStatus));}
     
     if (_cryptoEngine == nil) {
         NSInteger bytesRead = [parentStream read:buffer maxLength:len];
@@ -200,21 +247,21 @@
         return bytesRead;
     }
     if (thisStreamStatus == NSStreamStatusError) {
-        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: returning -1 because of NSStreamStatusError");}
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream:do_read returning -1 because of NSStreamStatusError");}
         return -1;
     }
-    if (thisStreamStatus == NSStreamStatusAtEnd) {
-        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: returning 0 because of NSStreamStatusAtEnd");}
+    if (thisStreamStatus == NSStreamStatusAtEnd && restBuffer.length == 0) {
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream:do_read returning 0 because of NSStreamStatusAtEnd and restbuffer == 0");}
         return 0;
     }
-    if (restBuffer.length < len) {
+    if (restBuffer.length < len && thisStreamStatus != NSStreamStatusAtEnd) {
         // read more bytes from input stream
-        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: restBuffer.length = %@ < len=%@", @(restBuffer.length), @(len));}
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream:do_read restBuffer.length = %@ < len=%@", @(restBuffer.length), @(len));}
         // NOTE: when read delivers less bytes than requested, the http stream assumes we are exhausted, so we must not let this happen and always read one block more
         // The chosen value 16 however is only sufficient for up to 256 Bit cipher block sizes (AES 256 has 128)
         NSMutableData * mySourceData =[NSMutableData dataWithLength:len+32];
         NSInteger bytesRead = [parentStream read:[mySourceData mutableBytes] maxLength:len+32];
-        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: request %@ bytes from parent, got %@, parentStatus = %@", @(len+16), @(bytesRead), @(parentStream.streamStatus));}
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream:do_read request %@ bytes from parent, got %@, parentStatus = %@", @(len+16), @(bytesRead), @(parentStream.streamStatus));}
         if (bytesRead < 0) {
             thisStreamError = parentStream.streamError;
             [self setThisStreamStatus:NSStreamStatusError];
@@ -236,7 +283,7 @@
             myTransformedData = myTransformedMutableData;
         }
         if (myError != nil) {
-            NSLog(@"Error in CryptingInputStream: %@", thisStreamError);
+            NSLog(@"Error in CryptingInputStream:do_read: %@", thisStreamError);
             [self setThisStreamStatus:NSStreamStatusError];
             thisStreamError = myError;
             return -1;
@@ -248,7 +295,7 @@
         [restBuffer getBytes:buffer length:len];
         [restBuffer replaceBytesInRange:NSMakeRange(0, len) withBytes:nil length:0];
         totalBytesOut+= len;
-        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: totalIn=%@ totalOut=%@ returning len=%@", @(totalBytesIn), @(totalBytesOut), @(len));}
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream:do_read totalIn=%@ totalOut=%@ returning len=%@", @(totalBytesIn), @(totalBytesOut), @(len));}
         return len;
     }
     // not enough to satisfy full reqeuested len, but hand the whole restbuffer we got if any
@@ -259,7 +306,7 @@
     }
     [restBuffer setLength:0];
     totalBytesOut += bytesOut;
-    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream: totalIn=%@ totalOut=%@ returning rest len=%@", @(totalBytesIn), @(totalBytesOut), @(bytesOut));}
+    if (CRYPTO_STREAM_DEBUG) {NSLog(@"CryptingInputStream:do_read totalIn=%@ totalOut=%@ returning rest len=%@", @(totalBytesIn), @(totalBytesOut), @(bytesOut));}
 	return bytesOut;
 }
 
@@ -317,9 +364,9 @@
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode {
 	
 	if (aStream == parentStream) {
-        if (CRYPTO_STREAM_DEBUG) {NSLog(@"Parentstream encountered stream event %@", @(eventCode));}
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"Parentstream encountered stream event %@", streamEventName(eventCode));}
     } else if (aStream == self) {
-        if (CRYPTO_STREAM_DEBUG) {NSLog(@"Stream encountered stream event %@", @(eventCode));}
+        if (CRYPTO_STREAM_DEBUG) {NSLog(@"Stream encountered stream event %@", streamEventName(eventCode));}
         
         switch (eventCode) {
             case NSStreamEventOpenCompleted:
