@@ -83,6 +83,10 @@ static const int kMaxConcurrentUploads = 2;
 
 const double kHXgetServerTimeInterval = 10 * 60; // get Server Time every n minutes
 
+NSString * const kNickTemporary       = @"<temporary>";
+NSString * const kNickNewPresence     = @"<new presence>";
+NSString * const kNickNewRelationship = @"<new relationship>";
+NSString * const kNickNewMember       = @"<new member>";
 
 typedef enum BackendStates {
     kBackendStopped,
@@ -1802,12 +1806,12 @@ static NSTimer * _stateNotificationDelayTimer;
                 contact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:context];
                 contact.type = [Contact entityName];
                 contact.clientId = clientId;
-                contact.nickName = @"<new relationship>";
+                contact.nickName = kNickNewRelationship;
                 [self.delegate saveContext:context];
             }
         }
         // show "new friend" or "blocked" message in case the state changed
-        if (contact.nickName.length > 0 && !contact.isFriend && [kRelationStateFriend isEqualToString: relationshipDict[@"state"] ]) {
+        if ([self hasActualNickName: contact] && !contact.isFriend && [kRelationStateFriend isEqualToString: relationshipDict[@"state"] ]) {
             [self newFriendAlertForContact:contact];
         } else if (!contact.isBlocked && [kRelationStateBlocked isEqualToString: relationshipDict[@"state"]]) {
             [self blockedAlertForContact:contact];
@@ -2265,6 +2269,10 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
+- (BOOL) hasActualNickName: (Contact*) contact {
+    return contact.nickName != nil && [@[kNickNewMember, kNickNewPresence, kNickNewRelationship, kNickTemporary] indexOfObject: contact.nickName] == NSNotFound;
+}
+
 - (void) presenceUpdated:(NSDictionary *) thePresence inContext:(NSManagedObjectContext *)context {
     
     NSString * myClient = thePresence[@"clientId"];
@@ -2288,7 +2296,7 @@ static NSTimer * _stateNotificationDelayTimer;
             myContact.relationshipState = kRelationStateNone;
             myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
             myContact.avatarURL = @"";
-            myContact.nickName = @"<new presence>";
+            myContact.nickName = kNickNewPresence;
             [self checkRelationsipStateForGroupMembershipOfContact:myContact];
             newContact = YES;
             [self.delegate saveContext:context];
@@ -2302,7 +2310,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     if (myContact) {
         NSString * newNickName = thePresence[@"clientName"];
-        if (myContact.nickName == nil && newNickName.length > 0 && myContact.isFriend) {
+        if ( ! [self hasActualNickName: myContact] && newNickName.length > 0 && myContact.isFriend) {
             newFriend = YES;
         }
         myContact.nickName = newNickName;
@@ -3202,7 +3210,7 @@ static NSTimer * _stateNotificationDelayTimer;
     group.type = [Group entityName];
     group.clientId = groupId;
     group.groupState = groupState;
-    group.nickName = @"temporary";
+    group.nickName = kNickTemporary;
     if (GROUP_DEBUG) NSLog(@"createLocalGroup: created a new group with id %@",groupId);
     return group;
 }
@@ -3253,7 +3261,7 @@ static NSTimer * _stateNotificationDelayTimer;
             memberContact = (Contact*)[NSEntityDescription insertNewObjectForEntityForName: [Contact entityName] inManagedObjectContext:context];
             memberContact.type = [Contact entityName];
             memberContact.clientId = memberClientId;
-            memberContact.nickName = @"<new member>";
+            memberContact.nickName = kNickNewMember;
             
             [self.delegate saveContext:context];
         }
