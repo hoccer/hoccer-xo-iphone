@@ -116,7 +116,7 @@ static CGFloat kHeaderHeight;
     cell.titleLabel.text = title;
 
     if ([cell respondsToSelector: @selector(setDelegate:)]) {
-        [(id)cell setDelegate: self];
+        [cell setDelegate: self];
     }
 
     UIColor * titleColor = item.titleTextColor;
