@@ -68,9 +68,11 @@
 }
 
 - (void) createPeopleList {
-    ABRecordRef source = ABAddressBookCopyDefaultSource(self.addressBook);
-    self.peopleList = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeopleInSourceWithSortOrdering(self.addressBook, source, ABPersonGetSortOrdering());
-    CFRelease(source);
+    typedef NSInteger compare(id, id, void*);
+
+    NSArray * people = (__bridge_transfer NSArray*)ABAddressBookCopyArrayOfAllPeople(self.addressBook);
+    self.peopleList = [people sortedArrayUsingFunction: (compare*)ABPersonComparePeopleByName context: (void*) ABPersonGetSortOrdering()];
+
     [self.tableView reloadData];
 }
 
