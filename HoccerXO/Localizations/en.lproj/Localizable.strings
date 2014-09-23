@@ -566,9 +566,11 @@
 // Permissions
 //==============================================================================
 
-"permission_denied_title"              = "Access Denied";
-"permission_denied_microphone_message" = "Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";
-"permission_denied_location_message"   = "Grant location access to Hoccer XO in Settings->Privacy->Location Services to chat with people nearby.";
+"permission_denied_title"                       = "Access Denied";
+"permission_denied_microphone_message"          = "Grant microphone access to Hoccer XO in Settings->Privacy->Microphone if you want to record audio.";
+"permission_denied_location_nearby_message"     = "Grant location access to Hoccer XO in Settings->Privacy->Location Services to chat with people nearby.";
+"permission_denied_location_placemarks_message" = "Grant location access to Hoccer XO in Settings->Privacy->Location Services to pinpoint your current location.";
+
 
 //==============================================================================
 // Profile

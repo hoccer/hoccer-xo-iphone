@@ -864,6 +864,7 @@
 		63E9B00E18F315BA00EFF829 /* paper_dart.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = paper_dart.svg; sourceTree = "<group>"; };
 		63EB5DA018F1FFEB00E9A4E1 /* CopyableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CopyableLabel.h; sourceTree = "<group>"; };
 		63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CopyableLabel.m; sourceTree = "<group>"; };
+		63F3B56B19D1BE1E00357C2C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63F64C0C18B5069E00411ADC /* HoccerXO- 25.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO- 25.xcdatamodel"; sourceTree = "<group>"; };
 		63FE105218EFA726008630DE /* AttachmentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentButton.h; sourceTree = "<group>"; };
 		63FE105318EFA726008630DE /* AttachmentButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentButton.m; sourceTree = "<group>"; };
@@ -3204,6 +3205,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				63AE45591705EE770099F0CB /* en */,
+				63F3B56B19D1BE1E00357C2C /* de */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

@@ -37,7 +37,20 @@ static const CGFloat kGeoLocationCityZoom = 500;
     [super viewWillAppear: animated];
     self.mapView.showsUserLocation = YES;
 
-    [self.locationManager startUpdatingLocation];
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+    if (status == kCLAuthorizationStatusNotDetermined) {
+        [self.locationManager requestWhenInUseAuthorization];
+    } else if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [self.locationManager startUpdatingLocation];
+    } else if (status == kCLAuthorizationStatusDenied) {
+        /*
+        [[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
+                                    message: NSLocalizedString(@"permission_denied_location_placemarks_message", nil)
+                                   delegate: nil
+                          cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                          otherButtonTitles: nil] show];
+         */
+    }
 
     self.navigationItem.rightBarButtonItem.enabled = NO;
     _renderPreview = NO;
@@ -80,6 +93,16 @@ static const CGFloat kGeoLocationCityZoom = 500;
         _placemark.coordinate = newLocation.coordinate;
     }
 
+}
+
+- (void) locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [self.locationManager startUpdatingLocation];
+    } else if (status == kCLAuthorizationStatusDenied) {
+        [self.locationManager stopUpdatingLocation];
+    } else {
+        NSLog(@"Unhandled CLAuthorizationStatus %d", status);
+    }
 }
 
 #pragma mark - MKMapViewDelegate

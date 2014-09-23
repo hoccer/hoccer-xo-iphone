@@ -97,7 +97,31 @@ static HXOEnvironment *instance;
 - (void)activateLocation{
     if (LOCATION_DEBUG) {NSLog(@"Environment: startUpdatingLocation");}
     _lastLocationUpdate = nil;
-    [_locationManager startUpdatingLocation];
+    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
+
+    if (status == kCLAuthorizationStatusNotDetermined) {
+        [_locationManager requestWhenInUseAuthorization];
+    } else if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [_locationManager startUpdatingLocation];
+    } else if (status == kCLAuthorizationStatusDenied) {
+        [[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
+                                   message: NSLocalizedString(@"permission_denied_location_nearby_message", nil)
+                                  delegate: nil
+                         cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                          otherButtonTitles: nil] show];
+    } else {
+        NSLog(@"Unhandled CLAuthorizationStatus %d", status);
+    }
+}
+
+- (void) locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        [_locationManager startUpdatingLocation];
+    } else if (status == kCLAuthorizationStatusDenied) {
+        [_locationManager stopUpdatingLocation];
+    } else {
+        NSLog(@"Unhandled CLAuthorizationStatus %d", status);
+    }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation
@@ -122,7 +146,7 @@ static HXOEnvironment *instance;
     
     if (error.code == kCLErrorDenied){
         UIAlertView *locationAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
-                                                                message: NSLocalizedString(@"permission_denied_location_message", nil)
+                                                                message: NSLocalizedString(@"permission_denied_location_nearby_message", nil)
                                                                delegate: nil
                                                       cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                       otherButtonTitles: nil];

@@ -51,7 +51,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>14606</string>
+	<string>14615</string>
 	<key>HXOClientDevelopers</key>
 	<array>
 		<string>Pavel Mayer</string>
@@ -68,6 +68,8 @@
 	<array/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>see InfoPlist.strings</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
