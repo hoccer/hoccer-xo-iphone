@@ -51,10 +51,10 @@
 @property (nonatomic) NSNumber *   timeSentMillis;
 @property (nonatomic) NSNumber *   timeAcceptedMillis;
 
-@property (nonatomic) CGFloat cachedPortraitCellHeight;
-@property (nonatomic) CGFloat cachedLandscapeCellHeight;
+@property (nonatomic) float      cachedPortraitCellHeight;
+@property (nonatomic) float      cachedLandscapeCellHeight;
 @property (nonatomic) NSString * cachedBuildNumber;
-@property (nonatomic) double cachedMessageFontSize;
+@property (nonatomic) double     cachedMessageFontSize;
 
 @property (nonatomic) CGFloat cachedCellHeight;
 
