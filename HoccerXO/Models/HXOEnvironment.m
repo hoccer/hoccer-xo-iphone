@@ -115,7 +115,7 @@ static HXOEnvironment *instance;
 }
 
 - (void) locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
+    if (status == kCLAuthorizationStatusAuthorizedWhenInUse && _activationState) {
         [_locationManager startUpdatingLocation];
     } else if (status == kCLAuthorizationStatusDenied) {
         [_locationManager stopUpdatingLocation];
