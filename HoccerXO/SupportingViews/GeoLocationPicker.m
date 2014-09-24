@@ -1,3 +1,4 @@
+
 //
 //  GeoLocationViewController.m
 //  HoccerXO
@@ -9,6 +10,7 @@
 #import "GeoLocationPicker.h"
 #import "UIImage+ScaleAndCrop.h"
 #import "HXOUserDefaults.h"
+#import "CLLocationManager+AuthHelper.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -37,20 +39,7 @@ static const CGFloat kGeoLocationCityZoom = 500;
     [super viewWillAppear: animated];
     self.mapView.showsUserLocation = YES;
 
-    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-        [self.locationManager requestWhenInUseAuthorization];
-    if (status == kCLAuthorizationStatusNotDetermined) {
-    } else if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        [self.locationManager startUpdatingLocation];
-    } else if (status == kCLAuthorizationStatusDenied) {
-        /*
-        [[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
-                                    message: NSLocalizedString(@"permission_denied_location_placemarks_message", nil)
-                                   delegate: nil
-                          cancelButtonTitle: NSLocalizedString(@"ok", nil)
-                          otherButtonTitles: nil] show];
-         */
-    }
+    [self.locationManager performAuthOrRun];
 
     self.navigationItem.rightBarButtonItem.enabled = NO;
     _renderPreview = NO;
@@ -92,17 +81,10 @@ static const CGFloat kGeoLocationCityZoom = 500;
     } else if ( ! _pinDraggedByUser){
         _placemark.coordinate = newLocation.coordinate;
     }
-
 }
 
 - (void) locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        [self.locationManager startUpdatingLocation];
-    } else if (status == kCLAuthorizationStatusDenied) {
-        [self.locationManager stopUpdatingLocation];
-    } else {
-        NSLog(@"Unhandled CLAuthorizationStatus %d", status);
-    }
+    [self.locationManager handleAuthorizationStatus: status];
 }
 
 #pragma mark - MKMapViewDelegate

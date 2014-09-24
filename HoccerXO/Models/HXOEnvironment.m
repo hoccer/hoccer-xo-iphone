@@ -110,9 +110,7 @@ static HXOEnvironment *instance;
 
 - (void) locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
     if (_activationState) {
-        if ( ! [_locationManager handleAuthorizationStatus: status]) {
-
-        }
+        [_locationManager handleAuthorizationStatus: status];
     }
 }
 
