@@ -38,8 +38,8 @@ static const CGFloat kGeoLocationCityZoom = 500;
     self.mapView.showsUserLocation = YES;
 
     CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
-    if (status == kCLAuthorizationStatusNotDetermined) {
         [self.locationManager requestWhenInUseAuthorization];
+    if (status == kCLAuthorizationStatusNotDetermined) {
     } else if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
         [self.locationManager startUpdatingLocation];
     } else if (status == kCLAuthorizationStatusDenied) {

@@ -93,6 +93,7 @@
 		636D400B171081AB00304EDF /* Environment.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D400A171081AB00304EDF /* Environment.plist */; };
 		63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */; };
 		63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */; };
+		637207BC19D2FD8E002FAF03 /* CLLocationManager+AuthHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 637207BB19D2FD8E002FAF03 /* CLLocationManager+AuthHelper.m */; };
 		63756A9018F6434C003F7555 /* ContactPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 63756A8F18F6434C003F7555 /* ContactPicker.m */; };
 		6378482916F37E9600DE03C2 /* AttachmentPickerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378482816F37E9500DE03C2 /* AttachmentPickerController.m */; };
 		6378482B16F3AE9100DE03C2 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6378482A16F3AE9000DE03C2 /* AssetsLibrary.framework */; };
@@ -648,6 +649,8 @@
 		63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
 		63716BBB185CCEE60094987D /* GenericAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
 		63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GenericAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
+		637207BA19D2FD8E002FAF03 /* CLLocationManager+AuthHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CLLocationManager+AuthHelper.h"; sourceTree = "<group>"; };
+		637207BB19D2FD8E002FAF03 /* CLLocationManager+AuthHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CLLocationManager+AuthHelper.m"; sourceTree = "<group>"; };
 		63756A8E18F6434C003F7555 /* ContactPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactPicker.h; sourceTree = "<group>"; };
 		63756A8F18F6434C003F7555 /* ContactPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactPicker.m; sourceTree = "<group>"; };
 		63756A9F18F669DC003F7555 /* ContactCellProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContactCellProtocol.h; sourceTree = "<group>"; };
@@ -1465,6 +1468,8 @@
 			children = (
 				E96CB03017145ABF005F8FFA /* Base64Transcoder.c */,
 				E96CB03117145ABF005F8FFA /* Base64Transcoder.h */,
+				637207BA19D2FD8E002FAF03 /* CLLocationManager+AuthHelper.h */,
+				637207BB19D2FD8E002FAF03 /* CLLocationManager+AuthHelper.m */,
 				C51B1146194858EC00FBCD2B /* NSArray+RemoveObject.h */,
 				C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */,
 				E96CB03217145ABF005F8FFA /* NSData+Base64.h */,
@@ -1477,6 +1482,8 @@
 				E9AF289D1927BDAA00E29A03 /* NSData+GZIP.m */,
 				63AE454B1705ADAE0099F0CB /* NSData+HexString.h */,
 				63AE454C1705ADAF0099F0CB /* NSData+HexString.m */,
+				E9E14D4A19D0A22000A71DAF /* NSData+NSInputStream.h */,
+				E9E14D4B19D0A22000A71DAF /* NSData+NSInputStream.m */,
 				E96CB0441716DB8D005F8FFA /* NSDictionary+CSURLParams.h */,
 				E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */,
 				E93ED64417A302070072FD2C /* NSMutableArray+QueueAdditions.h */,
@@ -1513,8 +1520,6 @@
 				C576EBCB1934CC6100C0D254 /* UIImage+Tint.m */,
 				E980E27318648D80004AF79D /* UIResponder+Debug.h */,
 				E980E27418648D80004AF79D /* UIResponder+Debug.m */,
-				E9E14D4A19D0A22000A71DAF /* NSData+NSInputStream.h */,
-				E9E14D4B19D0A22000A71DAF /* NSData+NSInputStream.m */,
 			);
 			path = UtilityCategories;
 			sourceTree = "<group>";
@@ -3094,6 +3099,7 @@
 				63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */,
 				63C178C318BF57A600F29BC4 /* UIColor+HSBUtilities.m in Sources */,
 				C576EC441934CCB200C0D254 /* player_button_shuffle_on.m in Sources */,
+				637207BC19D2FD8E002FAF03 /* CLLocationManager+AuthHelper.m in Sources */,
 				E9E92F3B18733B7A007B8042 /* DDAbstractDatabaseLogger.m in Sources */,
 				E9D1145E1732E74000737EF7 /* Vcard.m in Sources */,
 				E9D1148A1736702E00737EF7 /* GCHTTPRequestOperation.m in Sources */,

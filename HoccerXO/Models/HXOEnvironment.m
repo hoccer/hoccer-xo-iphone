@@ -10,6 +10,7 @@
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "UserProfile.h"
+#import "CLLocationManager+AuthHelper.h"
 
 #import <ifaddrs.h>
 #import <arpa/inet.h>
@@ -97,30 +98,21 @@ static HXOEnvironment *instance;
 - (void)activateLocation{
     if (LOCATION_DEBUG) {NSLog(@"Environment: startUpdatingLocation");}
     _lastLocationUpdate = nil;
-    CLAuthorizationStatus status = [CLLocationManager authorizationStatus];
 
-    if (status == kCLAuthorizationStatusNotDetermined) {
-        [_locationManager requestWhenInUseAuthorization];
-    } else if (status == kCLAuthorizationStatusAuthorizedWhenInUse) {
-        [_locationManager startUpdatingLocation];
-    } else if (status == kCLAuthorizationStatusDenied) {
+    if ( ! [_locationManager performAuthOrRun]) {
         [[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
-                                   message: NSLocalizedString(@"permission_denied_location_nearby_message", nil)
-                                  delegate: nil
-                         cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                    message: NSLocalizedString(@"permission_denied_location_nearby_message", nil)
+                                   delegate: nil
+                          cancelButtonTitle: NSLocalizedString(@"ok", nil)
                           otherButtonTitles: nil] show];
-    } else {
-        NSLog(@"Unhandled CLAuthorizationStatus %d", status);
     }
 }
 
 - (void) locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    if (status == kCLAuthorizationStatusAuthorizedWhenInUse && _activationState) {
-        [_locationManager startUpdatingLocation];
-    } else if (status == kCLAuthorizationStatusDenied) {
-        [_locationManager stopUpdatingLocation];
-    } else {
-        NSLog(@"Unhandled CLAuthorizationStatus %d", status);
+    if (_activationState) {
+        if ( ! [_locationManager handleAuthorizationStatus: status]) {
+
+        }
     }
 }
 
