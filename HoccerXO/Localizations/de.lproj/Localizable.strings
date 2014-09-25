@@ -581,9 +581,10 @@
 
 
 "permission_denied_title"                       = "Zugriff verweigert";
-"permission_denied_microphone_message"          = "Um Sprache aufzunehmen erlaube Hoccer XO in Einstellungen->Datenschutz->Mikrofon den Zugriff.";
-"permission_denied_location_nearby_message"     = "Um mit Leuten in der Nähe zu chatten erlaube Hoccer XO in Einstellungen->Datenschutz->Ortungsdienste den Zugriff.";
-"permission_denied_location_placemarks_message" = "Um deinen Standort anzuzeigen erlaube Hoccer XO in Einstellungen->Datenschutz->Ortungsdienste den Zugriff.";
+"permission_denied_microphone_message"          = "Um Sprache aufzunehmen erlaube Hoccer XO im System Einstellungen->Datenschutz->Mikrofon den Zugriff.";
+"permission_denied_location_nearby_message"     = "Um mit Leuten in der Nähe zu chatten erlaube Hoccer XO im System Einstellungen->Datenschutz->Ortungsdienste den Zugriff.";
+"permission_denied_location_placemarks_message" = "Um deinen Standort anzuzeigen erlaube Hoccer XO im System Einstellungen->Datenschutz->Ortungsdienste den Zugriff.";
+"permission_denied_addressbook_message"         = "Um Kontakte auszuwählen erlaube Hoccer XO im System Einstellungen->Datenschutz->Kontakte den Zugriff auf dein Adressbuch.";
 
 //==============================================================================
 // Profile

@@ -423,10 +423,19 @@
 }
 
 - (void) pickVCardFromAdressbook {
-    ABPeoplePickerNavigationController *peoplePicker = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).peoplePicker;
-    peoplePicker.peoplePickerDelegate = self;
-    [_viewController presentViewController:peoplePicker animated:YES completion:nil];
-    [AppDelegate setBlackFontStatusbarForViewController:_viewController];
+    CFErrorRef myError;
+    ABAddressBookRef addressBook = ABAddressBookCreateWithOptions(nil, &myError);
+    [self checkAddressBookAccessforBook:addressBook WithHandler:^(bool granted, CFErrorRef error) {
+        if (granted) {
+            ABPeoplePickerNavigationController *peoplePicker = ((AppDelegate*)[[UIApplication sharedApplication] delegate]).peoplePicker;
+            peoplePicker.peoplePickerDelegate = self;
+            [_viewController presentViewController:peoplePicker animated:YES completion:nil];
+            [AppDelegate setBlackFontStatusbarForViewController:_viewController];
+        } else {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"permission_denied_title", "") message:NSLocalizedString(@"permission_denied_addressbook_message", "") delegate:nil cancelButtonTitle:NSLocalizedString(@"ok","") otherButtonTitles:nil];
+            [alert show];
+        }
+    }];
 }
 #pragma mark -
 #pragma mark ABPeoplePickerNavigationController delegate
@@ -454,6 +463,7 @@
     return NO;
 }
 
+
 - (BOOL)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
 	  shouldContinueAfterSelectingPerson:(ABRecordRef)person
 								property:(ABPropertyID)property identifier:(ABMultiValueIdentifier)identifier {
@@ -462,6 +472,45 @@
 
 - (void)peoplePickerNavigationControllerDidCancel:(ABPeoplePickerNavigationController *)peoplePicker {
     [peoplePicker dismissViewControllerAnimated:YES completion:nil];
+}
+
+// new in iOS8
+- (void)peoplePickerNavigationController:(ABPeoplePickerNavigationController *)peoplePicker
+                         didSelectPerson:(ABRecordRef)person {
+    
+    [self peoplePickerNavigationController:peoplePicker shouldContinueAfterSelectingPerson:person];
+}
+
+#pragma mark Address Book Access
+
+-(void)checkAddressBookAccessforBook:(ABAddressBookRef)book WithHandler:(ABAddressBookRequestAccessCompletionHandler)handler
+{
+    switch (ABAddressBookGetAuthorizationStatus())
+    {
+        case kABAuthorizationStatusAuthorized:
+            handler(YES, nil);
+            break;
+        case kABAuthorizationStatusNotDetermined :
+        {
+            ABAddressBookRequestAccessWithCompletion(book, ^(bool granted, CFErrorRef error) {
+                // callback will come on any queue, so force handler call on main queue
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    handler(granted, error);
+                });
+            });
+        }
+            break;
+        case kABAuthorizationStatusDenied:
+        case kABAuthorizationStatusRestricted:
+        {
+            handler(NO, nil);
+        }
+            break;
+        default:
+            NSLog(@"#ERROR: ABAddressBookGetAuthorizationStatus returned unknown value");
+            handler(NO, nil);
+            break;
+    }
 }
 
 #pragma mark - Geo Location Picking
