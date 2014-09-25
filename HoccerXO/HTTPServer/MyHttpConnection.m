@@ -26,8 +26,9 @@
 
 // Log levels: off, error, warn, info, verbose
 // Other flags: trace
+#ifdef WITH_WEBSERVER
 static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
-
+#endif
 
 @implementation MyHTTPConnection
 
