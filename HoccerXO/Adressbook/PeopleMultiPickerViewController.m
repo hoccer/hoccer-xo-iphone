@@ -71,7 +71,7 @@
     typedef NSInteger compare(id, id, void*);
     NSArray * people = (__bridge_transfer NSArray*) ABAddressBookCopyArrayOfAllPeople(self.addressBook);
     self.peopleList = [people sortedArrayUsingFunction: (compare*)ABPersonComparePeopleByName
-                                               context: (void*) ABPersonGetSortOrdering()];
+                                               context: (void*)(NSInteger)ABPersonGetSortOrdering()];
 
     [self.tableView reloadData];
 }
