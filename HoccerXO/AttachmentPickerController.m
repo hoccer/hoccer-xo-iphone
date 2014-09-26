@@ -292,7 +292,9 @@
         [self.delegate didPickAttachment: nil];
     } else {
         AttachmentPickerItem * item = _supportedItems[buttonIndex];
-        [self showPickerForType: item.type];
+        dispatch_async(dispatch_get_main_queue(), ^ {
+            [self showPickerForType: item.type];
+        });
     }
 }
 

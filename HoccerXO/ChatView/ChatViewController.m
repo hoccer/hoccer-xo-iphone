@@ -1655,26 +1655,28 @@ nil
     if (buttonIndex == actionSheet.cancelButtonIndex) {
         return;
     }
-    switch (buttonIndex) {
-        case 0:
-            // attachment_option_remove_btn_title pressed
-            [self trashCurrentAttachment];
-            break;
-        case 1:
-            [self.attachmentPicker showInView: self.view];
-            // NSLog(@"Pick new attachment");
-            break;
-        case 2:
-            if (self.currentMultiAttachment != nil) {
-                [self.attachmentPicker pickMultipleImages:self.currentMultiAttachment];
-            } else {
-                [self presentViewForAttachment: self.currentAttachment];
-            }
-            // NSLog(@"Viewing current attachment");
-            break;
-        default:
-            break;
-    }
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        switch (buttonIndex) {
+            case 0:
+                // attachment_option_remove_btn_title pressed
+                [self trashCurrentAttachment];
+                break;
+            case 1:
+                [self.attachmentPicker showInView: self.view];
+                // NSLog(@"Pick new attachment");
+                break;
+            case 2:
+                if (self.currentMultiAttachment != nil) {
+                    [self.attachmentPicker pickMultipleImages:self.currentMultiAttachment];
+                } else {
+                    [self presentViewForAttachment: self.currentAttachment];
+                }
+                // NSLog(@"Viewing current attachment");
+                break;
+            default:
+                break;
+        }
+    });
 }
 
 #pragma mark - Table view data source

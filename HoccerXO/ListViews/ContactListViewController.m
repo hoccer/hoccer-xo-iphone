@@ -725,11 +725,15 @@ bool almostEqual(CGFloat a, CGFloat b) {
 }
 
 - (void) inviteByCode {
-    [self performSegueWithIdentifier: @"showInviteCodeViewController" sender: self];
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        [self performSegueWithIdentifier: @"showInviteCodeViewController" sender: self];
+    });
 }
 
 - (void) inviteByMessage: (PeoplePickerMode) mode {
-    [self performSegueWithIdentifier: @"showInviteMessageViewController" sender: @(mode)];
+    dispatch_async(dispatch_get_main_queue(), ^ {
+        [self performSegueWithIdentifier: @"showInviteMessageViewController" sender: @(mode)];
+    });
 }
 
 #pragma mark - Empty Table Placeholder

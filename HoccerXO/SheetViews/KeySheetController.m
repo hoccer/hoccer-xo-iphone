@@ -225,7 +225,9 @@
         if (buttonIndex == 0) {
             [AppDelegate renewRSAKeyPairWithSize: kHXODefaultKeySize];
         } else if (buttonIndex == 1) {
-            [self.delegate performSegueWithIdentifier: @"createCustomKey" sender: sender];
+            dispatch_async(dispatch_get_main_queue(), ^ {
+                [self.delegate performSegueWithIdentifier: @"createCustomKey" sender: sender];
+            });
         }
     };
 
