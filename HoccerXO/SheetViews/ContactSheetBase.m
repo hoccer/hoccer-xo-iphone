@@ -284,11 +284,13 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (void) pickAvatarFromSource: (UIImagePickerControllerSourceType) source {
-    UIImagePickerController * picker = [[UIImagePickerController alloc] init];
-    picker.sourceType = source;
-    picker.allowsEditing = YES;
-    picker.delegate = self;
-    [self.delegate presentViewController: picker animated: YES completion: nil];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+        picker.sourceType = source;
+        picker.allowsEditing = YES;
+        picker.delegate = self;
+        [self.delegate presentViewController: picker animated: YES completion: nil];
+    });
 }
 
 - (void) imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
