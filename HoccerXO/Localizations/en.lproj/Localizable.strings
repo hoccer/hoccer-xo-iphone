@@ -484,8 +484,8 @@
 "invite_recipient_picker_title"   = "Recipients";
 
 "invite_mail_subject"             = "Hoccer XO Invitation";
-"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
-"invite_sms_text"                 = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
+"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload it now and accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
+"invite_sms_text"                 = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now and add me as a contact: %@ \nxo %@ ";
 
 "invite_scan_nav_title"           = "Scan";
 "invite_generate_nav_title"       = "Generate";

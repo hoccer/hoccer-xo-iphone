@@ -36,9 +36,7 @@ NSString * const kValidEnvironments = @"_validEnvironments";
     return self;
 }
 
-
 @synthesize talkServer = _talkServer;
-
 - (NSString*) talkServer {
     if (_talkServer == nil) {
         _talkServer = [self getEnvironmentValueForKeySelector: _cmd];
@@ -46,13 +44,20 @@ NSString * const kValidEnvironments = @"_validEnvironments";
     return _talkServer;
 }
 
-
 @synthesize fileCacheURI = _fileCacheURI;
 - (NSString*) fileCacheURI {
     if (_fileCacheURI == nil) {
         _fileCacheURI = [self getEnvironmentValueForKeySelector: _cmd];
     }
     return _fileCacheURI;
+}
+
+@synthesize inviteServer = _inviteServer;
+- (NSString*) inviteServer {
+    if (_inviteServer == nil) {
+        _inviteServer = [self getEnvironmentValueForKeySelector: _cmd];
+    }
+    return _inviteServer;
 }
 
 @synthesize certificateFiles = _certificateFiles;

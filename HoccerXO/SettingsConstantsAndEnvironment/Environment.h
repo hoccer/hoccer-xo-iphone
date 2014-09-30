@@ -20,6 +20,7 @@
 
 @property (nonatomic, readonly) NSString * talkServer;
 @property (nonatomic, readonly) NSString * fileCacheURI;
+@property (nonatomic, readonly) NSString * inviteServer;
 
 @property (nonatomic, readonly) NSArray* certificateFiles;
 

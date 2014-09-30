@@ -11,6 +11,7 @@
 #import <AddressBook/AddressBook.h>
 
 #import "AppDelegate.h"
+#import "Environment.h"
 #import "HXOUserDefaults.h"
 
 @interface BatchInviteViewController ()
@@ -77,7 +78,7 @@
             [mailView setBccRecipients: recipients];
 
             NSString * body = NSLocalizedString(@"invite_mail_body", nil);
-            body = [NSString stringWithFormat: body, [self appStoreURL], [self inviteURL: token]];
+            body = [NSString stringWithFormat: body, [self inviteURL: token]];
             [mailView setMessageBody: body isHTML: NO];
         } else {
             MFMessageComposeViewController * messageView = [[MFMessageComposeViewController alloc] init];
@@ -102,15 +103,8 @@
 }
 
 - (NSString*) inviteURL: (NSString*) token {
-    return [NSString stringWithFormat: @"%@://%@", kHXOURLScheme, token];
-}
-
-- (NSString*) appStoreURL {
-    return @"itms-apps://itunes.com/apps/hoccerxo";
-}
-
-- (NSString*) androidURL {
-    return @"http://google.com";
+    NSString * inviteServer = [[Environment sharedEnvironment] inviteServer];
+    return [NSString stringWithFormat: @"%@/%@", inviteServer, token];
 }
 
 - (void)mailComposeController:(MFMailComposeViewController*)controller
