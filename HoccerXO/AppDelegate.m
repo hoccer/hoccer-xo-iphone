@@ -75,6 +75,8 @@ static NSString * const kTestFlightAppToken = @"c5ada956-43ec-4e9e-86e5-0a3bd3d9
 NSString * const kHXOURLScheme = @"hxo";
 static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
 #endif
+NSString * const kHXOTransferCredentialsURLScheme = @"xoxfer";
+
 
 static NSInteger validationErrorCount = 0;
 
@@ -1553,8 +1555,56 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         }
         return [self handleFileURL:url withDocumentType:documentType];
     }
+    if ([[url scheme] isEqualToString:kHXOTransferCredentialsURLScheme]) {
+        NSString * hexCredentials = [url host];
+        NSLog(@"handleOpenURL: credentials received%@",hexCredentials);
+        NSData * credentials = [NSData dataWithHexadecimalString:hexCredentials];
+        [self receiveCredentials:credentials];
+    }
+
     return NO;
 }
+
+- (void) receiveCredentials:(NSData*)credentials {
+    
+    HXOAlertViewCompletionBlock completionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
+        switch (buttonIndex) {
+            case 0:
+                // no
+                break;
+            case 1: {
+                int result = [[UserProfile sharedProfile] importCredentialsJson:credentials];
+                switch (result) {
+                    case 1:
+                        [AppDelegate.instance showFatalErrorAlertWithMessage:NSLocalizedString(@"credentials_imported_message", nil)
+                                                                   withTitle:NSLocalizedString(@"credentials_imported_title", nil)];
+                        break;
+                    case -1:
+                        [HXOUI showErrorAlertWithMessageAsync:@"credentials_receive_import_failed_message" withTitle:@"credentials_receive_import_failed_title"];
+                        break;
+                    case 0:
+                        [HXOUI showErrorAlertWithMessageAsync:@"credentials_receive_equals_current_message" withTitle:@"credentials_receive_equals_current_title"];
+                        break;
+                    default:
+                        NSLog(@"#ERROR: receiveCredentials: unhandled result %d", result);
+                        break;
+                }
+            }
+                break;
+        }
+        
+    };
+    
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_received_import_title", nil)
+                                                        message: NSLocalizedString(@"credentials_received_import_message", nil)
+                                                completionBlock: completionBlock
+                                              cancelButtonTitle:NSLocalizedString(@"no", nil)
+                                              otherButtonTitles:NSLocalizedString(@"credentials_receive_import_btn_title",nil),nil];
+        [alert show];
+    
+
+}
+
 
 +(BOOL)zipDirectoryAtURL:(NSURL*)theDirectoryURL toZipFile:(NSURL*)zipFileURL {
     NSLog(@"zipDirectoryAtURL: %@ -> %@",theDirectoryURL,zipFileURL);

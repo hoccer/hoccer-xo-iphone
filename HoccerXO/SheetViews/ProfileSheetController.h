@@ -13,5 +13,6 @@
 @property (nonatomic, readonly) DatasheetItem * exportCredentialsItem;
 @property (nonatomic, readonly) DatasheetItem * importCredentialsItem;
 @property (nonatomic, readonly) DatasheetItem * deleteCredentialsFileItem;
+@property (nonatomic, readonly) DatasheetItem * transferCredentialsItem;
 
 @end
