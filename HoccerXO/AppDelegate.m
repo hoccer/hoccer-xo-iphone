@@ -1605,6 +1605,34 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 
 }
 
++(BOOL)unzipFileAtURL:(NSURL*)zipFileURL toDirectory:(NSURL*) theDirectoryURL {
+    NSLog(@"unzipFileAtURL: %@ -> %@",zipFileURL, theDirectoryURL);
+    BOOL isDirectory;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[theDirectoryURL path] isDirectory:&isDirectory];
+    if (exists) {
+        if (!isDirectory) {
+            NSLog(@"zipDirectoryAtURL: file at path is not a directory:%@",[theDirectoryURL path]);
+        } else {
+            ZipArchive* zip = [[ZipArchive alloc] init];
+            zip.progressBlock = ^(int percentage, int filesProcessed, unsigned long numFiles) {
+                NSLog(@"Unzipped %d of %lu files (%d%%)", filesProcessed, numFiles, percentage);
+            };
+            if([zip UnzipOpenFile:[zipFileURL path]]) {
+                NSLog(@"Zip File openend:%@",[zipFileURL path]);
+                if ([zip UnzipFileTo:[theDirectoryURL path] overWrite:YES]) {
+                    NSLog(@"Extracted %d files from %@",zip.unzippedFiles.count, [zipFileURL path]);
+                    if (![zip UnzipCloseFile]) {
+                        NSLog(@"#ERROR: failed to close zip file:%@",[zipFileURL path]);
+                    } else {
+                        return YES;
+                    }
+                }
+            }
+        }
+    }
+    return NO;
+}
+
 
 +(BOOL)zipDirectoryAtURL:(NSURL*)theDirectoryURL toZipFile:(NSURL*)zipFileURL {
     NSLog(@"zipDirectoryAtURL: %@ -> %@",theDirectoryURL,zipFileURL);
@@ -1619,13 +1647,18 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 NSLog(@"Zip File Created:%@",[zipFileURL path]);
                 NSArray * subpaths = [[NSFileManager defaultManager] subpathsAtPath:[theDirectoryURL path]];
                 for (NSString * subpath in subpaths) {
-                    NSLog(@"added to zip: %@",subpath);
                     NSString * fullPath = [[theDirectoryURL path] stringByAppendingPathComponent: subpath];
                     //NSLog(@"fullPath=%@",fullPath);
-                    if([zip addFileToZip:fullPath newname:subpath]) {
-                        //NSLog(@"File '%@' Added to zip as '%@'",fullPath,subpath);
+                    
+                    if ([fullPath isEqualToString:[zipFileURL path]]) {
+                        NSLog(@"Ignoring archive file: %@",subpath);
                     } else {
-                        NSLog(@"#ERROR: Failed to add file '%@' Added to zip as '%@'",fullPath,subpath);
+                        NSLog(@"Adding to zip: %@",subpath);
+                        if([zip addFileToZip:fullPath newname:subpath]) {
+                            //NSLog(@"File '%@' Added to zip as '%@'",fullPath,subpath);
+                        } else {
+                            NSLog(@"#ERROR: Failed to add file '%@' Added to zip as '%@'",fullPath,subpath);
+                        }
                     }
                 }
                 if ([zip CloseZipFile2]) {
@@ -1643,7 +1676,257 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return NO;
 }
 
+- (void) makeArchiveWithHandler:(GenericResultHandler)onReady {
+    ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_make_hud_title", nil)];
+    [hud show];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
+        BOOL success = [self makeArchive];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hud dismiss];
+            onReady(success);
+        });
+    });
+}
+
+- (BOOL)makeArchive {
+    NSError *error = nil;
+    
+    {
+        NSURL *archivedbURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archived.database"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[archivedbURL path]]) {
+            [[NSFileManager defaultManager] removeItemAtURL:archivedbURL error:&error];
+            if (error != nil) {
+                NSLog(@"Error removing old database archive at URL %@, error=%@", archivedbURL, error);
+                return NO;
+            } else {
+                NSLog(@"Removed old database archive at URL %@", archivedbURL);
+            }
+        }
+        NSURL *dbURL = [self persistentStoreURL];
+        [[NSFileManager defaultManager] copyItemAtURL:dbURL toURL:archivedbURL error:&error];
+        if (error != nil) {
+            NSLog(@"Error copying database from %@ to %@, error=%@", dbURL, archivedbURL, error);
+            return NO;
+        } else {
+            NSLog(@"Copied database from %@ to %@", dbURL, archivedbURL);
+        }
+    }
+    [UserProfile.sharedProfile exportCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn"];
+    
+    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[archiveURL path]]) {
+        [[NSFileManager defaultManager] removeItemAtURL:archiveURL error:&error];
+        if (error != nil) {
+            NSLog(@"Error removing old archive at URL %@, error=%@", archiveURL, error);
+        } else {
+            NSLog(@"Removed old archive at URL %@", archiveURL);
+        }
+    }
+
+    // zip ot
+    if (error == nil) {
+        if (![AppDelegate zipDirectoryAtURL:[self applicationDocumentsDirectory] toZipFile:archiveURL]) {
+            NSLog(@"Failed to create archive at URL %@", archiveURL);
+            [[NSFileManager defaultManager] removeItemAtURL:archiveURL error:&error];
+            return NO;
+        }
+    }
+    return YES;
+}
+
+
+- (void) importArchiveWithHandler:(GenericResultHandler)onReady {
+    ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_import_hud_title", nil)];
+    [hud show];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        BOOL success = [self extractArchive];
+        if (success) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                hud.title = NSLocalizedString(@"archive_install_hud_title", nil);
+            });
+            success = [self installArchive];
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hud dismiss];
+            onReady(success);
+        });
+    });
+}
+
+- (BOOL)extractArchive {
+    NSError *error = nil;
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    
+    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
+    
+    if (![fileMgr fileExistsAtPath:[archiveURL path]]) {
+        NSLog(@"Error: No archive at URL %@", archiveURL);
+    } else {
+        NSURL *archiveExtractDirURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: @"unarchived"];
+        
+        if ([fileMgr fileExistsAtPath:[archiveExtractDirURL path]]) {
+            NSLog(@"Removing archive extraction directory at URL %@", archiveExtractDirURL);
+            [fileMgr removeItemAtURL:archiveExtractDirURL error:&error];
+            if (error != nil) {
+                NSLog(@"Error removing old unarchived dir at URL %@, error=%@", archiveExtractDirURL, error);
+                return NO;
+            } else {
+                NSLog(@"Removed old archive extraction directory at URL %@", archiveExtractDirURL);
+            }
+            
+        }
+        [[NSFileManager defaultManager] createDirectoryAtPath:[archiveExtractDirURL path] withIntermediateDirectories:YES attributes:nil error:&error];
+        
+        if (error != nil) {
+            NSLog(@"Error creating archive extraction directory at URL %@, error=%@", archiveExtractDirURL, error);
+        } else {
+            NSLog(@"Created archive extraction directory at URL %@", archiveExtractDirURL);
+            if ([AppDelegate unzipFileAtURL:archiveURL toDirectory:archiveExtractDirURL]) {
+                // all files extracted
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
+-(BOOL)installArchive {
+    NSError *error = nil;
+    NSFileManager *fileMgr = [NSFileManager defaultManager];
+    NSURL *archiveExtractDirURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: @"unarchived"];
+    
+    BOOL isDirectory;
+    BOOL exists = [fileMgr fileExistsAtPath:[archiveExtractDirURL path] isDirectory:&isDirectory];
+    if (exists) {
+        if (!isDirectory) {
+        } else {
+            NSURL *dbURL = [self persistentStoreURL];
+            // NSString * dbName = [dbURL lastPathComponent];
+            NSURL *archivedbURL = [archiveExtractDirURL URLByAppendingPathComponent: @"archived.database"];
+            NSURL *backupdbURL = [archiveExtractDirURL URLByAppendingPathComponent: @"backupdb.sqlite"];
+            if (![fileMgr fileExistsAtPath:[archivedbURL path]]) {
+                NSLog(@"#ERROR: no database to install found at archive URL %@", backupdbURL);
+            } else {
+                if ([fileMgr fileExistsAtPath:[backupdbURL path]]) {
+                    // remove old backup if necessary
+                    [fileMgr removeItemAtURL:backupdbURL error:&error];
+                    if (error != nil) {
+                        NSLog(@"Error removing old database backup at URL %@, error=%@", backupdbURL, error);
+                        return NO;
+                    } else {
+                        NSLog(@"Removed old database backup at URL %@", backupdbURL);
+                    }
+                }
+                // move current db to backup
+                [fileMgr moveItemAtURL:dbURL toURL:backupdbURL error:&error];
+                if (error != nil) {
+                    NSLog(@"Error moving old database from %@ to backup URL %@, error=%@", dbURL, backupdbURL, error);
+                    return NO;
+                } else {
+                    NSLog(@"Move old database from %@ to backup at URL %@", dbURL, backupdbURL);
+                }
+        
+                // move archive db to current
+                [fileMgr moveItemAtURL:archivedbURL toURL:dbURL error:&error];
+                if (error != nil) {
+                    NSLog(@"Error moving archived database from %@ to current URL %@, error=%@", archivedbURL, dbURL, error);
+                    // move database backup back in place
+                    [fileMgr moveItemAtURL:backupdbURL toURL:dbURL error:&error];
+                    if (error != nil) {
+                        NSLog(@"Error moving back archived database from %@ to current URL %@, error=%@", backupdbURL, dbURL, error);
+                    }
+                    return NO;
+                } else {
+                    NSLog(@"Moved archive database from %@ to current at URL %@", archivedbURL, dbURL);
+                }
+                
+                // clear document directory first
+                NSURL * docDir = [self applicationDocumentsDirectory];
+                {
+                    NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:docDir includingPropertiesForKeys:@[] options:0 error:&error];
+                    if (error != nil) {
+                        NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
+                        return NO;
+                    }
+                    for (NSURL * fileToRemove in fileArray)  {
+                        [fileMgr removeItemAtURL:fileToRemove error:&error];
+                        if (error != nil) {
+                            NSLog(@"Error removing file %@, error=%@", fileToRemove, error);
+                            return NO;
+                        } else {
+                            NSLog(@"Removed file %@", fileToRemove);
+                        }
+                    }
+                }
+                
+                // move all the files to document directory
+                NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:archiveExtractDirURL includingPropertiesForKeys:@[] options:0 error:&error];
+                if (error != nil) {
+                    NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
+                    return NO;
+                }
+                for (NSURL * fileToMove in fileArray)  {
+                    NSURL * destURL = [docDir URLByAppendingPathComponent:[fileToMove lastPathComponent]];
+                    [fileMgr moveItemAtURL:fileToMove toURL:destURL error:&error];
+                    if (error != nil) {
+                        NSLog(@"Error moving file %@ to %@, error=%@", fileToMove, destURL, error);
+                        return NO;
+                    } else {
+                        NSLog(@"Moved file %@ to %@", fileToMove, destURL);
+                    }
+                }
+                
+                // get the credentials now
+                int result = [UserProfile.sharedProfile importCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn"];
+                if (result != -1) {
+                    return YES;
+                }
+
+            }
+        }
+    }
+    return NO;
+}
+
+/*
+    {
+        
+        
+        NSURL *archivedbURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archived.database"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[archivedbURL path]]) {
+            [[NSFileManager defaultManager] removeItemAtURL:archivedbURL error:&error];
+            if (error != nil) {
+                NSLog(@"Error removing old database archive at URL %@, error=%@", archivedbURL, error);
+                return NO;
+            } else {
+                NSLog(@"Removed old database archive at URL %@", archivedbURL);
+            }
+        }
+        NSURL *dbURL = [self persistentStoreURL];
+        [[NSFileManager defaultManager] copyItemAtURL:dbURL toURL:archivedbURL error:&error];
+        if (error != nil) {
+            NSLog(@"Error copying database from %@ to %@, error=%@", dbURL, archivedbURL, error);
+            return NO;
+        } else {
+            NSLog(@"Copied database from %@ to %@", dbURL, archivedbURL);
+        }
+    }
+    [UserProfile.sharedProfile exportCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn"];
+    
+    
+    // zip ot
+    if (error == nil) {
+        if (![AppDelegate zipDirectoryAtURL:[self applicationDocumentsDirectory] toZipFile:archiveURL]) {
+            NSLog(@"Failed to create archive at URL %@", archiveURL);
+            [[NSFileManager defaultManager] removeItemAtURL:archiveURL error:&error];
+            return NO;
+        }
+    }
+    return YES;
+ */
 
 - (BOOL)handleFileURL: (NSURL *)url withDocumentType:(NSString*)documentType
 {
