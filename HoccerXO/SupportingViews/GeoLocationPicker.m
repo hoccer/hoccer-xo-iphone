@@ -33,6 +33,8 @@ static const CGFloat kGeoLocationCityZoom = 500;
     self.title = NSLocalizedString(@"geolocation_picker_title", nil);
     self.navigationItem.leftBarButtonItem.title = NSLocalizedString(@"cancel", nil);
     self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"done", nil);
+
+    self.mapView.translatesAutoresizingMaskIntoConstraints = NO;
 }
 
 - (void) viewWillAppear:(BOOL)animated {

@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
     <dependencies>
+        <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Themed Navigation Controller-->
@@ -979,14 +981,19 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oDn-ba-OW5">
-                                <rect key="frame" x="0.0" y="-8" width="320" height="512"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2Im-gw-7Ar">
+                                <rect key="frame" x="-4" y="0.0" width="328" height="504"/>
                                 <connections>
-                                    <outlet property="delegate" destination="7cB-uF-Ia0" id="Fcx-Jc-zcL"/>
+                                    <outlet property="delegate" destination="7cB-uF-Ia0" id="Eb3-YA-Lml"/>
                                 </connections>
                             </mapView>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="2Im-gw-7Ar" firstAttribute="leading" secondItem="SMK-u8-fXi" secondAttribute="leadingMargin" constant="-20" id="P6m-F8-tXR"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="2Im-gw-7Ar" secondAttribute="trailing" constant="-20" id="hVg-5j-wMK"/>
+                            <constraint firstItem="2Im-gw-7Ar" firstAttribute="top" secondItem="Ure-6j-jwg" secondAttribute="bottom" id="jij-Gx-nad"/>
+                            <constraint firstItem="zwZ-8x-104" firstAttribute="top" secondItem="2Im-gw-7Ar" secondAttribute="bottom" id="tqo-ZF-tIa"/>
+                        </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Drag the Pin" id="dZo-z5-Fid">
@@ -1001,9 +1008,6 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
-                    <connections>
-                        <outlet property="mapView" destination="oDn-ba-OW5" id="g5t-ee-PnJ"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kom-cA-fQT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
