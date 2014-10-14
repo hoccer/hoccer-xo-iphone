@@ -16,6 +16,7 @@
 
 
 FOUNDATION_EXPORT NSString * const kHXOURLScheme;
+FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLScheme;
 
 typedef void (^ContinueBlock)();
 typedef void (^ContextBlock)(NSManagedObjectContext* context);
@@ -116,6 +117,9 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 -(BOOL)isInspecting:(id)inspectedObject;
 -(id)inspectorOf:(id)inspectedObject;
 
+- (BOOL) makeArchive;
+- (void) makeArchiveWithHandler:(GenericResultHandler)onReady;
+- (void) importArchiveWithHandler:(GenericResultHandler)onReady;
 
 + (void) setDefaultAudioSession;
 + (void) setRecordingAudioSession;
@@ -140,5 +144,8 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 + (AppDelegate*)instance;
 + (void) renewRSAKeyPairWithSize: (NSUInteger) size;
+
++ (BOOL)unzipFileAtURL:(NSURL*)zipFileURL toDirectory:(NSURL*)theDirectoryURL;
+
 
 @end

@@ -166,7 +166,7 @@
 }
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    NSArray * hidden = @[self.keyItem, self.exportCredentialsItem, self.importCredentialsItem, self.deleteCredentialsFileItem, self.destructiveButton ];
+    NSArray * hidden = @[self.keyItem, self.exportCredentialsItem, self.importCredentialsItem, self.deleteCredentialsFileItem, self.transferCredentialsItem, self.archiveAllItem, self.destructiveButton ];
     if ([hidden indexOfObject: item] != NSNotFound) {
         return NO;
     }

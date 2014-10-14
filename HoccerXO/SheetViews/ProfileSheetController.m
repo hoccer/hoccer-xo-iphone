@@ -26,8 +26,13 @@
 
 @synthesize credentialsSection = _credentialsSection;
 @synthesize exportCredentialsItem = _exportCredentialsItem;
+@synthesize transferCredentialsItem = _transferCredentialsItem;
 @synthesize importCredentialsItem = _importCredentialsItem;
 @synthesize deleteCredentialsFileItem = _deleteCredentialsFileItem;
+
+@synthesize archiveAllItem = _archiveAllItem;
+@synthesize archiveImportItem = _archiveImportItem;
+
 
 - (void) commonInit {
     [super commonInit];
@@ -76,7 +81,14 @@
         _credentialsSection.headerViewIdentifier = @"DatasheetFooterTextView";
         _credentialsSection.items = @[self.exportCredentialsItem,
                                       self.importCredentialsItem,
-                                      self.deleteCredentialsFileItem];
+                                      self.deleteCredentialsFileItem
+                                      
+#ifndef HOCCER_CLASSIC
+                                      , self.transferCredentialsItem
+#endif
+                                      , self.archiveAllItem
+                                      , self.archiveImportItem
+                                      ];
     }
     return _credentialsSection;
 }
@@ -94,6 +106,84 @@
     }
     return [super isItemVisible: item];
 }
+
+#pragma mark - Make Archive
+
+- (DatasheetItem*) archiveAllItem {
+    if ( ! _archiveAllItem) {
+        _archiveAllItem = [self itemWithIdentifier: @"archive_all_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _archiveAllItem.visibilityMask = DatasheetModeEdit;
+        _archiveAllItem.target = self;
+        _archiveAllItem.action = @selector(archiveAllPressed:);
+    }
+    return _archiveAllItem;
+}
+
+- (void) archiveAllPressed: (id) sender {
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [AppDelegate.instance makeArchiveWithHandler:^(BOOL ok) {
+                if (!ok) {
+                    [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"archive_failed_message",nil)
+                                                         withTitle:NSLocalizedString(@"archive_failed_title",nil)
+                                                       withOKBlock:^{
+                                                           [[UIApplication sharedApplication] openURL:[NSURL URLWithString:NSLocalizedString(@"credentials_transfer_install_app_url",nil)]];
+                                                       }];
+                } else {
+                    [HXOUI showErrorAlertWithMessageAsync: nil withTitle:@"archive_ok_alert"];
+                }
+            }];
+            
+        }
+    };
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"archive", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: self.delegate.view];
+}
+
+#pragma mark - Import & install Archive
+
+- (DatasheetItem*) archiveImportItem {
+    if ( ! _archiveImportItem) {
+        _archiveImportItem = [self itemWithIdentifier: @"archive_import_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _archiveImportItem.visibilityMask = DatasheetModeEdit;
+        _archiveImportItem.target = self;
+        _archiveImportItem.action = @selector(archiveImportPressed:);
+    }
+    return _archiveImportItem;
+}
+
+- (void) archiveImportPressed: (id) sender {
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [AppDelegate.instance importArchiveWithHandler:^(BOOL ok) {
+                if (!ok) {
+                    [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"archive_import_failed_message",nil)
+                                                         withTitle:NSLocalizedString(@"archive_import_failed_title",nil)
+                                                       withOKBlock:^{
+                                                       }];
+                } else {
+                    [AppDelegate.instance showFatalErrorAlertWithMessage: NSLocalizedString(@"archive_imported_message",nil)
+                                                               withTitle:NSLocalizedString(@"archive_imported_title",nil)
+                     ];
+                }
+            }];
+            
+        }
+    };
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_import_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"import", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: self.delegate.view];
+}
+
 
 #pragma mark - Export Credentials
 
@@ -121,6 +211,40 @@
                      onCompletion: completion];
 }
 
+#pragma mark - Transfer Credentials
+
+- (DatasheetItem*) transferCredentialsItem {
+    if ( ! _transferCredentialsItem) {
+        _transferCredentialsItem = [self itemWithIdentifier: @"credentials_transfer_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _transferCredentialsItem.visibilityMask = DatasheetModeEdit;
+        _transferCredentialsItem.target = self;
+        _transferCredentialsItem.action = @selector(transferCredentialsPressed:);
+    }
+    return _transferCredentialsItem;
+}
+
+- (void) transferCredentialsPressed: (id) sender {
+    
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            if (![[UserProfile sharedProfile] transferCredentials]) {
+                [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"credentials_transfer_failed_no_xox_message",nil)
+                                                     withTitle:NSLocalizedString(@"credentials_transfer_failed_no_xox_title",nil)
+                                                   withOKBlock:^{
+                                                       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:NSLocalizedString(@"credentials_transfer_install_app_url",nil)]];
+                                                   }];
+            }
+        }
+    };
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_transfer_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"transfer", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: self.delegate.view];
+}
+
 #pragma mark - Import Credentials
 
 - (DatasheetItem*) importCredentialsItem {
@@ -141,7 +265,9 @@
             int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:passphrase];
             switch (result) {
                 case 1:
-                    [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"New login credentials have been imported. Restart Hoccer XO to use them" withTitle:@"New Login Credentials Imported"];
+                    [AppDelegate.instance showFatalErrorAlertWithMessage: NSLocalizedString(@"credentials_imported_message",nil)
+                      withTitle:NSLocalizedString(@"credentials_imported_title",nil)
+                    ];
                     break;
                 case -1:
                     [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_decryption_failed_message" withTitle:@"credentials_file_import_failed_title"];

@@ -33,5 +33,12 @@
 		<key>production</key>
 		<string>wss://talkserver.talk.hoccer.de</string>
 	</dict>
+	<key>inviteServer</key>
+	<dict>
+		<key>development</key>
+		<string>https://invite-test1.hoccer.com</string>
+		<key>production</key>
+		<string>https://invite.hoccer.com</string>
+	</dict>
 </dict>
 </plist>

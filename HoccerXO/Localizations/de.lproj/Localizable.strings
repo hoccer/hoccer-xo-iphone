@@ -41,6 +41,8 @@
 "continue" = "Weitermachen";
 "abort"    = "Beenden";
 "loading"  = "Lade…";
+"transfer" = "Übertragen";
+
 
 "search_placeholder" = "suchen";
 
@@ -376,6 +378,26 @@
 "credentials_and_database_really_delete_title" = "Zugangsdaten und Datenbank wirklich löschen?";
 "credentials_database_delete_btn_title"        = "Alles löschen";
 
+"credentials_imported_message"                 = "Neue Zugangsdaten wurden übernommen. Bitte XOX neu starten.";
+"credentials_imported_title"                   = "Zugangsdaten übenommen";
+
+"credentials_receive_import_failed_message"    = "Fehler beim Übernehmen der Zugangsdaten";
+"credentials_receive_import_failed_title"      = "Zugangsdaten konnten nicht übernommen werden. Diesen Fehler bitte melden.";
+
+"credentials_receive_equals_current_message"   = "Zugangsdaten nicht neu";
+"credentials_receive_equals_current_title"     = "Die selben Zugangsdaten sind bereits vorhanden.";
+
+"credentials_received_import_title"            = "Zugangsdaten übernehmen?";
+"credentials_received_import_message"          = "Willst du wirklich die Zugangsdaten aus Hoccer XO übernehmen?";
+
+"credentials_receive_import_btn_title"         = "Übernehmen";
+
+"credentials_transfer_btn_title"               = "Zugangsdaten nach XOX";
+"credentials_transfer_failed_no_xox_message"   = "Du must zuvor XOX installieren. Hierzu wird sich die XOX-Seite öffnen.";
+"credentials_transfer_failed_no_xox_title"     = "XOX App benötigt";
+"credentials_transfer_install_app_url"         = "http://hoccer.com";
+"credentials_transfer_safety_question"         = "Willst du deine Zugangsdaten auf die XOX-App übertragen?";
+
 //==============================================================================
 // CTAssetsPickerController (3rd party)
 //==============================================================================
@@ -496,8 +518,8 @@
 "invite_recipient_picker_title"   = "Empfänger";
 
 "invite_mail_subject"             = "Einladung zu Hoccer XO";
-"invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade dir jetzt „Hoccer XO“ aus deinem iTunes Store runter: %@\n\nWenn du die „Hoccer XO“ App runtergeladen hast, oder bereits aktiver User bist, dann bestätige hier bitte meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
-"invite_sms_text"                 = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen: http://hoccer.com/xo und mich als Kontakt hinzufügen: %@\nxo, %@";
+"invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade die App jetzt herunter und bestätige meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
+"invite_sms_text"                 = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen und mich als Kontakt hinzufügen: %@\nxo, %@";
 
 "invite_scan_nav_title"           = "Scannen";
 "invite_generate_nav_title"       = "Generieren";

@@ -240,6 +240,51 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSLog(@"Crypted Credentials: %@", [NSString stringWithData:cryptedJsonData usingEncoding:NSUTF8StringEncoding]);
 }
 
+- (BOOL)transferCredentials {
+    
+    NSDictionary * json = [self extractCredentials];
+    NSError * error;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
+    if ( jsonData == nil) {
+        NSLog(@"failed to extract credentials: %@", error);
+        return NO;
+    }
+    
+    NSString * credentialsString = [jsonData hexadecimalString];
+    NSLog(@"Credentials: %@", credentialsString);
+    
+    NSString * credentialsUrlString = [NSString stringWithFormat:@"%@://%@", kHXOTransferCredentialsURLScheme,credentialsString];
+    
+    NSURL * myUrl = [NSURL URLWithString:credentialsUrlString];
+    NSLog(@"Credentials URL: %@", myUrl);
+    
+    if ([[UIApplication sharedApplication] openURL:myUrl]) {
+        NSLog(@"Credentials openURL returned true");
+        return YES;
+    } else {
+        NSLog(@"Credentials openURL returned false");
+        return NO;
+    }
+    
+}
+
+- (NSDictionary*)parseCredentials:(NSData *)jsonCredentials {
+    NSError * error = nil;
+    NSDictionary * credentials = nil;
+    @try {
+         credentials = [NSJSONSerialization JSONObjectWithData: jsonCredentials options: 0 error: & error];
+    } @catch (NSException * ex) {
+        NSLog(@"ERROR parsing credentials, jsonCredentials = %@, ex=%@", jsonCredentials, ex);
+        return nil;
+    }
+    if (credentials[@"clientId"] == nil ||  credentials[@"password"] == nil || credentials[@"salt"] == nil) {
+        NSLog(@"ERROR: missing field in jsonCredentials = %@", credentials);
+        return nil;
+    }
+    return credentials;
+}
+
+
 - (BOOL) foundCredentialsFile {
     NSURL * url = [self getCredentialsURL];
     NSDictionary * credentials = nil;
@@ -268,7 +313,6 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 - (NSDictionary*) loadCredentialsWithPassphrase:(NSString*)passphrase {
     NSURL * url = [self getCredentialsURL];
     NSError * error = nil;
-    NSDictionary * credentials = nil;
     NSData * jsonCredentials = nil;
     NSData * cryptedJsonCredentials = nil;
     @try {
@@ -281,20 +325,14 @@ const NSUInteger kHXODefaultKeySize    = 2048;
             NSLog(@"failed to decrypt credentials: %@", error);
             return nil;
         }
-        credentials = [NSJSONSerialization JSONObjectWithData: jsonCredentials options: 0 error: & error];
     } @catch (NSException * ex) {
         NSLog(@"ERROR parsing credentials, jsonCredentials = %@, ex=%@, contentURL=%@", jsonCredentials, ex, url);
         return nil;
     }
-    if (credentials[@"clientId"] == nil ||  credentials[@"password"] == nil || credentials[@"salt"] == nil) {
-        NSLog(@"ERROR: missing field in jsonCredentials = %@", credentials);
-        return nil;
-    }
-    return credentials;
+    return [self parseCredentials:jsonCredentials];
 }
     
-- (int) importCredentialsWithPassphrase:(NSString*)passphrase {
-    NSDictionary * credentials = [self loadCredentialsWithPassphrase:passphrase];
+- (int) importCredentials:(NSDictionary*)credentials {
     if (credentials != nil) {
         if (![self sameCredentialsInDict:credentials]) {
             [self setCredentialsWithDict:credentials];
@@ -304,6 +342,17 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     }
     return -1;
 }
+
+- (int) importCredentialsWithPassphrase:(NSString*)passphrase {
+    NSDictionary * credentials = [self loadCredentialsWithPassphrase:passphrase];
+    return [self importCredentials:credentials];
+}
+
+- (int)importCredentialsJson:(NSData*)jsonData {
+    NSDictionary * credentials = [self parseCredentials:jsonData];
+    return [self importCredentials:credentials];
+}
+
 
 +(NSURL*)getKeyFileURLWithKeyTypeName:(NSString*)keyTypeName forUser:(NSString*)userName withKeyId:(NSString*)keyId {
     NSString *newFileName = [NSString stringWithFormat:@"%@-%@-%@.pem",keyTypeName,userName,keyId];

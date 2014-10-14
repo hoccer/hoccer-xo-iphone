@@ -60,6 +60,10 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 - (int) importCredentialsWithPassphrase:(NSString*)passphrase;
 - (void) exportCredentialsWithPassphrase:(NSString*)passphrase;
 
+- (BOOL)transferCredentials;
+- (int)importCredentialsJson:(NSData*)jsonData;
+
+
 - (NSString*) startSrpAuthentication;
 - (NSString*) processSrpChallenge: (NSString*) challenge error: (NSError**) error;
 - (BOOL)      verifySrpSession: (NSString*) HAMK error: (NSError**) error;

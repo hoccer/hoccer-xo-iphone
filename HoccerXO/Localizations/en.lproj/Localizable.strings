@@ -41,6 +41,8 @@
 "continue" = "Continue";
 "abort"    = "Abort";
 "loading"  = "Loading…";
+"transfer" = "Transfer";
+
 
 "search_placeholder" = "search";
 
@@ -375,6 +377,26 @@
 "credentials_and_database_really_delete_title" = "Really delete Credentials and Database?";
 "credentials_database_delete_btn_title"        = "Delete All";
 
+"credentials_imported_message"                 = "New login credentials have been imported. Restart Hoccer to use them.";
+"credentials_imported_title"                   = "New Login Credentials Imported";
+
+"credentials_receive_import_failed_message"    = "Error transfering credentials";
+"credentials_receive_import_failed_title"      = "Credentials could not be transfered. Please file a bug report.";
+
+"credentials_receive_equals_current_message"   = "Credentials already active";
+"credentials_receive_equals_current_title"     = "Credentials already have been transfered before. (New credentials are the same as the active one.)";
+
+"credentials_received_import_title"            = "Transfer Login from other App?";
+"credentials_received_import_message"          = "Do you really want to transfer login credentials from Hoccer XO?";
+
+"credentials_receive_import_btn_title"         = "Transfer";
+
+"credentials_transfer_btn_title"               = "Transfer Login to XOX";
+"credentials_transfer_failed_no_xox_message"   = "You need to install the XOX App first. You will be transfered to the XOX home page for installation.";
+"credentials_transfer_failed_no_xox_title"     = "XOX App required";
+"credentials_transfer_install_app_url"         = "http://hoccer.com";
+"credentials_transfer_safety_question"         = "Do you want to transfer your login credentials to the XOX App?";
+
 //==============================================================================
 // Database
 //==============================================================================
@@ -484,8 +506,8 @@
 "invite_recipient_picker_title"   = "Recipients";
 
 "invite_mail_subject"             = "Hoccer XO Invitation";
-"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload Hoccer XO now from your iTunes Store- %@.\nOnce the app is downloaded or you already have it, accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
-"invite_sms_text"                 = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now: http://hoccer.com/xo Then add me as a contact: %@ \nxo %@ ";
+"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload it now and accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
+"invite_sms_text"                 = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now and add me as a contact: %@ \nxo %@ ";
 
 "invite_scan_nav_title"           = "Scan";
 "invite_generate_nav_title"       = "Generate";
