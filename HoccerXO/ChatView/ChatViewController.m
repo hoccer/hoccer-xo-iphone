@@ -463,8 +463,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     NSTimeInterval duration = [[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
     UIViewAnimationOptions curve = [[[notification userInfo] objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
     CGRect keyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGFloat height = orientation == UIInterfaceOrientationIsPortrait(orientation) ? keyboardFrame.size.height : keyboardFrame.size.width;
+    BOOL flipped = UIInterfaceOrientationIsLandscape(orientation) == UIInterfaceOrientationIsLandscape(orientation) && SYSTEM_VERSION_LESS_THAN(@"8.0");
+    CGFloat height = flipped ? keyboardFrame.size.width : keyboardFrame.size.height;
     CGPoint contentOffset = self.tableView.contentOffset;
     contentOffset.y += height;
 
@@ -2024,6 +2026,7 @@ nil
         }
     } else if ([keyPath isEqualToString: @"contentSize"] && [object isEqual: self.messageField]) {
         CGRect frame = self.messageField.frame;
+        // XXX magic numbers
         frame.size.height = MIN(150, MAX( 50 - 2 * kHXOGridSpacing, self.messageField.contentSize.height));
         self.messageField.frame = frame;
         self.chatbarHeight.constant = frame.size.height + 2 * kHXOGridSpacing;
