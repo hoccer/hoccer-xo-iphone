@@ -13,6 +13,8 @@
 #import "RNCachingURLProtocol.h"
 #import "HXOBackend.h"
 
+#define DEBUG_WEBVIEW NO
+
 @interface WebViewController ()
 
 @property (strong, nonatomic) id connectionInfoObserver;
@@ -60,7 +62,7 @@
     [super viewWillAppear: animated];
     
     NSString * myLocalizedUrlString = NSLocalizedString(self.homeUrl,"@webview");
-    //NSLog(@"webview url: %@, localized url: %@", self.homeUrl, myLocalizedUrlString);
+    if (DEBUG_WEBVIEW) NSLog(@"webview url: %@, localized url: %@", self.homeUrl, myLocalizedUrlString);
     
     if (![[self.webView.request.URL absoluteString] isEqualToString:myLocalizedUrlString] ) {
         // in case the user has navigated somewhere else
@@ -73,10 +75,12 @@
     [self.activityIndicator startAnimating];
     self.loadingOverlay.hidden = false;
     self.loadingLabel.text = NSLocalizedString(@"Loading", @"webview");
-    
-    NSLog(@"webview opening, registering RNCachingURLProtocol");
+//#define USE_CACHING
+#ifdef USE_CACHING
+    if (DEBUG_WEBVIEW) NSLog(@"webview opening, registering RNCachingURLProtocol");
     // we will only register the caching protocol for the first page
     [NSURLProtocol registerClass:[RNCachingURLProtocol class]];
+#endif
     
     NSString * myLocalizedUrlString = NSLocalizedString(self.homeUrl,"@webview");
     //NSLog(@"webview 2 url: '%@', localized url: '%@'", self.homeUrl, myLocalizedUrlString);
@@ -89,8 +93,12 @@
 - (void) loadingFinished {
     [self.activityIndicator stopAnimating];
     self.loadingOverlay.hidden = true;
+#ifdef USE_CACHING
     [NSURLProtocol unregisterClass:[RNCachingURLProtocol class]];
     NSLog(@"webview finshed loading, RNCachingURLProtocol ungregistered");
+#else
+    NSLog(@"webview finshed loading");
+#endif
     self.forwardButton.enabled = self.webView.canGoForward;
     self.backButton.enabled = self.webView.canGoBack;
     self.navigationItem.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
@@ -99,7 +107,7 @@
 #pragma mark - Optional UIWebViewDelegate delegate methods
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    NSLog(@"webview shouldStartLoadWithRequest %@, _requestsRunning = %d", request.URL, _requestsRunning);
+    if (DEBUG_WEBVIEW) NSLog(@"webview shouldStartLoadWithRequest %@, _requestsRunning = %d", request.URL, _requestsRunning);
     return YES;
 }
 
@@ -107,7 +115,7 @@
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     ++_requestsRunning;
     self.navigationItem.title = NSLocalizedString(@"loading", nil);
-    // NSLog(@"webview webViewDidStartLoad _requestsRunning = %d", _requestsRunning);
+    if (DEBUG_WEBVIEW) NSLog(@"webview webViewDidStartLoad _requestsRunning = %d", _requestsRunning);
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
@@ -115,7 +123,7 @@
     if (_requestsRunning && --_requestsRunning == 0) {
         [self loadingFinished];
     }
-    // NSLog(@"webview finshed loading, _requestsRunning=%d", _requestsRunning);
+    if (DEBUG_WEBVIEW) NSLog(@"webview finshed loading, _requestsRunning=%d", _requestsRunning);
     
 }
 
@@ -125,7 +133,7 @@
     if (_requestsRunning && --_requestsRunning == 0) {
         [self loadingFinished];
     }
-    // NSLog(@"webview failed to load, _requestsRunning=%d", _requestsRunning);
+    if (DEBUG_WEBVIEW) NSLog(@"webview failed to load, _requestsRunning=%d", _requestsRunning);
 }
 
 - (void) done: (id) sender {
