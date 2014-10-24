@@ -221,27 +221,136 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
     return myLocalURL;
 }
-    
-- (void)exportCredentialsWithPassphrase:(NSString*)passphrase {
-    NSURL * myLocalURL = [self getCredentialsURL];
 
+- (NSData*)encryptCredentialsWithPassphrase:(NSString*)passphrase {
     NSDictionary * json = [self extractCredentials];
     NSError * error;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
     if ( jsonData == nil) {
         NSLog(@"failed to extract credentials: %@", error);
+        return nil;
+    }
+    // NSLog(@"Credentials: %@", [NSString stringWithData:jsonData usingEncoding:NSUTF8StringEncoding]);
+    NSData * cryptedJsonData = [CryptoJSON encryptedContainer:jsonData withPassword:passphrase withType:@"credentials"];
+    NSLog(@"Crypted Credentials: %@", [NSString stringWithData:cryptedJsonData usingEncoding:NSUTF8StringEncoding]);
+    return cryptedJsonData;
+}
+
+
+- (NSDictionary*) decryptedCredentials:(NSData*)cryptedJsonCredentials withPassphrase:(NSString*)passphrase {
+    NSError * error = nil;
+    NSData * jsonCredentials = nil;
+    @try {
+        if (cryptedJsonCredentials == nil) {
+            return nil;
+        }
+        jsonCredentials = [CryptoJSON decryptedContainer:cryptedJsonCredentials withPassword:passphrase withType:@"credentials"];
+        if (jsonCredentials == nil) {
+            NSLog(@"failed to decrypt credentials: %@", error);
+            return nil;
+        }
+    } @catch (NSException * ex) {
+        NSLog(@"ERROR parsing credentials, jsonCredentials = %@, ex=%@", jsonCredentials, ex);
+        return nil;
+    }
+    return [self parseCredentials:jsonCredentials];
+}
+
+-(NSString*)credentialsSetting {
+    return [self credentialsSettingWithId:@""];
+}
+
+-(NSString*)credentialsSettingWithId:(NSString*)myId {
+    return [[Environment sharedEnvironment] suffixedString: [@"cryptedCredentials" stringByAppendingString:myId] ];
+}
+
+- (NSData*) credentialsBackup {
+    return [HXOUserDefaults.standardUserDefaults valueForKey:self.credentialsSetting];
+}
+
+- (NSData*) credentialsBackupWithId:(NSString*)myId {
+    return [HXOUserDefaults.standardUserDefaults valueForKey:[self credentialsSettingWithId:myId]];
+}
+
+- (BOOL) foundCredentialsBackup {
+    return [self credentialsBackup] != nil;
+}
+
+-(void)backupCredentials {
+    [self backupCredentialsWithId: @""];
+}
+
+-(void)backupCredentialsWithId:(NSString*)myId {
+    if (!self.isRegistered) {
+        NSLog(@"Not registered, not backing up credentials");
         return;
     }
-    NSData * cryptedJsonData = [CryptoJSON encryptedContainer:jsonData withPassword:passphrase withType:@"credentials"];
+    NSData * cryptedJsonData = [self encryptCredentialsWithPassphrase:@"Batldfh§$cx%&/()dgsGhajau"];
+    if (cryptedJsonData != nil) {
+        [[HXOUserDefaults standardUserDefaults] setValue: cryptedJsonData forKey: [self credentialsSettingWithId:myId]];
+        [[HXOUserDefaults standardUserDefaults] synchronize];
+        NSLog(@"backed up credentials");
+    }
+}
+
+-(NSDictionary*)restoredCredentialsWithId:(NSString*)myId {
+    NSDictionary * credentials = [self decryptedCredentials:[self credentialsBackupWithId:myId] withPassphrase:@"Batldfh§$cx%&/()dgsGhajau"];
+    return credentials;
+}
+
+-(NSDictionary*)restoredCredentials:(NSString*)myId {
+    return [self restoredCredentialsWithId:myId];
+}
+
+-(int)restoreCredentials {
+    return [self restoreCredentialsWithId:@""];
+}
+
+-(int)restoreCredentialsWithId:(NSString*)myId {
+    return [self importCredentials:[self restoredCredentialsWithId:myId]];
+}
+
+-(void)removeCredentialsBackupWithId:(NSString*)myId {
+    NSString * key = [self credentialsSettingWithId:myId];
+    if ([[HXOUserDefaults standardUserDefaults] valueForKey:key] != nil) {
+        [[HXOUserDefaults standardUserDefaults] removeObjectForKey: key];
+        [[HXOUserDefaults standardUserDefaults] synchronize];
+    }
+}
+
+-(void)verfierChangePlease {
+    [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:@"changeVerifier"]];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
+}
+
+-(void)verfierChangeDone {
+    [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:@"changeVerifier"]];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
+}
+
+-(BOOL)verfierChangeRequested {
+    return [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:@"changeVerifier"]];
+}
+
+- (void)exportCredentialsWithPassphrase:(NSString*)passphrase {
+    if (!self.isRegistered) {
+        NSLog(@"Not registered, not exporting credentials");
+        return;
+    }
+    NSURL * myLocalURL = [self getCredentialsURL];
     
-    [cryptedJsonData writeToURL:myLocalURL atomically:NO];
-    NSLog(@"Exported credentials to %@", myLocalURL);
-    NSLog(@"Credentials: %@", [NSString stringWithData:jsonData usingEncoding:NSUTF8StringEncoding]);
-    NSLog(@"Crypted Credentials: %@", [NSString stringWithData:cryptedJsonData usingEncoding:NSUTF8StringEncoding]);
+    NSData * cryptedJsonData = [self encryptCredentialsWithPassphrase:passphrase];
+    if (cryptedJsonData != nil) {
+        [cryptedJsonData writeToURL:myLocalURL atomically:NO];
+        NSLog(@"Exported credentials to %@", myLocalURL);
+    }
 }
 
 - (BOOL)transferCredentials {
-    
+    if (!self.isRegistered) {
+        NSLog(@"Not registered, not transfering credentials");
+        return NO;
+    }
     NSDictionary * json = [self extractCredentials];
     NSError * error;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
@@ -312,24 +421,18 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 
 - (NSDictionary*) loadCredentialsWithPassphrase:(NSString*)passphrase {
     NSURL * url = [self getCredentialsURL];
-    NSError * error = nil;
     NSData * jsonCredentials = nil;
     NSData * cryptedJsonCredentials = nil;
     @try {
         cryptedJsonCredentials = [NSData dataWithContentsOfURL: url];
-        if (cryptedJsonCredentials == nil) {
-            return nil;
-        }
-        jsonCredentials = [CryptoJSON decryptedContainer:cryptedJsonCredentials withPassword:passphrase withType:@"credentials"];
-        if (jsonCredentials == nil) {
-            NSLog(@"failed to decrypt credentials: %@", error);
-            return nil;
+        if (cryptedJsonCredentials != nil) {
+            return [self decryptedCredentials:cryptedJsonCredentials withPassphrase:passphrase];
         }
     } @catch (NSException * ex) {
         NSLog(@"ERROR parsing credentials, jsonCredentials = %@, ex=%@, contentURL=%@", jsonCredentials, ex, url);
         return nil;
     }
-    return [self parseCredentials:jsonCredentials];
+    return nil;
 }
     
 - (int) importCredentials:(NSDictionary*)credentials {
@@ -375,8 +478,9 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 - (BOOL) isRegistered {
-    // NSLog(@"isRegistered: clientId=%@, password=%@, salt=%@",self.clientId, self.password , self.salt);
-    return ! [self.clientId isEqualToString: @""] && ! [self.password isEqualToString: @""] && ! [self.salt isEqualToString: @""];
+    NSLog(@"isRegistered: clientId=%@, password=%@, salt=%@",self.clientId, self.password , self.salt);
+    return self.clientId != nil && self.password != nil && self.salt != nil &&
+    ! [self.clientId isEqualToString: @""] && ! [self.password isEqualToString: @""] && ! [self.salt isEqualToString: @""];
 }
 
 - (NSString*) startSrpAuthentication {

@@ -303,7 +303,7 @@ BOOL sameObjects(id obj1, id obj2) {
     // NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
     BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
 
-    if (isFirstRun) {
+    if (isFirstRun || ![UserProfile sharedProfile].isRegistered) {
         dispatch_async(dispatch_get_main_queue(), ^{  // delay until window is realized
             [self.window.rootViewController performSegueWithIdentifier: @"showSetup" sender: self];
         });
@@ -322,6 +322,10 @@ BOOL sameObjects(id obj1, id obj2) {
         self.runningNewBuild = YES;
         NSLog(@"Running new build %@ for the first time",buildNumber);
     }
+    if ([UserProfile sharedProfile].isRegistered && (![UserProfile sharedProfile].foundCredentialsBackup || self.runningNewBuild)) {
+        [[UserProfile sharedProfile] backupCredentials];
+    }
+        
     [[HXOUserDefaults standardUserDefaults] setValue:buildNumber forKey: [[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
     
     self.internetReachabilty = [GCNetworkReachability reachabilityForInternetConnection];
@@ -1576,6 +1580,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 int result = [[UserProfile sharedProfile] importCredentialsJson:credentials];
                 switch (result) {
                     case 1:
+                        [[UserProfile sharedProfile] verfierChangePlease];
                         [AppDelegate.instance showFatalErrorAlertWithMessage:NSLocalizedString(@"credentials_imported_message", nil)
                                                                    withTitle:NSLocalizedString(@"credentials_imported_title", nil)];
                         break;
@@ -1620,7 +1625,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             if([zip UnzipOpenFile:[zipFileURL path]]) {
                 NSLog(@"Zip File openend:%@",[zipFileURL path]);
                 if ([zip UnzipFileTo:[theDirectoryURL path] overWrite:YES]) {
-                    NSLog(@"Extracted %d files from %@",zip.unzippedFiles.count, [zipFileURL path]);
+                    NSLog(@"Extracted %lu files from %@",(unsigned long)zip.unzippedFiles.count, [zipFileURL path]);
                     if (![zip UnzipCloseFile]) {
                         NSLog(@"#ERROR: failed to close zip file:%@",[zipFileURL path]);
                     } else {

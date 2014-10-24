@@ -338,10 +338,12 @@
 //==============================================================================
 
 "credentials_setup_nav_title"                  = "Konto";
-"credentials_setup_found_old_text"             = "Hoccer XO war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
-"credentials_setup_found_file_text"            = "Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?";
+"credentials_setup_found_old_text"             = "Hoccer war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.\n";
+"credentials_setup_found_backup_text"          = "Eine Sicherungskopie mit Zugangsdaten ist vorhanden. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.\n";
+"credentials_setup_found_file_text"            = "Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?\n";
 "credentials_setup_keep_btn_title"             = "Konto reaktivieren";
-"credentials_setup_import_btn_title"           = "Importieren";
+"credentials_setup_restore_btn_title"          = "Konto-Sicherungskopie laden";
+"credentials_setup_import_btn_title"           = "Konto Importieren";
 "credentials_setup_create_btn_title"           = "Neues Konto";
 
 "credentials_file_delete_btn_title"            = "Exportierte Daten löschen";
@@ -370,7 +372,7 @@
 "credentials_and_database_not_deleted_message" = "Versuche eine Sicherungskopie einzuspielen oder gültige Zugangsdaten zu importieren.";
 
 "credentials_and_database_deleted_title"       = "Zugangsdaten gelöscht";
-"credentials_and_database_deleted_message"     = "Zugangsdaten und Datenbank wurden gelöscht. Starte Hoccer XO neu.";
+"credentials_and_database_deleted_message"     = "Zugangsdaten und Datenbank wurden gelöscht. Starte die App neu.";
 
 "credentials_invalid_title"                    = "Zugangsdaten zurückgewiesen";
 "credentials_invalid_delete_question"          = "Der Server hat deine Zugangsdaten nicht akzeptiert. ('%@') Falls dies ein neues Gerät ist und du Daten von einem alten Gerät übertragen hast, kannst du dort die alten Zugangsdaten unter 'Profil' exportieren. Du kannst auch einen neuen Zugang anlegen. Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
@@ -378,7 +380,7 @@
 "credentials_and_database_really_delete_title" = "Zugangsdaten und Datenbank wirklich löschen?";
 "credentials_database_delete_btn_title"        = "Alles löschen";
 
-"credentials_imported_message"                 = "Neue Zugangsdaten wurden übernommen. Bitte XOX neu starten.";
+"credentials_imported_message"                 = "Neue Zugangsdaten wurden übernommen. Bitte die App neu starten.";
 "credentials_imported_title"                   = "Zugangsdaten übenommen";
 
 "credentials_receive_import_failed_message"    = "Fehler beim Übernehmen der Zugangsdaten";
@@ -392,11 +394,11 @@
 
 "credentials_receive_import_btn_title"         = "Übernehmen";
 
-"credentials_transfer_btn_title"               = "Zugangsdaten nach XOX";
-"credentials_transfer_failed_no_xox_message"   = "Du must zuvor XOX installieren. Hierzu wird sich die XOX-Seite öffnen.";
-"credentials_transfer_failed_no_xox_title"     = "XOX App benötigt";
+"credentials_transfer_btn_title"               = "Zugangsdaten übertragen";
+"credentials_transfer_failed_no_xox_message"   = "Du must zuvor zusötzlich die Hoccer App installieren. Hierzu wird sich die Hoccer-Seite öffnen.";
+"credentials_transfer_failed_no_xox_title"     = "Hoccer-App benötigt";
 "credentials_transfer_install_app_url"         = "http://hoccer.com";
-"credentials_transfer_safety_question"         = "Willst du deine Zugangsdaten auf die XOX-App übertragen?";
+"credentials_transfer_safety_question"         = "Willst du deine Zugangsdaten auf die Hoccer-App übertragen?";
 
 //==============================================================================
 // CTAssetsPickerController (3rd party)

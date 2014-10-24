@@ -60,6 +60,17 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 - (int) importCredentialsWithPassphrase:(NSString*)passphrase;
 - (void) exportCredentialsWithPassphrase:(NSString*)passphrase;
 
+- (BOOL)foundCredentialsBackup;
+- (void)backupCredentials;
+- (void)backupCredentialsWithId:(NSString*)myId;
+- (int)restoreCredentials;
+- (int)restoreCredentialsWithId:(NSString*)myId;
+- (void)removeCredentialsBackupWithId:(NSString*)myId;
+
+- (void)verfierChangePlease;
+- (void)verfierChangeDone;
+- (BOOL)verfierChangeRequested;
+
 - (BOOL)transferCredentials;
 - (int)importCredentialsJson:(NSData*)jsonData;
 

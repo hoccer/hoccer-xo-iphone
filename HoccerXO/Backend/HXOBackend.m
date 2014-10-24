@@ -980,6 +980,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) didRegister: (BOOL) success {
     // NSLog(@"didRegister: %d", success);
     if (success) {
+        [UserProfile.sharedProfile backupCredentials];
         _performRegistration = NO;
         [self startAuthentication];
     }
@@ -1075,6 +1076,17 @@ static NSTimer * _stateNotificationDelayTimer;
             _apnsDeviceToken = nil; // XXX: this is not nice...
         }
         [self setState: kBackendReady];
+        
+        if ([[UserProfile sharedProfile] verfierChangeRequested]) {
+            [self srpChangeVerifierWithHandler:^(BOOL ok) {
+                if (ok) {
+                    [[UserProfile sharedProfile] verfierChangeDone];
+                }
+                [self stopAndRetry];
+            }];
+            return;
+        }
+        
         if (HXOEnvironment.sharedInstance.isActive) {
             NSLog(@"Nearby active, defering sync until environment update ready");
             __block __typeof(self) __weak weakSelf = self;
@@ -4690,6 +4702,33 @@ static NSTimer * _stateNotificationDelayTimer;
         [self didRegister: success];
     }];
 
+}
+
+- (void) srpChangeVerifierWithHandler:(GenericResultHandler)handler {
+    [[UserProfile sharedProfile] backupCredentialsWithId:@"old"];
+    NSString * verifier = [[UserProfile sharedProfile] registerClientAndComputeVerifier: [UserProfile sharedProfile].clientId];
+    NSString * salt = [UserProfile sharedProfile].salt;
+    [[UserProfile sharedProfile] backupCredentialsWithId:@"new"];
+    
+    //NSLog(@"srpChangeVerifier: %@ andSalt: %@", verifier, salt);
+    [_serverConnection invoke: @"srpChangeVerifier" withParams: @[verifier, salt] onResponse: ^(id responseOrError, BOOL success) {
+        if ( ! success) {
+            NSLog(@"ERROR - verifier change failed: %@ - restoring old verifier", responseOrError);
+            [[UserProfile sharedProfile] restoreCredentialsWithId:@"old"];
+            [[UserProfile sharedProfile] removeCredentialsBackupWithId:@"old"];
+            // TODO: if we have failed, the server might have changed to the new credentials anyway
+            // these are stored under id "new", so we might try to recover from this problem
+            // but it will be probably very rare
+            handler(NO);
+        } else {
+            NSLog(@"INFO: verifier change succeeded");
+            [[UserProfile sharedProfile] backupCredentials];
+            [[UserProfile sharedProfile] removeCredentialsBackupWithId:@"old"];
+            [[UserProfile sharedProfile] removeCredentialsBackupWithId:@"new"];
+            handler(YES);
+        }
+    }];
+    
 }
 
 - (void) srpPhase1WithClientId: (NSString*) clientId A: (NSString*) A andHandler: (SrpHanlder) handler {

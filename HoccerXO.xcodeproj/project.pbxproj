@@ -3510,7 +3510,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "XOX (Hoccer)";
+				PRODUCT_NAME = Hoccer;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3618,7 +3618,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "XOX (Hoccer)";
+				PRODUCT_NAME = Hoccer;
 				PROVISIONING_PROFILE = "162a6729-0062-41b5-8344-c1d632028f65";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";

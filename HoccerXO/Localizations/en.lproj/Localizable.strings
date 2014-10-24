@@ -339,9 +339,11 @@
 
 "credentials_setup_nav_title"                  = "Account";
 "credentials_setup_found_old_text"             = "Hoccer XO was installed before. Do you want to reactivate the old account and keep all contacts?";
+"credentials_setup_found_backup_text"          = "A login backup exists. You can restore your account from this backup.\n";
 "credentials_setup_found_file_text"            = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
-"credentials_setup_keep_btn_title"             = "Reactivate account";
-"credentials_setup_import_btn_title"           = "Import";
+"credentials_setup_keep_btn_title"             = "Reactivate Account";
+"credentials_setup_restore_btn_title"          = "Restore Account-Backup";
+"credentials_setup_import_btn_title"           = "Import Account";
 "credentials_setup_create_btn_title"           = "New Account";
 
 "credentials_file_delete_btn_title"            = "Delete exported credentials";
@@ -369,7 +371,7 @@
 "credentials_and_database_not_deleted_message" = "Try restoring from backup or import saved credentials";
 
 "credentials_and_database_deleted_title"       = "Credentials Deleted";
-"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer XO.";
+"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer.";
 
 "credentials_invalid_title"                    = "Credentials not accepted";
 "credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') If this is a new device and you have transfered data from the old device, you can transfer your credentials from your old device under 'Profile'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
@@ -391,11 +393,11 @@
 
 "credentials_receive_import_btn_title"         = "Transfer";
 
-"credentials_transfer_btn_title"               = "Transfer Login to XOX";
-"credentials_transfer_failed_no_xox_message"   = "You need to install the XOX App first. You will be transfered to the XOX home page for installation.";
-"credentials_transfer_failed_no_xox_title"     = "XOX App required";
+"credentials_transfer_btn_title"               = "Transfer Login to Hoccer";
+"credentials_transfer_failed_no_xox_message"   = "You need to install the Hoccer-App first. You will be transfered to the Hoccer home page for installation.";
+"credentials_transfer_failed_no_xox_title"     = "Hoccer App required";
 "credentials_transfer_install_app_url"         = "http://hoccer.com";
-"credentials_transfer_safety_question"         = "Do you want to transfer your login credentials to the XOX App?";
+"credentials_transfer_safety_question"         = "Do you want to transfer your login credentials to the Hoccer App?";
 
 //==============================================================================
 // Database

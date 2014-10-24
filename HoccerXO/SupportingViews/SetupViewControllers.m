@@ -25,6 +25,7 @@
 @property (nonatomic, strong) DatasheetSection * section;
 @property (nonatomic, strong) DatasheetItem    * optionKeep;
 @property (nonatomic, strong) DatasheetItem    * optionImport;
+@property (nonatomic, strong) DatasheetItem    * optionRestore;
 @property (nonatomic, strong) DatasheetItem    * optionCreateNew;
 
 @property (nonatomic, strong) DatasheetItem    * selectedItem;
@@ -40,8 +41,10 @@
 @implementation SetupViewController
 
 - (void) viewDidLoad {
-    BOOL somethingWithCredentials = [UserProfile sharedProfile].isRegistered || [UserProfile sharedProfile].foundCredentialsFile;
+    BOOL somethingWithCredentials = [UserProfile sharedProfile].isRegistered || [UserProfile sharedProfile].foundCredentialsFile || [UserProfile sharedProfile].foundCredentialsBackup;
 
+    NSLog(@"reg = %d, credf= %d, backup= %d", [UserProfile sharedProfile].isRegistered,[UserProfile sharedProfile].foundCredentialsFile,[UserProfile sharedProfile].foundCredentialsBackup);
+    
     if (somethingWithCredentials) {
         DatasheetViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier: @"cleanup_credentials"];
         [self setViewControllers: @[vc]];
@@ -65,6 +68,10 @@
         [texts addObject: NSLocalizedString(@"credentials_setup_found_old_text", nil)];
     }
     
+    if ([UserProfile sharedProfile].foundCredentialsBackup) {
+        [texts addObject: NSLocalizedString(@"credentials_setup_found_backup_text", nil)];
+    }
+    
     if ([UserProfile sharedProfile].foundCredentialsFile) {
         [texts addObject: NSLocalizedString(@"credentials_setup_found_file_text", nil)];
     }
@@ -77,6 +84,7 @@
 
     self.optionKeep      = [self itemWithIdentifier: @"credentials_setup_keep_btn_title"   cellIdentifier: @"DatasheetActionCell"];
     self.optionImport    = [self itemWithIdentifier: @"credentials_setup_import_btn_title" cellIdentifier: @"DatasheetActionCell"];
+    self.optionRestore    = [self itemWithIdentifier: @"credentials_setup_restore_btn_title" cellIdentifier: @"DatasheetActionCell"];
     self.optionCreateNew = [self itemWithIdentifier: @"credentials_setup_create_btn_title" cellIdentifier: @"DatasheetActionCell"];
 
     self.optionKeep.accessoryStyle      =
@@ -85,13 +93,15 @@
 
     self.optionKeep.target      =
     self.optionImport.target    =
+    self.optionRestore.target   =
     self.optionCreateNew.target = self;
 
     self.optionKeep.action      =
     self.optionImport.action    =
+    self.optionRestore.action   =
     self.optionCreateNew.action = @selector(buttonPressed:);
 
-    [self.section setItems: @[self.optionKeep, self.optionImport, self.optionCreateNew]];
+    [self.section setItems: @[self.optionKeep, self.optionImport, self.optionRestore, self.optionCreateNew]];
 }
 
 - (NSArray*) buildSections {
@@ -103,6 +113,8 @@
         return [UserProfile sharedProfile].isRegistered;
     } else if ([item isEqual: self.optionImport]) {
         return [UserProfile sharedProfile].foundCredentialsFile;
+    } else if ([item isEqual: self.optionRestore]) {
+        return [UserProfile sharedProfile].foundCredentialsBackup;
     }
     return [super isItemVisible: item];
 }
@@ -115,6 +127,7 @@
                 int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:passphrase];
                 switch (result) {
                     case 1:
+                        [[UserProfile sharedProfile] verfierChangePlease];
                         [(UIViewController*)self.delegate performSegueWithIdentifier: @"showProfileSetup" sender: self];
                         break;
                     case -1:
@@ -135,6 +148,24 @@
                 withPlaceHolder: NSLocalizedString(@"credentials_file_passphrase_placeholder",nil)
                    onCompletion: passphraseCompletion];
 
+    } else  if ([sender isEqual: self.optionRestore]) {
+        int result = [[UserProfile sharedProfile] restoreCredentials];
+        switch (result) {
+            case 1:
+                [[UserProfile sharedProfile] verfierChangePlease];
+                [(UIViewController*)self.delegate performSegueWithIdentifier: @"showProfileSetup" sender: self];
+                break;
+            case -1:
+                [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_decryption_failed_message" withTitle:@"credentials_file_import_failed_title"];
+                break;
+            case 0:
+                [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_equals_current_message" withTitle:@"credentials_file_equals_current_title"];
+                break;
+            default:
+                NSLog(@"importCredentialsPressed: unhandled result %d", result);
+                break;
+        }
+        
     } else {
         [(UIViewController*)self.delegate performSegueWithIdentifier: @"showProfileSetup" sender: self];
     }

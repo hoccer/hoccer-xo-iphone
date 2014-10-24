@@ -16,9 +16,6 @@
 @property (nonatomic, readonly) UserProfile      * userProfile;
 
 @property (nonatomic, readonly) DatasheetSection * credentialsSection;
-//@property (nonatomic, readonly) DatasheetItem    * exportCredentialsItem;
-//@property (nonatomic, readonly) DatasheetItem    * importCredentialsItem;
-//@property (nonatomic, readonly) DatasheetItem    * deleteCredentialsFileItem;
 
 @end
 
@@ -265,6 +262,7 @@
             int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:passphrase];
             switch (result) {
                 case 1:
+                    [[UserProfile sharedProfile] verfierChangePlease];
                     [AppDelegate.instance showFatalErrorAlertWithMessage: NSLocalizedString(@"credentials_imported_message",nil)
                       withTitle:NSLocalizedString(@"credentials_imported_title",nil)
                     ];
