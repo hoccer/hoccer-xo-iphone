@@ -16,7 +16,8 @@
 
 
 FOUNDATION_EXPORT NSString * const kHXOURLScheme;
-FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLScheme;
+FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLImportScheme;
+FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLExportScheme;
 
 typedef void (^ContinueBlock)();
 typedef void (^ContextBlock)(NSManagedObjectContext* context);

@@ -72,10 +72,17 @@
 NSString * const kHXOURLScheme = @"hxod";
 static NSString * const kTestFlightAppToken = @"c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 #else
-NSString * const kHXOURLScheme = @"hxo";
-static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
+    #ifdef HOCCER_CLASSIC
+        NSString * const kHXOURLScheme = @"hcr";
+        static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
+    #else
+        NSString * const kHXOURLScheme = @"hxo";
+        static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
+    #endif
 #endif
-NSString * const kHXOTransferCredentialsURLScheme = @"xoxfer";
+
+NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
+NSString * const kHXOTransferCredentialsURLExportScheme = @"hcrexport";
 
 
 static NSInteger validationErrorCount = 0;
@@ -1559,14 +1566,39 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         }
         return [self handleFileURL:url withDocumentType:documentType];
     }
-    if ([[url scheme] isEqualToString:kHXOTransferCredentialsURLScheme]) {
+    if ([[url scheme] isEqualToString:kHXOTransferCredentialsURLImportScheme]) {
         NSString * hexCredentials = [url host];
         NSLog(@"handleOpenURL: credentials received%@",hexCredentials);
         NSData * credentials = [NSData dataWithHexadecimalString:hexCredentials];
         [self receiveCredentials:credentials];
     }
+    if ([[url scheme] isEqualToString:kHXOTransferCredentialsURLExportScheme]) {
+        dispatch_async(dispatch_get_main_queue(), ^{ // delay until window is realized
+            [self sendCredentials];
+        });
+    }
 
     return NO;
+}
+
+-(void) sendCredentials {
+    HXOAlertViewCompletionBlock completion = ^(NSUInteger buttonIndex, UIAlertView * alertView) {
+        if (buttonIndex != alertView.cancelButtonIndex) {
+            if (![[UserProfile sharedProfile] transferCredentials]) {
+                [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"credentials_transfer_failed_no_xox_message",nil)
+                                                     withTitle:NSLocalizedString(@"credentials_transfer_failed_no_xox_title",nil)
+                                                   withOKBlock:^{
+                                                       [[UIApplication sharedApplication] openURL:[NSURL URLWithString:NSLocalizedString(@"credentials_transfer_install_app_url",nil)]];
+                                                   }];
+            }
+        }
+    };
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_transfer_safety_question", nil)
+                                                     message: nil
+                                             completionBlock: completion
+                                           cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                           otherButtonTitles: NSLocalizedString(@"transfer", nil),nil];
+    [alert show];
 }
 
 - (void) receiveCredentials:(NSData*)credentials {

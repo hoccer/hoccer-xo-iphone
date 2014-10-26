@@ -3379,8 +3379,8 @@
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_URL_SCHEME = hxo;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
-				HXO_XFER_URL_SCHEME = xoxfer_disabled;
-				HXO_XFER_URL_SCHEME_ID = "com.hoccer.xoxfer-disabled";
+				HXO_XFER_URL_SCHEME = hcrexport;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrexport;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -3421,8 +3421,8 @@
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_URL_SCHEME = hxo;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
-				HXO_XFER_URL_SCHEME = "xoxfer_disabled\nxoxfer_disabled\nxoxfer_disabled";
-				HXO_XFER_URL_SCHEME_ID = "com.hoccer.xoxfer-disabled";
+				HXO_XFER_URL_SCHEME = hcrexport;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrexport;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -3495,10 +3495,10 @@
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
-				HXO_URL_SCHEME = hxo;
-				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
-				HXO_XFER_URL_SCHEME = xoxfer;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xoxfer;
+				HXO_URL_SCHEME = hcr;
+				HXO_URL_SCHEME_ID = com.hoccer.hoccer;
+				HXO_XFER_URL_SCHEME = hcrimport;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrimport;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -3603,10 +3603,10 @@
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
-				HXO_URL_SCHEME = hxo;
-				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
-				HXO_XFER_URL_SCHEME = xoxfer;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xoxfer;
+				HXO_URL_SCHEME = hcr;
+				HXO_URL_SCHEME_ID = com.hoccer.hoccer;
+				HXO_XFER_URL_SCHEME = hcrimport;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrimport;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -3715,8 +3715,8 @@
 				HXO_DEFAULT_ENVIRONMENT = development;
 				HXO_URL_SCHEME = hxod;
 				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
-				HXO_XFER_URL_SCHEME = "xoxfer_disabled\n";
-				HXO_XFER_URL_SCHEME_ID = "com.hoccer.xoxfer-disabled";
+				HXO_XFER_URL_SCHEME = "xferdisabled\n";
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -3823,8 +3823,8 @@
 				HXO_DEFAULT_ENVIRONMENT = development;
 				HXO_URL_SCHEME = hxod;
 				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
-				HXO_XFER_URL_SCHEME = xoxfer_disabled;
-				HXO_XFER_URL_SCHEME_ID = "com.hoccer.xoxfer-disabled";
+				HXO_XFER_URL_SCHEME = xferdisabled;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (

@@ -362,7 +362,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSString * credentialsString = [jsonData hexadecimalString];
     NSLog(@"Credentials: %@", credentialsString);
     
-    NSString * credentialsUrlString = [NSString stringWithFormat:@"%@://%@", kHXOTransferCredentialsURLScheme,credentialsString];
+    NSString * credentialsUrlString = [NSString stringWithFormat:@"%@://%@", kHXOTransferCredentialsURLImportScheme,credentialsString];
     
     NSURL * myUrl = [NSURL URLWithString:credentialsUrlString];
     NSLog(@"Credentials URL: %@", myUrl);
@@ -409,6 +409,22 @@ const NSUInteger kHXODefaultKeySize    = 2048;
         return NO;
     }
     return credentials != nil;
+}
+
+- (NSURL*)fetchCredentialsURL {
+    NSString * urlString = [NSString stringWithFormat:@"%@://fetch/", kHXOTransferCredentialsURLExportScheme];
+    
+    NSURL * myUrl = [NSURL URLWithString:urlString];
+    return myUrl;
+    
+}
+
+- (BOOL) foundCredentialsProviderApp {
+#ifdef HOCCER_CLASSIC
+    return [[UIApplication sharedApplication] canOpenURL:[self fetchCredentialsURL]];
+#else
+    return NO;
+#endif
 }
 
 - (BOOL) deleteCredentialsFile {

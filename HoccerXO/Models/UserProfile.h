@@ -56,6 +56,9 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 - (BOOL) foundCredentialsFile;
 - (BOOL) deleteCredentialsFile;
 
+- (BOOL) foundCredentialsProviderApp;
+- (NSURL*)fetchCredentialsURL;
+
 - (NSDictionary*) loadCredentialsWithPassphrase:(NSString*)passphrase;
 - (int) importCredentialsWithPassphrase:(NSString*)passphrase;
 - (void) exportCredentialsWithPassphrase:(NSString*)passphrase;
@@ -73,7 +76,6 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 
 - (BOOL)transferCredentials;
 - (int)importCredentialsJson:(NSData*)jsonData;
-
 
 - (NSString*) startSrpAuthentication;
 - (NSString*) processSrpChallenge: (NSString*) challenge error: (NSError**) error;

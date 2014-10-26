@@ -24,6 +24,7 @@
 @synthesize credentialsSection = _credentialsSection;
 @synthesize exportCredentialsItem = _exportCredentialsItem;
 @synthesize transferCredentialsItem = _transferCredentialsItem;
+@synthesize fetchCredentialsItem = _fetchCredentialsItem;
 @synthesize importCredentialsItem = _importCredentialsItem;
 @synthesize deleteCredentialsFileItem = _deleteCredentialsFileItem;
 
@@ -82,6 +83,8 @@
                                       
 #ifndef HOCCER_CLASSIC
                                       , self.transferCredentialsItem
+#else
+                                      , self.fetchCredentialsItem
 #endif
                                       , self.archiveAllItem
                                       , self.archiveImportItem
@@ -100,6 +103,8 @@
         return self.userProfile.foundCredentialsFile && [super isItemVisible: item];
     } else if ([item isEqual: self.deleteCredentialsFileItem]) {
         return self.userProfile.foundCredentialsFile && [super isItemVisible: item];
+    } else if ([item isEqual: self.fetchCredentialsItem]) {
+        return self.userProfile.foundCredentialsProviderApp && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
 }
@@ -242,6 +247,42 @@
     [sheet showInView: self.delegate.view];
 }
 
+
+#pragma mark - Fetch Credentials
+
+- (DatasheetItem*) fetchCredentialsItem {
+    if ( ! _fetchCredentialsItem) {
+        _fetchCredentialsItem = [self itemWithIdentifier: @"credentials_fetch_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _fetchCredentialsItem.visibilityMask = DatasheetModeEdit;
+        _fetchCredentialsItem.dependencyPaths = @[@"foundCredentialsProviderApp"];
+        _fetchCredentialsItem.target = self;
+        _fetchCredentialsItem.action = @selector(fetchCredentialsPressed:);
+
+    }
+    return _fetchCredentialsItem;
+}
+
+- (void) fetchCredentialsPressed: (UIViewController*) sender {
+
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            NSURL * myFetchURL = [UserProfile sharedProfile].fetchCredentialsURL;
+            if ([[UIApplication sharedApplication] openURL:myFetchURL]) {
+                NSLog(@"Credentials openURL returned true");
+            } else {
+                NSLog(@"Credentials openURL returned false");
+            }
+        }
+    };
+
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_fetch_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"credentials_fetch_confirm_btn_title", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: self.delegate.view];
+}
+
 #pragma mark - Import Credentials
 
 - (DatasheetItem*) importCredentialsItem {
@@ -251,7 +292,7 @@
         _importCredentialsItem.dependencyPaths = @[@"foundCredentialsFile"];
         _importCredentialsItem.target = self;
         _importCredentialsItem.action = @selector(importCredentialsPressed:);
-
+        
     }
     return _importCredentialsItem;
 }
@@ -264,8 +305,8 @@
                 case 1:
                     [[UserProfile sharedProfile] verfierChangePlease];
                     [AppDelegate.instance showFatalErrorAlertWithMessage: NSLocalizedString(@"credentials_imported_message",nil)
-                      withTitle:NSLocalizedString(@"credentials_imported_title",nil)
-                    ];
+                                                               withTitle:NSLocalizedString(@"credentials_imported_title",nil)
+                     ];
                     break;
                 case -1:
                     [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_decryption_failed_message" withTitle:@"credentials_file_import_failed_title"];
@@ -279,14 +320,14 @@
             }
         }
     };
-
+    
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             [HXOUI enterStringAlert:nil withTitle:NSLocalizedString(@"credentials_file_enter_passphrase_alert",nil) withPlaceHolder:NSLocalizedString(@"credentials_file_passphrase_placeholder",nil)
                        onCompletion: passphraseCompletion];
         }
     };
-
+    
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_import_safety_question", nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"cancel", nil)
@@ -294,6 +335,8 @@
                                       otherButtonTitles: nil];
     [sheet showInView: self.delegate.view];
 }
+
+
 
 #pragma mark - Delete Credentials
 
