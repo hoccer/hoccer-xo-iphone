@@ -358,7 +358,7 @@
 "credentials_file_equals_current_message"      = "Importiere Zugangsdaten sind mit den geltenden identisch.";
 
 "credentials_export_btn_title"                 = "Zugangsdaten exportieren";
-"credentials_exported_alert"                   = "Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, darf der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
+"credentials_exported_alert"                   = "Zugangsdaten wurden ins Dokumentenverzeichnis exportiert. Falls diese auf einem anderen Gerät importiert werden, kann der Zugang mit diesem Gerät hier nicht mehr genutzt werden!";
 
 "credentials_import_btn_title"                 = "Zugangsdaten importieren";
 "credentials_import_safety_question"           = "Das Importieren von Zugangsdaten kann zum Verlust des aktuellen Zugangs und aller XO-Kontakte führen! Dennoch importieren?";
@@ -399,6 +399,32 @@
 "credentials_transfer_failed_no_xox_title"     = "Hoccer-App benötigt";
 "credentials_transfer_install_app_url"         = "http://hoccer.com";
 "credentials_transfer_safety_question"         = "Willst du deine Zugangsdaten auf die Hoccer-App übertragen?";
+
+"credentials_fetch_btn_title"                   = "Zugangsdaten von XO holen";
+"credentials_fetch_safety_question"             = "Das Holen der Zugangsdaten von Hoccer XO übernimmt die Anmeldeinformation und damit Kontakte und Gruppeninformationen, aber die alten Nachrichten und Anhäge werden nicht mitgenommen. Willst du den Vorgang fortsetzen?";
+"credentials_fetch_confirm_btn_title"           = "Nur Zugangsdaten holen";
+
+//==============================================================================
+// Archive
+//==============================================================================
+"archive_all_btn_title"                         = "Archiv anlegen";
+"archive_failed_message"                        = "Archivdatei konnte nicht angelegt werden. Möglicherweise nicht mehr genügend freier Speicherplatz.";
+"archive_failed_title"                          = "Archivieren fehlgeschlagen";
+"archive_ok_alert_message"                      = "Es wurde eine Archivdatei in deinem Dokumentverzeichnis angelegt. Du kannst sie mit Hilfe von iTunes auf ein anderes Gerät übertragen.";
+"archive_ok_alert_title"                        = "Archivdatei angelegt";
+"archive_safety_question"                       = "Das Anlegen einer Archivdatei verdoppelt den Speicherverbrauch dieser App. Willst du wirklich alle deine Daten archivieren? ";
+"archive"                                       = "Archivieren";
+"archive_import_btn_title"                      = "Archiv importieren";
+"archive_import_failed_message"                 = "Möglicherweise nicht genügend freier Speicher oder die Archivdatei ist nicht in Ordnung.";
+"archive_import_failed_title"                   = "Archivimport fehlgschlagen";
+"archive_imported_message"                      = "Neue Datenbank und Zugangsdaten wurden übernommen. Bitte die App neu starten.";
+"archive_imported_title"                        = "Archiv importiert";
+"archive_import_safety_question"                = "Das Importieren eines Archivs überschreibt die aktuelle Datenbank und Benutzerkonto mit den Daten des Accounts, mit dem das Archiv angelegt wurde. Wirklich fortfahren?";
+"archive_fetch_btn_title"                       = "Alles von XO übertragen";
+"archive_fetch_safety_question"                 = "Diese Funktion Übertragen alle Daten von Hoccer XO einschlisslich der Anmeldeinfomation in diese App. Willst du forfahren?";
+"archive_fetch_confirm_btn_title"               = "Alles Holen";
+
+"archive_transfer_safety_question"              = "Willst du alle Daten einschliesslich der Anmeldedaten von XO zur neuen Hoccer App übertragen?";
 
 //==============================================================================
 // CTAssetsPickerController (3rd party)

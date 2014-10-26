@@ -1082,7 +1082,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 if (ok) {
                     [[UserProfile sharedProfile] verfierChangeDone];
                 }
-                [self stopAndRetry];
+                // [self stopAndRetry]; // TODO: activate this when server is up to date
             }];
             return;
         }

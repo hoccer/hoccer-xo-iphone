@@ -258,7 +258,7 @@ BOOL sameObjects(id obj1, id obj2) {
     _inspectionLock = [NSObject new];
 
 #ifdef DEBUG
-#define DEFINE_OTHER_SERVERS
+//#define DEFINE_OTHER_SERVERS
 #endif
 #ifdef DEFINE_OTHER_SERVERS
     //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.166:8080/" forKey: kHXODebugServerURL];
@@ -1653,14 +1653,12 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         
     };
     
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_received_import_title", nil)
-                                                        message: NSLocalizedString(@"credentials_received_import_message", nil)
-                                                completionBlock: completionBlock
-                                              cancelButtonTitle:NSLocalizedString(@"no", nil)
-                                              otherButtonTitles:NSLocalizedString(@"credentials_receive_import_btn_title",nil),nil];
-        [alert show];
-    
-
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_received_import_title", nil)
+                                                    message: NSLocalizedString(@"credentials_received_import_message", nil)
+                                            completionBlock: completionBlock
+                                          cancelButtonTitle:NSLocalizedString(@"no", nil)
+                                          otherButtonTitles:NSLocalizedString(@"credentials_receive_import_btn_title",nil),nil];
+    [alert show];
 }
 
 
@@ -1669,15 +1667,15 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         if (buttonIndex != alertView.cancelButtonIndex) {
             [self transferArchiveWithHandler:^(BOOL ok) {
                 if (!ok) {
-                    [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"credentials_transfer_archive_failed_message",nil)
-                                                         withTitle:NSLocalizedString(@"credentials_transfer_archive_failed_title",nil)
+                    [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"archive_failed_message",nil)
+                                                         withTitle:NSLocalizedString(@"archive_failed_title",nil)
                                                        withOKBlock:^{ }
                      ];
                 }
             }];
         }
     };
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_archive_transfer_safety_question", nil)
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_transfer_safety_question", nil)
                                                      message: nil
                                              completionBlock: completion
                                            cancelButtonTitle: NSLocalizedString(@"cancel", nil)
@@ -1736,11 +1734,11 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         
     };
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_archive_received_import_title", nil)
-                                                    message: NSLocalizedString(@"credentials_archive_received_import_message", nil)
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_received_import_title", nil)
+                                                    message: NSLocalizedString(@"archive_received_import_message", nil)
                                             completionBlock: completionBlock
                                           cancelButtonTitle:NSLocalizedString(@"no", nil)
-                                          otherButtonTitles:NSLocalizedString(@"credentials_receive_archive_import_btn_title",nil),nil];
+                                          otherButtonTitles:NSLocalizedString(@"archive_received_import_btn_title",nil),nil];
     [alert show];
 }
 

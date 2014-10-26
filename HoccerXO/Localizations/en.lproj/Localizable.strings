@@ -399,6 +399,34 @@
 "credentials_transfer_install_app_url"         = "http://hoccer.com";
 "credentials_transfer_safety_question"         = "Do you want to transfer your login credentials to the Hoccer App?";
 
+"credentials_fetch_btn_title"                   = "Fetch Credentials from XO";
+"credentials_fetch_safety_question"             = "Fetching Credentials from Hoccer XO will transfer the account with contact to this App, but chats and attachment will not be transfered. Do you want to proceed?";
+"credentials_fetch_confirm_btn_title"           = "Fetch Credentials Only";
+
+//==============================================================================
+// Archive
+//==============================================================================
+"archive_all_btn_title"                         = "Create Archive";
+"archive_failed_message"                        = "Could not create archive. Possibly not enough free storage on device.";
+"archive_failed_title"                          = "Create Archive Failed";
+"archive_ok_alert_message"                      = "An Archive File has been created in you Document Directory. You can transfer and import it on another device using iTunes.";
+"archive_ok_alert_title"                        = "Archive File Created";
+"archive_safety_question"                       = "Creating an archive file will double the amount of storage required by this app and may take some minutes. Really create an archive file of all you data? ";
+"archive"                                       = "Create Archive";
+"archive_import_btn_title"                      = "Import Archive";
+"archive_import_failed_message"                 = "Importing archive failed. You either do not have enough free space or the archive is corrupted.";
+"archive_import_failed_title"                   = "Archive Import Failed";
+"archive_imported_message"                      = "An Archive has successfully been imported. You need to restart this app to continue.";
+"archive_imported_title"                        = "Archive Imported";
+"archive_import_safety_question"                = "Importing an archive will overwrite your existing database of messages and set your login to the one the archive was created with. Do you really want to import an archive? ";
+"archive_fetch_btn_title"                       = "Fetch All from XO";
+"archive_fetch_safety_question"                 = "Fetching Data from Hoccer XO will transfer all the data and account to this App. Do you want to proceed?";
+"archive_fetch_confirm_btn_title"               = "Fetch All";
+
+"archive_transfer_safety_question"              = "Do you want to tranfer your account and data from XO to the installed Hoccer App?";
+
+
+
 //==============================================================================
 // Database
 //==============================================================================

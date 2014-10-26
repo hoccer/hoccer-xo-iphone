@@ -134,7 +134,7 @@
                                                            [[UIApplication sharedApplication] openURL:[NSURL URLWithString:NSLocalizedString(@"credentials_transfer_install_app_url",nil)]];
                                                        }];
                 } else {
-                    [HXOUI showErrorAlertWithMessageAsync: nil withTitle:@"archive_ok_alert"];
+                    [HXOUI showErrorAlertWithMessageAsync: @"archive_ok_alert_message" withTitle:@"archive_ok_alert_title"];
                 }
             }];
             
@@ -193,7 +193,7 @@
 //TODO: strings
 - (DatasheetItem*) fetchArchiveItem {
     if ( ! _fetchArchiveItem) {
-        _fetchArchiveItem = [self itemWithIdentifier: @"credentials_archive_fetch_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _fetchArchiveItem = [self itemWithIdentifier: @"archive_fetch_btn_title" cellIdentifier: @"DatasheetActionCell"];
         _fetchArchiveItem.visibilityMask = DatasheetModeEdit;
         _fetchArchiveItem.dependencyPaths = @[@"foundCredentialsProviderApp"];
         _fetchArchiveItem.target = self;
@@ -218,10 +218,10 @@
         }
     };
     
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_archive_fetch_safety_question", nil)
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_fetch_safety_question", nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"credentials_archive_fetch_confirm_btn_title", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"archive_fetch_confirm_btn_title", nil)
                                       otherButtonTitles: nil];
     [sheet showInView: self.delegate.view];
 }
