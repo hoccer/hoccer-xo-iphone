@@ -25,6 +25,7 @@
 @synthesize exportCredentialsItem = _exportCredentialsItem;
 @synthesize transferCredentialsItem = _transferCredentialsItem;
 @synthesize fetchCredentialsItem = _fetchCredentialsItem;
+@synthesize fetchArchiveItem = _fetchArchiveItem;
 @synthesize importCredentialsItem = _importCredentialsItem;
 @synthesize deleteCredentialsFileItem = _deleteCredentialsFileItem;
 
@@ -85,6 +86,7 @@
                                       , self.transferCredentialsItem
 #else
                                       , self.fetchCredentialsItem
+                                      , self.fetchArchiveItem
 #endif
                                       , self.archiveAllItem
                                       , self.archiveImportItem
@@ -124,8 +126,8 @@
 - (void) archiveAllPressed: (id) sender {
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            [AppDelegate.instance makeArchiveWithHandler:^(BOOL ok) {
-                if (!ok) {
+            [AppDelegate.instance makeArchiveWithHandler:^(NSURL* url) {
+                if (url == nil) {
                     [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"archive_failed_message",nil)
                                                          withTitle:NSLocalizedString(@"archive_failed_title",nil)
                                                        withOKBlock:^{
@@ -182,6 +184,44 @@
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                  destructiveButtonTitle: NSLocalizedString(@"import", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: self.delegate.view];
+}
+
+#pragma mark - Fetch Archive
+
+//TODO: strings
+- (DatasheetItem*) fetchArchiveItem {
+    if ( ! _fetchArchiveItem) {
+        _fetchArchiveItem = [self itemWithIdentifier: @"credentials_archive_fetch_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _fetchArchiveItem.visibilityMask = DatasheetModeEdit;
+        _fetchArchiveItem.dependencyPaths = @[@"foundCredentialsProviderApp"];
+        _fetchArchiveItem.target = self;
+        _fetchArchiveItem.action = @selector(fetchArchivePressed:);
+        
+    }
+    return _fetchArchiveItem;
+}
+
+//TODO: strings
+
+- (void) fetchArchivePressed: (UIViewController*) sender {
+    
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            NSURL * myFetchURL = [UserProfile sharedProfile].fetchArchiveURL;
+            if ([[UIApplication sharedApplication] openURL:myFetchURL]) {
+                NSLog(@"Credentials openURL returned true");
+            } else {
+                NSLog(@"Credentials openURL returned false");
+            }
+        }
+    };
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_archive_fetch_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"credentials_archive_fetch_confirm_btn_title", nil)
                                       otherButtonTitles: nil];
     [sheet showInView: self.delegate.view];
 }

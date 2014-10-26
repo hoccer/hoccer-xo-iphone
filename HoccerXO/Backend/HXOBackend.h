@@ -32,6 +32,7 @@ typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^ObjectResultHandler)(NSDictionary*);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL ok);
+typedef void (^URLResultHandler)(NSURL * url);
 typedef void (^StringResultHandler)(NSString* result, BOOL ok);
 typedef void (^BoolResultHandler)(BOOL result, BOOL ok);
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);

@@ -362,7 +362,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSString * credentialsString = [jsonData hexadecimalString];
     NSLog(@"Credentials: %@", credentialsString);
     
-    NSString * credentialsUrlString = [NSString stringWithFormat:@"%@://%@", kHXOTransferCredentialsURLImportScheme,credentialsString];
+    NSString * credentialsUrlString = [NSString stringWithFormat:@"%@://credentials/%@", kHXOTransferCredentialsURLImportScheme,credentialsString];
     
     NSURL * myUrl = [NSURL URLWithString:credentialsUrlString];
     NSLog(@"Credentials URL: %@", myUrl);
@@ -375,6 +375,64 @@ const NSUInteger kHXODefaultKeySize    = 2048;
         return NO;
     }
     
+}
+
+- (BOOL)transferArchive:(NSData*)data {
+    if (!self.isRegistered) {
+        NSLog(@"Not registered, not transfering archive");
+        return NO;
+    }
+    
+    // Setup the Pasteboard
+    //UIPasteboard *pasteboard = [UIPasteboard pasteboardWithUniqueName];
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    [pasteboard setPersistent:YES]; // Makes sure the pasteboard lives beyond app termination.
+    NSString *pasteboardName = [pasteboard name];
+    NSString *pasteboardNameHex = [[pasteboardName dataUsingEncoding:NSUTF8StringEncoding] hexadecimalString];
+    
+    // Write The Data
+    NSString *pasteboardType = kHXOTransferArchiveUTI;
+    [pasteboard setData:data forPasteboardType:pasteboardType];
+    
+    // Launch the destination app
+    NSString * launchUrlString = [NSString stringWithFormat:@"%@://%@/%@", kHXOTransferCredentialsURLImportScheme,kHXOTransferCredentialsURLArchiveHost, pasteboardNameHex];
+    
+    NSURL * myLaunchUrl = [NSURL URLWithString:launchUrlString];
+    NSLog(@"Archive launch URL: %@", myLaunchUrl);
+
+    if ([[UIApplication sharedApplication] canOpenURL:myLaunchUrl]) {
+        [[UIApplication sharedApplication] openURL:myLaunchUrl];
+        NSLog(@"Archive transfer openURL returned true");
+        return YES;
+    } else {
+        [pasteboard setData:nil forPasteboardType:pasteboardType];
+        [pasteboard setPersistent:NO];
+        NSLog(@"Archive transfer openURL returned false");
+        return NO;
+    }
+}
+
+- (NSData*)receiveArchive:(NSURL*)launchURL {
+    NSString * pasteboardNameHex = [launchURL lastPathComponent];
+    NSString * pasteboardName = [NSString stringWithData:[NSData dataWithHexadecimalString:pasteboardNameHex] usingEncoding:NSUTF8StringEncoding];
+    
+    NSString *pasteboardType = kHXOTransferArchiveUTI;
+
+    //UIPasteboard *pasteboard = [UIPasteboard pasteboardWithName:pasteboardName create:NO];
+    UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
+    if (pasteboard) {
+        NSData *data = [pasteboard dataForPasteboardType:pasteboardType];
+        if (data) {
+            return data;
+        } else {
+            NSLog(@"receiveArchive: data type %@ not found on pasteboard named %@", pasteboardType, pasteboardName);
+        }
+        [pasteboard setData:nil forPasteboardType:pasteboardType];
+        [pasteboard setPersistent:NO];
+    } else {
+        NSLog(@"receiveArchive: pasteboard with name %@ not found", pasteboardName);
+    }
+    return nil;
 }
 
 - (NSDictionary*)parseCredentials:(NSData *)jsonCredentials {
@@ -412,7 +470,15 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 - (NSURL*)fetchCredentialsURL {
-    NSString * urlString = [NSString stringWithFormat:@"%@://fetch/", kHXOTransferCredentialsURLExportScheme];
+    NSString * urlString = [NSString stringWithFormat:@"%@://%@/", kHXOTransferCredentialsURLExportScheme, kHXOTransferCredentialsURLCredentialsHost];
+    
+    NSURL * myUrl = [NSURL URLWithString:urlString];
+    return myUrl;
+    
+}
+
+- (NSURL*)fetchArchiveURL {
+    NSString * urlString = [NSString stringWithFormat:@"%@://%@/", kHXOTransferCredentialsURLExportScheme, kHXOTransferCredentialsURLArchiveHost];
     
     NSURL * myUrl = [NSURL URLWithString:urlString];
     return myUrl;

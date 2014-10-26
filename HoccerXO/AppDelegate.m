@@ -82,8 +82,10 @@ static NSString * const kTestFlightAppToken = @"c5ada956-43ec-4e9e-86e5-0a3bd3d9
 #endif
 
 NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
+NSString * const kHXOTransferCredentialsURLCredentialsHost = @"credentials";
+NSString * const kHXOTransferCredentialsURLArchiveHost = @"archive";
 NSString * const kHXOTransferCredentialsURLExportScheme = @"hcrexport";
-
+NSString * const kHXOTransferArchiveUTI = @"com.hoccer.archive.v1";
 
 static NSInteger validationErrorCount = 0;
 
@@ -256,7 +258,7 @@ BOOL sameObjects(id obj1, id obj2) {
     _inspectionLock = [NSObject new];
 
 #ifdef DEBUG
-//#define DEFINE_OTHER_SERVERS
+#define DEFINE_OTHER_SERVERS
 #endif
 #ifdef DEFINE_OTHER_SERVERS
     //[[HXOUserDefaults standardUserDefaults] setValue: @"ws://10.1.9.166:8080/" forKey: kHXODebugServerURL];
@@ -1567,15 +1569,34 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         return [self handleFileURL:url withDocumentType:documentType];
     }
     if ([[url scheme] isEqualToString:kHXOTransferCredentialsURLImportScheme]) {
-        NSString * hexCredentials = [url host];
-        NSLog(@"handleOpenURL: credentials received%@",hexCredentials);
-        NSData * credentials = [NSData dataWithHexadecimalString:hexCredentials];
-        [self receiveCredentials:credentials];
+        NSString * host = [url host];
+        if ([host isEqualToString:kHXOTransferCredentialsURLCredentialsHost]) {
+            // receive only credentials as hex-encoded credentials json
+            NSString * hexCredentials = [url lastPathComponent];
+            NSLog(@"handleOpenURL: credentials received%@",hexCredentials);
+            NSData * credentials = [NSData dataWithHexadecimalString:hexCredentials];
+            [self receiveCredentials:credentials];
+        } else if ([host isEqualToString:kHXOTransferCredentialsURLArchiveHost]) {
+            // receive archive via pasteboard
+            [self receiveArchive:url];
+        } else {
+            NSLog(@"#ERROR: unknown host part for import scheme");
+        }
     }
     if ([[url scheme] isEqualToString:kHXOTransferCredentialsURLExportScheme]) {
-        dispatch_async(dispatch_get_main_queue(), ^{ // delay until window is realized
-            [self sendCredentials];
-        });
+        NSString * host = [url host];
+        if ([host isEqualToString:kHXOTransferCredentialsURLCredentialsHost]) {
+            dispatch_async(dispatch_get_main_queue(), ^{ // delay until window is realized
+                [self sendCredentials];
+            });
+        } else if ([host isEqualToString:kHXOTransferCredentialsURLArchiveHost]) {
+            dispatch_async(dispatch_get_main_queue(), ^{ // delay until window is realized
+                // send archive via pasteboard
+                [self transferArchive];
+            });
+        } else {
+            NSLog(@"#ERROR: unknown host part for import scheme");
+        }
     }
 
     return NO;
@@ -1641,6 +1662,88 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     
 
 }
+
+
+-(void) transferArchive {
+    HXOAlertViewCompletionBlock completion = ^(NSUInteger buttonIndex, UIAlertView * alertView) {
+        if (buttonIndex != alertView.cancelButtonIndex) {
+            [self transferArchiveWithHandler:^(BOOL ok) {
+                if (!ok) {
+                    [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"credentials_transfer_archive_failed_message",nil)
+                                                         withTitle:NSLocalizedString(@"credentials_transfer_archive_failed_title",nil)
+                                                       withOKBlock:^{ }
+                     ];
+                }
+            }];
+        }
+    };
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_archive_transfer_safety_question", nil)
+                                                     message: nil
+                                             completionBlock: completion
+                                           cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                           otherButtonTitles: NSLocalizedString(@"transfer", nil),nil];
+    [alert show];
+}
+
+- (void)transferArchiveWithHandler:(GenericResultHandler)handler {
+    [self makeArchiveWithHandler:^(NSURL *url) {
+        if (url != nil) {
+            NSData *data = [NSData dataWithContentsOfURL:url];
+            BOOL ok = [[UserProfile sharedProfile]transferArchive:data];
+            handler(ok);
+        } else {
+            handler(NO);
+        }
+    }];
+}
+
+-(void) receiveArchive:(NSData*)archive onReady:(GenericResultHandler)handler {
+    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
+    NSError * error;
+    if ([archive writeToURL:archiveURL options:0 error:&error]) {
+        [self importArchiveWithHandler:handler];
+    } else {
+        NSLog(@"receiveArchive: Failed to write archive to URL %@", archiveURL);
+        handler(NO);
+    }
+}
+
+//TODO: strings
+- (void) receiveArchive:(NSURL*)launchURL {
+    
+    HXOAlertViewCompletionBlock completionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
+        switch (buttonIndex) {
+            case 0:
+                // no
+                break;
+            case 1: {
+                NSData * archiveDat = [[UserProfile sharedProfile] receiveArchive:launchURL];
+                [self receiveArchive:archiveDat onReady:^(BOOL ok) {
+                    if (ok) {
+                        [[UserProfile sharedProfile] verfierChangePlease];
+                        [AppDelegate.instance showFatalErrorAlertWithMessage:NSLocalizedString(@"credentials_archive_imported_message", nil)
+                                                                   withTitle:NSLocalizedString(@"credentials_archive_imported_title", nil)];
+                        
+                    } else {
+                        [HXOUI showErrorAlertWithMessageAsync:@"credentials_archive_import_failed_message" withTitle:@"credentials_archive_import_failed_title"];
+                        
+                    }
+                }];
+
+            }
+                break;
+        }
+        
+    };
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_archive_received_import_title", nil)
+                                                    message: NSLocalizedString(@"credentials_archive_received_import_message", nil)
+                                            completionBlock: completionBlock
+                                          cancelButtonTitle:NSLocalizedString(@"no", nil)
+                                          otherButtonTitles:NSLocalizedString(@"credentials_receive_archive_import_btn_title",nil),nil];
+    [alert show];
+}
+
 
 +(BOOL)unzipFileAtURL:(NSURL*)zipFileURL toDirectory:(NSURL*) theDirectoryURL {
     NSLog(@"unzipFileAtURL: %@ -> %@",zipFileURL, theDirectoryURL);
@@ -1713,20 +1816,20 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return NO;
 }
 
-- (void) makeArchiveWithHandler:(GenericResultHandler)onReady {
+- (void) makeArchiveWithHandler:(URLResultHandler)onReady {
     ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_make_hud_title", nil)];
     [hud show];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
-        BOOL success = [self makeArchive];
+        NSURL * url = [self makeArchive];
         dispatch_async(dispatch_get_main_queue(), ^{
             [hud dismiss];
-            onReady(success);
+            onReady(url);
         });
     });
 }
 
-- (BOOL)makeArchive {
+- (NSURL*)makeArchive {
     NSError *error = nil;
     
     {
@@ -1735,7 +1838,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             [[NSFileManager defaultManager] removeItemAtURL:archivedbURL error:&error];
             if (error != nil) {
                 NSLog(@"Error removing old database archive at URL %@, error=%@", archivedbURL, error);
-                return NO;
+                return nil;
             } else {
                 NSLog(@"Removed old database archive at URL %@", archivedbURL);
             }
@@ -1744,7 +1847,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         [[NSFileManager defaultManager] copyItemAtURL:dbURL toURL:archivedbURL error:&error];
         if (error != nil) {
             NSLog(@"Error copying database from %@ to %@, error=%@", dbURL, archivedbURL, error);
-            return NO;
+            return nil;
         } else {
             NSLog(@"Copied database from %@ to %@", dbURL, archivedbURL);
         }
@@ -1766,10 +1869,10 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         if (![AppDelegate zipDirectoryAtURL:[self applicationDocumentsDirectory] toZipFile:archiveURL]) {
             NSLog(@"Failed to create archive at URL %@", archiveURL);
             [[NSFileManager defaultManager] removeItemAtURL:archiveURL error:&error];
-            return NO;
+            return nil;
         }
     }
-    return YES;
+    return archiveURL;
 }
 
 
@@ -1928,42 +2031,6 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return NO;
 }
 
-/*
-    {
-        
-        
-        NSURL *archivedbURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archived.database"];
-        if ([[NSFileManager defaultManager] fileExistsAtPath:[archivedbURL path]]) {
-            [[NSFileManager defaultManager] removeItemAtURL:archivedbURL error:&error];
-            if (error != nil) {
-                NSLog(@"Error removing old database archive at URL %@, error=%@", archivedbURL, error);
-                return NO;
-            } else {
-                NSLog(@"Removed old database archive at URL %@", archivedbURL);
-            }
-        }
-        NSURL *dbURL = [self persistentStoreURL];
-        [[NSFileManager defaultManager] copyItemAtURL:dbURL toURL:archivedbURL error:&error];
-        if (error != nil) {
-            NSLog(@"Error copying database from %@ to %@, error=%@", dbURL, archivedbURL, error);
-            return NO;
-        } else {
-            NSLog(@"Copied database from %@ to %@", dbURL, archivedbURL);
-        }
-    }
-    [UserProfile.sharedProfile exportCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn"];
-    
-    
-    // zip ot
-    if (error == nil) {
-        if (![AppDelegate zipDirectoryAtURL:[self applicationDocumentsDirectory] toZipFile:archiveURL]) {
-            NSLog(@"Failed to create archive at URL %@", archiveURL);
-            [[NSFileManager defaultManager] removeItemAtURL:archiveURL error:&error];
-            return NO;
-        }
-    }
-    return YES;
- */
 
 - (BOOL)handleFileURL: (NSURL *)url withDocumentType:(NSString*)documentType
 {
