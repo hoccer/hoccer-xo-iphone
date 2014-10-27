@@ -46,7 +46,7 @@
 #define DELIVERY_TRACE      NO
 #define GLITCH_TRACE        NO
 #define SECTION_TRACE       NO
-#define CONNECTION_TRACE    NO
+#define CONNECTION_TRACE    YES
 #define GROUPKEY_DEBUG      NO
 #define GROUP_DEBUG         NO
 #define RELATIONSHIP_DEBUG  NO
@@ -95,6 +95,7 @@ typedef enum BackendStates {
     kBackendAuthenticating,
     kBackendReady,
     kBackendStopping,
+    kBackendDisabled,
     kBackendStateUnknown
 } BackendState;
 
@@ -385,6 +386,9 @@ static NSTimer * _stateNotificationDelayTimer;
             break;
         case kBackendStopping:
             return @"backend_stopping";
+            break;
+        case kBackendDisabled:
+            return @"backend_disabled";
             break;
         case kBackendStateUnknown:
             return @"unknown";
@@ -1076,16 +1080,19 @@ static NSTimer * _stateNotificationDelayTimer;
             _apnsDeviceToken = nil; // XXX: this is not nice...
         }
         [self setState: kBackendReady];
-        
+
+#define DONT_CHANGE_VERIFIER
+#ifdef DONT_CHANGE_VEIFIER
         if ([[UserProfile sharedProfile] verfierChangeRequested]) {
             [self srpChangeVerifierWithHandler:^(BOOL ok) {
                 if (ok) {
                     [[UserProfile sharedProfile] verfierChangeDone];
                 }
-                // [self stopAndRetry]; // TODO: activate this when server is up to date
+                [self stopAndRetry];
             }];
             return;
         }
+#endif
         
         if (HXOEnvironment.sharedInstance.isActive) {
             NSLog(@"Nearby active, defering sync until environment update ready");
@@ -1411,21 +1418,40 @@ static NSTimer * _stateNotificationDelayTimer;
         // We should handle this case more gracefully
         [_serverConnection close];
     }
+    if (_state == kBackendDisabled) {
+        NSLog(@"Backend disabled, not starting");
+        return;
+    }
     _performRegistration = performRegistration;
     [self setState: kBackendConnecting];
     _startedConnectingTime = [NSDate new];
     [_serverConnection openWithURLRequest: [self urlRequest] protocols: @[kHXOProtocol] allowUntrustedConnections:[HXOBackend allowUntrustedServerCertificate]];
 }
 
+- (void)disable {
+    [self stop];
+    [self setState:kBackendDisabled];
+}
+
+- (void)enable {
+    if (_state == kBackendDisabled) {
+        [self setState:kBackendStopped];
+    }
+}
+
 - (void) stop {
-    [self setState: kBackendStopping];
-    [_serverConnection close];
-    [self clearWaitingAttachmentTransfers];
+    if (_state != kBackendDisabled) {
+        [self setState: kBackendStopping];
+        [_serverConnection close];
+        [self clearWaitingAttachmentTransfers];
+    }
 }
 
 - (void) stopAndRetry {
-    [self setState: kBackendStopped];
-    [_serverConnection close];
+    if (_state != kBackendDisabled) {
+        [self setState: kBackendStopped];
+        [_serverConnection close];
+    }
 }
 
 // called by internetReachabilty Observer when internet connection is lost or gained

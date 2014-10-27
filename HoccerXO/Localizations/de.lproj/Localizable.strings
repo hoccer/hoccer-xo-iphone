@@ -338,13 +338,18 @@
 //==============================================================================
 
 "credentials_setup_nav_title"                  = "Konto";
-"credentials_setup_found_old_text"             = "Hoccer war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.\n";
-"credentials_setup_found_backup_text"          = "Eine Sicherungskopie mit Zugangsdaten ist vorhanden. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.\n";
-"credentials_setup_found_file_text"            = "Exportierte Zugangsdaten gefunden. Diese können nur auf einem Gerät genutzt werden! Sollen die Zugangsdaten importiert werden?\n";
-"credentials_setup_keep_btn_title"             = "Konto reaktivieren";
+"credentials_setup_found_old_text"             = "Hoccer war schon einmal installiert. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
+"credentials_setup_found_backup_text"          = "Eine Sicherungskopie mit Zugangsdaten ist vorhanden. Du kannst das alte Konto reaktivieren und erhältst deine Kontakte.";
+"credentials_setup_found_file_text"            = "Es wurde eine Datei mit exportierten Zugangsdaten gefunden, die importiert werden können.";
+"credentials_setup_keep_btn_title"             = "Altes Konto reaktivieren";
 "credentials_setup_restore_btn_title"          = "Konto-Sicherungskopie laden";
 "credentials_setup_import_btn_title"           = "Konto Importieren";
 "credentials_setup_create_btn_title"           = "Neues Konto";
+
+"credentials_setup_found_credentials_provider_text" = "Es ebenfalls eine Hoccer XO version installiert die Zugangsdaten dieser App abgelöst wrden wird. Du kannst von Hoccer XO entweder alle Daten oder nur die Zugangsdaten holen. Ersteres erfordert ausreichend freien Speicher. Die Anmeldekontodaten schliessen Freunde und Gruppenmitgliedschaften ein.";
+"credentials_setup_fetch_btn_title"            = "Nur XO-Zugangsdaten holen.";
+"credentials_setup_fetchall_btn_title"         = "Alle Daten von XO holen";
+"credentials_setup_question"                    = "Was willst du tun?";
 
 "credentials_file_delete_btn_title"            = "Exportierte Daten löschen";
 "credentials_file_delete_safety_question"      = "Exportierte Zugangsdaten wirklich löschen?";
@@ -425,6 +430,13 @@
 "archive_fetch_confirm_btn_title"               = "Alles Holen";
 
 "archive_transfer_safety_question"              = "Willst du alle Daten einschliesslich der Anmeldedaten von XO zur neuen Hoccer App übertragen?";
+
+"archive_make_hud_title"                        = "Archiv wird angelegt";
+"archive_import_hud_title"                      = "Archiv wird entpackt";
+"archive_install_hud_title"                     = "Archiv wird installiert";
+
+"archive_import_alert_title"                    = "Archive empfangen";
+"archive_import_alert_message"                  = "Möchtest du dieses aus einer anderen App empfangene Archiv importieren?";
 
 //==============================================================================
 // CTAssetsPickerController (3rd party)

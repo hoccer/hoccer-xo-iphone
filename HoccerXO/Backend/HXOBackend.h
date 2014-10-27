@@ -156,6 +156,9 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) start: (BOOL) performRegistration;
 - (void) stop;
 
+- (void)disable;
+- (void)enable;
+
 - (void) webSocketDidFailWithError: (NSError*) error;
 - (void) didReceiveInvalidJsonRpcMessage: (NSError*) error;
 

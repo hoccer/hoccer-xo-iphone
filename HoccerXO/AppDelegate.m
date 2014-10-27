@@ -313,6 +313,7 @@ BOOL sameObjects(id obj1, id obj2) {
     BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
 
     if (isFirstRun || ![UserProfile sharedProfile].isRegistered) {
+        [self.chatBackend disable];
         dispatch_async(dispatch_get_main_queue(), ^{  // delay until window is realized
             [self.window.rootViewController performSegueWithIdentifier: @"showSetup" sender: self];
         });
@@ -1257,6 +1258,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return storeURL;
 }
 
+- (NSURL *)preferencesURL {
+    NSString * bundleId = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+    NSString * preferencesName = [NSString stringWithFormat: @"Preferences/%@.plist", bundleId];
+    NSURL *prefURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: preferencesName];
+    return prefURL;
+}
+
+
 - (BOOL) canAutoMigrateFrom:(NSString*)modelName {
     return [self canAutoMigrateFromModel:[self managedObjectModelWithName:modelName]];
 }
@@ -1630,6 +1639,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 // no
                 break;
             case 1: {
+                [self.chatBackend disable];
                 int result = [[UserProfile sharedProfile] importCredentialsJson:credentials];
                 switch (result) {
                     case 1:
@@ -1639,9 +1649,11 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                         break;
                     case -1:
                         [HXOUI showErrorAlertWithMessageAsync:@"credentials_receive_import_failed_message" withTitle:@"credentials_receive_import_failed_title"];
+                        [self.chatBackend enable];
                         break;
                     case 0:
                         [HXOUI showErrorAlertWithMessageAsync:@"credentials_receive_equals_current_message" withTitle:@"credentials_receive_equals_current_title"];
+                        [self.chatBackend enable];
                         break;
                     default:
                         NSLog(@"#ERROR: receiveCredentials: unhandled result %d", result);
@@ -1706,7 +1718,6 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     }
 }
 
-//TODO: strings
 - (void) receiveArchive:(NSURL*)launchURL {
     
     HXOAlertViewCompletionBlock completionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
@@ -1716,14 +1727,17 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 break;
             case 1: {
                 NSData * archiveDat = [[UserProfile sharedProfile] receiveArchive:launchURL];
+                [self.chatBackend disable];
                 [self receiveArchive:archiveDat onReady:^(BOOL ok) {
                     if (ok) {
+                        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
                         [[UserProfile sharedProfile] verfierChangePlease];
-                        [AppDelegate.instance showFatalErrorAlertWithMessage:NSLocalizedString(@"credentials_archive_imported_message", nil)
-                                                                   withTitle:NSLocalizedString(@"credentials_archive_imported_title", nil)];
+                        [AppDelegate.instance showFatalErrorAlertWithMessage:NSLocalizedString(@"archive_imported_message", nil)
+                                                                   withTitle:NSLocalizedString(@"archive_imported_title", nil)];
                         
                     } else {
-                        [HXOUI showErrorAlertWithMessageAsync:@"credentials_archive_import_failed_message" withTitle:@"credentials_archive_import_failed_title"];
+                        [self.chatBackend enable];
+                        [HXOUI showErrorAlertWithMessageAsync:@"archive_import_failed_message" withTitle:@"archive_import_failed_title"];
                         
                     }
                 }];
@@ -1734,11 +1748,11 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         
     };
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_received_import_title", nil)
-                                                    message: NSLocalizedString(@"archive_received_import_message", nil)
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_import_alert_title", nil)
+                                                    message: NSLocalizedString(@"archive_import_alert_message", nil)
                                             completionBlock: completionBlock
                                           cancelButtonTitle:NSLocalizedString(@"no", nil)
-                                          otherButtonTitles:NSLocalizedString(@"archive_received_import_btn_title",nil),nil];
+                                          otherButtonTitles:NSLocalizedString(@"archive_import_btn_title",nil),nil];
     [alert show];
 }
 
@@ -1850,6 +1864,29 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             NSLog(@"Copied database from %@ to %@", dbURL, archivedbURL);
         }
     }
+    
+    {
+        NSURL *archivePrefURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archived.preferences"];
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[archivePrefURL path]]) {
+            [[NSFileManager defaultManager] removeItemAtURL:archivePrefURL error:&error];
+            if (error != nil) {
+                NSLog(@"Error removing old preferences archive at URL %@, error=%@", archivePrefURL, error);
+                return nil;
+            } else {
+                NSLog(@"Removed old database archive at URL %@", archivePrefURL);
+            }
+        }
+        NSURL *prefURL = [self preferencesURL];
+        [[HXOUserDefaults standardUserDefaults] synchronize];
+        [[NSFileManager defaultManager] copyItemAtURL:prefURL toURL:archivePrefURL error:&error];
+        if (error != nil) {
+            NSLog(@"Error copying database from %@ to %@, error=%@", prefURL, archivePrefURL, error);
+            return nil;
+        } else {
+            NSLog(@"Copied database from %@ to %@", prefURL, archivePrefURL);
+        }
+    }
+    
     [UserProfile.sharedProfile exportCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn"];
     
     NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
@@ -1966,7 +2003,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 } else {
                     NSLog(@"Move old database from %@ to backup at URL %@", dbURL, backupdbURL);
                 }
-        
+                
                 // move archive db to current
                 [fileMgr moveItemAtURL:archivedbURL toURL:dbURL error:&error];
                 if (error != nil) {
@@ -1981,48 +2018,100 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     NSLog(@"Moved archive database from %@ to current at URL %@", archivedbURL, dbURL);
                 }
                 
-                // clear document directory first
-                NSURL * docDir = [self applicationDocumentsDirectory];
-                {
-                    NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:docDir includingPropertiesForKeys:@[] options:0 error:&error];
+                NSURL *prefURL = [self preferencesURL];
+                NSURL *archivePrefURL = [archiveExtractDirURL URLByAppendingPathComponent: @"archived.preferences"];
+                NSURL *backupPrefURL = [archiveExtractDirURL URLByAppendingPathComponent: @"backuped.preferences"];
+                if (![fileMgr fileExistsAtPath:[archivePrefURL path]]) {
+                    NSLog(@"#ERROR: no preferences to install found at archive URL %@", backupPrefURL);
+                } else {
+                    NSDictionary * defaults = [NSDictionary dictionaryWithContentsOfURL:archivePrefURL];
+                    [defaults enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
+                        NSLog(@"Setting prefence %@ to %@", key, object);
+                        [[HXOUserDefaults standardUserDefaults] setObject:object forKey:key];
+                    }];
+                    [[HXOUserDefaults standardUserDefaults] synchronize];
+                    
+                    /*
+                    if ([fileMgr fileExistsAtPath:[backupPrefURL path]]) {
+                        // remove old backup if necessary
+                        [fileMgr removeItemAtURL:backupPrefURL error:&error];
+                        if (error != nil) {
+                            NSLog(@"Error removing old preferences backup at URL %@, error=%@", backupPrefURL, error);
+                            return NO;
+                        } else {
+                            NSLog(@"Removed old preferences backup at URL %@", backupPrefURL);
+                        }
+                    }
+                    // move current Pref to backup
+                    [[HXOUserDefaults standardUserDefaults] synchronize];
+
+                   [fileMgr moveItemAtURL:prefURL toURL:backupPrefURL error:&error];
+                    if (error != nil) {
+                        NSLog(@"Error moving old preferences from %@ to backup URL %@, error=%@", prefURL, backupPrefURL, error);
+                        return NO;
+                    } else {
+                        NSLog(@"Move old preferences from %@ to backup at URL %@", prefURL, backupPrefURL);
+                    }
+                    
+                    // move archive Pref to current
+                    //[fileMgr moveItemAtURL:archivePrefURL toURL:prefURL error:&error];
+                    [fileMgr copyItemAtURL:archivePrefURL toURL:prefURL error:&error];
+                    if (error != nil) {
+                        NSLog(@"Error moving archived preferences from %@ to current URL %@, error=%@", archivePrefURL, prefURL, error);
+                        // move database backup back in place
+                        [fileMgr moveItemAtURL:backupPrefURL toURL:prefURL error:&error];
+                        if (error != nil) {
+                            NSLog(@"Error moving back archived preferences from %@ to current URL %@, error=%@", backupPrefURL, prefURL, error);
+                        }
+                        return NO;
+                    } else {
+                        [[HXOUserDefaults standardUserDefaults] synchronize];
+                        NSLog(@"Moved archive preferences from %@ to current at URL %@", archivePrefURL, prefURL);
+                    }
+                    */
+                    // clear document directory first
+                    NSURL * docDir = [self applicationDocumentsDirectory];
+                    {
+                        NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:docDir includingPropertiesForKeys:@[] options:0 error:&error];
+                        if (error != nil) {
+                            NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
+                            return NO;
+                        }
+                        for (NSURL * fileToRemove in fileArray)  {
+                            [fileMgr removeItemAtURL:fileToRemove error:&error];
+                            if (error != nil) {
+                                NSLog(@"Error removing file %@, error=%@", fileToRemove, error);
+                                return NO;
+                            } else {
+                                NSLog(@"Removed file %@", fileToRemove);
+                            }
+                        }
+                    }
+                    
+                    // move all the files to document directory
+                    NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:archiveExtractDirURL includingPropertiesForKeys:@[] options:0 error:&error];
                     if (error != nil) {
                         NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
                         return NO;
                     }
-                    for (NSURL * fileToRemove in fileArray)  {
-                        [fileMgr removeItemAtURL:fileToRemove error:&error];
+                    for (NSURL * fileToMove in fileArray)  {
+                        NSURL * destURL = [docDir URLByAppendingPathComponent:[fileToMove lastPathComponent]];
+                        [fileMgr moveItemAtURL:fileToMove toURL:destURL error:&error];
                         if (error != nil) {
-                            NSLog(@"Error removing file %@, error=%@", fileToRemove, error);
+                            NSLog(@"Error moving file %@ to %@, error=%@", fileToMove, destURL, error);
                             return NO;
                         } else {
-                            NSLog(@"Removed file %@", fileToRemove);
+                            NSLog(@"Moved file %@ to %@", fileToMove, destURL);
                         }
                     }
-                }
-                
-                // move all the files to document directory
-                NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:archiveExtractDirURL includingPropertiesForKeys:@[] options:0 error:&error];
-                if (error != nil) {
-                    NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
-                    return NO;
-                }
-                for (NSURL * fileToMove in fileArray)  {
-                    NSURL * destURL = [docDir URLByAppendingPathComponent:[fileToMove lastPathComponent]];
-                    [fileMgr moveItemAtURL:fileToMove toURL:destURL error:&error];
-                    if (error != nil) {
-                        NSLog(@"Error moving file %@ to %@, error=%@", fileToMove, destURL, error);
-                        return NO;
-                    } else {
-                        NSLog(@"Moved file %@ to %@", fileToMove, destURL);
+                    
+                    // get the credentials now
+                    int result = [UserProfile.sharedProfile importCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn"];
+                    if (result != -1) {
+                        return YES;
                     }
+                    
                 }
-                
-                // get the credentials now
-                int result = [UserProfile.sharedProfile importCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn"];
-                if (result != -1) {
-                    return YES;
-                }
-
             }
         }
     }

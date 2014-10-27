@@ -27,6 +27,8 @@
 @property (nonatomic, strong) DatasheetItem    * optionImport;
 @property (nonatomic, strong) DatasheetItem    * optionRestore;
 @property (nonatomic, strong) DatasheetItem    * optionCreateNew;
+@property (nonatomic, strong) DatasheetItem    * optionFetch;
+@property (nonatomic, strong) DatasheetItem    * optionFetchAll;
 
 @property (nonatomic, strong) DatasheetItem    * selectedItem;
 
@@ -64,17 +66,25 @@
 
     NSMutableArray * texts = [NSMutableArray array];
 
-    if ([UserProfile sharedProfile].isRegistered) {
-        [texts addObject: NSLocalizedString(@"credentials_setup_found_old_text", nil)];
+    if ([UserProfile sharedProfile].foundCredentialsProviderApp) {
+        [texts addObject: NSLocalizedString(@"credentials_setup_found_credentials_provider_text", nil)];
     }
-    
+ 
     if ([UserProfile sharedProfile].foundCredentialsBackup) {
         [texts addObject: NSLocalizedString(@"credentials_setup_found_backup_text", nil)];
+    }
+    
+    if ([UserProfile sharedProfile].isRegistered) {
+        [texts addObject: NSLocalizedString(@"credentials_setup_found_old_text", nil)];
     }
     
     if ([UserProfile sharedProfile].foundCredentialsFile) {
         [texts addObject: NSLocalizedString(@"credentials_setup_found_file_text", nil)];
     }
+    
+    
+    [texts addObject: NSLocalizedString(@"credentials_setup_question", nil)];
+
 
     //[texts addObject: NSLocalizedString(@"credentials_setup_create_account_text", nil)];
 
@@ -86,6 +96,8 @@
     self.optionImport    = [self itemWithIdentifier: @"credentials_setup_import_btn_title" cellIdentifier: @"DatasheetActionCell"];
     self.optionRestore    = [self itemWithIdentifier: @"credentials_setup_restore_btn_title" cellIdentifier: @"DatasheetActionCell"];
     self.optionCreateNew = [self itemWithIdentifier: @"credentials_setup_create_btn_title" cellIdentifier: @"DatasheetActionCell"];
+    self.optionFetch    = [self itemWithIdentifier: @"credentials_setup_fetch_btn_title" cellIdentifier: @"DatasheetActionCell"];
+    self.optionFetchAll    = [self itemWithIdentifier: @"credentials_setup_fetchall_btn_title" cellIdentifier: @"DatasheetActionCell"];
 
     self.optionKeep.accessoryStyle      =
     //self.optionImport.accessoryStyle    =
@@ -94,14 +106,18 @@
     self.optionKeep.target      =
     self.optionImport.target    =
     self.optionRestore.target   =
+    self.optionFetchAll.target  =
+    self.optionFetch.target     =
     self.optionCreateNew.target = self;
 
     self.optionKeep.action      =
     self.optionImport.action    =
     self.optionRestore.action   =
+    self.optionFetchAll.action  =
+    self.optionFetch.action     =
     self.optionCreateNew.action = @selector(buttonPressed:);
 
-    [self.section setItems: @[self.optionKeep, self.optionImport, self.optionRestore, self.optionCreateNew]];
+    [self.section setItems: @[self.optionFetchAll, self.optionFetch, self.optionImport, self.optionRestore, self.optionKeep, self.optionCreateNew]];
 }
 
 - (NSArray*) buildSections {
@@ -115,6 +131,10 @@
         return [UserProfile sharedProfile].foundCredentialsFile;
     } else if ([item isEqual: self.optionRestore]) {
         return [UserProfile sharedProfile].foundCredentialsBackup;
+    } else if ([item isEqual: self.optionFetchAll]) {
+        return [UserProfile sharedProfile].foundCredentialsProviderApp;
+    } else if ([item isEqual: self.optionFetch]) {
+        return [UserProfile sharedProfile].foundCredentialsProviderApp;
     }
     return [super isItemVisible: item];
 }
@@ -166,6 +186,44 @@
                 break;
         }
         
+    } else  if ([sender isEqual: self.optionFetchAll]) {
+        // TODO: refactor, this block is a copy of code from ProfileSheetController.m
+        HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+            if (buttonIndex == actionSheet.destructiveButtonIndex) {
+                NSURL * myFetchURL = [UserProfile sharedProfile].fetchArchiveURL;
+                if ([[UIApplication sharedApplication] openURL:myFetchURL]) {
+                    NSLog(@"Credentials openURL returned true");
+                } else {
+                    NSLog(@"Credentials openURL returned false");
+                }
+            }
+        };
+        
+        UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_fetch_safety_question", nil)
+                                            completionBlock: completion
+                                          cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                     destructiveButtonTitle: NSLocalizedString(@"archive_fetch_confirm_btn_title", nil)
+                                          otherButtonTitles: nil];
+        [sheet showInView: self.delegate.view];
+    } else  if ([sender isEqual: self.optionFetch]) {
+        // TODO: refactor, this block is a copy of code from ProfileSheetController.m
+        HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
+            if (buttonIndex == actionSheet.destructiveButtonIndex) {
+                NSURL * myFetchURL = [UserProfile sharedProfile].fetchCredentialsURL;
+                if ([[UIApplication sharedApplication] openURL:myFetchURL]) {
+                    NSLog(@"Credentials openURL returned true");
+                } else {
+                    NSLog(@"Credentials openURL returned false");
+                }
+            }
+        };
+        
+        UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"credentials_fetch_safety_question", nil)
+                                            completionBlock: completion
+                                          cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                     destructiveButtonTitle: NSLocalizedString(@"credentials_fetch_confirm_btn_title", nil)
+                                          otherButtonTitles: nil];
+        [sheet showInView: self.delegate.view];
     } else {
         [(UIViewController*)self.delegate performSegueWithIdentifier: @"showProfileSetup" sender: self];
     }
@@ -197,7 +255,7 @@
 }
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    NSArray * hidden = @[self.keyItem, self.exportCredentialsItem, self.importCredentialsItem, self.deleteCredentialsFileItem, self.transferCredentialsItem, self.archiveAllItem, self.destructiveButton ];
+    NSArray * hidden = @[self.keyItem, self.exportCredentialsItem, self.importCredentialsItem, self.deleteCredentialsFileItem, self.transferCredentialsItem, self.fetchCredentialsItem, self.fetchArchiveItem, self.archiveAllItem, self.archiveImportItem, self.destructiveButton];
     if ([hidden indexOfObject: item] != NSNotFound) {
         return NO;
     }

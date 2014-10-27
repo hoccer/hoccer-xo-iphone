@@ -338,13 +338,19 @@
 //==============================================================================
 
 "credentials_setup_nav_title"                  = "Account";
-"credentials_setup_found_old_text"             = "Hoccer XO was installed before. Do you want to reactivate the old account and keep all contacts?";
-"credentials_setup_found_backup_text"          = "A login backup exists. You can restore your account from this backup.\n";
-"credentials_setup_found_file_text"            = "An exported login has been found. You must use this login on one device only! Do you want to import the login?";
-"credentials_setup_keep_btn_title"             = "Reactivate Account";
+"credentials_setup_found_old_text"             = "This app was installed before. You can reactivate the old account and keep all contacts.";
+"credentials_setup_found_backup_text"          = "A login backup exists. You can restore an account from this backup.";
+"credentials_setup_found_file_text"            = "An exported login has been found. You can import this login.";
+"credentials_setup_keep_btn_title"             = "Reactivate Old Account";
 "credentials_setup_restore_btn_title"          = "Restore Account-Backup";
 "credentials_setup_import_btn_title"           = "Import Account";
 "credentials_setup_create_btn_title"           = "New Account";
+
+"credentials_setup_found_credentials_provider_text" = "There is also a Hoccer XO version installed that will be superseded by this app. You can fetch all data from Hoccer XO or only the login credentials (including your friends and group memeberships).";
+"credentials_setup_fetch_btn_title"            = "Fetch Credentials only";
+"credentials_setup_fetchall_btn_title"         = "Fetch All from XO";
+"credentials_setup_question"                    = "What do you want to do?";
+
 
 "credentials_file_delete_btn_title"            = "Delete exported credentials";
 "credentials_file_delete_safety_question"      = "Really deleted exported credentials?";
@@ -425,7 +431,12 @@
 
 "archive_transfer_safety_question"              = "Do you want to tranfer your account and data from XO to the installed Hoccer App?";
 
+"archive_make_hud_title"                        = "Creating Archive...";
+"archive_import_hud_title"                      = "Unpacking Archive...";
+"archive_install_hud_title"                     = "Installing Archive...";
 
+"archive_import_alert_title"                    = "Archive received";
+"archive_import_alert_message"                  = "Do you want to import this received archive from another app?";
 
 //==============================================================================
 // Database
