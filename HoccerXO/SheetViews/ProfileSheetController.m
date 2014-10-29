@@ -10,12 +10,15 @@
 #import "UserProfile.h"
 #import "AppDelegate.h"
 #import "HXOUI.h"
+#import "ModalTaskHUD.h"
 
 @interface ProfileSheetController ()
 
 @property (nonatomic, readonly) UserProfile      * userProfile;
 
 @property (nonatomic, readonly) DatasheetSection * credentialsSection;
+
+@property (nonatomic, strong) ModalTaskHUD * hud;
 
 @end
 
@@ -24,6 +27,7 @@
 @synthesize credentialsSection = _credentialsSection;
 @synthesize exportCredentialsItem = _exportCredentialsItem;
 @synthesize transferCredentialsItem = _transferCredentialsItem;
+@synthesize transferArchiveItem = _transferArchiveItem;
 @synthesize fetchCredentialsItem = _fetchCredentialsItem;
 @synthesize fetchArchiveItem = _fetchArchiveItem;
 @synthesize importCredentialsItem = _importCredentialsItem;
@@ -90,6 +94,7 @@
 #endif
                                       , self.archiveAllItem
                                       , self.archiveImportItem
+                                      , self.transferArchiveItem
                                       ];
     }
     return _credentialsSection;
@@ -126,12 +131,12 @@
 - (void) archiveAllPressed: (id) sender {
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            [AppDelegate.instance makeArchiveWithHandler:^(NSURL* url) {
+            NSURL* archiveURL = [[AppDelegate.instance applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
+            [AppDelegate.instance makeArchive:archiveURL withHandler:^(NSURL* url) {
                 if (url == nil) {
                     [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"archive_failed_message",nil)
                                                          withTitle:NSLocalizedString(@"archive_failed_title",nil)
                                                        withOKBlock:^{
-                                                           [[UIApplication sharedApplication] openURL:[NSURL URLWithString:NSLocalizedString(@"credentials_transfer_install_app_url",nil)]];
                                                        }];
                 } else {
                     [HXOUI showErrorAlertWithMessageAsync: @"archive_ok_alert_message" withTitle:@"archive_ok_alert_title"];
@@ -164,7 +169,8 @@
 - (void) archiveImportPressed: (id) sender {
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            [AppDelegate.instance importArchiveWithHandler:^(BOOL ok) {
+            NSURL* archiveURL = [[AppDelegate.instance applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
+            [AppDelegate.instance importArchive:archiveURL withHandler:^(BOOL ok) {
                 if (!ok) {
                     [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"archive_import_failed_message",nil)
                                                          withTitle:NSLocalizedString(@"archive_import_failed_title",nil)
@@ -188,9 +194,84 @@
     [sheet showInView: self.delegate.view];
 }
 
+#pragma mark - transfer Archive other app
+
+- (DatasheetItem*) transferArchiveItem {
+    if ( ! _transferArchiveItem) {
+        _transferArchiveItem = [self itemWithIdentifier: @"archive_transfer_open_with_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _transferArchiveItem.visibilityMask = DatasheetModeEdit;
+        _transferArchiveItem.target = self;
+        _transferArchiveItem.action = @selector(transferArchivePressed:);
+    }
+    return _transferArchiveItem;
+}
+
+- (void) transferArchivePressed: (id) sender {
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            NSURL* archiveURL = [[AppDelegate.instance applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
+            [AppDelegate.instance makeArchive:archiveURL withHandler:^(NSURL* url) {
+                if (url == nil) {
+                    [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"archive_failed_message",nil)
+                                                         withTitle:NSLocalizedString(@"archive_failed_title",nil)
+                                                       withOKBlock:^{
+                                                       }];
+                } else {
+                    //[HXOUI showErrorAlertWithMessageAsync: @"archive_ok_alert_message" withTitle:@"archive_ok_alert_title"];
+                    [self openWithInteractionController:url withUTI:kHXOTransferArchiveUTI withName:kHXODefaultArchiveName];
+                }
+            }];
+            
+        }
+    };
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_transfer_open_with_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"archive", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: self.delegate.view];
+}
+
+- (void) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name {
+    NSLog(@"openWithInteractionController");
+
+    NSLog(@"openWithInteractionController: uti=%@, name = %@, url = %@", uti, name, myURL);
+    self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:myURL];
+    self.interactionController.delegate = self;
+    self.interactionController.UTI = uti;
+    self.interactionController.name = name;
+    [self.interactionController presentOpenInMenuFromRect:CGRectNull inView:self.delegate.view animated:YES];
+}
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
+    return self.delegate;
+}
+
+- (UIView *)documentInteractionControllerViewForPreview:(UIDocumentInteractionController *)controller
+{
+    return self.delegate.view;
+}
+
+- (CGRect)documentInteractionControllerRectForPreview:(UIDocumentInteractionController *)controller {
+    return self.delegate.view.frame;
+}
+- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application {
+    NSLog(@"willBeginSendingToApplication %@", application);
+    self.hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_sending_hud_title", nil)];
+    [self.hud show];
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application {
+    NSLog(@"didEndSendingToApplication %@", application);
+    [self.hud dismiss];
+}
+
 #pragma mark - Fetch Archive
 
-//TODO: strings
 - (DatasheetItem*) fetchArchiveItem {
     if ( ! _fetchArchiveItem) {
         _fetchArchiveItem = [self itemWithIdentifier: @"archive_fetch_btn_title" cellIdentifier: @"DatasheetActionCell"];
@@ -202,8 +283,6 @@
     }
     return _fetchArchiveItem;
 }
-
-//TODO: strings
 
 - (void) fetchArchivePressed: (UIViewController*) sender {
     

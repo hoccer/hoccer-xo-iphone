@@ -85,7 +85,8 @@ NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
 NSString * const kHXOTransferCredentialsURLCredentialsHost = @"credentials";
 NSString * const kHXOTransferCredentialsURLArchiveHost = @"archive";
 NSString * const kHXOTransferCredentialsURLExportScheme = @"hcrexport";
-NSString * const kHXOTransferArchiveUTI = @"com.hoccer.archive.v1";
+NSString * const kHXOTransferArchiveUTI = @"com.hoccer.ios.archive.v1";
+NSString * const kHXODefaultArchiveName = @"default.hciarch";
 
 static NSInteger validationErrorCount = 0;
 
@@ -476,7 +477,8 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 - (void) setupDone: (BOOL) performRegistration {
-    // NSLog(@"setupDone");
+    NSLog(@"setupDone");
+    [self.chatBackend enable];
     [self.chatBackend start: performRegistration];
 }
 
@@ -1696,7 +1698,8 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 }
 
 - (void)transferArchiveWithHandler:(GenericResultHandler)handler {
-    [self makeArchiveWithHandler:^(NSURL *url) {
+    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
+    [self makeArchive:archiveURL withHandler:^(NSURL *url) {
         if (url != nil) {
             NSData *data = [NSData dataWithContentsOfURL:url];
             BOOL ok = [[UserProfile sharedProfile]transferArchive:data];
@@ -1708,10 +1711,10 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 }
 
 -(void) receiveArchive:(NSData*)archive onReady:(GenericResultHandler)handler {
-    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
+    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"received_archive.zip"];
     NSError * error;
     if ([archive writeToURL:archiveURL options:0 error:&error]) {
-        [self importArchiveWithHandler:handler];
+        [self importArchive:archiveURL withHandler:handler];
     } else {
         NSLog(@"receiveArchive: Failed to write archive to URL %@", archiveURL);
         handler(NO);
@@ -1742,6 +1745,44 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     }
                 }];
 
+            }
+                break;
+        }
+        
+    };
+    
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_import_alert_title", nil)
+                                                    message: NSLocalizedString(@"archive_import_alert_message", nil)
+                                            completionBlock: completionBlock
+                                          cancelButtonTitle:NSLocalizedString(@"no", nil)
+                                          otherButtonTitles:NSLocalizedString(@"archive_import_btn_title",nil),nil];
+    [alert show];
+}
+
+- (void) receiveArchiveFile:(NSURL*)fileURL {
+    
+    [self.chatBackend disable];
+    HXOAlertViewCompletionBlock completionBlock = ^(NSUInteger buttonIndex, UIAlertView * alert) {
+        switch (buttonIndex) {
+            case 0:
+                // no
+                [self.chatBackend enable];
+                break;
+            case 1: {
+                [self importArchive:fileURL withHandler:^(BOOL ok) {
+                    if (ok) {
+                        [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
+                        [[UserProfile sharedProfile] verfierChangePlease];
+                        [AppDelegate.instance showFatalErrorAlertWithMessage:NSLocalizedString(@"archive_imported_message", nil)
+                                                                   withTitle:NSLocalizedString(@"archive_imported_title", nil)];
+                        
+                    } else {
+                        [self.chatBackend enable];
+                        [HXOUI showErrorAlertWithMessageAsync:@"archive_import_failed_message" withTitle:@"archive_import_failed_title"];
+                        
+                    }
+                }];
+                
             }
                 break;
         }
@@ -1828,12 +1869,12 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return NO;
 }
 
-- (void) makeArchiveWithHandler:(URLResultHandler)onReady {
+- (void) makeArchive:(NSURL*)archiveURL withHandler:(URLResultHandler)onReady {
     ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_make_hud_title", nil)];
     [hud show];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
-        NSURL * url = [self makeArchive];
+        NSURL * url = [self makeArchive:archiveURL];
         dispatch_async(dispatch_get_main_queue(), ^{
             [hud dismiss];
             onReady(url);
@@ -1841,7 +1882,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     });
 }
 
-- (NSURL*)makeArchive {
+- (NSURL*)makeArchive:(NSURL*)archiveURL {
     NSError *error = nil;
     
     {
@@ -1889,7 +1930,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     
     [UserProfile.sharedProfile exportCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn"];
     
-    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
+    //NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
     if ([[NSFileManager defaultManager] fileExistsAtPath:[archiveURL path]]) {
         [[NSFileManager defaultManager] removeItemAtURL:archiveURL error:&error];
         if (error != nil) {
@@ -1911,12 +1952,12 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 }
 
 
-- (void) importArchiveWithHandler:(GenericResultHandler)onReady {
+- (void) importArchive:(NSURL*)archiveURL withHandler:(GenericResultHandler)onReady {
     ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_import_hud_title", nil)];
     [hud show];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        BOOL success = [self extractArchive];
+        BOOL success = [self extractArchive:archiveURL];
         if (success) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 hud.title = NSLocalizedString(@"archive_install_hud_title", nil);
@@ -1931,11 +1972,13 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     });
 }
 
-- (BOOL)extractArchive {
+- (BOOL)extractArchive:(NSURL*) archiveURL {
     NSError *error = nil;
     NSFileManager *fileMgr = [NSFileManager defaultManager];
     
-    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
+    //if (archiveURL == nil) {
+    //    archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
+    //}
     
     if (![fileMgr fileExistsAtPath:[archiveURL path]]) {
         NSLog(@"Error: No archive at URL %@", archiveURL);
@@ -1960,6 +2003,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         } else {
             NSLog(@"Created archive extraction directory at URL %@", archiveExtractDirURL);
             if ([AppDelegate unzipFileAtURL:archiveURL toDirectory:archiveExtractDirURL]) {
+                [fileMgr removeItemAtURL:archiveURL error:&error];
+                if (error != nil) {
+                    NSLog(@"Error removing extracted archive at URL %@, error=%@", archiveURL, error);
+                    return NO;
+                } else {
+                    NSLog(@"Removed extracted archive at URL %@", archiveURL);
+                }
+                
                 // all files extracted
                 return YES;
             }
@@ -1969,6 +2020,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 }
 
 -(BOOL)installArchive {
+    [self.chatBackend disable];
     NSError *error = nil;
     NSFileManager *fileMgr = [NSFileManager defaultManager];
     NSURL *archiveExtractDirURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: @"unarchived"];
@@ -2077,13 +2129,27 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                             NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
                             return NO;
                         }
+                        NSURL * inbox = [docDir URLByAppendingPathComponent:@"Inbox"];
+                        NSString * inboxPath = [inbox path];
                         for (NSURL * fileToRemove in fileArray)  {
-                            [fileMgr removeItemAtURL:fileToRemove error:&error];
-                            if (error != nil) {
-                                NSLog(@"Error removing file %@, error=%@", fileToRemove, error);
-                                return NO;
+                            
+                            NSString * path = [fileToRemove path];
+                            NSLog(@"  path = %@", path);
+                            NSLog(@"ibpath = %@", inboxPath);
+                            NSRange inInbox = [path rangeOfString:inboxPath];
+                            NSLog(@"range: location %lu len %lu", (unsigned long)inInbox.location, (unsigned long)inInbox.length);
+                            
+                            if (inInbox.location == NSNotFound) {
+                                
+                                [fileMgr removeItemAtURL:fileToRemove error:&error];
+                                if (error != nil) {
+                                    NSLog(@"Error removing file %@, error=%@", fileToRemove, error);
+                                    return NO;
+                                } else {
+                                    NSLog(@"Removed file %@", fileToRemove);
+                                }
                             } else {
-                                NSLog(@"Removed file %@", fileToRemove);
+                                NSLog(@"Ignoring inbox file %@", fileToRemove);
                             }
                         }
                     }
@@ -2121,6 +2187,16 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 
 - (BOOL)handleFileURL: (NSURL *)url withDocumentType:(NSString*)documentType
 {
+    // handle backup archive
+    //BOOL equal = UTTypeEqual((__bridge CFStringRef)(kHXOTransferArchiveUTI), (__bridge CFStringRef)(documentType));
+    BOOL conforming = UTTypeEqual((__bridge CFStringRef)(documentType), (__bridge CFStringRef)(kHXOTransferArchiveUTI));
+    
+    if (conforming) {
+        [self receiveArchiveFile:url];
+        return YES;
+    }
+    
+    // handle other stuff
     NSString *fileName = [url lastPathComponent];
     NSURL *destURL = [AppDelegate uniqueNewFileURLForFileLike:fileName];
     NSError *error = nil;

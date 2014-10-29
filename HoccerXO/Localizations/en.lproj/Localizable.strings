@@ -175,6 +175,7 @@
 "backend_ready"          = "connected";
 "backend_stopping"       = "disconnecting...";
 "backend_no_internet"    = "no internet connection";
+"backend_disabled"       = "Connection Disabled";
 
 "backend_login_temporarily_failed_title"               = "Login failed";
 "backend_login_temporarily_failed_continue_question"   = "The Login has failed beacause there is a temporary technical problem with the connection or the server. ('%@') Do you want to keep trying to log in?";
@@ -434,9 +435,13 @@
 "archive_make_hud_title"                        = "Creating Archive...";
 "archive_import_hud_title"                      = "Unpacking Archive...";
 "archive_install_hud_title"                     = "Installing Archive...";
+"archive_sending_hud_title"                     = "Sending Archive...";
 
 "archive_import_alert_title"                    = "Archive received";
 "archive_import_alert_message"                  = "Do you want to import this received archive from another app?";
+
+"archive_transfer_open_with_btn_title"          = "Transfer Backup to other App";
+"archive_transfer_open_with_safety_question"    = "Create a backup of all messages, attachment and login credentials and transfer all to another app on this device?";
 
 //==============================================================================
 // Database

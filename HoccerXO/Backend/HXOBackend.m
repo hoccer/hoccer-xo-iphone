@@ -89,13 +89,13 @@ NSString * const kNickNewRelationship = @"<new relationship>";
 NSString * const kNickNewMember       = @"<new member>";
 
 typedef enum BackendStates {
+    kBackendDisabled,
     kBackendStopped,
     kBackendConnecting,
     kBackendRegistering,
     kBackendAuthenticating,
     kBackendReady,
     kBackendStopping,
-    kBackendDisabled,
     kBackendStateUnknown
 } BackendState;
 

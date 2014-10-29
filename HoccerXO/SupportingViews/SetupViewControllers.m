@@ -237,6 +237,7 @@
     }
 }
 
+
 @end
 
 @implementation ProfileSetupSheet
@@ -255,7 +256,7 @@
 }
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    NSArray * hidden = @[self.keyItem, self.exportCredentialsItem, self.importCredentialsItem, self.deleteCredentialsFileItem, self.transferCredentialsItem, self.fetchCredentialsItem, self.fetchArchiveItem, self.archiveAllItem, self.archiveImportItem, self.destructiveButton];
+    NSArray * hidden = @[self.keyItem, self.exportCredentialsItem, self.importCredentialsItem, self.deleteCredentialsFileItem, self.transferCredentialsItem, self.fetchCredentialsItem, self.fetchArchiveItem, self.archiveAllItem, self.archiveImportItem, self.transferArchiveItem, self.destructiveButton];
     if ([hidden indexOfObject: item] != NSNotFound) {
         return NO;
     }

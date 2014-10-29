@@ -169,13 +169,15 @@
 // Backend
 //==============================================================================
 
-"backend_stopped"        = "nicht verbunden";
+"backend_stopped"        = "Nicht verbunden";
 "backend_connecting"     = "Verbindungsaufbau...";
 "backend_registering"    = "Registrierung...";
 "backend_authenticating" = "Anmeldung...";
 "backend_ready"          = "verbunden";
 "backend_stopping"       = "Verbindung wird beendet...";
 "backend_no_internet"    = "Keine Internetverbindung";
+"backend_disabled"       = "Verbindung deaktiviert";
+
 
 "backend_login_temporarily_failed_title"               = "Anmeldung fehlgeschlagen";
 "backend_login_temporarily_failed_continue_question"   = "Die Anmeldung ist aufgrund eines vorübergehenden technischen Problems mit der Verbindung oder dem Server fehlgeschlagen.('%@') Wollen sie es weiter versuchen?";
@@ -434,9 +436,14 @@
 "archive_make_hud_title"                        = "Archiv wird angelegt";
 "archive_import_hud_title"                      = "Archiv wird entpackt";
 "archive_install_hud_title"                     = "Archiv wird installiert";
+"archive_sending_hud_title"                     = "Archiv wird gesendet";
 
 "archive_import_alert_title"                    = "Archive empfangen";
 "archive_import_alert_message"                  = "Möchtest du dieses aus einer anderen App empfangene Archiv importieren?";
+
+"archive_transfer_open_with_btn_title"          = "Archivdatei übertragen";
+"archive_transfer_open_with_safety_question"    = "Soll eine Archivdatei mit allen Nachrichten, Anhängen und der Anmeldeinformation erstellt und an eine andere App auf diesem Gerät übertragen werden?";
+
 
 //==============================================================================
 // CTAssetsPickerController (3rd party)

@@ -21,6 +21,7 @@ FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLCredentialsHost;
 FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLArchiveHost;
 FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLExportScheme;
 FOUNDATION_EXPORT NSString * const kHXOTransferArchiveUTI;
+FOUNDATION_EXPORT NSString * const kHXODefaultArchiveName;
 
 typedef void (^ContinueBlock)();
 typedef void (^ContextBlock)(NSManagedObjectContext* context);
@@ -121,9 +122,10 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 -(BOOL)isInspecting:(id)inspectedObject;
 -(id)inspectorOf:(id)inspectedObject;
 
-- (NSURL*) makeArchive;
-- (void) makeArchiveWithHandler:(URLResultHandler)onReady;
-- (void) importArchiveWithHandler:(GenericResultHandler)onReady;
+- (NSURL*)makeArchive:(NSURL*)archiveURL;
+- (void) makeArchive:(NSURL*)archiveURL withHandler:(URLResultHandler)onReady;
+- (void) importArchive:(NSURL*)archiveURL withHandler:(GenericResultHandler)onReady;
+- (BOOL)extractArchive:(NSURL*)archiveURL;
 
 + (void) setDefaultAudioSession;
 + (void) setRecordingAudioSession;
