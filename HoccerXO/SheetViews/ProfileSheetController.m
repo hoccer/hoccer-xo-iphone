@@ -18,8 +18,6 @@
 
 @property (nonatomic, readonly) DatasheetSection * credentialsSection;
 
-@property (nonatomic, strong) ModalTaskHUD * hud;
-
 @end
 
 @implementation ProfileSheetController
@@ -216,9 +214,8 @@
                                                          withTitle:NSLocalizedString(@"archive_failed_title",nil)
                                                        withOKBlock:^{
                                                        }];
-                } else {
-                    //[HXOUI showErrorAlertWithMessageAsync: @"archive_ok_alert_message" withTitle:@"archive_ok_alert_title"];
-                    [self openWithInteractionController:url withUTI:kHXOTransferArchiveUTI withName:kHXODefaultArchiveName];
+                } else {                    
+                    [AppDelegate.instance openWithInteractionController:url withUTI:kHXOTransferArchiveUTI withName:kHXODefaultArchiveName inView:self.delegate.view withController:self.delegate];
                 }
             }];
             
@@ -233,42 +230,6 @@
     [sheet showInView: self.delegate.view];
 }
 
-- (void) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name {
-    NSLog(@"openWithInteractionController");
-
-    NSLog(@"openWithInteractionController: uti=%@, name = %@, url = %@", uti, name, myURL);
-    self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:myURL];
-    self.interactionController.delegate = self;
-    self.interactionController.UTI = uti;
-    self.interactionController.name = name;
-    [self.interactionController presentOpenInMenuFromRect:CGRectNull inView:self.delegate.view animated:YES];
-}
-
-- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
-    return self.delegate;
-}
-
-- (UIView *)documentInteractionControllerViewForPreview:(UIDocumentInteractionController *)controller
-{
-    return self.delegate.view;
-}
-
-- (CGRect)documentInteractionControllerRectForPreview:(UIDocumentInteractionController *)controller {
-    return self.delegate.view.frame;
-}
-- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
-}
-
-- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application {
-    NSLog(@"willBeginSendingToApplication %@", application);
-    self.hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_sending_hud_title", nil)];
-    [self.hud show];
-}
-
-- (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application {
-    NSLog(@"didEndSendingToApplication %@", application);
-    [self.hud dismiss];
-}
 
 #pragma mark - Fetch Archive
 

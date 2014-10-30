@@ -1301,6 +1301,7 @@ static NSTimer * _stateNotificationDelayTimer;
         self.firstConnectionAfterCrashOrUpdate = NO;
         [self makeSureAvatarUploaded];
     }
+    [self disableFullSync];
 }
 
 - (void) generatePairingTokenWithHandler: (InviteTokenHanlder) handler {
@@ -2708,6 +2709,10 @@ static NSTimer * _stateNotificationDelayTimer;
 
 -(BOOL)fullSync {
     return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"fullSync"] boolValue];
+}
+
+-(void)disableFullSync {
+    [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: @"fullSync"];
 }
 
 -(BOOL)quickStart {

@@ -36,7 +36,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 @class MFSideMenuContainerViewController;
 @class HTTPServer;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate, UITabBarControllerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate, UITabBarControllerDelegate,UIDocumentInteractionControllerDelegate>
 {
     UIBackgroundTaskIdentifier _backgroundTask;
 }
@@ -71,6 +71,9 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 
 @property (nonatomic,readonly) ABPeoplePickerNavigationController * peoplePicker;
+
+@property (nonatomic, strong) UIDocumentInteractionController * interactionController;
+
 
 #ifdef WITH_WEBSERVER
 @property (readonly,nonatomic, strong) HTTPServer *httpServer;
@@ -126,6 +129,9 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 - (void) makeArchive:(NSURL*)archiveURL withHandler:(URLResultHandler)onReady;
 - (void) importArchive:(NSURL*)archiveURL withHandler:(GenericResultHandler)onReady;
 - (BOOL)extractArchive:(NSURL*)archiveURL;
+
++ (UIViewController*) getTopMostViewController;
+- (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller;
 
 + (void) setDefaultAudioSession;
 + (void) setRecordingAudioSession;

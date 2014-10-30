@@ -8,7 +8,7 @@
 
 #import "ContactSheetBase.h"
 
-@interface ProfileSheetController : ContactSheetBase<UIDocumentInteractionControllerDelegate>
+@interface ProfileSheetController : ContactSheetBase
 
 @property (nonatomic, readonly) DatasheetItem * exportCredentialsItem;
 @property (nonatomic, readonly) DatasheetItem * importCredentialsItem;
@@ -19,7 +19,5 @@
 @property (nonatomic, readonly) DatasheetItem * fetchArchiveItem;
 @property (nonatomic, readonly) DatasheetItem * archiveAllItem;
 @property (nonatomic, readonly) DatasheetItem * archiveImportItem;
-
-@property (nonatomic, strong) UIDocumentInteractionController * interactionController;
 
 @end

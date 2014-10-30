@@ -101,7 +101,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSMutableDictionary *_idLocks;
     NSObject * _inspectionLock;
     NSMutableDictionary * _backgroundContexts;
+    
 }
+
+@property (nonatomic, strong) ModalTaskHUD * hud;
+@property (nonatomic, strong) UIViewController * interactionViewController;
+@property (nonatomic, strong) UIView * interactionView;
+
 @end
 
 @implementation AppDelegate
@@ -1563,6 +1569,111 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 }
 */
 
+#pragma mark - getTopMostViewController
+
++ (UIViewController*) getTopMostViewController
+{
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    if (window.windowLevel != UIWindowLevelNormal) {
+        NSArray *windows = [[UIApplication sharedApplication] windows];
+        for(window in windows) {
+            if (window.windowLevel == UIWindowLevelNormal) {
+                break;
+            }
+        }
+    }
+    
+    for (UIView *subView in [window subviews])
+    {
+        UIResponder *responder = [subView nextResponder];
+        
+        //added this block of code for iOS 8 which puts a UITransitionView in between the UIWindow and the UILayoutContainerView
+        if ([responder isEqual:window])
+        {
+            //this is a UITransitionView
+            if ([[subView subviews] count])
+            {
+                UIView *subSubView = [subView subviews][0]; //this should be the UILayoutContainerView
+                responder = [subSubView nextResponder];
+            }
+        }
+        
+        if([responder isKindOfClass:[UIViewController class]]) {
+            return [self topViewController: (UIViewController *) responder];
+        }
+    }
+    
+    return nil;
+}
+
++ (UIViewController *) topViewController: (UIViewController *) controller
+{
+    BOOL isPresenting = NO;
+    do {
+        // this path is called only on iOS 6+, so -presentedViewController is fine here.
+        UIViewController *presented = [controller presentedViewController];
+        isPresenting = presented != nil;
+        if(presented != nil) {
+            controller = presented;
+        }
+        
+    } while (isPresenting);
+    
+    return controller;
+}
+
+#pragma mark - Document Interaction
+
+
+- (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller{
+    NSLog(@"openWithInteractionController");
+    if (self.interactionView != nil) {
+        NSLog(@"ERROR: interaction controller busy");
+        return NO;
+    }
+    
+    NSLog(@"openWithInteractionController: uti=%@, name = %@, url = %@", uti, name, myURL);
+    self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:myURL];
+    self.interactionController.delegate = self;
+    self.interactionController.UTI = uti;
+    self.interactionController.name = name;
+    self.interactionView = view;
+    self.interactionViewController = controller;
+    [self.interactionController presentOpenInMenuFromRect:CGRectNull inView:view animated:YES];
+    return YES;
+}
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller {
+    return self.interactionViewController;
+}
+
+- (UIView *)documentInteractionControllerViewForPreview:(UIDocumentInteractionController *)controller
+{
+    return self.interactionView;
+}
+
+- (CGRect)documentInteractionControllerRectForPreview:(UIDocumentInteractionController *)controller {
+    return self.window.frame;
+}
+- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
+    self.interactionView = nil;
+    self.interactionViewController = nil;
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application {
+    NSLog(@"willBeginSendingToApplication %@", application);
+    self.hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_sending_hud_title", nil)];
+    [self.hud show];
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application {
+    NSLog(@"didEndSendingToApplication %@", application);
+    [self.hud dismiss];
+    self.interactionView = nil;
+    self.interactionViewController = nil;
+}
+
+
 #pragma mark - URL Handling
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
@@ -1696,7 +1807,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                                            otherButtonTitles: NSLocalizedString(@"transfer", nil),nil];
     [alert show];
 }
-
+/*
 - (void)transferArchiveWithHandler:(GenericResultHandler)handler {
     NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
     [self makeArchive:archiveURL withHandler:^(NSURL *url) {
@@ -1709,6 +1820,22 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         }
     }];
 }
+*/
+
+- (void)transferArchiveWithHandler:(GenericResultHandler)handler {
+    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
+    [self makeArchive:archiveURL withHandler:^(NSURL *url) {
+        if (url != nil) {
+            UIViewController * vc = [AppDelegate getTopMostViewController];
+            BOOL ok = [AppDelegate.instance openWithInteractionController:url withUTI:kHXOTransferArchiveUTI withName:kHXODefaultArchiveName inView:vc.view withController:vc];
+            handler(ok);
+        } else {
+            handler(NO);
+        }
+    }];
+}
+
+
 
 -(void) receiveArchive:(NSData*)archive onReady:(GenericResultHandler)handler {
     NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"received_archive.zip"];
@@ -1727,6 +1854,13 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         switch (buttonIndex) {
             case 0:
                 // no
+            {
+                NSError *error = nil;
+                [[NSFileManager defaultManager] removeItemAtURL:launchURL error:&error];
+                if (error != nil) {
+                    NSLog(@"#ERROR: failed to remove file %@, error=%@",launchURL, error);
+                }
+            }
                 break;
             case 1: {
                 NSData * archiveDat = [[UserProfile sharedProfile] receiveArchive:launchURL];
@@ -1886,6 +2020,11 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     NSError *error = nil;
     
     {
+        //NSURL *deleteURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"default.archive"];
+        //[[NSFileManager defaultManager] removeItemAtURL:deleteURL error:&error];
+
+        
+        
         NSURL *archivedbURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archived.database"];
         if ([[NSFileManager defaultManager] fileExistsAtPath:[archivedbURL path]]) {
             [[NSFileManager defaultManager] removeItemAtURL:archivedbURL error:&error];
