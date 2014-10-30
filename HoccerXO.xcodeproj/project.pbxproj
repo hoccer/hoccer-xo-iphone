@@ -123,9 +123,6 @@
 		63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F684172C2F3100C0EC26 /* CoreVideo.framework */; };
 		63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F686172C2F6E00C0EC26 /* libiconv.dylib */; };
 		63A7F689172C328D00C0EC26 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F688172C328D00C0EC26 /* libstdc++.dylib */; };
-		63AE4516170350750099F0CB /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4513170350750099F0CB /* Default.png */; };
-		63AE4517170350750099F0CB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE4514170350750099F0CB /* Default@2x.png */; };
-		63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63AE451A1703519B0099F0CB /* Default-568h@2x.png */; };
 		63AE4544170493140099F0CB /* SettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE4543170493140099F0CB /* SettingsViewController.m */; };
 		63AE45471704945C0099F0CB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE45461704945C0099F0CB /* WebViewController.m */; };
 		63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE4549170494AF0099F0CB /* AboutViewController.m */; };
@@ -702,9 +699,6 @@
 		63A7F684172C2F3100C0EC26 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		63A7F686172C2F6E00C0EC26 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		63A7F688172C328D00C0EC26 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
-		63AE4513170350750099F0CB /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
-		63AE4514170350750099F0CB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
-		63AE451A1703519B0099F0CB /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		63AE4542170493140099F0CB /* SettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsViewController.h; sourceTree = "<group>"; };
 		63AE4543170493140099F0CB /* SettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsViewController.m; sourceTree = "<group>"; };
 		63AE45451704945C0099F0CB /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
@@ -1629,7 +1623,6 @@
 				C576EBDE1934CCB100C0D254 /* AudioPlayer */,
 				63E9AFF218F3137E00EFF829 /* Avatar */,
 				6381FEB91745536B001D16E0 /* ChatView */,
-				63AE4511170350750099F0CB /* Default */,
 				63E9AFFC18F314AB00EFF829 /* disclosure_arrow.h */,
 				63E9AFFD18F314AB00EFF829 /* disclosure_arrow.m */,
 				63E9AFFB18F314AB00EFF829 /* disclosure_arrow.svg */,
@@ -1806,16 +1799,6 @@
 				E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */,
 			);
 			path = TDSemiModal;
-			sourceTree = "<group>";
-		};
-		63AE4511170350750099F0CB /* Default */ = {
-			isa = PBXGroup;
-			children = (
-				63AE451A1703519B0099F0CB /* Default-568h@2x.png */,
-				63AE4513170350750099F0CB /* Default.png */,
-				63AE4514170350750099F0CB /* Default@2x.png */,
-			);
-			path = Default;
 			sourceTree = "<group>";
 		};
 		63AE4541170490B50099F0CB /* Supporting Views */ = {
@@ -2783,10 +2766,7 @@
 				E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */,
 				63B1C9DE1843E4FD00B75CD8 /* cnt-download@2x.png in Resources */,
 				63DEC02719B0A720003804E8 /* Playlists@2x.png in Resources */,
-				63AE4516170350750099F0CB /* Default.png in Resources */,
 				C576EC341934CCB200C0D254 /* fullscreen-button-play.png in Resources */,
-				63AE4517170350750099F0CB /* Default@2x.png in Resources */,
-				63AE451B1703519B0099F0CB /* Default-568h@2x.png in Resources */,
 				E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */,
 				63B1C9E71843E4FD00B75CD8 /* cnt-video.png in Resources */,
 				E9A85D9F184FD1AD00EB9B68 /* chatbar-attachment-icon-location@2x.png in Resources */,
@@ -3365,6 +3345,7 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-XO";
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -3407,6 +3388,7 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-XO";
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -3483,6 +3465,7 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -3591,6 +3574,7 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -3701,6 +3685,7 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-XO";
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -3809,6 +3794,7 @@
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Dev";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-XO";
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
