@@ -18,7 +18,7 @@
 @interface InviteController ()
 
 @property (nonatomic, readonly) ABAddressBookRef               addressBook;
-@property (nonatomic, strong)   NSMutableArray               * coolingPond;
+@property (nonatomic, strong)   NSMutableArray               * composerCoolingPond;
 @property (nonatomic, readonly) InvitationCodeViewController * invitationCodeViewController;
 
 @end
@@ -28,7 +28,7 @@
 - (id) init {
     self = [super init];
     if (self) {
-        self.coolingPond = [NSMutableArray array];
+        self.composerCoolingPond = [NSMutableArray array];
     }
     return self;
 }
@@ -120,9 +120,9 @@
                 messageView.body = [NSString stringWithFormat: smsText, [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
             } break;
         }
-        [self.coolingPond insertObject: vc atIndex: 0];
-        if (self.coolingPond.count > 10) {
-            [self.coolingPond removeLastObject];
+        [self.composerCoolingPond insertObject: vc atIndex: 0];
+        if (self.composerCoolingPond.count > 10) {
+            [self.composerCoolingPond removeLastObject];
         }
         completion(vc);
     }];
