@@ -83,7 +83,6 @@
 		634C07F019B7B60F00808A85 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 634C07EF19B7B60F00808A85 /* MainStoryboard_iPad.storyboard */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		6357A1791A03889400E87A96 /* InviteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6357A1781A03889400E87A96 /* InviteController.m */; };
-		63581CDF1959FC890068F48A /* BatchInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63581CDE1959FC890068F48A /* BatchInviteViewController.m */; };
 		63638F8E18EC8210008DA997 /* avatar_group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63638F8D18EC8210008DA997 /* avatar_group.m */; };
 		636492D71711E97900E35514 /* AvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* AvatarView.m */; };
 		6365EB2C18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EB2B18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m */; };
@@ -629,8 +628,6 @@
 		63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonFloatingSectionHeaderTableView.m; sourceTree = "<group>"; };
 		6357A1771A03889400E87A96 /* InviteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteController.h; sourceTree = "<group>"; };
 		6357A1781A03889400E87A96 /* InviteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteController.m; sourceTree = "<group>"; };
-		63581CDD1959FC890068F48A /* BatchInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatchInviteViewController.h; sourceTree = "<group>"; };
-		63581CDE1959FC890068F48A /* BatchInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatchInviteViewController.m; sourceTree = "<group>"; };
 		63638F8C18EC8210008DA997 /* avatar_group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avatar_group.h; sourceTree = "<group>"; };
 		63638F8D18EC8210008DA997 /* avatar_group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = avatar_group.m; sourceTree = "<group>"; };
 		636492D51711E97900E35514 /* AvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AvatarView.h; sourceTree = "<group>"; };
@@ -1811,8 +1808,6 @@
 				63AE4549170494AF0099F0CB /* AboutViewController.m */,
 				C576EBD11934CC8400C0D254 /* AudioPlayerViewController.h */,
 				C576EBD21934CC8400C0D254 /* AudioPlayerViewController.m */,
-				63581CDD1959FC890068F48A /* BatchInviteViewController.h */,
-				63581CDE1959FC890068F48A /* BatchInviteViewController.m */,
 				63756A8E18F6434C003F7555 /* ContactPicker.h */,
 				63756A8F18F6434C003F7555 /* ContactPicker.m */,
 				631FE508191947D80073E980 /* CustomKeyViewController.h */,
@@ -3041,7 +3036,6 @@
 				E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
 				E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */,
 				E9E92F3E18733B7A007B8042 /* DDLog.m in Sources */,
-				63581CDF1959FC890068F48A /* BatchInviteViewController.m in Sources */,
 				63B78FFA18D4D6C1003A9125 /* tab_chats.m in Sources */,
 				6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */,
 				E9E92F901874E7A3007B8042 /* MyHttpConnection.m in Sources */,

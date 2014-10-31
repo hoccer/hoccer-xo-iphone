@@ -22,7 +22,6 @@
 #import "GroupInStatuNascendi.h"
 #import "WebViewController.h"
 #import "tab_contacts.h"
-#import "BatchInviteViewController.h"
 #import "InviteController.h"
 
 #define HIDE_SEPARATORS
@@ -502,9 +501,6 @@ bool almostEqual(CGFloat a, CGFloat b) {
         Contact * contact = [self.currentFetchedResultsController objectAtIndexPath: sender];
         DatasheetViewController * vc = [segue destinationViewController];
         vc.inspectedObject = contact;
-    } else if ([sid isEqualToString:@"showInviteMessageViewController"]) {
-        ((UIViewController*)((UINavigationController*)segue.destinationViewController).viewControllers[0]).title = NSLocalizedString(@"invite_recipient_picker_title", nil);
-        ((BatchInviteViewController*)segue.destinationViewController).mode = [sender intValue];
     }
 }
 
@@ -705,49 +701,6 @@ bool almostEqual(CGFloat a, CGFloat b) {
 
 - (void) invitePeople {
     [self.inviteController invitePeople: self];
-    return;
-
-
-    NSMutableArray * actions = [NSMutableArray array];
-    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
-        if (buttonIndex != actionSheet.cancelButtonIndex) {
-            ((void(^)())actions[buttonIndex])(); // uhm, ok ... just call the damn thing, alright?
-        }
-    };
-
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"invite_option_sheet_title", @"Actionsheet Title")
-                                        completionBlock: completion
-                                      cancelButtonTitle: nil
-                                 destructiveButtonTitle: nil
-                                      otherButtonTitles: nil];
-
-
-    if ([MFMessageComposeViewController canSendText]) {
-        [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_sms_btn_title",@"Invite Actionsheet Button Title")];
-        [actions addObject: ^() { [self inviteByMessage: PeoplePickerModeText]; }];
-    }
-    if ([MFMailComposeViewController canSendMail]) {
-        [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_mail_btn_title",@"Invite Actionsheet Button Title")];
-        [actions addObject: ^() { [self inviteByMessage: PeoplePickerModeMail]; }];
-    }
-    [sheet addButtonWithTitle: NSLocalizedString(@"invite_option_code_btn_title",@"Invite Actionsheet Button Title")];
-    [actions addObject: ^() { [self inviteByCode]; }];
-
-    sheet.cancelButtonIndex = [sheet addButtonWithTitle: NSLocalizedString(@"cancel", nil)];
-
-    [sheet showInView: self.view];
-}
-
-- (void) inviteByCode {
-    dispatch_async(dispatch_get_main_queue(), ^ {
-        [self performSegueWithIdentifier: @"showInviteCodeViewController" sender: self];
-    });
-}
-
-- (void) inviteByMessage: (PeoplePickerMode) mode {
-    dispatch_async(dispatch_get_main_queue(), ^ {
-        [self performSegueWithIdentifier: @"showInviteMessageViewController" sender: @(mode)];
-    });
 }
 
 #pragma mark - Empty Table Placeholder
