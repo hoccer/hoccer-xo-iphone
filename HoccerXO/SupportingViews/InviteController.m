@@ -12,12 +12,14 @@
 #import "Environment.h"
 #import "HXOUserDefaults.h"
 #import "AppDelegate.h"
+#import "InvitationCodeViewController.h"
+#import "HXOThemedNavigationController.h"
 
 @interface InviteController ()
 
-@property (nonatomic, readonly) ABAddressBookRef addressBook;
-@property (nonatomic, strong)   NSMutableArray * coolingPond;
-
+@property (nonatomic, readonly) ABAddressBookRef               addressBook;
+@property (nonatomic, strong)   NSMutableArray               * coolingPond;
+@property (nonatomic, readonly) InvitationCodeViewController * invitationCodeViewController;
 
 @end
 
@@ -63,7 +65,7 @@
 }
 
 - (void) inviteByCode: (UIViewController*) vc {
-    [vc performSegueWithIdentifier: @"showInviteCodeViewController" sender: self];
+    [vc presentViewController: [[HXOThemedNavigationController alloc] initWithRootViewController: self.invitationCodeViewController] animated: YES completion: nil];
 }
 
 - (void) inviteByMessage: (PeoplePickerMode) mode withViewController: (UIViewController*) viewController {
@@ -87,7 +89,7 @@
         PeopleMultiPickerViewController * vc = [[PeopleMultiPickerViewController alloc] initWithStyle: UITableViewStylePlain];
         vc.delegate = self;
         vc.mode = mode;
-        completion([[UINavigationController alloc] initWithRootViewController: vc]);
+        completion([[HXOThemedNavigationController alloc] initWithRootViewController: vc]);
     } else {
         [self composeViewController: mode recipients: @[] completion: completion];
     }
@@ -194,13 +196,20 @@
 #pragma - MFMessageComposerDelegate
 
 @synthesize addressBook = _addressBook;
-
 - (ABAddressBookRef) addressBook {
     if (_addressBook == nil) {
         CFErrorRef error;
         _addressBook = ABAddressBookCreateWithOptions(NULL, &error);
     }
     return _addressBook;
+}
+
+@synthesize invitationCodeViewController = _invitationCodeViewController;
+- (InvitationCodeViewController*) invitationCodeViewController {
+    if (_invitationCodeViewController == nil) {
+        _invitationCodeViewController = [[InvitationCodeViewController alloc] init];
+    }
+    return _invitationCodeViewController;
 }
 
 - (HXOBackend*) chatBackend {

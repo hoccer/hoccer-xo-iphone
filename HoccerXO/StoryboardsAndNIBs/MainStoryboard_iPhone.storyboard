@@ -214,7 +214,6 @@
                     <connections>
                         <segue destination="Ewa-nI-cAA" kind="push" identifier="showContact" id="Kn0-3b-fVd"/>
                         <segue destination="VTA-Oa-XCk" kind="push" identifier="showGroup" id="5v1-4P-ajP"/>
-                        <segue destination="Ux6-gE-xyd" kind="modal" identifier="showInviteCodeViewController" id="S5q-xe-rQg"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -507,7 +506,6 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <segue destination="21" kind="push" identifier="showChat" id="4Tx-uH-B8w"/>
-                        <segue destination="Ux6-gE-xyd" kind="modal" identifier="showInviteCodeViewController" id="fCA-bC-lkd"/>
                         <segue destination="Ewa-nI-cAA" kind="push" identifier="showContact" id="yj0-Vd-HPq"/>
                         <segue destination="VTA-Oa-XCk" kind="push" identifier="showGroup" id="UJI-wH-YH7"/>
                     </connections>
@@ -721,41 +719,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dL5-qg-Q59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="638" y="2055"/>
-        </scene>
-        <!--Themed Navigation Controller-->
-        <scene sceneID="Naz-dy-kRv">
-            <objects>
-                <navigationController definesPresentationContext="YES" id="Ux6-gE-xyd" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="69b-Lz-5Vh"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Syd-8c-xlS">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="RTv-PU-Cyy" kind="relationship" relationship="rootViewController" id="YQR-y5-Tba"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AIL-MY-nIh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="638" y="-2011"/>
-        </scene>
-        <!--Invitation Code View Controller-->
-        <scene sceneID="eWu-7T-N4a">
-            <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="RTv-PU-Cyy" customClass="InvitationCodeViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9W2-FJ-Rjn"/>
-                        <viewControllerLayoutGuide type="bottom" id="tMF-39-vsf"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="hQN-yF-l5Y">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="cc7-xx-bxW"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DiA-No-hK7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1176" y="-2011"/>
         </scene>
         <!--Web View Controller-->
         <scene sceneID="cBy-9f-V3x">
@@ -1166,7 +1129,6 @@
         <segue reference="rav-wy-jJw"/>
         <segue reference="nwS-55-3Qg"/>
         <segue reference="NNl-EZ-WW3"/>
-        <segue reference="fCA-bC-lkd"/>
         <segue reference="r9n-Tc-8eU"/>
     </inferredMetricsTieBreakers>
 </document>

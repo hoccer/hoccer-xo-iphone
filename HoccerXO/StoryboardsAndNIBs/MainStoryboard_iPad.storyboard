@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6245" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
     <dependencies>
-        <deployment defaultVersion="1792" identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -215,8 +215,6 @@
                     <connections>
                         <segue destination="Ewa-nI-cAA" kind="push" identifier="showContact" id="Kn0-3b-fVd"/>
                         <segue destination="VTA-Oa-XCk" kind="push" identifier="showGroup" id="5v1-4P-ajP"/>
-                        <segue destination="Ux6-gE-xyd" kind="modal" identifier="showInviteCodeViewController" id="S5q-xe-rQg"/>
-                        <segue destination="ZTI-cU-aX9" kind="modal" identifier="showInviteMessageViewController" id="Xaf-oq-onc"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4Uu-zp-PHA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -509,10 +507,8 @@
                     </userDefinedRuntimeAttributes>
                     <connections>
                         <segue destination="21" kind="push" identifier="showChat" id="4Tx-uH-B8w"/>
-                        <segue destination="Ux6-gE-xyd" kind="modal" identifier="showInviteCodeViewController" id="fCA-bC-lkd"/>
                         <segue destination="Ewa-nI-cAA" kind="push" identifier="showContact" id="yj0-Vd-HPq"/>
                         <segue destination="VTA-Oa-XCk" kind="push" identifier="showGroup" id="UJI-wH-YH7"/>
-                        <segue destination="ZTI-cU-aX9" kind="modal" identifier="showInviteMessageViewController" id="rce-WF-Xcw"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="17" sceneMemberID="firstResponder"/>
@@ -724,117 +720,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dL5-qg-Q59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="638" y="2055"/>
-        </scene>
-        <!--Themed Navigation Controller-->
-        <scene sceneID="Naz-dy-kRv">
-            <objects>
-                <navigationController definesPresentationContext="YES" id="Ux6-gE-xyd" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationItem key="navigationItem" id="69b-Lz-5Vh"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Syd-8c-xlS">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="RTv-PU-Cyy" kind="relationship" relationship="rootViewController" id="YQR-y5-Tba"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="AIL-MY-nIh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="638" y="-2803"/>
-        </scene>
-        <!--People Multi Picker View Controller-->
-        <scene sceneID="TLI-w2-pbJ">
-            <objects>
-                <tableViewController id="jhN-oV-ste" customClass="PeopleMultiPickerViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="iyp-jH-q3D">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <connections>
-                            <outlet property="dataSource" destination="jhN-oV-ste" id="2MZ-gF-7an"/>
-                            <outlet property="delegate" destination="jhN-oV-ste" id="keY-ca-hdb"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="aFw-PV-I5K"/>
-                    <connections>
-                        <segue destination="b9K-xn-4jt" kind="push" identifier="showMailComposer" id="Cdl-8G-JYY"/>
-                        <segue destination="eON-Yn-4ED" kind="push" identifier="showMessageComposer" id="7fC-2c-0QF"/>
-                    </connections>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="D0R-dT-y3F" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1176" y="-2093"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="frb-Pe-EgN">
-            <objects>
-                <viewController id="b9K-xn-4jt" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="wQa-P2-I0m"/>
-                        <viewControllerLayoutGuide type="bottom" id="pgw-WT-ThV"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="PMW-S7-Gbe">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="dTX-F4-Uy8"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ReT-ls-pOz" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1710" y="-2093"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="LI6-vu-1fz">
-            <objects>
-                <viewController id="eON-Yn-4ED" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="NQT-D3-GQa"/>
-                        <viewControllerLayoutGuide type="bottom" id="Kvc-Oi-skD"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="Oq6-aN-Lws">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="qfY-Uf-PFb"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="5Ca-kA-hR7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1710" y="-1310"/>
-        </scene>
-        <!--Batch Invite View Controller-->
-        <scene sceneID="eel-dP-l7m">
-            <objects>
-                <navigationController definesPresentationContext="YES" id="ZTI-cU-aX9" customClass="BatchInviteViewController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="bYB-DV-nn1">
-                        <autoresizingMask key="autoresizingMask"/>
-                    </navigationBar>
-                    <connections>
-                        <segue destination="jhN-oV-ste" kind="relationship" relationship="rootViewController" id="7n8-d1-b2e"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Zih-kJ-kaX" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="638" y="-2093"/>
-        </scene>
-        <!--Invitation Code View Controller-->
-        <scene sceneID="eWu-7T-N4a">
-            <objects>
-                <viewController automaticallyAdjustsScrollViewInsets="NO" hidesBottomBarWhenPushed="YES" id="RTv-PU-Cyy" customClass="InvitationCodeViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="9W2-FJ-Rjn"/>
-                        <viewControllerLayoutGuide type="bottom" id="tMF-39-vsf"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="hQN-yF-l5Y">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="cc7-xx-bxW"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="DiA-No-hK7" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1176" y="-2803"/>
         </scene>
         <!--Web View Controller-->
         <scene sceneID="cBy-9f-V3x">
@@ -1240,15 +1125,13 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="rav-wy-jJw"/>
-        <segue reference="Kn0-3b-fVd"/>
-        <segue reference="NNl-EZ-WW3"/>
         <segue reference="5v1-4P-ajP"/>
-        <segue reference="Xaf-oq-onc"/>
-        <segue reference="S5q-xe-rQg"/>
-        <segue reference="k8Y-EQ-OHi"/>
+        <segue reference="Kn0-3b-fVd"/>
+        <segue reference="rav-wy-jJw"/>
         <segue reference="sc8-Bm-80f"/>
+        <segue reference="k8Y-EQ-OHi"/>
         <segue reference="nwS-55-3Qg"/>
+        <segue reference="NNl-EZ-WW3"/>
         <segue reference="r9n-Tc-8eU"/>
     </inferredMetricsTieBreakers>
 </document>
