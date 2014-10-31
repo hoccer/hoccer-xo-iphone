@@ -23,6 +23,7 @@
 #import "WebViewController.h"
 #import "tab_contacts.h"
 #import "BatchInviteViewController.h"
+#import "InviteController.h"
 
 #define HIDE_SEPARATORS
 #define FETCHED_RESULTS_DEBUG NO
@@ -61,6 +62,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 @property (nonatomic, readonly) UINavigationController       * webViewController;
 
+@property (nonatomic, readonly) InviteController             * inviteController;
 
 @end
 
@@ -693,7 +695,19 @@ bool almostEqual(CGFloat a, CGFloat b) {
 
 #pragma mark - Invitations
 
+@synthesize inviteController = _inviteController;
+- (InviteController*) inviteController {
+    if (_inviteController == nil) {
+        _inviteController = [[InviteController alloc] init];
+    }
+    return _inviteController;
+}
+
 - (void) invitePeople {
+    [self.inviteController invitePeople: self];
+    return;
+
+
     NSMutableArray * actions = [NSMutableArray array];
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet *actionSheet) {
         if (buttonIndex != actionSheet.cancelButtonIndex) {

@@ -82,6 +82,7 @@
 		634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */; };
 		634C07F019B7B60F00808A85 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 634C07EF19B7B60F00808A85 /* MainStoryboard_iPad.storyboard */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
+		6357A1791A03889400E87A96 /* InviteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6357A1781A03889400E87A96 /* InviteController.m */; };
 		63581CDF1959FC890068F48A /* BatchInviteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63581CDE1959FC890068F48A /* BatchInviteViewController.m */; };
 		63638F8E18EC8210008DA997 /* avatar_group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63638F8D18EC8210008DA997 /* avatar_group.m */; };
 		636492D71711E97900E35514 /* AvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* AvatarView.m */; };
@@ -626,6 +627,8 @@
 		634C07EF19B7B60F00808A85 /* MainStoryboard_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
 		63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonFloatingSectionHeaderTableView.m; sourceTree = "<group>"; };
+		6357A1771A03889400E87A96 /* InviteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteController.h; sourceTree = "<group>"; };
+		6357A1781A03889400E87A96 /* InviteController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InviteController.m; sourceTree = "<group>"; };
 		63581CDD1959FC890068F48A /* BatchInviteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BatchInviteViewController.h; sourceTree = "<group>"; };
 		63581CDE1959FC890068F48A /* BatchInviteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BatchInviteViewController.m; sourceTree = "<group>"; };
 		63638F8C18EC8210008DA997 /* avatar_group.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avatar_group.h; sourceTree = "<group>"; };
@@ -1820,6 +1823,8 @@
 				63DC01501713976B00609513 /* ImageViewController.m */,
 				63CA315318D272E70069A0C2 /* InvitationCodeViewController.h */,
 				63CA315418D272E70069A0C2 /* InvitationCodeViewController.mm */,
+				6357A1771A03889400E87A96 /* InviteController.h */,
+				6357A1781A03889400E87A96 /* InviteController.m */,
 				E9B7BAB7172EA15E00212420 /* RecordViewController.h */,
 				E9B7BAB8172EA15E00212420 /* RecordViewController.m */,
 				C576EBD31934CC8400C0D254 /* SeekSlider.h */,
@@ -2986,6 +2991,7 @@
 				C576EC3C1934CCB200C0D254 /* player_button_next.m in Sources */,
 				E9AF289E1927BDAA00E29A03 /* NSData+Compression.m in Sources */,
 				C576EC4A1934CCB200C0D254 /* player_icon_volume_up.m in Sources */,
+				6357A1791A03889400E87A96 /* InviteController.m in Sources */,
 				63DEC01719B0A720003804E8 /* JGMediaPickerController.m in Sources */,
 				C576EC6F1934CD1500C0D254 /* AudioAttachmentWithTextMessageCell.m in Sources */,
 				636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */,

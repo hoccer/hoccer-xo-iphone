@@ -1237,15 +1237,15 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="rav-wy-jJw"/>
-        <segue reference="Kn0-3b-fVd"/>
-        <segue reference="NNl-EZ-WW3"/>
         <segue reference="5v1-4P-ajP"/>
-        <segue reference="Xaf-oq-onc"/>
         <segue reference="S5q-xe-rQg"/>
-        <segue reference="k8Y-EQ-OHi"/>
+        <segue reference="Kn0-3b-fVd"/>
         <segue reference="sc8-Bm-80f"/>
+        <segue reference="k8Y-EQ-OHi"/>
+        <segue reference="rav-wy-jJw"/>
         <segue reference="nwS-55-3Qg"/>
+        <segue reference="NNl-EZ-WW3"/>
+        <segue reference="rce-WF-Xcw"/>
         <segue reference="r9n-Tc-8eU"/>
     </inferredMetricsTieBreakers>
 </document>
