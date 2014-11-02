@@ -24,6 +24,7 @@ static UserProfile * profileInstance;
 
 static NSString * const kHXOAccountIdentifier = @"HXOAccount";
 static NSString * const kHXOSaltIdentifier    = @"HXOSalt";
+static NSString * const kHXOCredentialsDateIdentifier = @"HXOCredentialsDate";
 static const NSUInteger kHXOPasswordLength    = 23;
 
 const NSUInteger kHXODefaultKeySize    = 2048;
@@ -32,6 +33,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 {
     KeychainItemWrapper * _accountItem;
     KeychainItemWrapper * _saltItem;
+    KeychainItemWrapper * _credentialsDateItem;
     UIImage * _avatarImage;
     unsigned int _avatarImageVersion;
     unsigned int _savedAvatarImageVersion;
@@ -54,6 +56,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     if (self != nil) {
         _accountItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOAccountIdentifier] accessGroup: nil];
         _saltItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOSaltIdentifier] accessGroup: nil];
+        _credentialsDateItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOCredentialsDateIdentifier] accessGroup: nil];
         [self loadProfile];
     }
     return self;
@@ -159,6 +162,19 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return [_saltItem objectForKey: (__bridge id)(kSecValueData)];
 }
 
+- (NSNumber*) credentialsDate {
+    NSString * dateString = [_credentialsDateItem objectForKey: (__bridge id)(kSecValueData)];
+    return [UserProfile credentialsDateFromString:dateString];
+}
+
++ (NSNumber*) credentialsDateFromString:(NSString*)millis {
+    if (millis == nil) {
+        millis = @"0";
+    }
+    return [NSNumber numberWithLongLong:[millis longLongValue]];
+}
+
+
 - (NSString*)groupMembershipList {
     return @"n/a"; //TODO: return something more interesting
 }
@@ -186,6 +202,12 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSString * keychainItemBugWorkaround = [NSString stringWithUUID];
     [_saltItem setObject: keychainItemBugWorkaround forKey: (__bridge id)(kSecAttrAccount)]; 
     [_saltItem setObject: [salt hexadecimalString] forKey: (__bridge id)(kSecValueData)];
+    
+    NSString * keychainItemBugWorkaround2 = [NSString stringWithUUID];
+    NSDate * date = [NSDate new];
+    [_credentialsDateItem setObject: keychainItemBugWorkaround2 forKey: (__bridge id)(kSecAttrAccount)];
+    [_credentialsDateItem setObject: [[HXOBackend millisFromDate:date] stringValue]  forKey: (__bridge id)(kSecValueData)];
+    
     //[ProfileViewController exportCredentials];
     return [verifier hexadecimalString];
 }
@@ -193,7 +215,8 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 -  (NSDictionary *) extractCredentials {
     NSDictionary * credentials = @{ @"password": [self password],
                                     @"salt" :[self salt],
-                                    @"clientId" : self.clientId };
+                                    @"clientId" : self.clientId,
+                                    @"credentialsDate" : [self.credentialsDate stringValue] };
     return credentials;
 }
 
@@ -201,9 +224,23 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSDictionary * currentCredentials = [self extractCredentials];
     return  [credentials[@"password"] isEqualToString:currentCredentials[@"password"]] &&
             [credentials[@"salt"] isEqualToString:currentCredentials[@"salt"]] &&
-            [credentials[@"clientId"] isEqualToString:currentCredentials[@"clientId"]];
+            [credentials[@"clientId"] isEqualToString:currentCredentials[@"clientId"]] &&
+            [credentials[@"credentialsDate"] isEqualToString:currentCredentials[@"credentialsDate"]];
 }
 
+// returns YES when the credentials are for the same client, have a different verifier and carry an older date stamp
+- (BOOL) olderCredentialsForSameAccountInDict:(NSDictionary*)credentials {
+    NSDictionary * currentCredentials = [self extractCredentials];
+    if ([credentials[@"clientId"] isEqualToString:currentCredentials[@"clientId"]]) {
+        if (![credentials[@"password"] isEqualToString:currentCredentials[@"password"]] ||
+            ![credentials[@"salt"] isEqualToString:currentCredentials[@"salt"]]) {
+            NSString * newCredentialsDateString = credentials[@"credentialsDate"];
+            NSNumber * newCredentialsDate = [UserProfile credentialsDateFromString:newCredentialsDateString];
+            return [newCredentialsDate longLongValue] < [self.credentialsDate longLongValue];
+        }
+    }
+    return NO;
+}
 
 - (void) setCredentialsWithDict:(NSDictionary*)credentials {
     [_accountItem setObject: credentials[@"clientId"] forKey: (__bridge id)(kSecAttrAccount)];
@@ -211,6 +248,14 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSString * keychainItemBugWorkaround = [NSString stringWithUUID];
     [_saltItem setObject: keychainItemBugWorkaround forKey: (__bridge id)(kSecAttrAccount)];
     [_saltItem setObject: credentials[@"salt"] forKey: (__bridge id)(kSecValueData)];
+    
+    NSString * date = credentials[@"credentialsDate"];
+    if (date == nil) {
+        date = @"0";
+    }
+    NSString * keychainItemBugWorkaround2 = [NSString stringWithUUID];
+    [_credentialsDateItem setObject: keychainItemBugWorkaround2 forKey: (__bridge id)(kSecAttrAccount)];
+    [_credentialsDateItem setObject: date  forKey: (__bridge id)(kSecValueData)];
 }
     
 -(NSURL*)getCredentialsURL {
@@ -298,16 +343,16 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return credentials;
 }
 
--(NSDictionary*)restoredCredentials:(NSString*)myId {
+-(NSDictionary*)restoredCredentials:(NSString*)myId{
     return [self restoredCredentialsWithId:myId];
 }
 
--(int)restoreCredentials {
-    return [self restoreCredentialsWithId:@""];
+-(int)restoreCredentialsWithForce:(BOOL)force{
+    return [self restoreCredentialsWithId:@"" withForce:force];
 }
 
--(int)restoreCredentialsWithId:(NSString*)myId {
-    return [self importCredentials:[self restoredCredentialsWithId:myId]];
+-(int)restoreCredentialsWithId:(NSString*)myId withForce:(BOOL)force {
+    return [self importCredentials:[self restoredCredentialsWithId:myId] withForce:force];
 }
 
 -(void)removeCredentialsBackupWithId:(NSString*)myId {
@@ -516,26 +561,31 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     }
     return nil;
 }
-    
-- (int) importCredentials:(NSDictionary*)credentials {
+
+// ret
+- (int) importCredentials:(NSDictionary*)credentials withForce:(BOOL)force{
     if (credentials != nil) {
         if (![self sameCredentialsInDict:credentials]) {
-            [self setCredentialsWithDict:credentials];
-            return 1;
+            if (force || ![self olderCredentialsForSameAccountInDict:credentials]) {
+                [self setCredentialsWithDict:credentials];
+                return 1;
+            } else {
+                return -2;
+            }
         }
         return 0;
     }
     return -1;
 }
 
-- (int) importCredentialsWithPassphrase:(NSString*)passphrase {
+- (int) importCredentialsWithPassphrase:(NSString*)passphrase withForce:(BOOL)force{
     NSDictionary * credentials = [self loadCredentialsWithPassphrase:passphrase];
-    return [self importCredentials:credentials];
+    return [self importCredentials:credentials withForce:force];
 }
 
-- (int)importCredentialsJson:(NSData*)jsonData {
+- (int)importCredentialsJson:(NSData*)jsonData withForce:(BOOL)force{
     NSDictionary * credentials = [self parseCredentials:jsonData];
-    return [self importCredentials:credentials];
+    return [self importCredentials:credentials withForce:force];
 }
 
 
@@ -590,6 +640,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 - (void) deleteCredentials {
     [_accountItem resetKeychainItem];
     [_saltItem resetKeychainItem];
+    [_credentialsDateItem resetKeychainItem];
     [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
     [[HXOUserDefaults standardUserDefaults] synchronize];
     NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);

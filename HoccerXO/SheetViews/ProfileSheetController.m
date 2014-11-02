@@ -380,7 +380,7 @@
 - (void) importCredentialsPressed: (UIViewController*) sender {
     HXOStringEntryCompletion passphraseCompletion = ^(NSString *passphrase) {
         if (passphrase != nil) {
-            int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:passphrase];
+            int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:passphrase withForce:NO];
             switch (result) {
                 case 1:
                     [[UserProfile sharedProfile] verfierChangePlease];
@@ -393,6 +393,9 @@
                     break;
                 case 0:
                     [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_equals_current_message" withTitle:@"credentials_file_equals_current_title"];
+                    break;
+                case -2:
+                    [HXOUI showErrorAlertWithMessageAsync:@"credentials_receive_old_message" withTitle:@"credentials_receive_old_title"];
                     break;
                 default:
                     NSLog(@"importCredentialsPressed: unhandled result %d", result);

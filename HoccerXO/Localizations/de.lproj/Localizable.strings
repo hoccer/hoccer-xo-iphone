@@ -396,6 +396,9 @@
 "credentials_receive_equals_current_message"   = "Zugangsdaten nicht neu";
 "credentials_receive_equals_current_title"     = "Die selben Zugangsdaten sind bereits vorhanden.";
 
+"credentials_receive_old_title"                 = "Zugangsdaten veraltet";
+"credentials_receive_old_message"               = "Die Zugangsdaten sind veraltet und können nicht genutzt werden, weil sie bereits importiert und anschliessend erneuert worden sind. Die aktuellen Zugangsdaten wurden behalten.";
+
 "credentials_received_import_title"            = "Zugangsdaten übernehmen?";
 "credentials_received_import_message"          = "Willst du wirklich die Zugangsdaten aus Hoccer XO übernehmen?";
 

@@ -1753,7 +1753,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 break;
             case 1: {
                 [self.chatBackend disable];
-                int result = [[UserProfile sharedProfile] importCredentialsJson:credentials];
+                int result = [[UserProfile sharedProfile] importCredentialsJson:credentials withForce:NO];
                 switch (result) {
                     case 1:
                         [[UserProfile sharedProfile] verfierChangePlease];
@@ -1766,6 +1766,10 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                         break;
                     case 0:
                         [HXOUI showErrorAlertWithMessageAsync:@"credentials_receive_equals_current_message" withTitle:@"credentials_receive_equals_current_title"];
+                        [self.chatBackend enable];
+                        break;
+                    case -2:
+                        [HXOUI showErrorAlertWithMessageAsync:@"credentials_receive_old_message" withTitle:@"credentials_receive_old_title"];
                         [self.chatBackend enable];
                         break;
                     default:
@@ -2101,7 +2105,25 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             dispatch_async(dispatch_get_main_queue(), ^{
                 hud.title = NSLocalizedString(@"archive_install_hud_title", nil);
             });
-            success = [self installArchive];
+            int result = [self installArchive];
+            if (result < 0) {
+                // total failure
+                success = NO;
+            } else {
+                if (result == 1) {
+                    // total success
+                    success = YES;
+                } else {
+                    if (result == 0) {
+                        [hud dismiss];
+                        // credentials import failed
+                        [self showOperationFailedAlert:@"credentials_receive_old_message" withTitle:@"credentials_receive_old_title"
+                                           withOKBlock:^{
+                                               onReady(YES);
+                                           }];
+                    }
+                }
+            }
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -2110,6 +2132,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         });
     });
 }
+
 
 - (BOOL)extractArchive:(NSURL*) archiveURL {
     NSError *error = nil;
@@ -2158,7 +2181,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return NO;
 }
 
--(BOOL)installArchive {
+-(int)installArchive {
     [self.chatBackend disable];
     NSError *error = nil;
     NSFileManager *fileMgr = [NSFileManager defaultManager];
@@ -2181,7 +2204,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     [fileMgr removeItemAtURL:backupdbURL error:&error];
                     if (error != nil) {
                         NSLog(@"Error removing old database backup at URL %@, error=%@", backupdbURL, error);
-                        return NO;
+                        return -10;
                     } else {
                         NSLog(@"Removed old database backup at URL %@", backupdbURL);
                     }
@@ -2190,7 +2213,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 [fileMgr moveItemAtURL:dbURL toURL:backupdbURL error:&error];
                 if (error != nil) {
                     NSLog(@"Error moving old database from %@ to backup URL %@, error=%@", dbURL, backupdbURL, error);
-                    return NO;
+                    return -20;
                 } else {
                     NSLog(@"Move old database from %@ to backup at URL %@", dbURL, backupdbURL);
                 }
@@ -2204,7 +2227,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     if (error != nil) {
                         NSLog(@"Error moving back archived database from %@ to current URL %@, error=%@", backupdbURL, dbURL, error);
                     }
-                    return NO;
+                    return -30;
                 } else {
                     NSLog(@"Moved archive database from %@ to current at URL %@", archivedbURL, dbURL);
                 }
@@ -2222,51 +2245,13 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     }];
                     [[HXOUserDefaults standardUserDefaults] synchronize];
                     
-                    /*
-                    if ([fileMgr fileExistsAtPath:[backupPrefURL path]]) {
-                        // remove old backup if necessary
-                        [fileMgr removeItemAtURL:backupPrefURL error:&error];
-                        if (error != nil) {
-                            NSLog(@"Error removing old preferences backup at URL %@, error=%@", backupPrefURL, error);
-                            return NO;
-                        } else {
-                            NSLog(@"Removed old preferences backup at URL %@", backupPrefURL);
-                        }
-                    }
-                    // move current Pref to backup
-                    [[HXOUserDefaults standardUserDefaults] synchronize];
-
-                   [fileMgr moveItemAtURL:prefURL toURL:backupPrefURL error:&error];
-                    if (error != nil) {
-                        NSLog(@"Error moving old preferences from %@ to backup URL %@, error=%@", prefURL, backupPrefURL, error);
-                        return NO;
-                    } else {
-                        NSLog(@"Move old preferences from %@ to backup at URL %@", prefURL, backupPrefURL);
-                    }
-                    
-                    // move archive Pref to current
-                    //[fileMgr moveItemAtURL:archivePrefURL toURL:prefURL error:&error];
-                    [fileMgr copyItemAtURL:archivePrefURL toURL:prefURL error:&error];
-                    if (error != nil) {
-                        NSLog(@"Error moving archived preferences from %@ to current URL %@, error=%@", archivePrefURL, prefURL, error);
-                        // move database backup back in place
-                        [fileMgr moveItemAtURL:backupPrefURL toURL:prefURL error:&error];
-                        if (error != nil) {
-                            NSLog(@"Error moving back archived preferences from %@ to current URL %@, error=%@", backupPrefURL, prefURL, error);
-                        }
-                        return NO;
-                    } else {
-                        [[HXOUserDefaults standardUserDefaults] synchronize];
-                        NSLog(@"Moved archive preferences from %@ to current at URL %@", archivePrefURL, prefURL);
-                    }
-                    */
                     // clear document directory first
                     NSURL * docDir = [self applicationDocumentsDirectory];
                     {
                         NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:docDir includingPropertiesForKeys:@[] options:0 error:&error];
                         if (error != nil) {
                             NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
-                            return NO;
+                            return -40;
                         }
                         NSURL * inbox = [docDir URLByAppendingPathComponent:@"Inbox"];
                         NSString * inboxPath = [inbox path];
@@ -2283,7 +2268,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                                 [fileMgr removeItemAtURL:fileToRemove error:&error];
                                 if (error != nil) {
                                     NSLog(@"Error removing file %@, error=%@", fileToRemove, error);
-                                    return NO;
+                                    return -50;
                                 } else {
                                     NSLog(@"Removed file %@", fileToRemove);
                                 }
@@ -2297,30 +2282,33 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:archiveExtractDirURL includingPropertiesForKeys:@[] options:0 error:&error];
                     if (error != nil) {
                         NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
-                        return NO;
+                        return -60;
                     }
                     for (NSURL * fileToMove in fileArray)  {
                         NSURL * destURL = [docDir URLByAppendingPathComponent:[fileToMove lastPathComponent]];
                         [fileMgr moveItemAtURL:fileToMove toURL:destURL error:&error];
                         if (error != nil) {
                             NSLog(@"Error moving file %@ to %@, error=%@", fileToMove, destURL, error);
-                            return NO;
+                            return -70;
                         } else {
                             NSLog(@"Moved file %@ to %@", fileToMove, destURL);
                         }
                     }
                     
                     // get the credentials now
-                    int result = [UserProfile.sharedProfile importCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn"];
+                    int result = [UserProfile.sharedProfile importCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn" withForce:NO];
+                    if (result == -2) {
+                        return 0;
+                    }
                     if (result != -1) {
-                        return YES;
+                        return 1;
                     }
                     
                 }
             }
         }
     }
-    return NO;
+    return -1;
 }
 
 

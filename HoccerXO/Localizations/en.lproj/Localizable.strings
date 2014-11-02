@@ -365,7 +365,7 @@
 "credentials_file_equals_current_message"      = "Imported credentials are the same as the active ones.";
 
 "credentials_export_btn_title"                 = "Export Login Credentials";
-"credentials_exported_alert"                   = "Login credentials have been exported to the document directory. If you transfer them to a another device, you must no longer use them here!";
+"credentials_exported_alert"                   = "Login credentials have been exported to the document directory. If you transfer them to a another device, you can no longer use them here!";
 
 "credentials_import_btn_title"                 = "Import Login Credentials";
 "credentials_import_safety_question"           = "Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
@@ -394,6 +394,9 @@
 
 "credentials_receive_equals_current_message"   = "Credentials already active";
 "credentials_receive_equals_current_title"     = "Credentials already have been transfered before. (New credentials are the same as the active one.)";
+
+"credentials_receive_old_title"                 = "Credentials Outdated";
+"credentials_receive_old_message"               = "This Credentials can not be used because they have already been imported and subsequently renewed. Current Credentials have been kept.";
 
 "credentials_received_import_title"            = "Transfer Login from other App?";
 "credentials_received_import_message"          = "Do you really want to transfer login credentials from Hoccer XO?";

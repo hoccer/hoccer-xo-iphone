@@ -43,6 +43,7 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 @property (nonatomic,strong)   NSString * clientId;
 @property (nonatomic,readonly) NSString * password;
 @property (nonatomic,readonly) NSString * salt;
+@property (nonatomic,readonly) NSNumber * credentialsDate;
 
 @property (nonatomic,readonly) BOOL       isAuthenticated;
 @property (nonatomic,readonly) BOOL       isRegistered;
@@ -61,14 +62,14 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 - (NSURL*)fetchArchiveURL;
 
 - (NSDictionary*) loadCredentialsWithPassphrase:(NSString*)passphrase;
-- (int) importCredentialsWithPassphrase:(NSString*)passphrase;
+- (int) importCredentialsWithPassphrase:(NSString*)passphrase withForce:(BOOL)force;
 - (void) exportCredentialsWithPassphrase:(NSString*)passphrase;
 
 - (BOOL)foundCredentialsBackup;
 - (void)backupCredentials;
 - (void)backupCredentialsWithId:(NSString*)myId;
-- (int)restoreCredentials;
-- (int)restoreCredentialsWithId:(NSString*)myId;
+- (int)restoreCredentialsWithForce:(BOOL)force;
+- (int)restoreCredentialsWithId:(NSString*)myId withForce:(BOOL)force;
 - (void)removeCredentialsBackupWithId:(NSString*)myId;
 
 - (BOOL)transferArchive:(NSData*)data;
@@ -79,7 +80,7 @@ FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 - (BOOL)verfierChangeRequested;
 
 - (BOOL)transferCredentials;
-- (int)importCredentialsJson:(NSData*)jsonData;
+- (int)importCredentialsJson:(NSData*)jsonData withForce:(BOOL)force;
 
 - (NSString*) startSrpAuthentication;
 - (NSString*) processSrpChallenge: (NSString*) challenge error: (NSError**) error;
