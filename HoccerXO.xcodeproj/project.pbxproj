@@ -3714,7 +3714,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "Hoccer XO Dev";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "d489f11b-8c27-4b34-861b-def4cdaf8621";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
