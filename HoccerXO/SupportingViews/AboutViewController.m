@@ -54,12 +54,13 @@
     aboutProsa.attributedText = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"about_prosa", nil) attributes: nil];
     [self.scrollView addSubview: aboutProsa];
 
+#ifdef SHOW_PEOPLE
     UILabel * teamLabel = [[UILabel alloc] initWithFrame: CGRectZero];
     teamLabel.translatesAutoresizingMaskIntoConstraints = NO;
     teamLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
     teamLabel.text = NSLocalizedString(@"about_team_heading", nil);
     [self.scrollView addSubview: teamLabel];
-
+#endif
     NSMutableDictionary * views = [NSMutableDictionary dictionaryWithDictionary:
                                    @{@"icon":  appIcon,
                                      @"info":  appInfo,
