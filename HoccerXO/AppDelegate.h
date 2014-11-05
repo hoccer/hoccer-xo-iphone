@@ -115,6 +115,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 - (void) showFatalErrorAlertWithMessage:(NSString *)message withTitle:(NSString *)title;
 - (void) showOperationFailedAlert:(NSString *)message withTitle:(NSString *) title withOKBlock:(ContinueBlock)okBlock;
+- (void) showGenericAlertWithTitle:(NSString *)title andMessage:(NSString *)message withOKBlock:(ContinueBlock)okBlock;
 
 -(void)configureForNearbyMode:(BOOL)modeNearby;
 -(BOOL)inNearbyMode;
@@ -157,7 +158,22 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 + (AppDelegate*)instance;
 + (void) renewRSAKeyPairWithSize: (NSUInteger) size;
 
++ (NSString *)memoryFormatter:(long long)diskSpace;
++ (long long)totalDiskSpace;
++ (long long)freeDiskSpace;
++ (long long)usedDiskSpace;
+
++ (long long)databaseFileSize;
++ (long long)documentDirectorySizeIgnoring:(NSArray*)ignorePaths;
++ (long long)estimatedDocumentArchiveSize;
++ (long long)archiveFileSize;
+
++ (NSNumber *) sizeOfFileAtURL: (NSURL *) fileURL withError: (NSError**) myError ;
++(NSNumber*)sizeOfDirectoryAtURL:(NSURL*)theDirectoryURL ignoring:(NSArray*)ignorePaths;
 + (BOOL)unzipFileAtURL:(NSURL*)zipFileURL toDirectory:(NSURL*)theDirectoryURL;
++ (BOOL)zipDirectoryAtURL:(NSURL*)theDirectoryURL toZipFile:(NSURL*)zipFileURL ignoring:(NSArray*)ignorePaths;
+
+
 
 
 @end

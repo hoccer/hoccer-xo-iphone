@@ -46,7 +46,7 @@
 #define DELIVERY_TRACE      NO
 #define GLITCH_TRACE        NO
 #define SECTION_TRACE       NO
-#define CONNECTION_TRACE    YES
+#define CONNECTION_TRACE    NO
 #define GROUPKEY_DEBUG      NO
 #define GROUP_DEBUG         NO
 #define RELATIONSHIP_DEBUG  NO
@@ -89,6 +89,7 @@ NSString * const kNickNewRelationship = @"<new relationship>";
 NSString * const kNickNewMember       = @"<new member>";
 
 typedef enum BackendStates {
+    kBackendDisabling,
     kBackendDisabled,
     kBackendStopped,
     kBackendConnecting,
@@ -390,6 +391,9 @@ static NSTimer * _stateNotificationDelayTimer;
         case kBackendDisabled:
             return @"backend_disabled";
             break;
+        case kBackendDisabling:
+            return @"backend_disabling";
+            break;
         case kBackendStateUnknown:
             return @"unknown";
             break;
@@ -425,10 +429,12 @@ static NSTimer * _stateNotificationDelayTimer;
     NSString * newInfo;
     BOOL normal = NO;
     BOOL progress = NO;
+    BOOL disabled = NO;
     BOOL reachable = [self.delegate.internetReachabilty isReachable];
     if (reachable) {
         newInfo = [self stateString: _state];
         normal = (_state == kBackendReady) ;
+        disabled = (_state == kBackendDisabling || _state == kBackendDisabled) ;
         progress = _state > oldState &&
             _state > kBackendConnecting &&
             _state < kBackendStopping &&
@@ -440,7 +446,7 @@ static NSTimer * _stateNotificationDelayTimer;
     [self cancelStateNotificationDelayTimer];
     id userInfo = @{ @"statusinfo":NSLocalizedString(newInfo, @"connection states"),
                      @"normal":@(normal) };
-    if (normal || progress || !reachable) {
+    if (normal || progress || !reachable || disabled) {
         if (CONNECTION_TRACE) NSLog(@"immediate notification for %@",userInfo);
         [[NSNotificationCenter defaultCenter] postNotificationName:@"connectionInfoChanged"
                                                             object:self
@@ -454,6 +460,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void)cancelStateNotificationDelayTimer {
     if (_stateNotificationDelayTimer.isValid) {
+        if (CONNECTION_TRACE) NSLog(@"canceling Timer for %@",_stateNotificationDelayTimer.userInfo);
         [_stateNotificationDelayTimer invalidate];
         _stateNotificationDelayTimer = nil;
     }    
@@ -990,59 +997,66 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
+
+- (void)handleLoginError:(id)errorReturned inPhase:(NSString*)phase {
+    NSLog(@"SRP phase %@ failed", phase);
+    // can happen if the client thinks the connection was closed, but the server still considers it as open
+    // so let us also close and try again
+    
+    NSString * errorMessage;
+    if (errorReturned == nil) {
+        errorMessage = @"unknown error";
+    } else if ([errorReturned isKindOfClass:[NSDictionary class]]) {
+        errorMessage = ((NSDictionary*)errorReturned)[@"message"];
+    } else {
+        errorMessage = [errorReturned description];
+    }
+    
+    if (errorReturned != nil &&
+        ([errorMessage isEqualToString:@"No such client"] ||
+         [errorMessage isEqualToString:@"Authentication failed"] ||
+         [errorMessage isEqualToString:@"Verification failed"] ||
+         [errorMessage isEqualToString:@"Bad salt"] ||
+         [errorMessage isEqualToString:@"Not registered"] ))
+    {
+        // check if our credentials were refused
+        NSLog(@"Login credentials refused in SRP phase %@ with ‘%@', loginRefusals=%d", phase, errorMessage, _loginRefusals);
+        _loginRefusals++;
+        if (_loginRefusals >= 3) {
+            [AppDelegate.instance showInvalidCredentialsWithInfo:errorMessage withContinueHandler:^{
+            }];
+            [self disable];
+        } else {
+            [self stopAndRetry];
+        }
+    } else {
+        _loginFailures++;
+        if (_loginFailures >= 3) {
+            NSLog(@"Login SRP phase 1 failed %d times", _loginFailures);
+            [AppDelegate.instance showLoginFailedWithInfo:errorMessage withContinueHandler:^{
+                _loginFailures = 0;
+                [self stopAndRetry];
+            }];
+        } else {
+            [self stopAndRetry];
+        }
+    }
+    
+}
+
 - (void) startAuthentication {
     [self setState: kBackendAuthenticating];
     NSString * A = [[UserProfile sharedProfile] startSrpAuthentication];
     [self srpPhase1WithClientId: [UserProfile sharedProfile].clientId A: A andHandler:^(NSString * challenge, NSDictionary * errorReturned) {
         if (challenge == nil) {
-            NSLog(@"SRP phase 1 failed");
-            // can happen if the client thinks the connection was closed, but the server still considers it as open
-            // so let us also close and try again
-            
-            NSString * errorMessage;
-            if (errorReturned == nil) {
-                errorMessage = @"unknown error";
-            } else if ([errorReturned isKindOfClass:[NSDictionary class]]) {
-                errorMessage = errorReturned[@"message"];
-            } else {
-                errorMessage = [errorReturned description];
-            }
-            
-            if (errorReturned != nil &&
-                ([errorMessage isEqualToString:@"No such client"] ||
-                 [errorMessage isEqualToString:@"Authentication failed"] ||
-                 [errorMessage isEqualToString:@"Bad salt"] ||
-                 [errorMessage isEqualToString:@"Not registered"] ))
-            {
-                // check if our credentials were refused
-                NSLog(@"Login credentials refused in SRP phase1 with ‘%@', loginRefusals=%d", errorMessage, _loginRefusals);
-                _loginRefusals++;
-                if (_loginRefusals >= 3) {
-                    [AppDelegate.instance showInvalidCredentialsWithInfo:errorMessage withContinueHandler:^{
-                    }];
-                } else {
-                    [self stopAndRetry];
-                }
-            } else {
-                _loginFailures++;
-                if (_loginFailures >= 3) {
-                    NSLog(@"Login SRP phase 1 failed %d times", _loginFailures);
-                    [AppDelegate.instance showLoginFailedWithInfo:errorMessage withContinueHandler:^{
-                        _loginFailures = 0;
-                        [self stopAndRetry];
-                    }];
-                } else {
-                    [self stopAndRetry];
-                }
-            }
-            
+            [self handleLoginError:errorReturned inPhase:@"1"];
         } else {
             NSError * error;
             NSString * M = [[UserProfile sharedProfile] processSrpChallenge: challenge error: &error];
             if (M == nil) {
                 NSLog(@"%@", error);
                 // possible tampering ... trigger reconnect by closing the socket
-                [self stopAndRetry];
+                [self handleLoginError:error inPhase:@"2.5"];
             } else {
                 [self srpPhase2: M handler:^(NSString * HAMK, NSDictionary * errorReturned) {
                     if (HAMK != nil) {
@@ -1055,7 +1069,8 @@ static NSTimer * _stateNotificationDelayTimer;
                         _loginFailures = 0;
                         _loginRefusals = 0;
                     } else {
-                        [self didFinishLogin: NO];
+                        [self handleLoginError:errorReturned inPhase:@"2"];
+                        //[self didFinishLogin: NO];
                     }
                 }];
             }
@@ -1421,6 +1436,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     if (_state == kBackendDisabled) {
         NSLog(@"Backend disabled, not starting");
+        [self setState:kBackendDisabled];
         return;
     }
     _performRegistration = performRegistration;
@@ -1430,26 +1446,33 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void)disable {
-    [self stop];
-    [self setState:kBackendDisabled];
+    if (_state != kBackendStopped) {
+        [self setState:kBackendDisabling];
+        [self stop];
+        
+    } else {
+        [self setState:kBackendDisabled];
+    }
 }
 
 - (void)enable {
-    if (_state == kBackendDisabled) {
+    if (_state == kBackendDisabled || _state != kBackendDisabling) {
         [self setState:kBackendStopped];
     }
 }
 
 - (void) stop {
-    if (_state != kBackendDisabled) {
-        [self setState: kBackendStopping];
+    if (_state != kBackendStopped && _state != kBackendDisabled) {
+        if (_state != kBackendDisabling) {
+            [self setState: kBackendStopping];
+        }
         [_serverConnection close];
         [self clearWaitingAttachmentTransfers];
     }
 }
 
 - (void) stopAndRetry {
-    if (_state != kBackendDisabled) {
+    if (_state != kBackendDisabled && _state != kBackendDisabling) {
         [self setState: kBackendStopped];
         [_serverConnection close];
     }
@@ -6385,8 +6408,12 @@ static NSTimer * _stateNotificationDelayTimer;
     _uncleanConnectionShutdown = code != 0 || [_serverConnection numberOfOpenRequests] !=0 || [_serverConnection numberOfFlushedRequests] != 0;
     if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode _uncleanConnectionShutdown = %d, openRequests = %d, flushedRequests = %d", _uncleanConnectionShutdown, [_serverConnection numberOfOpenRequests], [_serverConnection numberOfFlushedRequests]);
     BackendState oldState = _state;
-    [self setState: kBackendStopped];
-    if (oldState == kBackendStopping) {
+    if (oldState == kBackendDisabling) {
+        [self setState: kBackendDisabled];
+    } else {
+        [self setState: kBackendStopped];
+    }
+    if (oldState == kBackendStopping || oldState == kBackendDisabling) {
         [self cancelStateNotificationDelayTimer];
         if ([self.delegate respondsToSelector:@selector(backendDidStop)]) {
             [self.delegate backendDidStop];

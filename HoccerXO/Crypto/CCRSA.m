@@ -59,7 +59,7 @@ static NSObject * instanceLock;
 
 - (BOOL)hasKeyPair {
     @synchronized(instanceLock) {
-        return [instance getPublicKeyRef] != nil && [instance getPrivateKeyRef] != nil;
+        return [instance getPublicKeyRef] != nil && [instance getPrivateKeyRef] != nil && ([CCRSA getPublicKeySize:[instance getPublicKeyBits]] > 1000);
     }
 }
 

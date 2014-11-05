@@ -43,9 +43,9 @@
 @implementation SetupViewController
 
 - (void) viewDidLoad {
-    BOOL somethingWithCredentials = [UserProfile sharedProfile].isRegistered || [UserProfile sharedProfile].foundCredentialsFile || [UserProfile sharedProfile].foundCredentialsBackup;
+    BOOL somethingWithCredentials = [UserProfile sharedProfile].isRegistered || [UserProfile sharedProfile].foundCredentialsFile || [UserProfile sharedProfile].foundCredentialsBackup || (![UserProfile sharedProfile].isRegistered && [UserProfile sharedProfile].foundCredentialsProviderApp);
 
-    NSLog(@"reg = %d, credf= %d, backup= %d", [UserProfile sharedProfile].isRegistered,[UserProfile sharedProfile].foundCredentialsFile,[UserProfile sharedProfile].foundCredentialsBackup);
+    //NSLog(@"reg = %d, credf= %d, backup= %d, provider=%d", [UserProfile sharedProfile].isRegistered,[UserProfile sharedProfile].foundCredentialsFile,[UserProfile sharedProfile].foundCredentialsBackup, [UserProfile sharedProfile].foundCredentialsProviderApp);
     
     if (somethingWithCredentials) {
         DatasheetViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier: @"cleanup_credentials"];

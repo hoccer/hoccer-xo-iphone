@@ -371,6 +371,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 -(void)verfierChangeDone {
     [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:@"changeVerifier"]];
     [[HXOUserDefaults standardUserDefaults] synchronize];
+    [AppDelegate.instance showGenericAlertWithTitle:@"credentials_verifier_changed_title" andMessage:@"credentials_verifier_changed_message" withOKBlock:nil];
 }
 
 -(BOOL)verfierChangeRequested {
@@ -610,7 +611,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 - (BOOL) isRegistered {
-    NSLog(@"isRegistered: clientId=%@, password=%@, salt=%@",self.clientId, self.password , self.salt);
+    //NSLog(@"isRegistered: clientId=%@, password=%@, salt=%@",self.clientId, self.password , self.salt);
     return self.clientId != nil && self.password != nil && self.salt != nil &&
     ! [self.clientId isEqualToString: @""] && ! [self.password isEqualToString: @""] && ! [self.salt isEqualToString: @""];
 }

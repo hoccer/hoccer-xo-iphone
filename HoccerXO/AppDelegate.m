@@ -74,7 +74,7 @@ static NSString * const kTestFlightAppToken = @"c5ada956-43ec-4e9e-86e5-0a3bd3d9
 #else
     #ifdef HOCCER_CLASSIC
         NSString * const kHXOURLScheme = @"hcr";
-        static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
+        static NSString * const kTestFlightAppToken = @"cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
     #else
         NSString * const kHXOURLScheme = @"hxo";
         static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
@@ -259,7 +259,9 @@ BOOL sameObjects(id obj1, id obj2) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
-    
+#ifdef DEBUG
+    [self testFSSize];
+#endif
     _idLocks = [NSMutableDictionary new];
     _backgroundContexts = [NSMutableDictionary new];
     _inspectionLock = [NSObject new];
@@ -1639,7 +1641,10 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     self.interactionController.name = name;
     self.interactionView = view;
     self.interactionViewController = controller;
-    [self.interactionController presentOpenInMenuFromRect:CGRectNull inView:view animated:YES];
+    CGRect navRect = controller.navigationController.navigationBar.frame;
+    //navRect.size = CGSizeMake(1500.0f, 40.0f);
+    //[self.interactionController presentOpenInMenuFromRect:CGRectNull inView:view animated:YES];
+    [self.interactionController presentOpenInMenuFromRect:navRect inView:view animated:YES];
     return YES;
 }
 
@@ -1669,6 +1674,13 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 - (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application {
     NSLog(@"didEndSendingToApplication %@", application);
     [self.hud dismiss];
+    NSError * error = nil;
+    [[NSFileManager defaultManager] removeItemAtURL:self.interactionController.URL error:&error];
+    if (error == nil) {
+        NSLog(@"removed sent file URL %@",self.interactionController.URL);
+    } else {
+        NSLog(@"failed to remove sent file URL %@, error=%@",self.interactionController.URL, error);
+    }
     self.interactionView = nil;
     self.interactionViewController = nil;
 }
@@ -1804,27 +1816,31 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             }];
         }
     };
-    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_transfer_safety_question", nil)
-                                                     message: nil
-                                             completionBlock: completion
-                                           cancelButtonTitle: NSLocalizedString(@"cancel", nil)
-                                           otherButtonTitles: NSLocalizedString(@"transfer", nil),nil];
-    [alert show];
+    long long requiredSpace = [AppDelegate estimatedDocumentArchiveSize] * 2.1;
+    long long freeSpace = [AppDelegate freeDiskSpace] + [AppDelegate archiveFileSize];
+    
+    if (requiredSpace > freeSpace) {
+        HXOAlertViewCompletionBlock completion2 = ^(NSUInteger buttonIndex, UIAlertView * alertView) {};
+        NSString * archiveNotEnoughSpaceMessage = [NSString stringWithFormat:NSLocalizedString(@"archive_transfer_not_enough_space %@ %@", nil),
+                                                   [AppDelegate memoryFormatter:requiredSpace],
+                                                   [AppDelegate memoryFormatter:freeSpace]];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_transfer_not_enough_space_title",nil)
+                                                         message: archiveNotEnoughSpaceMessage
+                                                 completionBlock: completion2
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
+        
+    } else {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_transfer_safety_question", nil)
+                                                         message: nil
+                                                 completionBlock: completion
+                                               cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                               otherButtonTitles: NSLocalizedString(@"transfer", nil),nil];
+        [alert show];
+    }
 }
-/*
-- (void)transferArchiveWithHandler:(GenericResultHandler)handler {
-    NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
-    [self makeArchive:archiveURL withHandler:^(NSURL *url) {
-        if (url != nil) {
-            NSData *data = [NSData dataWithContentsOfURL:url];
-            BOOL ok = [[UserProfile sharedProfile]transferArchive:data];
-            handler(ok);
-        } else {
-            handler(NO);
-        }
-    }];
-}
-*/
+
 
 - (void)transferArchiveWithHandler:(GenericResultHandler)handler {
     NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
@@ -1838,8 +1854,6 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         }
     }];
 }
-
-
 
 -(void) receiveArchive:(NSData*)archive onReady:(GenericResultHandler)handler {
     NSURL *archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"received_archive.zip"];
@@ -1935,6 +1949,140 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     [alert show];
 }
 
+-(void) testFSSize {
+    long long dataSize = [AppDelegate estimatedDocumentArchiveSize];
+    NSLog(@"dirsize = %lld = %@", dataSize, [AppDelegate memoryFormatter:dataSize]);
+    NSLog(@"free = %@", [AppDelegate memoryFormatter:[AppDelegate freeDiskSpace]]);
+    NSLog(@"used = %@", [AppDelegate memoryFormatter:[AppDelegate usedDiskSpace]]);
+    NSLog(@"total = %@", [AppDelegate memoryFormatter:[AppDelegate totalDiskSpace]]);
+}
+
++ (NSString *)memoryFormatter:(long long)diskSpace {
+    NSString *formatted;
+    double bytes = 1.0 * diskSpace;
+    double kilobytes = bytes / 1024;
+    double megabytes = kilobytes / 1024;
+    double gigabytes = megabytes / 1024;
+    if (gigabytes >= 1.0)
+        formatted = [NSString stringWithFormat:@"%.2f GB", gigabytes];
+    else if (megabytes >= 1.0)
+        formatted = [NSString stringWithFormat:@"%.2f MB", megabytes];
+    else if (kilobytes >= 1.0)
+        formatted = [NSString stringWithFormat:@"%.2f kB", kilobytes];
+    else
+        formatted = [NSString stringWithFormat:@"%.2f bytes", bytes];
+    
+    return formatted;
+}
+
++ (long long)totalDiskSpace {
+    long long space = [[[[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil] objectForKey:NSFileSystemSize] longLongValue];
+    return space;
+}
+
++ (long long)freeDiskSpace {
+    long long freeSpace = [[[[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil] objectForKey:NSFileSystemFreeSize] longLongValue];
+    return freeSpace;
+}
+
++ (long long)usedDiskSpace {
+    long long usedSpace = [self totalDiskSpace] - [self freeDiskSpace];
+    return usedSpace;
+}
+
++ (long long)documentDirectorySizeIgnoring:(NSArray*)ignorePaths {
+    
+    NSNumber * totalSize = [AppDelegate sizeOfDirectoryAtURL:[AppDelegate.instance applicationDocumentsDirectory] ignoring:ignorePaths];
+
+    return [totalSize longLongValue];
+}
+
++ (long long)databaseFileSize {
+    return [self sizeOfFileAtURL:[AppDelegate.instance persistentStoreURL]];
+}
+
++ (long long)archiveFileSize {
+    NSURL* archiveURL = [[AppDelegate.instance applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
+    return [self sizeOfFileAtURL:archiveURL];
+}
+
++ (long long)preferencesFileSize {
+    NSURL *archivePrefURL = [[AppDelegate.instance applicationDocumentsDirectory] URLByAppendingPathComponent: @"archived.preferences"];
+    return [self sizeOfFileAtURL:archivePrefURL];
+}
+
+// returns the approximate size to create an archive of all data; will slightly overestimate because it does not consider compression
++ (long long)estimatedDocumentArchiveSize {
+    return [self documentDirectorySizeIgnoring:@[kHXODefaultArchiveName,@"Inbox"]] + [self databaseFileSize] + [self preferencesFileSize];
+}
+
++ (NSNumber *) sizeOfFileAtURL: (NSURL *) fileURL withError: (NSError**) myError {
+    if (myError != nil) {
+        *myError = nil;
+    }
+    NSString * myPath = [fileURL path];
+    NSNumber * result =  @([[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:myError] fileSize]);
+    if (myError != nil && *myError != nil) {
+        NSLog(@"WARNING: can not determine size of file '%@', error=%@", myPath, *myError);
+        result = @(-1);
+    }
+    return result;
+}
+
++ (long long) sizeOfFileAtURL: (NSURL *) fileURL {
+    NSError * myError = nil;
+    NSString * myPath = [fileURL path];
+    NSNumber * result =  @([[[NSFileManager defaultManager] attributesOfItemAtPath: myPath error:&myError] fileSize]);
+    if (myError != nil) {
+        return 0;
+    }
+    return [result longLongValue];
+}
+
++(NSNumber*)sizeOfDirectoryAtURL:(NSURL*)theDirectoryURL ignoring:(NSArray*)ignorePaths {
+    NSLog(@"sizeOfDirectoryAtURL: %@",theDirectoryURL);
+    BOOL isDirectory;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[theDirectoryURL path] isDirectory:&isDirectory];
+    NSError * error = nil;
+    if (exists) {
+        if (!isDirectory) {
+            NSLog(@"sizeOfDirectoryAtURL: file at path is not a directory:%@",[theDirectoryURL path]);
+        } else {
+            long long totalSize = 0;
+            NSArray * subpaths = [[NSFileManager defaultManager] subpathsAtPath:[theDirectoryURL path]];
+            for (NSString * subpath in subpaths) {
+                NSString * fullPath = [[theDirectoryURL path] stringByAppendingPathComponent: subpath];
+                NSURL * fullPathURL = [NSURL fileURLWithPath:fullPath];
+                //NSLog(@"fullPath=%@",fullPath);
+                
+                BOOL ignore = NO;
+                for (NSString * is in ignorePaths) {
+                    if ([subpath rangeOfString:is].length == is.length) {
+                        ignore = YES;
+                    }
+                }
+                
+                if (ignore) {
+                    NSLog(@"Ignoring file: %@",subpath);
+                } else {
+                    NSNumber * fileSize = [self sizeOfFileAtURL:fullPathURL withError:&error];
+                    if (error == nil) {
+                        totalSize += [fileSize longLongValue];
+                        NSLog(@"Counting file: %@, size %@, total %lld",subpath, fileSize, totalSize);
+                    } else {
+                        NSLog(@"#ERROR: Failed to determine size of file %@, error=%@",fullPathURL,error);
+                    }
+                }
+            }
+            return @(totalSize);
+        }
+    } else {
+        NSLog(@"sizeOfDirectoryAtURL: file at path does not exist:%@",[theDirectoryURL path]);
+    }
+    return @(-1);
+}
+
+
 
 +(BOOL)unzipFileAtURL:(NSURL*)zipFileURL toDirectory:(NSURL*) theDirectoryURL {
     NSLog(@"unzipFileAtURL: %@ -> %@",zipFileURL, theDirectoryURL);
@@ -1965,7 +2113,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 }
 
 
-+(BOOL)zipDirectoryAtURL:(NSURL*)theDirectoryURL toZipFile:(NSURL*)zipFileURL {
++(BOOL)zipDirectoryAtURL:(NSURL*)theDirectoryURL toZipFile:(NSURL*)zipFileURL ignoring:(NSArray*)ignorePaths {
     NSLog(@"zipDirectoryAtURL: %@ -> %@",theDirectoryURL,zipFileURL);
     BOOL isDirectory;
     BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[theDirectoryURL path] isDirectory:&isDirectory];
@@ -1981,7 +2129,17 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     NSString * fullPath = [[theDirectoryURL path] stringByAppendingPathComponent: subpath];
                     //NSLog(@"fullPath=%@",fullPath);
                     
+                    BOOL ignore = NO;
+                    for (NSString * is in ignorePaths) {
+                        if ([subpath rangeOfString:is].length == is.length) {
+                            ignore = YES;
+                        }
+                    }
                     if ([fullPath isEqualToString:[zipFileURL path]]) {
+                        ignore =YES;
+                    }
+
+                    if (ignore) {
                         NSLog(@"Ignoring archive file: %@",subpath);
                     } else {
                         NSLog(@"Adding to zip: %@",subpath);
@@ -2026,8 +2184,6 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     {
         //NSURL *deleteURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"default.archive"];
         //[[NSFileManager defaultManager] removeItemAtURL:deleteURL error:&error];
-
-        
         
         NSURL *archivedbURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archived.database"];
         if ([[NSFileManager defaultManager] fileExistsAtPath:[archivedbURL path]]) {
@@ -2083,9 +2239,9 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         }
     }
 
-    // zip ot
+    // zip it
     if (error == nil) {
-        if (![AppDelegate zipDirectoryAtURL:[self applicationDocumentsDirectory] toZipFile:archiveURL]) {
+        if (![AppDelegate zipDirectoryAtURL:[self applicationDocumentsDirectory] toZipFile:archiveURL ignoring:@[@"Inbox"]]) {
             NSLog(@"Failed to create archive at URL %@", archiveURL);
             [[NSFileManager defaultManager] removeItemAtURL:archiveURL error:&error];
             return nil;
@@ -2232,7 +2388,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     NSLog(@"Moved archive database from %@ to current at URL %@", archivedbURL, dbURL);
                 }
                 
-                NSURL *prefURL = [self preferencesURL];
+                //NSURL *prefURL = [self preferencesURL];
                 NSURL *archivePrefURL = [archiveExtractDirURL URLByAppendingPathComponent: @"archived.preferences"];
                 NSURL *backupPrefURL = [archiveExtractDirURL URLByAppendingPathComponent: @"backuped.preferences"];
                 if (![fileMgr fileExistsAtPath:[archivePrefURL path]]) {
@@ -2344,7 +2500,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             NSString * urlpath = [destURL path];
             NSString * zippath = [urlpath stringByAppendingString:@".zip"];
             NSURL *zipfile = [NSURL fileURLWithPath:zippath];
-            if ([AppDelegate zipDirectoryAtURL:url toZipFile:zipfile]) {
+            if ([AppDelegate zipDirectoryAtURL:url toZipFile:zipfile ignoring:@[]]) {
                 destURL = zipfile;
                 documentType = @"public.zip-archive";
                 mimeType = @"application/zip";
@@ -2438,6 +2594,17 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                                           otherButtonTitles:nil];
     [alert show];
 }
+
+- (void) showGenericAlertWithTitle:(NSString *)title andMessage:(NSString *)message withOKBlock:(ContinueBlock)okBlock {
+     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title, nil)
+                                                    message: NSLocalizedString(message, nil)
+                                             completionBlock: ^(NSUInteger buttonIndex,UIAlertView* alertView) { if (okBlock) okBlock();}
+                                          cancelButtonTitle:NSLocalizedString(@"ok",nil)
+                                          otherButtonTitles:nil];
+    [alert show];
+}
+
+
 
 - (void) showOperationFailedAlert:  (NSString *) message withTitle:(NSString *) title withOKBlock:(ContinueBlock)okBlock{
     if (title == nil) {
@@ -2536,8 +2703,15 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         
     };
     
+    NSString * message = nil;
+    if ([info isEqualToString:@"Verification failed"]) {
+        message = [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_changed_delete_question", nil),info];
+    } else {
+        message = [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_delete_question", nil),info];
+    }
+    
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_invalid_title", nil)
-                                                    message: [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_delete_question", nil),info]
+                                                    message: message
                                             completionBlock: completionBlock
                                           cancelButtonTitle:NSLocalizedString(@"no",nil)
                                           otherButtonTitles:NSLocalizedString(@"credentials_database_delete_btn_title",nil),nil];

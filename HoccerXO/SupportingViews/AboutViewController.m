@@ -64,17 +64,17 @@
                                    @{@"icon":  appIcon,
                                      @"info":  appInfo,
                                      @"prosa": aboutProsa,
-                                     @"team":  teamLabel
+                                     //@"team":  teamLabel
                                      }];
     NSString * format;
-
+#ifdef SHOW_PEOPLE
     NSDictionary * sections = @{@"about_client_developers": @"HXOClientDevelopers",
                                 @"about_server_developers": @"HXOServerDevelopers",
                                 @"about_designers"        : @"HXODesigners"
 //                                @"about_operators"        : @"HXOOperators"
                                 };
-
     UIFontDescriptor * bold = [[UIFontDescriptor preferredFontDescriptorWithTextStyle: UIFontTextStyleBody] fontDescriptorWithSymbolicTraits: UIFontDescriptorTraitBold];
+    
     for (NSString * labelKey in sections) {
         UILabel  * sectionTitle = [[UILabel alloc] initWithFrame: CGRectZero];
         sectionTitle.translatesAutoresizingMaskIntoConstraints = NO;
@@ -97,20 +97,25 @@
 
         [self.scrollView addConstraint: [NSLayoutConstraint constraintWithItem: sectionTitle attribute: NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem: peopleList attribute: NSLayoutAttributeTop multiplier: 1 constant: 0]];
     }
-
+#endif
+    
     format = [NSString stringWithFormat: @"H:|-%f-[icon]-%f-[info]-(>=%f)-|", kHXOCellPadding, kHXOCellPadding, kHXOCellPadding];
     [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
     format = [NSString stringWithFormat: @"H:|-%f-[prosa]-%f-|", kHXOCellPadding, kHXOCellPadding];
     [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-
+#ifdef SHOW_PEOPLE
     format = [NSString stringWithFormat: @"H:|-%f-[team]-%f-|", kHXOCellPadding, kHXOCellPadding];
     [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-    
+#endif
     format = [NSString stringWithFormat: @"V:|-%f-[icon]", kHXOCellPadding];
     [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+#ifdef SHOW_PEOPLE
 
     format = [NSString stringWithFormat: @"V:|-%f-[info]-%f-[prosa]-%f-[team]-%f-[HXOClientDevelopers]-%f-[HXOServerDevelopers]-%f-[HXODesigners]-%f-|", kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding];
+#else
+    format = [NSString stringWithFormat: @"V:|-%f-[info]-%f-[prosa]-%f-|", kHXOCellPadding, kHXOCellPadding, kHXOCellPadding];
+#endif
     [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 }
 

@@ -60,7 +60,7 @@
 // About
 //==============================================================================
 
-"about_prosa"             = "Hoccer XO - your secure multimedia messenger\n\nSecurity, data protection and the protection of privacy are of extreme importance to us. Hoccer sets new standards in mobile data transmission and puts mobile privacy to a whole new level, due to latest encryption and transmission technologies. Hoccer XO provides an easy and unlimited exchange of data between smartphones and tablets, without constraining users to register and enter confidential data.\n\nShare hugs & kisses";
+"about_prosa"             = "HOCCER - The Messenger\n\nHoccer is \"The Messenger\" for fast, easy and secure file transfer between smartphones and tablets, with unlimited data exchange without any setup or exchange of any personal data and the possibility of gesture controlled anonymous communication. Security, data protection and the protection of privacy are of extreme importance to us. Hoccer sets new standards in mobile data transmission and puts mobile privacy to a new level, due to latest encryption and transmission technologies. No registration needed, no need of mobile number or mailadress to add friends.";
 
 "about_team_heading"      = "Team";
 "about_client_developers" = "Client Developers:";
@@ -176,6 +176,7 @@
 "backend_stopping"       = "disconnecting...";
 "backend_no_internet"    = "no internet connection";
 "backend_disabled"       = "Connection Disabled";
+"backend_disabling"      = "disabling connection...";
 
 "backend_login_temporarily_failed_title"               = "Login failed";
 "backend_login_temporarily_failed_continue_question"   = "The Login has failed beacause there is a temporary technical problem with the connection or the server. ('%@') Do you want to keep trying to log in?";
@@ -339,19 +340,25 @@
 //==============================================================================
 
 "credentials_setup_nav_title"                  = "Account";
-"credentials_setup_found_old_text"             = "This app was installed before. You can reactivate the old account and keep all contacts.";
+"credentials_setup_found_old_text"             = "This app has been installed before. You can reactivate your old account and keep all contacts.";
 "credentials_setup_found_backup_text"          = "A login backup exists. You can restore an account from this backup.";
-"credentials_setup_found_file_text"            = "An exported login has been found. You can import this login.";
+"credentials_setup_found_file_text"            = "An exported login (credentials.json) has been found. You can import this login.";
 "credentials_setup_keep_btn_title"             = "Reactivate Old Account";
 "credentials_setup_restore_btn_title"          = "Restore Account-Backup";
 "credentials_setup_import_btn_title"           = "Import Account";
-"credentials_setup_create_btn_title"           = "New Account";
+"credentials_setup_create_btn_title"           = "Create New Account";
 
-"credentials_setup_found_credentials_provider_text" = "There is also a Hoccer XO version installed that will be superseded by this app. You can fetch all data from Hoccer XO or only the login credentials (including your friends and group memeberships).";
-"credentials_setup_fetch_btn_title"            = "Fetch Credentials only";
-"credentials_setup_fetchall_btn_title"         = "Fetch All from XO";
-"credentials_setup_question"                    = "What do you want to do?";
+"credentials_setup_found_credentials_provider_text" = "Dear XO friend,
 
+we at Hoccer have combined our best features from Hoccer XO and Hoccer Classic into one app: Hoccer - The Messenger.
+
+To continue using our secure messaging service, we would like to move your data to our new app. XO won’t be available anymore soon.
+
+You can transfer all your data from Hoccer XO including all chat histories, or the login credentials including only your friends and group memberships. Please note, the former requires sufficient free storage. ";
+
+"credentials_setup_fetch_btn_title"            = "Take XO-Login Only";
+"credentials_setup_fetchall_btn_title"         = "Take All from XO";
+"credentials_setup_question"                   = "What do you want to do?";
 
 "credentials_file_delete_btn_title"            = "Delete exported credentials";
 "credentials_file_delete_safety_question"      = "Really deleted exported credentials?";
@@ -381,7 +388,9 @@
 "credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer.";
 
 "credentials_invalid_title"                    = "Credentials not accepted";
-"credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') If this is a new device and you have transfered data from the old device, you can transfer your credentials from your old device under 'Profile'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+"credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') It might also indicate tampering or a non-existent acount on the server. You can transfer credentials from other devices under 'Profile->Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+
+"credentials_invalid_changed_delete_question"  = "The server has refused your login credentials ('%@'). This happened probably because they are in use on another device or Hoccer-App. It might also indicate tampering. You can transfer credentials under 'Profile->Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
 "credentials_and_database_really_delete_title" = "Really delete Credentials and Database?";
 "credentials_database_delete_btn_title"        = "Delete All";
@@ -412,6 +421,9 @@
 "credentials_fetch_btn_title"                   = "Fetch Credentials from XO";
 "credentials_fetch_safety_question"             = "Fetching Credentials from Hoccer XO will transfer the account with contact to this App, but chats and attachment will not be transfered. Do you want to proceed?";
 "credentials_fetch_confirm_btn_title"           = "Fetch Credentials Only";
+
+"credentials_verifier_changed_title"           = "Login Transfer Successful";
+"credentials_verifier_changed_message"         = "Imported login credentials have been successfully transfered to this app. You can no longer use them in the app or device where they originated. You can however transfer them from this app using functions in Profile->Edit.";
 
 //==============================================================================
 // Archive
@@ -445,6 +457,10 @@
 
 "archive_transfer_open_with_btn_title"          = "Transfer Backup to other App";
 "archive_transfer_open_with_safety_question"    = "Create a backup of all messages, attachment and login credentials and transfer all to another app on this device?";
+
+"archive_transfer_not_enough_space %@ %@"       = "The data transfer required %@ of free space on your device, but you have only %@. You can delete some large media attachments in your chats to lower the space requirements or make more free space by temporarily removing media items from other apps.";
+"archive_transfer_not_enough_space_title"       = "Not Enough Space";
+
 
 //==============================================================================
 // Database

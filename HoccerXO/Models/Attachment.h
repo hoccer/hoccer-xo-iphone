@@ -24,6 +24,7 @@ typedef void(^StreamSetterBlock)(NSInputStream* theStream,NSError* theError);
 typedef void(^CompletionBlock)(NSError* theError);
 typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 typedef void(^MACSetterBlock)(NSData* theMAC,NSError* theError);
+typedef void(^OkBlock)();
 
 typedef void(^UploadProgessBlock)(NSUInteger bytesWritten, NSUInteger totalBytesWritten, NSUInteger totalBytesExpectedToWrite);
 typedef void(^DownloadProgessBlock)(NSUInteger bytesRead, NSUInteger totalBytesRead, NSUInteger totalBytesExpectedToRead);
