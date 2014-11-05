@@ -47,7 +47,7 @@
 "search_placeholder" = "suchen";
 
 "fatal_error_default_title"   = "Unbehebbarer Fehlerzustand";
-"fatal_error_default_message" = "Ein unbehebbarer Fehler ist aufgetreten und Hoccer XO wird sich beenden. Bitte starte Hoccer XO neu.";
+"fatal_error_default_message" = "Ein unbehebbarer Fehler ist aufgetreten und Hoccer wird sich beenden. Bitte starte Hoccer neu.";
 
 "operation_failed_default_title"    = "Vorgang fehlgeschlagen";
 "operation_failed_default_message"  = "Ein Vorgang ist fehlgeschlagen. Überprüfe deine Netzwerkverbindung und versuche es später noch einmal.";
@@ -188,7 +188,7 @@
 //==============================================================================
 
 "certificate_invalid_title"   = "Ungültiges Server Zertifikat";
-"certificate_invalid_message" = "Hoccer XO konnte keine sichere Verbindung zum Server aufbauen. Du bist vermutlich mit einem öffentlichen Hotspot verbunden, aber nicht mit dem Internet. Die Ursache kann auch eine Fehlkonfiguration des Internetzugangs sein oder ein erfolgloser Versuch, die Verbindung abzuhören.";
+"certificate_invalid_message" = "Hoccer konnte keine sichere Verbindung zum Server aufbauen. Du bist vermutlich mit einem öffentlichen Hotspot verbunden, aber nicht mit dem Internet. Die Ursache kann auch eine Fehlkonfiguration des Internetzugangs sein oder ein erfolgloser Versuch, die Verbindung abzuhören.";
 
 //==============================================================================
 // Chat
@@ -382,6 +382,9 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 
 "credentials_delete_btn_title"                 = "Zugangsdaten löschen";
 
+"credentials_deleted_title"                     = "Zugangsdaten gelöscht";
+"credentials_deleted_message"                   = "Zugangsdaten wurden gelöscht. Starte die App neu.";
+
 "credentials_and_database_not_deleted_title"   = "Daten behalten";
 "credentials_and_database_not_deleted_message" = "Versuche eine Sicherungskopie einzuspielen oder gültige Zugangsdaten zu importieren.";
 
@@ -409,7 +412,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "credentials_receive_old_message"               = "Die Zugangsdaten sind veraltet und können nicht genutzt werden, weil sie bereits importiert und anschliessend erneuert worden sind. Die aktuellen Zugangsdaten wurden behalten.";
 
 "credentials_received_import_title"            = "Zugangsdaten übernehmen?";
-"credentials_received_import_message"          = "Willst du wirklich die Zugangsdaten aus Hoccer XO übernehmen?";
+"credentials_received_import_message"          = "Willst du wirklich die Zugangsdaten aus einer anderen App übernehmen?";
 
 "credentials_receive_import_btn_title"         = "Übernehmen";
 
@@ -478,9 +481,9 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 //==============================================================================
 
 "database_corrupt_not_deleted_title"   = "Datenbank nicht gelöscht";
-"database_corrupt_not_deleted_message" = "Veraltete oder korrupte Datenbank wurde nicht gelöscht. Hoccer XO wird nicht funktionieren.";
+"database_corrupt_not_deleted_message" = "Veraltete oder korrupte Datenbank wurde nicht gelöscht. Hoccer wird nicht funktionieren.";
 "database_corrupt_deleted_title"       = "Datenbank gelöscht";
-"database_corrupt_deleted_message"     = "Die Datenbank wurde gelöscht. Bitte starte Hoccer XO neu.";
+"database_corrupt_deleted_message"     = "Die Datenbank wurde gelöscht. Bitte starte Hoccer neu.";
 
 "database_delete_btn_title"            = "Datenbank löschen";
 
@@ -581,9 +584,9 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 
 "invite_recipient_picker_title"   = "Empfänger";
 
-"invite_mail_subject"             = "Einladung zu Hoccer XO";
-"invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer XO“ zum sicheren Chatten mit meinen Freunden.\n\nLade die App jetzt herunter und bestätige meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
-"invite_sms_text"                 = "Hey, ich nutze die Gratis-App Hoccer XO zum sicheren Chatten! Jetzt herunterladen und mich als Kontakt hinzufügen: %@\nxo, %@";
+"invite_mail_subject"             = "Einladung zu Hoccer";
+"invite_mail_body"                = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „Hoccer“ zum sicheren Chatten mit meinen Freunden.\n\nLade die App jetzt herunter und bestätige meine Freundschaftsanfrage: %@\n\nUnd los geht´s!\n\nxo";
+"invite_sms_text"                 = "Hey, ich nutze die Gratis-App Hoccer zum sicheren Chatten! Jetzt herunterladen und mich als Kontakt hinzufügen: %@\nxo, %@";
 
 "invite_scan_nav_title"           = "Scannen";
 "invite_generate_nav_title"       = "Generieren";
@@ -594,7 +597,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "invite_error_alert_title"        = "Einladung fehlgeschlagen";
 "invite_error_rejected_by_server" = "Der Code wurde abgelehnt";
 
-"invite_no_xo_qr_code_title"      = "Kein Hoccer XO Code";
+"invite_no_xo_qr_code_title"      = "Kein Hoccer Code";
 
 //==============================================================================
 // Keys
@@ -667,10 +670,10 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 
 
 "permission_denied_title"                       = "Zugriff verweigert";
-"permission_denied_microphone_message"          = "Um Sprache aufzunehmen erlaube Hoccer XO im System Einstellungen->Datenschutz->Mikrofon den Zugriff.";
-"permission_denied_location_nearby_message"     = "Um mit Leuten in der Nähe zu chatten erlaube Hoccer XO im System Einstellungen->Datenschutz->Ortungsdienste den Zugriff.";
-"permission_denied_location_placemarks_message" = "Um deinen Standort anzuzeigen erlaube Hoccer XO im System Einstellungen->Datenschutz->Ortungsdienste den Zugriff.";
-"permission_denied_addressbook_message"         = "Um Kontakte auszuwählen erlaube Hoccer XO im System Einstellungen->Datenschutz->Kontakte den Zugriff auf dein Adressbuch.";
+"permission_denied_microphone_message"          = "Um Sprache aufzunehmen erlaube Hoccer im System Einstellungen->Datenschutz->Mikrofon den Zugriff.";
+"permission_denied_location_nearby_message"     = "Um mit Leuten in der Nähe zu chatten erlaube Hoccer im System Einstellungen->Datenschutz->Ortungsdienste den Zugriff.";
+"permission_denied_location_placemarks_message" = "Um deinen Standort anzuzeigen erlaube Hoccer im System Einstellungen->Datenschutz->Ortungsdienste den Zugriff.";
+"permission_denied_addressbook_message"         = "Um Kontakte auszuwählen erlaube Hoccer im System Einstellungen->Datenschutz->Kontakte den Zugriff auf dein Adressbuch.";
 
 //==============================================================================
 // Profile

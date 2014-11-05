@@ -48,7 +48,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
     NSString *computerName = AppDelegate.instance.httpServer.publishedName;
     NSString *currentTime = [[NSDate date] description];
     
-    NSString * header = [NSString stringWithFormat:@"Hoccer XO Server<br/>Host:%@ Time:%@<br/>", [computerName stringByEscapingForHTML],[currentTime stringByEscapingForHTML]];
+    NSString * header = [NSString stringWithFormat:@"Hoccer Server<br/>Host:%@ Time:%@<br/>", [computerName stringByEscapingForHTML],[currentTime stringByEscapingForHTML]];
     
     NSString * listing = @"";
     
@@ -471,7 +471,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 	// Override me to provide a custom realm...
 	// You can configure it for the entire server, or based on the current request
 	
-	return @"Hoccer XO WebServer on Client App";
+	return @"Hoccer WebServer on Client App";
 }
 
 #endif

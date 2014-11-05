@@ -2,7 +2,7 @@
 // Pluralocalization:
 //
 // Application texts containing numeric values may require inflection of nouns
-// and/or grammar changes. Hoccer XO automatically appends a plural category to
+// and/or grammar changes. Hoccer automatically appends a plural category to
 // these localization keys depending on the current numeric value and locale.
 //
 // Plural Categories:
@@ -47,7 +47,7 @@
 "search_placeholder" = "search";
 
 "fatal_error_default_title"   = "Fatal Error";
-"fatal_error_default_message" = "An unrecoverable error occured and Hoccer XO will quit. Please restart Hoccer XO.";
+"fatal_error_default_message" = "An unrecoverable error occured and Hoccer will quit. Please restart Hoccer.";
 
 "operation_failed_default_title"    = "Operation Failed";
 "operation_failed_default_message"  = "The operation has failed. Check you network connection and try again later";
@@ -187,7 +187,7 @@
 //==============================================================================
 
 "certificate_invalid_title"   = "Invalid Server Certificate";
-"certificate_invalid_message" = "Hoccer XO could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
+"certificate_invalid_message" = "Hoccer could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
 
 //==============================================================================
 // Chat
@@ -375,11 +375,18 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "credentials_exported_alert"                   = "Login credentials have been exported to the document directory. If you transfer them to a another device, you can no longer use them here!";
 
 "credentials_import_btn_title"                 = "Import Login Credentials";
-"credentials_import_safety_question"           = "Importing credentials might result in the permanent loss of your current login and all XO-Contacts. Do you really want to import new credentials?";
+"credentials_import_safety_question"           = "Importing credentials might result in the permanent loss of your current login and all Hoccer Contacts. Do you really want to import new credentials?";
 "credentials_key_import_confirm_btn_title"     = "Import";
 
 "credentials_delete_btn_title"                 = "Delete Login Credentials";
-"credentials_delete_safety_question"           = "Deleting credentials might result in the permanent loss of your current login all XO-Contacts. Do you really want to delete your credentials?";
+"credentials_delete_safety_question"           = "Deleting credentials might result in the permanent loss of your current login all Hoccer Contacts. Do you really want to delete your credentials?";
+
+"credentials_deleted_title"                     = "Credentials Deleted";
+"credentials_deleted_message"                   = "Credentials have been deleted. Please restart Hoccer.";
+
+"credentials_and_database_deleted_title"       = "Credentials Deleted";
+"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer.";
+
 
 "credentials_and_database_not_deleted_title"   = "Nothing was deleted";
 "credentials_and_database_not_deleted_message" = "Try restoring from backup or import saved credentials";
@@ -467,9 +474,9 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 
 "database_corrupt_not_deleted_title"   = "Database not deleted";
-"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer XO will not work.";
+"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer will not work.";
 "database_corrupt_deleted_title"       = "Database deleted";
-"database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer XO.";
+"database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer.";
 
 "database_delete_btn_title"="Delete Database";
 
@@ -570,7 +577,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 
 "invite_recipient_picker_title"   = "Recipients";
 
-"invite_mail_subject"             = "Hoccer XO Invitation";
+"invite_mail_subject"             = "Hoccer Invitation";
 "invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload it now and accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
 "invite_sms_text"                 = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now and add me as a contact: %@ \nxo %@ ";
 
@@ -583,7 +590,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "invite_error_alert_title"        = "Invite failed";
 "invite_error_rejected_by_server" = "The code has been rejected";
 
-"invite_no_xo_qr_code_title"      = "Not a Hoccer XO code";
+"invite_no_xo_qr_code_title"      = "Not a Hoccer code";
 
 //==============================================================================
 // Keys
@@ -603,7 +610,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "key_length_unit_format"                         = "%@ bit";
 
 "key_renew_keypair"                              = "Renew RSA Keypair";
-"key_renew_keypair_info"                         = "Hoccer XO protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+"key_renew_keypair_info"                         = "Hoccer protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
 
 "key_renew_option_sheet_title"                   = "Create new RSA Keypair?";
 "key_renew_option_automatic"                     = "Automatic";
@@ -654,10 +661,10 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 
 "permission_denied_title"                       = "Access Denied";
-"permission_denied_microphone_message"          = "Grant microphone access to Hoccer XO in System Settings->Privacy->Microphone if you want to record audio.";
-"permission_denied_location_nearby_message"     = "Grant location access to Hoccer XO in System Settings->Privacy->Location Services to chat with people nearby.";
-"permission_denied_location_placemarks_message" = "Grant location access to Hoccer XO in System Settings->Privacy->Location Services to pinpoint your current location.";
-"permission_denied_addressbook_message"         = "Grant address book access to Hoccer XO in System Settings->Privacy->Contacts to allow contact selection.";
+"permission_denied_microphone_message"          = "Grant microphone access to Hoccer in System Settings->Privacy->Microphone if you want to record audio.";
+"permission_denied_location_nearby_message"     = "Grant location access to Hoccer in System Settings->Privacy->Location Services to chat with people nearby.";
+"permission_denied_location_placemarks_message" = "Grant location access to Hoccer in System Settings->Privacy->Location Services to pinpoint your current location.";
+"permission_denied_addressbook_message"         = "Grant address book access to Hoccer in System Settings->Privacy->Contacts to allow contact selection.";
 
 
 //==============================================================================

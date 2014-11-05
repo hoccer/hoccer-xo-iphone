@@ -446,7 +446,7 @@
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             [[UserProfile sharedProfile] deleteCredentials];
-            [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"Your login credentials have been deleted. Hoccer XO will terminate now." withTitle:@"Login Credentials Deleted"];
+            [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"credentials_deleted_message" withTitle:@"credentials_deleted_title"];
 
         }
     };

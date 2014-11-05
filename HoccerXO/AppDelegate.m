@@ -107,6 +107,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @property (nonatomic, strong) ModalTaskHUD * hud;
 @property (nonatomic, strong) UIViewController * interactionViewController;
 @property (nonatomic, strong) UIView * interactionView;
+@property BOOL interactionSending;
 
 @end
 
@@ -1641,6 +1642,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     self.interactionController.name = name;
     self.interactionView = view;
     self.interactionViewController = controller;
+    self.interactionSending = NO;
     CGRect navRect = controller.navigationController.navigationBar.frame;
     //navRect.size = CGSizeMake(1500.0f, 40.0f);
     //[self.interactionController presentOpenInMenuFromRect:CGRectNull inView:view animated:YES];
@@ -1660,20 +1662,27 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 - (CGRect)documentInteractionControllerRectForPreview:(UIDocumentInteractionController *)controller {
     return self.window.frame;
 }
+
 - (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
-    NSError * error = nil;
-    [[NSFileManager defaultManager] removeItemAtURL:self.interactionController.URL error:&error];
-    if (error == nil) {
-        NSLog(@"removed dismissed file URL %@",self.interactionController.URL);
+    if (!self.interactionSending) {
+        NSLog(@"documentInteractionControllerDidDismissOpenInMenu, not sending, cleaning up");
+        NSError * error = nil;
+        [[NSFileManager defaultManager] removeItemAtURL:self.interactionController.URL error:&error];
+        if (error == nil) {
+            NSLog(@"removed dismissed file URL %@",self.interactionController.URL);
+        } else {
+            NSLog(@"failed to remove sent file URL %@, error=%@",self.interactionController.URL, error);
+        }
+        self.interactionView = nil;
+        self.interactionViewController = nil;
     } else {
-        NSLog(@"failed to remove sent file URL %@, error=%@",self.interactionController.URL, error);
+        NSLog(@"documentInteractionControllerDidDismissOpenInMenu, but is sending");
     }
-    self.interactionView = nil;
-    self.interactionViewController = nil;
 }
 
 - (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application {
     NSLog(@"willBeginSendingToApplication %@", application);
+    self.interactionSending = YES;
     self.hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_sending_hud_title", nil)];
     [self.hud show];
 }
@@ -1690,6 +1699,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     }
     self.interactionView = nil;
     self.interactionViewController = nil;
+    self.interactionSending = NO;
 }
 
 
@@ -2256,6 +2266,26 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             return nil;
         }
     }
+    
+    // cleanup
+    NSURL *archivedbURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archived.database"];
+    [[NSFileManager defaultManager] removeItemAtURL:archivedbURL error:&error];
+    if (error != nil) {
+        NSLog(@"Error removing temporary database archive at URL %@, error=%@", archivedbURL, error);
+    } else {
+        NSLog(@"Removed temporary database archive at URL %@", archivedbURL);
+    }
+    
+    NSURL *archivePrefURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archived.preferences"];
+    [[NSFileManager defaultManager] removeItemAtURL:archivePrefURL error:&error];
+    if (error != nil) {
+        NSLog(@"Error removing temporary preferences archive at URL %@, error=%@", archivePrefURL, error);
+    } else {
+        NSLog(@"Removed temporary database archive at URL %@", archivePrefURL);
+    }
+    
+    [[UserProfile sharedProfile] deleteCredentialsFile];
+    
     return archiveURL;
 }
 

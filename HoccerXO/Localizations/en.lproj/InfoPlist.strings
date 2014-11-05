@@ -1,6 +1,6 @@
 /* Localized versions of Info.plist keys */
 
-"NSLocationWhenInUseUsageDescription" = "To chat with people nearby and to send placemarks Hoccer XO requires access to your location.";
+"NSLocationWhenInUseUsageDescription" = "To chat with people nearby and to send placemarks Hoccer requires access to your location.";
 
 /*
 "CFBundleDisplayName" = "XOX (Hoccer)";
