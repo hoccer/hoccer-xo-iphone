@@ -458,7 +458,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "archive_transfer_open_with_btn_title"          = "Transfer Backup to other App";
 "archive_transfer_open_with_safety_question"    = "Create a backup of all messages, attachment and login credentials and transfer all to another app on this device?";
 
-"archive_transfer_not_enough_space %@ %@"       = "The data transfer required %@ of free space on your device, but you have only %@. You can delete some large media attachments in your chats to lower the space requirements or make more free space by temporarily removing media items from other apps.";
+"archive_transfer_not_enough_space %@ %@"       = "The data transfer requires %@ of free space on your device, but you have only %@. You can delete some large media attachments in your chats to lower the space requirements or make more free space by temporarily removing media items from other apps.";
 "archive_transfer_not_enough_space_title"       = "Not Enough Space";
 
 

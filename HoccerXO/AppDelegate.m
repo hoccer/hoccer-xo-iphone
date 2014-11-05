@@ -1661,6 +1661,13 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return self.window.frame;
 }
 - (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
+    NSError * error = nil;
+    [[NSFileManager defaultManager] removeItemAtURL:self.interactionController.URL error:&error];
+    if (error == nil) {
+        NSLog(@"removed dismissed file URL %@",self.interactionController.URL);
+    } else {
+        NSLog(@"failed to remove sent file URL %@, error=%@",self.interactionController.URL, error);
+    }
     self.interactionView = nil;
     self.interactionViewController = nil;
 }
@@ -1818,6 +1825,8 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     };
     long long requiredSpace = [AppDelegate estimatedDocumentArchiveSize] * 2.1;
     long long freeSpace = [AppDelegate freeDiskSpace] + [AppDelegate archiveFileSize];
+    
+    NSLog(@"transferArchive: required %@, free %@",[AppDelegate memoryFormatter:requiredSpace],[AppDelegate memoryFormatter:freeSpace]);
     
     if (requiredSpace > freeSpace) {
         HXOAlertViewCompletionBlock completion2 = ^(NSUInteger buttonIndex, UIAlertView * alertView) {};

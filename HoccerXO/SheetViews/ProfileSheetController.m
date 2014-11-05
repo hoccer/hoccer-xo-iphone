@@ -221,13 +221,32 @@
             
         }
     };
+    long long requiredSpace = [AppDelegate estimatedDocumentArchiveSize] * 2.1;
+    long long freeSpace = [AppDelegate freeDiskSpace] + [AppDelegate archiveFileSize];
     
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_transfer_open_with_safety_question", nil)
-                                        completionBlock: completion
-                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"archive", nil)
-                                      otherButtonTitles: nil];
-    [sheet showInView: self.delegate.view];
+    NSLog(@"transferArchive: required %@, free %@",[AppDelegate memoryFormatter:requiredSpace],[AppDelegate memoryFormatter:freeSpace]);
+    
+    if (requiredSpace > freeSpace) {
+        HXOAlertViewCompletionBlock completion2 = ^(NSUInteger buttonIndex, UIAlertView * alertView) {};
+        NSString * archiveNotEnoughSpaceMessage = [NSString stringWithFormat:NSLocalizedString(@"archive_transfer_not_enough_space %@ %@", nil),
+                                                   [AppDelegate memoryFormatter:requiredSpace],
+                                                   [AppDelegate memoryFormatter:freeSpace]];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_transfer_not_enough_space_title",nil)
+                                                         message: archiveNotEnoughSpaceMessage
+                                                 completionBlock: completion2
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
+        
+    } else {
+        
+        UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_transfer_open_with_safety_question", nil)
+                                            completionBlock: completion
+                                          cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                     destructiveButtonTitle: NSLocalizedString(@"archive", nil)
+                                          otherButtonTitles: nil];
+        [sheet showInView: self.delegate.view];
+    }
 }
 
 
