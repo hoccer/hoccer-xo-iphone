@@ -16,7 +16,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
 
 @implementation MyDAVConnection
 
-#if 0
+#if 1
 - (BOOL)isPasswordProtected:(NSString *)path
 {
     // We're only going to password protect the "secret" directory.

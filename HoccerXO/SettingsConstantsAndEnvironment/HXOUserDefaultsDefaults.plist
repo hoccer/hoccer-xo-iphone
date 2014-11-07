@@ -9,7 +9,7 @@
 	<key>updateLocations</key>
 	<false/>
 	<key>httpServerPassword</key>
-	<string>xopassword</string>
+	<string>hoccer-pw</string>
 	<key>manualKeyManagement</key>
 	<false/>
 	<key>signMessages</key>
@@ -53,6 +53,6 @@
 	<key>quickStart</key>
 	<true/>
 	<key>mpMediaAccess</key>
-	<false/>
+	<true/>
 </dict>
 </plist>

@@ -310,6 +310,12 @@
 		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
 		E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = E980E27418648D80004AF79D /* UIResponder+Debug.m */; };
+		E991E4FF1A0D11F300015BEE /* DAVConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E991E4F81A0D11F300015BEE /* DAVConnection.m */; };
+		E991E5001A0D11F300015BEE /* DAVResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E991E4FA1A0D11F300015BEE /* DAVResponse.m */; };
+		E991E5011A0D11F300015BEE /* DELETEResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E991E4FC1A0D11F300015BEE /* DELETEResponse.m */; };
+		E991E5021A0D11F300015BEE /* PUTResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E991E4FE1A0D11F300015BEE /* PUTResponse.m */; };
+		E991E5121A0D134C00015BEE /* libxml2.2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E991E5111A0D134C00015BEE /* libxml2.2.dylib */; };
+		E991E5151A0D351B00015BEE /* MyDAVConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E991E5141A0D351B00015BEE /* MyDAVConnection.m */; };
 		E9949465170DB39700F67B07 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9949464170DB39700F67B07 /* MobileCoreServices.framework */; };
 		E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886BB1725CB3F0089A510 /* ABPersonCreator.m */; };
 		E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */ = {isa = PBXBuildFile; fileRef = E99886BD1725CB3F0089A510 /* ABPersonVCardCreator.m */; };
@@ -1084,6 +1090,17 @@
 		E980D446171EF8950060C1B5 /* CryptingInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptingInputStream.m; sourceTree = "<group>"; };
 		E980E27318648D80004AF79D /* UIResponder+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIResponder+Debug.h"; sourceTree = "<group>"; };
 		E980E27418648D80004AF79D /* UIResponder+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIResponder+Debug.m"; sourceTree = "<group>"; };
+		E991E4F71A0D11F300015BEE /* DAVConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAVConnection.h; sourceTree = "<group>"; };
+		E991E4F81A0D11F300015BEE /* DAVConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAVConnection.m; sourceTree = "<group>"; };
+		E991E4F91A0D11F300015BEE /* DAVResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAVResponse.h; sourceTree = "<group>"; };
+		E991E4FA1A0D11F300015BEE /* DAVResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAVResponse.m; sourceTree = "<group>"; };
+		E991E4FB1A0D11F300015BEE /* DELETEResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DELETEResponse.h; sourceTree = "<group>"; };
+		E991E4FC1A0D11F300015BEE /* DELETEResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DELETEResponse.m; sourceTree = "<group>"; };
+		E991E4FD1A0D11F300015BEE /* PUTResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PUTResponse.h; sourceTree = "<group>"; };
+		E991E4FE1A0D11F300015BEE /* PUTResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PUTResponse.m; sourceTree = "<group>"; };
+		E991E5111A0D134C00015BEE /* libxml2.2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.2.dylib; path = usr/lib/libxml2.2.dylib; sourceTree = SDKROOT; };
+		E991E5131A0D351B00015BEE /* MyDAVConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyDAVConnection.h; sourceTree = "<group>"; };
+		E991E5141A0D351B00015BEE /* MyDAVConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyDAVConnection.m; sourceTree = "<group>"; };
 		E9949464170DB39700F67B07 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		E99886BA1725CB3F0089A510 /* ABPersonCreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ABPersonCreator.h; sourceTree = "<group>"; };
 		E99886BB1725CB3F0089A510 /* ABPersonCreator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ABPersonCreator.m; sourceTree = "<group>"; };
@@ -1248,6 +1265,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E991E5121A0D134C00015BEE /* libxml2.2.dylib in Frameworks */,
 				6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */,
 				6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */,
 				6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */,
@@ -1883,6 +1901,7 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E991E5111A0D134C00015BEE /* libxml2.2.dylib */,
 				6327F37318B8C390007D79E3 /* Accelerate.framework */,
 				E92FAED61870A0F900D72D79 /* libz.dylib */,
 				E99886CD1725CE0F0089A510 /* AddressBook.framework */,
@@ -2303,6 +2322,30 @@
 			path = Crypto;
 			sourceTree = "<group>";
 		};
+		E991E4F51A0D11F300015BEE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				E991E4F61A0D11F300015BEE /* WebDAV */,
+			);
+			name = Extensions;
+			path = CocoaHTTPServer/Extensions;
+			sourceTree = "<group>";
+		};
+		E991E4F61A0D11F300015BEE /* WebDAV */ = {
+			isa = PBXGroup;
+			children = (
+				E991E4F71A0D11F300015BEE /* DAVConnection.h */,
+				E991E4F81A0D11F300015BEE /* DAVConnection.m */,
+				E991E4F91A0D11F300015BEE /* DAVResponse.h */,
+				E991E4FA1A0D11F300015BEE /* DAVResponse.m */,
+				E991E4FB1A0D11F300015BEE /* DELETEResponse.h */,
+				E991E4FC1A0D11F300015BEE /* DELETEResponse.m */,
+				E991E4FD1A0D11F300015BEE /* PUTResponse.h */,
+				E991E4FE1A0D11F300015BEE /* PUTResponse.m */,
+			);
+			path = WebDAV;
+			sourceTree = "<group>";
+		};
 		E99886B91725CB3E0089A510 /* Adressbook */ = {
 			isa = PBXGroup;
 			children = (
@@ -2411,6 +2454,7 @@
 		E9E92F2018733B15007B8042 /* CocoaHttpServer */ = {
 			isa = PBXGroup;
 			children = (
+				E991E4F51A0D11F300015BEE /* Extensions */,
 				E9E92F4318733D01007B8042 /* Core */,
 				E9E92F2118733B79007B8042 /* Vendor */,
 			);
@@ -2543,6 +2587,8 @@
 				E9E92F951875D41E007B8042 /* TypedHTTPDataResponse.m */,
 				E9E92F9718760B05007B8042 /* TypedHTTPFileResponse.h */,
 				E9E92F9818760B05007B8042 /* TypedHTTPFileResponse.m */,
+				E991E5131A0D351B00015BEE /* MyDAVConnection.h */,
+				E991E5141A0D351B00015BEE /* MyDAVConnection.m */,
 			);
 			name = "HTTP Server";
 			path = HTTPServer;
@@ -2975,6 +3021,8 @@
 				63AE4544170493140099F0CB /* SettingsViewController.m in Sources */,
 				63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */,
 				63AE45471704945C0099F0CB /* WebViewController.m in Sources */,
+				E991E5151A0D351B00015BEE /* MyDAVConnection.m in Sources */,
+				E991E4FF1A0D11F300015BEE /* DAVConnection.m in Sources */,
 				63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */,
 				63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */,
 				631F6CDD1706558100FB28D5 /* UIImage+ScaleAndCrop.m in Sources */,
@@ -3066,6 +3114,7 @@
 				E99886C71725CB3F0089A510 /* ACAddressBookPerson.m in Sources */,
 				E99886C81725CB3F0089A510 /* VcardParser.m in Sources */,
 				E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */,
+				E991E5001A0D11F300015BEE /* DAVResponse.m in Sources */,
 				E9E92F4018733B7A007B8042 /* ContextFilterLogFormatter.m in Sources */,
 				E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */,
 				C576EBD61934CC8400C0D254 /* AudioPlayerViewController.m in Sources */,
@@ -3083,6 +3132,7 @@
 				E9E92F3B18733B7A007B8042 /* DDAbstractDatabaseLogger.m in Sources */,
 				E9D1145E1732E74000737EF7 /* Vcard.m in Sources */,
 				E9D1148A1736702E00737EF7 /* GCHTTPRequestOperation.m in Sources */,
+				E991E5011A0D11F300015BEE /* DELETEResponse.m in Sources */,
 				C576EBB71934CC3B00C0D254 /* HXOAudioPlayer.m in Sources */,
 				E9D1148B1736702E00737EF7 /* GCImageRequestOperation.m in Sources */,
 				C576EC791934CDD900C0D254 /* MessageItem.m in Sources */,
@@ -3118,6 +3168,7 @@
 				63C1E88C18EB2B450066D5C6 /* ProfileSheetController.m in Sources */,
 				63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */,
 				63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */,
+				E991E5021A0D11F300015BEE /* PUTResponse.m in Sources */,
 				63CA315518D272E70069A0C2 /* InvitationCodeViewController.mm in Sources */,
 				C5B167E21963ECF6004D3A28 /* AudioAttachmentDataSource.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
@@ -3355,6 +3406,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"3rdParty/openssl-xcode/openssl/include",
+					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				HXO_DEFAULT_ENVIRONMENT = production;
@@ -3398,6 +3450,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"3rdParty/openssl-xcode/openssl/include",
+					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				HXO_DEFAULT_ENVIRONMENT = production;
@@ -3475,6 +3528,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"3rdParty/openssl-xcode/openssl/include",
+					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
@@ -3584,6 +3638,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"3rdParty/openssl-xcode/openssl/include",
+					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
@@ -3695,6 +3750,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"3rdParty/openssl-xcode/openssl/include",
+					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
@@ -3804,6 +3860,7 @@
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"3rdParty/openssl-xcode/openssl/include",
+					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;

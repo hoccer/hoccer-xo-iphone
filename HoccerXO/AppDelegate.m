@@ -40,6 +40,8 @@
 #import "DDLog.h"
 #import "DDTTYLogger.h"
 #import "MyHttpConnection.h"
+#import "DAVConnection.h"
+#import "MyDAVConnection.h"
 #endif
 
 #include <ifaddrs.h>
@@ -2950,11 +2952,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     if (_httpServer == nil) {
         // Create server using our custom MyHTTPServer class
         _httpServer = [[HTTPServer alloc] init];
-        [_httpServer setConnectionClass:[MyHTTPConnection class]];
+        //[_httpServer setConnectionClass:[MyHTTPConnection class]];
+        //[_httpServer setConnectionClass:[DAVConnection class]];
+        [_httpServer setConnectionClass:[MyDAVConnection class]];
 
         // Tell the server to broadcast its presence via Bonjour.
         // This allows browsers such as Safari to automatically discover our service.
-        [_httpServer setType:@"_http._tcp."];
+        //[_httpServer setType:@"_http._tcp."];
+        [_httpServer setType:@"_webdav._tcp"];
 
         [_httpServer setPort:8899];
 

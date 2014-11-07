@@ -14,8 +14,8 @@
 # import <CoreData/CoreData.h>
 #endif
 
-#ifdef DEBUG
 # define WITH_WEBSERVER
+#ifdef DEBUG
 // get rid of warning in DDTTYLogger.m
 # define kCGImageAlphaNoneSkipLast ((CGBitmapInfo)kCGImageAlphaNoneSkipLast)
 #endif
