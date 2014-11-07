@@ -711,17 +711,28 @@ NSArray * TransferStateName = @[@"detached",
     
     for (AVMetadataItem *i in artworks) {
         NSString *keySpace = i.keySpace;
-        UIImage *im = nil;
+        NSData *imageData = nil;
         
         if ([keySpace isEqualToString:AVMetadataKeySpaceID3]) {
-            NSDictionary *d = [i.value copyWithZone:nil];
-            im = [UIImage imageWithData:[d objectForKey:@"data"]];
+            // see http://stackoverflow.com/questions/25778757/getting-mp3-artwork-crashes-on-ios-8-but-works-on-ios-7
+            if (TARGET_OS_IPHONE && NSFoundationVersionNumber > NSFoundationVersionNumber_iOS_7_1) {
+                imageData = [i.value copyWithZone:nil];
+            } else {
+                NSDictionary *d = [i.value copyWithZone:nil];
+                if ([d isKindOfClass:[NSDictionary class]]) {
+                    imageData = [d objectForKey:@"data"];
+                }
+            }
         } else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes]) {
-            im = [UIImage imageWithData:[i.value copyWithZone:nil]];
+            imageData = [i.value copyWithZone:nil];
         } else {
             NSLog(@"=== unhandled media item %@", i);
         }
         
+        UIImage *im = nil;
+        if (imageData) {
+            im = [UIImage imageWithData:imageData];
+        }
         if (im) {
             [artworkImages addObject:im];
         }
