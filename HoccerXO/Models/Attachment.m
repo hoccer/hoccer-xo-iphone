@@ -1752,6 +1752,16 @@ NSArray * TransferStateName = @[@"detached",
     return CFBridgingRelease(uti);
 }
 
++ (NSString *) UTIFromfileExtension: (NSString *) theExtension {
+    if (theExtension == nil) return nil;
+    CFStringRef uti = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, (__bridge CFStringRef)(theExtension), NULL);
+    if (uti != nil) {
+        return CFBridgingRelease(uti);
+    } else {
+        return @"public.data";
+    }
+}
+
 + (NSString*) localizedDescriptionOfUTI:(NSString*)uti {
     if (uti == nil) return nil;
     return CFBridgingRelease(UTTypeCopyDescription((__bridge CFStringRef)(uti)));
@@ -2163,6 +2173,7 @@ NSArray * TransferStateName = @[@"detached",
     if ([self.mediaType isEqualToString:@"audio"] && self.contentURL) {
         AVURLAsset *asset = [AVURLAsset assetWithURL:self.contentURL];
         self.playable = asset.playable ? @"YES" : @"NO";
+        NSLog(@"asset %@ playable:%@", self.contentURL, self.playable);
     }
 }
 
@@ -2418,6 +2429,72 @@ NSArray * TransferStateName = @[@"detached",
     [attachment useURLs:self.localURL anOtherURL:self.assetURL];
     
     return attachment;
+}
+
+- (Attachment*) cloneWithCompletion:(AttachmentCompletionBlock)attachmentCompleted {
+    Attachment * attachment = self;
+    Attachment * newAttachment = nil;
+    if (attachment) {
+        newAttachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: [AppDelegate instance].currentObjectContext];
+        
+        newAttachment.mediaType = attachment.mediaType;
+        newAttachment.mimeType = attachment.mimeType;
+        newAttachment.humanReadableFileName = attachment.humanReadableFileName;
+        
+        CompletionBlock completion  = ^(NSError *myerror) {
+            attachmentCompleted(newAttachment, myerror);
+        };
+        
+        if ([newAttachment.mediaType isEqualToString:@"image"]) {
+            [newAttachment makeImageAttachment: attachment.localURL anOtherURL:attachment.assetURL image:nil withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"video"]) {
+            [newAttachment makeVideoAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"audio"]) {
+            [newAttachment makeAudioAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"vcard"]) {
+            [newAttachment makeVcardAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"geolocation"]) {
+            [newAttachment makeGeoLocationAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        } else if ([newAttachment.mediaType isEqualToString:@"data"]) {
+            [newAttachment makeDataAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
+        }
+    }
+    return newAttachment;
+}
+
+
++ (Attachment*) makeAttachmentWithMediaType:(NSString*)mediaType
+                                   mimeType:(NSString*)mimeType
+                      humanReadableFileName:(NSString*)humanReadableFileName
+                                   localURL:(NSString*)localURL
+                                   assetURL:(NSString*)assetURL
+                                  inContext:(NSManagedObjectContext*)context
+                                  whenReady:(AttachmentCompletionBlock)attachmentCompleted
+{
+    Attachment * newAttachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: context];
+    
+    newAttachment.mediaType = mediaType;
+    newAttachment.mimeType = mimeType;
+    newAttachment.humanReadableFileName = humanReadableFileName;
+    
+    CompletionBlock completion  = ^(NSError *myerror) {
+        attachmentCompleted(newAttachment, myerror);
+    };
+    
+    if ([newAttachment.mediaType isEqualToString:@"image"]) {
+        [newAttachment makeImageAttachment: localURL anOtherURL:assetURL image:nil withCompletion:completion];
+    } else if ([newAttachment.mediaType isEqualToString:@"video"]) {
+        [newAttachment makeVideoAttachment: localURL anOtherURL:assetURL withCompletion:completion];
+    } else if ([newAttachment.mediaType isEqualToString:@"audio"]) {
+        [newAttachment makeAudioAttachment: localURL anOtherURL:assetURL withCompletion:completion];
+    } else if ([newAttachment.mediaType isEqualToString:@"vcard"]) {
+        [newAttachment makeVcardAttachment: localURL anOtherURL:assetURL withCompletion:completion];
+    } else if ([newAttachment.mediaType isEqualToString:@"geolocation"]) {
+        [newAttachment makeGeoLocationAttachment: localURL anOtherURL:assetURL withCompletion:completion];
+    } else if ([newAttachment.mediaType isEqualToString:@"data"]) {
+        [newAttachment makeDataAttachment:localURL anOtherURL:assetURL withCompletion:completion];
+    }
+    return newAttachment;
 }
 
 @end

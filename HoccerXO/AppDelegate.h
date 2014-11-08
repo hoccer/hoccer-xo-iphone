@@ -154,6 +154,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 - (NSDictionary *)ownIPAddresses;
 
 + (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern;
++ (NSString*)mediaTypeOfUTI:(NSString*)documentType;
 
 + (AppDelegate*)instance;
 + (void) renewRSAKeyPairWithSize: (NSUInteger) size;
@@ -169,9 +170,10 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 + (long long)archiveFileSize;
 
 + (NSNumber *) sizeOfFileAtURL: (NSURL *) fileURL withError: (NSError**) myError ;
-+(NSNumber*)sizeOfDirectoryAtURL:(NSURL*)theDirectoryURL ignoring:(NSArray*)ignorePaths;
++ (NSNumber*)sizeOfDirectoryAtURL:(NSURL*)theDirectoryURL ignoring:(NSArray*)ignorePaths;
 + (BOOL)unzipFileAtURL:(NSURL*)zipFileURL toDirectory:(NSURL*)theDirectoryURL;
 + (BOOL)zipDirectoryAtURL:(NSURL*)theDirectoryURL toZipFile:(NSURL*)zipFileURL ignoring:(NSArray*)ignorePaths;
++ (NSArray*)fileNamesInDirectoryAtURL:(NSURL*)theDirectoryURL ignorePaths:(NSArray*)ignorePaths ignoreSuffixes:(NSArray*)ignoreSuffixes;
 
 
 

@@ -490,37 +490,6 @@ static NSTimer * _stateNotificationDelayTimer;
     return [NSDate dateWithTimeIntervalSinceNow:self.latestKnownServerTimeOffset];
 }
 
-- (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)attachmentCompleted {
-    Attachment * newAttachment = nil;
-    if (attachment) {
-        newAttachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: self.delegate.currentObjectContext];
-        
-        newAttachment.mediaType = attachment.mediaType;
-        newAttachment.mimeType = attachment.mimeType;
-        newAttachment.humanReadableFileName = attachment.humanReadableFileName;
-        
-        CompletionBlock completion  = ^(NSError *myerror) {
-            attachmentCompleted(newAttachment, myerror);
-        };
-        
-        if ([newAttachment.mediaType isEqualToString:@"image"]) {
-            [newAttachment makeImageAttachment: attachment.localURL anOtherURL:attachment.assetURL image:nil withCompletion:completion];
-        } else if ([newAttachment.mediaType isEqualToString:@"video"]) {
-            [newAttachment makeVideoAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
-        } else if ([newAttachment.mediaType isEqualToString:@"audio"]) {
-            [newAttachment makeAudioAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
-        } else if ([newAttachment.mediaType isEqualToString:@"vcard"]) {
-            [newAttachment makeVcardAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
-        } else if ([newAttachment.mediaType isEqualToString:@"geolocation"]) {
-            [newAttachment makeGeoLocationAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
-        } else if ([newAttachment.mediaType isEqualToString:@"data"]) {
-            [newAttachment makeDataAttachment: attachment.localURL anOtherURL:attachment.assetURL withCompletion:completion];
-        }
-    }
-    return newAttachment;
-}
-
-
 // calls sendmessage after cloning the attachment
 - (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment {
     
@@ -532,7 +501,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     };
     
-    newAttachment = [self cloneAttachment:attachment whenReady:completion];
+    newAttachment = [attachment cloneWithCompletion:completion];
     if (newAttachment == nil) {
         // send message without attachment right now, we will not get a completion call here
         [self sendMessage: text toContactOrGroup:contact toGroupMemberOnly:privateGroupMessageContact withAttachment:nil];

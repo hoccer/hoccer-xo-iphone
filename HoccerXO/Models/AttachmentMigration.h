@@ -13,5 +13,6 @@
 @interface AttachmentMigration : NSObject
 
 + (void) determinePlayabilityForAllAudioAttachments;
++ (void) findOrphanedFilesAndRegisterAsAttachment;
 
 @end

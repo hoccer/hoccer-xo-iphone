@@ -35,7 +35,6 @@ typedef void (^GenericResultHandler)(BOOL ok);
 typedef void (^URLResultHandler)(NSURL * url);
 typedef void (^StringResultHandler)(NSString* result, BOOL ok);
 typedef void (^BoolResultHandler)(BOOL result, BOOL ok);
-typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 typedef void (^DataLoadedBlock)(NSData *, NSError*);
 typedef void (^DoneBlock)();
 typedef void (^GroupMemberDeleted)(GroupMembership* member);
@@ -83,7 +82,6 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 
 - (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
 - (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
-- (Attachment*) cloneAttachment:(const Attachment*) attachment whenReady:(AttachmentCompletionBlock)completion;
 
 - (void) inDeliveryConfirmPrivate: (NSString*) messageId withDelivery: (Delivery*) delivery;
 - (void) inDeliveryConfirmSeen: (NSString*) messageId withDelivery: (Delivery*) delivery;

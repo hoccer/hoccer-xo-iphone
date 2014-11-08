@@ -377,6 +377,8 @@ BOOL sameObjects(id obj1, id obj2) {
     NSLog(@"myKey=%@", [myKey hexadecimalString]);
 #endif
 
+    
+    [AttachmentMigration findOrphanedFilesAndRegisterAsAttachment];
     [AttachmentMigration determinePlayabilityForAllAudioAttachments];
 
     NSAssert([self.window.rootViewController isKindOfClass:[UITabBarController class]], @"Expecting UITabBarController");
@@ -2103,7 +2105,91 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return @(-1);
 }
 
++ (NSArray *)fileUrlsInDocumentDirPath:(NSString *)fileDirPath withExtension:(NSString *)fileExtension
+{
+    NSString *path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0];
+    
+    if(fileDirPath.length > 0 && [fileDirPath hasPrefix:@"/"] == NO)
+        path = [path stringByAppendingString:@"/"];
+    
+    path = [path stringByAppendingString:fileDirPath];
+    
+    NSError *error = nil;
+    NSArray *pathContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:&error];
+    
+    NSArray *sortedPathsContent = [pathContent sortedArrayUsingSelector: @selector(compare:)];
+    
+    NSMutableArray *resultArray = [NSMutableArray new];
+    
+    for (NSString *p in sortedPathsContent)
+    {
+        if(fileExtension && [p hasSuffix:fileExtension] == NO)
+            continue;
+        
+        NSData *data = [NSData dataWithContentsOfFile:[path stringByAppendingPathComponent:p]];
+        
+        if(data)
+            [resultArray addObject:data];
+    }
+    
+    return resultArray;
+}
 
++(NSArray*)fileNamesInDirectoryAtURL:(NSURL*)theDirectoryURL ignorePaths:(NSArray*)ignorePaths ignoreSuffixes:(NSArray*)ignoreSuffixes {
+    NSLog(@"fileUrlsInDirectoryAtURL: %@",theDirectoryURL);
+    BOOL isDirectory;
+    BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[theDirectoryURL path] isDirectory:&isDirectory];
+    NSError * error = nil;
+    NSMutableArray * result = [NSMutableArray new];
+    if (exists) {
+        if (!isDirectory) {
+            NSLog(@"sizeOfDirectoryAtURL: object at path is not a directory:%@",[theDirectoryURL path]);
+        } else {
+            //NSArray * subpaths = [[NSFileManager defaultManager] subpathsAtPath:[theDirectoryURL path]];
+            NSArray * subpaths = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[theDirectoryURL path] error:&error];
+            for (NSString * subpath in subpaths) {
+                NSString * fullPath = [[theDirectoryURL path] stringByAppendingPathComponent: subpath];
+                //NSURL * fullPathURL = [NSURL fileURLWithPath:fullPath];
+                //NSLog(@"fullPath=%@",fullPath);
+                
+                BOOL ignore = NO;
+                BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
+                if (!exists) {
+                    NSLog(@"#ERROR: file does not exist: %@",subpath);
+                    ignore = YES;
+                }
+                if (isDirectory) {
+                    ignore = YES;
+                }
+                
+                for (NSString * is in ignoreSuffixes) {
+                    if ([is isEqualToString:[subpath pathExtension]]) {
+                        ignore = YES;
+                        break;
+                    }
+                }
+                
+                for (NSString * is in ignorePaths) {
+                    if ([subpath rangeOfString:is].length == is.length) {
+                        ignore = YES;
+                        break;
+                    }
+                }
+                
+                if (ignore) {
+                    NSLog(@"Ignoring file: %@",subpath);
+                } else {
+                    NSLog(@"Adding file: %@",subpath);
+                    [result addObject:subpath];
+                }
+            }
+            return result;
+        }
+    } else {
+        NSLog(@"fileNamesInDirectoryAtURL: file at path does not exist:%@",[theDirectoryURL path]);
+    }
+    return nil;
+}
 
 +(BOOL)unzipFileAtURL:(NSURL*)zipFileURL toDirectory:(NSURL*) theDirectoryURL {
     NSLog(@"unzipFileAtURL: %@ -> %@",zipFileURL, theDirectoryURL);
@@ -2508,6 +2594,28 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return -1;
 }
 
++ (NSString*)mediaTypeOfUTI:(NSString*)documentType {
+    NSString * mediaType = nil;
+    if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeText)) {
+        mediaType=@"text";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeImage)) {
+        mediaType=@"image";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeMovie)) {
+        mediaType=@"video";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVideo)) {
+        mediaType=@"video";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeAudio)) {
+        mediaType=@"audio";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVCard)) {
+        mediaType=@"vcard";
+    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeURL)) {
+        mediaType=@"text";
+    } else {
+        mediaType=@"data";
+    }
+    return mediaType;
+}
+
 
 - (BOOL)handleFileURL: (NSURL *)url withDocumentType:(NSString*)documentType
 {
@@ -2558,23 +2666,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     NSLog(@"destURL=%@", destURL);
 
     if (mediaType == nil) {
-        if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeText)) {
-            mediaType=@"text";
-        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeImage)) {
-            mediaType=@"image";
-        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeMovie)) {
-            mediaType=@"video";
-        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVideo)) {
-            mediaType=@"video";
-        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeAudio)) {
-            mediaType=@"audio";
-        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVCard)) {
-            mediaType=@"vcard";
-        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeURL)) {
-            mediaType=@"text";
-        } else {
-            mediaType=@"data";
-        }
+        [AppDelegate mediaTypeOfUTI:mediaType];
     }
     NSLog(@"mediaType=%@", mediaType);
 

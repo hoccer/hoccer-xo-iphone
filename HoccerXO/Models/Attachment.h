@@ -25,6 +25,7 @@ typedef void(^CompletionBlock)(NSError* theError);
 typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 typedef void(^MACSetterBlock)(NSData* theMAC,NSError* theError);
 typedef void(^OkBlock)();
+typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
 
 typedef void(^UploadProgessBlock)(NSUInteger bytesWritten, NSUInteger totalBytesWritten, NSUInteger totalBytesExpectedToWrite);
 typedef void(^DownloadProgessBlock)(NSUInteger bytesRead, NSUInteger totalBytesRead, NSUInteger totalBytesExpectedToRead);
@@ -154,6 +155,15 @@ typedef enum AttachmentStates {
 - (void) makeGeoLocationAttachment: (NSString*) theURL anOtherURL: (NSString*) theOtherURL withCompletion: (CompletionBlock) completion;
 - (void) makeDataAttachment: (NSString*) theURL anOtherURL: (NSString*) theOtherURL withCompletion: (CompletionBlock) completion;
 
++ (Attachment*) makeAttachmentWithMediaType:(NSString*)mediaType
+                                   mimeType:(NSString*)mimeType
+                      humanReadableFileName:(NSString*)humanReadableFileName
+                                   localURL:(NSString*)localURL
+                                   assetURL:(NSString*)assetURL
+                                  inContext:(NSManagedObjectContext*)context
+                                  whenReady:(AttachmentCompletionBlock)attachmentCompleted;
+
+
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block;
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock) block;
 
@@ -170,12 +180,14 @@ typedef enum AttachmentStates {
 - (void) determinePlayability;
 
 - (Attachment *) clone;
+- (Attachment*) cloneWithCompletion:(AttachmentCompletionBlock)attachmentCompleted;
 
 + (NSString *) fileExtensionFromMimeType: (NSString *) theMimeType;
 + (NSString *) mimeTypeFromfileExtension: (NSString *) theExtension;
 + (NSString *) mimeTypeFromURLExtension: (NSString *) theURLString;
 + (NSString *) mimeTypeFromUTI: (NSString *) uti;
-+ (NSString*) UTIfromMimeType:(NSString*)mimeType;
++ (NSString *) UTIfromMimeType:(NSString*)mimeType;
++ (NSString *) UTIFromfileExtension: (NSString *) theExtension;
 + (NSString*) localizedDescriptionOfUTI:(NSString*)uti;
 + (NSString*) localizedDescriptionOfMimeType:(NSString*)mimeType;
 

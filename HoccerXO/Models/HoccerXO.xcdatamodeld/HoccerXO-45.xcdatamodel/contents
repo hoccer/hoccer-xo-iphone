@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="25" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13E28" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="25" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6252" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
         <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -148,7 +148,7 @@
     <fetchRequest name="AttachmentsByOwnedURL" entity="Attachment" predicateString="ownedURL == $ownedURL"/>
     <fetchRequest name="AttachmentsNotDownloaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoingFlag == 0 AND transferFailures &lt; $max_retries"/>
     <fetchRequest name="AttachmentsNotUploaded" entity="Attachment" predicateString="remoteURL != &quot;&quot; AND transferSize != contentSize AND message.isOutgoingFlag != 0 AND transferFailures &lt; $max_retries AND message != nil"/>
-    <fetchRequest name="AudioAttachments" entity="Attachment" predicateString="mediaType == &quot;audio&quot; AND ((message.isOutgoingFlag == 0 AND contentSize == transferSize) OR (message.isOutgoingFlag == 1 AND assetURL != nil)) AND playable == &quot;YES&quot; AND ($contact == nil OR message.contact == $contact) AND (NOT humanReadableFileName BEGINSWITH &quot;recording&quot;)"/>
+    <fetchRequest name="AudioAttachments" entity="Attachment" predicateString="mediaType == &quot;audio&quot; AND (message == nil OR (message.isOutgoingFlag == 0 AND contentSize == transferSize) OR (message.isOutgoingFlag == 1 AND assetURL != nil)) AND playable == &quot;YES&quot; AND ($contact == nil OR message.contact == $contact) AND (NOT humanReadableFileName BEGINSWITH &quot;recording&quot;)"/>
     <fetchRequest name="AudioAttachmentsWithUnknownPlayability" entity="Attachment" predicateString="mediaType == &quot;audio&quot; AND playable == &quot;UNKNOWN&quot;"/>
     <fetchRequest name="CollectionItemsForCollection" entity="CollectionItem" predicateString="collection == $collection"/>
     <fetchRequest name="Collections" entity="Collection"/>
