@@ -21,7 +21,7 @@
 	url = git@github.com:hoccer/ZipArchive.git
 [submodule "3rdParty/CocoaHTTPServer"]
 	path = 3rdParty/CocoaHTTPServer
-	url = git@github.com:robbiehanson/CocoaHTTPServer.git
+	url = git@github.com:hoccer/CocoaHTTPServer.git
 [submodule "3rdParty/openssl-xcode"]
 	path = 3rdParty/openssl-xcode
 	url = git@github.com:hoccer/openssl-xcode.git
