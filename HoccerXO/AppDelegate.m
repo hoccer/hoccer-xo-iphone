@@ -68,6 +68,7 @@
 #define TRACE_LOCKING               NO
 #define TRACE_DELIVERY_SAVES        NO
 #define TRACE_CONTACT_SAVES         NO
+#define TRACE_FILE_SEARCH           NO
 
 
 #ifdef HOCCER_DEV
@@ -90,6 +91,8 @@ NSString * const kHXOTransferCredentialsURLExportScheme = @"hcrexport";
 NSString * const kHXOTransferArchiveUTI = @"com.hoccer.ios.archive.v1";
 NSString * const kHXODefaultArchiveName = @"default.hciarch";
 
+NSString * const kFileChangedNotification = @"fileChangedNotification";
+
 static NSInteger validationErrorCount = 0;
 
 #ifdef WITH_WEBSERVER
@@ -103,7 +106,14 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSMutableDictionary *_idLocks;
     NSObject * _inspectionLock;
     NSMutableDictionary * _backgroundContexts;
+
+    // File monitoring Dispatch queue
+    dispatch_queue_t _dirMonitorDispatchQueue;
+
+    // A source of potential notifications
+    dispatch_source_t _dirMonitorDispatchSource;
     
+    NSDictionary *_fileEntities;
 }
 
 @property (nonatomic, strong) ModalTaskHUD * hud;
@@ -126,6 +136,146 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @synthesize rpcObjectModel = _rpcObjectModel;
 @synthesize userAgent;
+
+// see http://stackoverflow.com/questions/3181821/notification-of-changes-to-the-iphones-documents-directory
+
+-(void) setupDocumentDirectoryMonitoring {
+    
+    // Get the path to the home directory
+    NSString * homeDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
+    
+    // Create a new file descriptor - we need to convert the NSString to a char * i.e. C style string
+    int filedes = open([homeDirectory cStringUsingEncoding:NSASCIIStringEncoding], O_EVTONLY);
+    
+    // Create a dispatch queue - when a file changes the event will be sent to this queue
+    _dirMonitorDispatchQueue = dispatch_queue_create("FileMonitorQueue", 0);
+    
+    // Create a GCD source. This will monitor the file descriptor to see if a write command is detected
+    // The following options are available
+    
+    /*!
+     * @typedef dispatch_source_vnode_flags_t
+     * Type of dispatch_source_vnode flags
+     *
+     * @constant DISPATCH_VNODE_DELETE
+     * The filesystem object was deleted from the namespace.
+     *
+     * @constant DISPATCH_VNODE_WRITE
+     * The filesystem object data changed.
+     *
+     * @constant DISPATCH_VNODE_EXTEND
+     * The filesystem object changed in size.
+     *
+     * @constant DISPATCH_VNODE_ATTRIB
+     * The filesystem object metadata changed.
+     *
+     * @constant DISPATCH_VNODE_LINK
+     * The filesystem object link count changed.
+     *
+     * @constant DISPATCH_VNODE_RENAME
+     * The filesystem object was renamed in the namespace.
+     *
+     * @constant DISPATCH_VNODE_REVOKE
+     * The filesystem object was revoked.
+     */
+    
+    // Write covers - adding a file, renaming a file and deleting a file...
+    _dirMonitorDispatchSource = dispatch_source_create(DISPATCH_SOURCE_TYPE_VNODE,filedes,
+                                     DISPATCH_VNODE_WRITE,
+                                     _dirMonitorDispatchQueue);
+    
+    
+    // This block will be called when teh file changes
+    dispatch_source_set_event_handler(_dirMonitorDispatchSource, ^(){
+        // We call an NSNotification so the file can change can be detected anywhere
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFileChangedNotification object:Nil];
+    });
+    
+    // When we stop monitoring the file this will be called and it will close the file descriptor
+    dispatch_source_set_cancel_handler(_dirMonitorDispatchSource, ^() {
+        close(filedes);
+    });
+    
+    // Start monitoring the file...
+    dispatch_resume(_dirMonitorDispatchSource);
+    
+    // When we want to stop monitoring the file we call this
+    //dispatch_source_cancel(_dirMonitorDispatchSource);
+    
+    // To recieve a notification about the file change we can use the NSNotificationCenter
+    [[NSNotificationCenter defaultCenter] addObserverForName:kFileChangedNotification object:Nil queue:Nil usingBlock:^(NSNotification * notification) {
+        NSLog(@"Document Directory file change detected!");
+        [AppDelegate.instance handleDocumentDirectoryChanges];
+    }];
+    
+}
+
+-(BOOL)considerFile:(NSString*)file withEntity:(NSString*)entity {
+    if ([[file substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"."]) {
+        return NO;
+    }
+    if ([[entity substringWithRange:NSMakeRange(entity.length-2, 2)] isEqualToString:@"-0"]) {
+        return NO;
+    }
+    return YES;
+}
+
+-(void)handleDocumentDirectoryChanges {
+    NSDictionary * oldEntities = _fileEntities;
+    
+    NSURL * documentDirectory = [self applicationDocumentsDirectory];
+    NSArray * files = [AppDelegate fileNamesInDirectoryAtURL:documentDirectory ignorePaths:@[@"Inbox"] ignoreSuffixes:@[@"hciarch"]];
+    NSMutableDictionary * newEntities = [AppDelegate entityIdsOfFiles:files inDirectory:documentDirectory];
+    
+    NSMutableArray * changedFiles = [NSMutableArray new];
+    NSMutableArray * newFiles = [NSMutableArray new];
+    NSMutableArray * deletedFiles = [NSMutableArray new];
+    
+    // find deleted files first, we may filter out somw newEntities later
+    for (NSString * file in oldEntities) {
+        NSString * newEntity = newEntities[file];
+        if (newEntity == nil) {
+            if ([self considerFile:file withEntity:oldEntities[file]]) {
+                NSLog(@"deletedFile: %@ (%@)", file, oldEntities[file]);
+                [deletedFiles addObject:file];
+            } else {
+                NSLog(@"Not considering deletedFile: %@ (%@)", file, oldEntities[file]);
+            }
+        }
+    }
+    
+    // find new and changed files
+    for (NSString * file in newEntities) {
+        NSString * oldEntity = oldEntities[file];
+        if (oldEntity == nil) {
+            if ([self considerFile:file withEntity:newEntities[file]]) {
+                NSLog(@"newFile: %@ (%@)", file, newEntities[file]);
+                [newFiles addObject:file];
+            } else {
+                NSLog(@"Not considering newFile: %@ (%@)", file, oldEntities[file]);
+            }
+        } else {
+            NSString * newEntity = newEntities[file];
+            if (newEntity != nil) {
+                if (![newEntity isEqualToString:oldEntity]) {
+                    if ([self considerFile:file withEntity:newEntities[file]]) {
+                        NSLog(@"changedFile: %@ (%@ -> %@)", file, oldEntity, newEntity);
+                        [changedFiles addObject:file];
+                    } else {
+                        NSLog(@"Not considering changedFiles: %@ (%@)", file, newEntities[file]);
+                    }
+                }
+            }
+        }
+    }
+    if (changedFiles.count > 0 || newFiles.count > 0 || deletedFiles.count > 0) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [AttachmentMigration adoptOrphanedFiles:newFiles changedFiles:changedFiles deletedFiles:deletedFiles withRemovingAttachmentsNotInFiles:files inDirectory:documentDirectory];
+        });
+    }
+    
+    _fileEntities = newEntities;
+}
 
 -(void)printInspection {
     @synchronized(_inspectionLock) {
@@ -268,6 +418,7 @@ BOOL sameObjects(id obj1, id obj2) {
     _idLocks = [NSMutableDictionary new];
     _backgroundContexts = [NSMutableDictionary new];
     _inspectionLock = [NSObject new];
+    _fileEntities = [NSDictionary new];
 
 #ifdef DEBUG
 //#define DEFINE_OTHER_SERVERS
@@ -378,11 +529,14 @@ BOOL sameObjects(id obj1, id obj2) {
 #endif
 
     
-    [AttachmentMigration findOrphanedFilesAndRegisterAsAttachment];
+    //[AttachmentMigration findOrphanedFilesAndRegisterAsAttachment];
+    [self handleDocumentDirectoryChanges];
     [AttachmentMigration determinePlayabilityForAllAudioAttachments];
+    [self setupDocumentDirectoryMonitoring];
 
     NSAssert([self.window.rootViewController isKindOfClass:[UITabBarController class]], @"Expecting UITabBarController");
     ((UITabBarController *)self.window.rootViewController).delegate = self;
+    
     
     return YES;
 }
@@ -1085,7 +1239,7 @@ NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context) {
         //NSManagedObject *  obj = [context existingObjectWithID:objId error:&error];
         NSManagedObject *  obj = [context objectWithID:objId];
         if (obj == nil || error != nil) {
-            NSLog(@"could not fetch managed object from id %@, error=%@", objId, error);
+            NSLog(@"managedObjects: could not fetch managed object from id %@, error=%@", objId, error);
             return nil;
         }
         [result addObject:obj];
@@ -1100,7 +1254,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     for (NSManagedObjectID * objId in objectIds) {
         NSManagedObject *  obj = [context existingObjectWithID:objId error:&error];
         if (obj == nil || error != nil) {
-            NSLog(@"could not fetch managed object %d from id %@, error=%@", num, objId, error);
+            NSLog(@"existingManagedObjects: could not fetch managed object %d from id %@, error=%@", num, objId, error);
             return nil;
         }
         [result addObject:obj];
@@ -2063,7 +2217,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 }
 
 +(NSNumber*)sizeOfDirectoryAtURL:(NSURL*)theDirectoryURL ignoring:(NSArray*)ignorePaths {
-    NSLog(@"sizeOfDirectoryAtURL: %@",theDirectoryURL);
+    if (TRACE_FILE_SEARCH) NSLog(@"sizeOfDirectoryAtURL: %@",theDirectoryURL);
     BOOL isDirectory;
     BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[theDirectoryURL path] isDirectory:&isDirectory];
     NSError * error = nil;
@@ -2091,7 +2245,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     NSNumber * fileSize = [self sizeOfFileAtURL:fullPathURL withError:&error];
                     if (error == nil) {
                         totalSize += [fileSize longLongValue];
-                        NSLog(@"Counting file: %@, size %@, total %lld",subpath, fileSize, totalSize);
+                        if (TRACE_FILE_SEARCH) NSLog(@"Counting file: %@, size %@, total %lld",subpath, fileSize, totalSize);
                     } else {
                         NSLog(@"#ERROR: Failed to determine size of file %@, error=%@",fullPathURL,error);
                     }
@@ -2135,8 +2289,47 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return resultArray;
 }
 
++ (NSString *)etagFromAttributes:(NSDictionary*) attributes {
+    
+    if ([attributes objectForKey:NSFileModificationDate] &&
+        [attributes objectForKey:NSFileCreationDate] &&
+        [attributes objectForKey:NSFileSystemFileNumber]
+        )
+    {
+        unsigned long fileSystemNumber = [attributes fileSystemFileNumber];
+        unsigned long long created = [[attributes fileCreationDate] timeIntervalSince1970];
+        unsigned long long lastMod = [[attributes fileModificationDate] timeIntervalSince1970];
+        unsigned long long fileSize;
+        NSString * etag;
+        if ([attributes objectForKey:NSFileSize]) {
+            fileSize= [attributes fileSize];
+            etag = [NSString stringWithFormat:@"ev1-%lu-%qu-%qu-%qu",fileSystemNumber, lastMod, created, fileSize];
+        } else {
+            etag = [NSString stringWithFormat:@"ev1-%lu-%qu-%qu-d",fileSystemNumber, lastMod, created];
+        }
+        // NSLog(@"return etag %@", etag);
+        return etag;
+    }
+    return nil;
+}
+
++(NSMutableDictionary*)entityIdsOfFiles:(NSArray*)fileNames inDirectory:(NSURL*)theDirectoryURL {
+    NSMutableDictionary * result = [NSMutableDictionary new];
+    for (NSString * fileName in fileNames) {
+        NSString * fullPath = [[theDirectoryURL path] stringByAppendingPathComponent: fileName];
+        NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
+        NSString * etag = [self etagFromAttributes:attributes];
+        if (etag != nil) {
+            result[fileName] = etag;
+        } else {
+            NSLog(@"Could not get etag for file %@", fullPath);
+        }
+    }
+    return result;
+}
+
 +(NSArray*)fileNamesInDirectoryAtURL:(NSURL*)theDirectoryURL ignorePaths:(NSArray*)ignorePaths ignoreSuffixes:(NSArray*)ignoreSuffixes {
-    NSLog(@"fileUrlsInDirectoryAtURL: %@",theDirectoryURL);
+    if (TRACE_FILE_SEARCH) NSLog(@"fileUrlsInDirectoryAtURL: %@",theDirectoryURL);
     BOOL isDirectory;
     BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[theDirectoryURL path] isDirectory:&isDirectory];
     NSError * error = nil;
@@ -2177,9 +2370,9 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 }
                 
                 if (ignore) {
-                    NSLog(@"Ignoring file: %@",subpath);
+                    if (TRACE_FILE_SEARCH) NSLog(@"Ignoring file: %@",subpath);
                 } else {
-                    NSLog(@"Adding file: %@",subpath);
+                    if (TRACE_FILE_SEARCH) NSLog(@"Adding file: %@",subpath);
                     [result addObject:subpath];
                 }
             }

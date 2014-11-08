@@ -13,6 +13,7 @@
 @interface AttachmentMigration : NSObject
 
 + (void) determinePlayabilityForAllAudioAttachments;
-+ (void) findOrphanedFilesAndRegisterAsAttachment;
++ (void) adoptOrphanedFile:(NSString*)file inDirectory:(NSURL*)inDirectory;
++ (void) adoptOrphanedFiles:(NSArray*)newFiles changedFiles:(NSArray*)changedFiles deletedFiles:(NSArray*)deletedFiles withRemovingAttachmentsNotInFiles:(NSArray*)allFiles inDirectory:(NSURL*)inDirectory;
 
 @end

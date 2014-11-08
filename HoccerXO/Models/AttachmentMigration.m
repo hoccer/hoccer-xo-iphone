@@ -15,38 +15,56 @@
 
 #import <MobileCoreServices/MobileCoreServices.h>
 
-/*
+#define DEBUG_MIGRATION NO
 
-NSString *preferredUTIForExtension(NSString *ext) {
-    NSString *theUTI = (__bridge_transfer NSString *)
-    UTTypeCreatePreferredIdentifierForTag( kUTTagClassFilenameExtension, (__bridge CFStringRef) ext, NULL);
-    return theUTI;
-}
-
-NSString *preferredUTIForMIMEType(NSString *mime) {
-    NSString *theUTI = (__bridge_transfer NSString *)
-    UTTypeCreatePreferredIdentifierForTag( kUTTagClassMIMEType, (__bridge CFStringRef) mime, NULL);
-    return theUTI;
-}
-
-NSString *extensionForUTI(NSString *aUTI) {
-    CFStringRef theUTI = (__bridge CFStringRef) aUTI;
-    CFStringRef results = UTTypeCopyPreferredTagWithClass(theUTI, kUTTagClassFilenameExtension);
-    return (__bridge_transfer NSString *)results;
-}
-
-NSString *mimeTypeForUTI(NSString *aUTI) {
-    CFStringRef theUTI = (__bridge CFStringRef) aUTI;
-    CFStringRef results = UTTypeCopyPreferredTagWithClass(theUTI, kUTTagClassMIMEType);
-    return (__bridge_transfer NSString *)results;
-}
-*/
 @implementation AttachmentMigration
 
-+ (void) findOrphanedFilesAndRegisterAsAttachment {
++ (void)adoptOrphanedFile:(NSString*)file inDirectory:(NSURL*)inDirectory {
+    NSLog(@"orphaned file: %@", file);
+    
+    if ([[file substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"."]) {
+        NSLog(@"Ignoring file starting with dot: %@",file);
+        return;
+    }
+    
+    NSString * extension = [file pathExtension];
+    NSString * fullPath = [[inDirectory path] stringByAppendingPathComponent:file];
+    NSURL * fullURL = [NSURL fileURLWithPath:fullPath];
+    
+    NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
+    if (attributes != nil && [attributes objectForKey:NSFileSize] != nil) {
+        BOOL isDirectory = [[attributes fileType] isEqualToString:NSFileTypeDirectory];
+        
+        if (!isDirectory && extension.length > 0 && [attributes fileSize] > 0) {
+            NSString * uti = [Attachment UTIFromfileExtension:extension];
+            NSString * mediaType = [AppDelegate mediaTypeOfUTI:uti];
+            NSString * mimeType = [Attachment mimeTypeFromUTI:uti];
+            NSString * localURL = [fullURL absoluteString];
+            
+            // better to run this on main thread because it will generate previews and possible trigger observers
+            // seen the asset stuff causing problem when invoking from background thread
+            [AppDelegate.instance performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                NSLog(@"Making attachment for orphaned file %@ mediaType %@ mimeType %@ url %@", file, mediaType, mimeType, localURL);
+#define ARMED
+#ifdef ARMED
+                [Attachment makeAttachmentWithMediaType:mediaType mimeType:mimeType humanReadableFileName:file localURL:localURL assetURL:nil inContext:context whenReady:^(Attachment * attachment, NSError * error) {
+                    NSLog(@"Finished making attachment %@, error=%@",attachment, error);
+                    [attachment determinePlayability];
+                }];
+#endif
+            }];
+        } else {
+            NSLog(@"Ignoring file with zero size or no extension: %@",file);
+        }
+    }
+}
+
++ (void) adoptOrphanedFiles:(NSArray*)newFiles changedFiles:(NSArray*)changedFiles deletedFiles:(NSArray*)deletedFiles withRemovingAttachmentsNotInFiles:(NSArray*)allFiles inDirectory:(NSURL*)inDirectory {
     AppDelegate *delegate = [AppDelegate instance];
     
     [delegate performWithoutLockingInNewBackgroundContext:^(NSManagedObjectContext *context) {
+        
+        // fetch
         NSEntityDescription *entity = [NSEntityDescription entityForName:[Attachment entityName] inManagedObjectContext:context];
         NSFetchRequest *fetchRequest = [NSFetchRequest new];
         [fetchRequest setEntity:entity];
@@ -57,43 +75,27 @@ NSString *mimeTypeForUTI(NSString *aUTI) {
         for (Attachment * attachment in attachments) {
             NSURL * attachmentURL = [attachment contentURL];
             if ([attachmentURL isFileURL]) {
-                NSLog(@"Attachment owns file %@ playable %@", attachmentURL, attachment.playable);
+                if (DEBUG_MIGRATION) NSLog(@"Attachment owns file %@ playable %@", attachmentURL, attachment.playable);
                 NSString * file = [attachmentURL lastPathComponent];
                 [attachmentFiles addObject:file];
                 attachmentsByFile[file] = attachment;
             }
         }
         
-        NSArray * files = [AppDelegate fileNamesInDirectoryAtURL:[AppDelegate.instance applicationDocumentsDirectory] ignorePaths:@[@"credentials.json", @"default.hciarch", @"._.DS_Store", @".DS_Store"] ignoreSuffixes:@[]];
-        NSMutableSet * orphanedFilesSet = [NSMutableSet setWithArray:files];
+        //NSURL * documentDirectory = [AppDelegate.instance applicationDocumentsDirectory];
+        
+        //NSArray * files = [AppDelegate fileNamesInDirectoryAtURL:documentDirectory ignorePaths:@[@"credentials.json", @"default.hciarch", @"._.DS_Store", @".DS_Store"] ignoreSuffixes:@[]];
+        NSMutableSet * orphanedFilesSet = [NSMutableSet setWithArray:newFiles];
+        [orphanedFilesSet addObjectsFromArray:changedFiles];
         [orphanedFilesSet minusSet:attachmentFiles];
         
         NSMutableSet * orphanedAttachmentsSet = [NSMutableSet setWithSet:attachmentFiles];
-        [orphanedAttachmentsSet minusSet:[NSSet setWithArray:files]];
+        [orphanedAttachmentsSet minusSet:[NSSet setWithArray:allFiles]];
         
-        NSLog(@"Total attachments: %lu, orphaned attachments: %lu, total files: %lu, orphaned files:%lu", (unsigned long)attachmentFiles.count, (unsigned long)orphanedAttachmentsSet.count, (unsigned long)files.count, (unsigned long)orphanedFilesSet.count);
+        NSLog(@"Total attachments: %lu, orphaned attachments: %lu, total files: %lu, orphaned files:%lu", (unsigned long)attachmentFiles.count, (unsigned long)orphanedAttachmentsSet.count, (unsigned long)allFiles.count, (unsigned long)orphanedFilesSet.count);
         
         for (NSString * file in orphanedFilesSet) {
-            NSLog(@"orphaned file: %@", file);
-            NSString * extension = [file pathExtension];
-            if (extension.length > 0) {
-                NSString * uti = [Attachment UTIFromfileExtension:extension];
-                NSString * mediaType = [AppDelegate mediaTypeOfUTI:uti];
-                NSString * mimeType = [Attachment mimeTypeFromUTI:uti];
-                NSString * fullPath = [[[AppDelegate.instance applicationDocumentsDirectory] path] stringByAppendingPathComponent:file];
-                NSURL * fullURL = [NSURL fileURLWithPath:fullPath];
-                NSString * localURL = [fullURL absoluteString];
-                [AppDelegate.instance performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                    NSLog(@"Making attachment for orphaned file %@ mediaType %@ mimeType %@ url %@", file, mediaType, mimeType, localURL);
-#define ARMED
-#ifdef ARMED
-                    [Attachment makeAttachmentWithMediaType:mediaType mimeType:mimeType humanReadableFileName:file localURL:localURL assetURL:nil inContext:context whenReady:^(Attachment * attachment, NSError * error) {
-                        NSLog(@"Finished making attachment %@, error=%@",attachment, error);
-                        [attachment determinePlayability];
-                    }];
-#endif
-                }];
-            }
+            [self adoptOrphanedFile:file inDirectory:inDirectory];
         }
         
         NSMutableArray * orphanedAttachments = [NSMutableArray new];
@@ -101,6 +103,7 @@ NSString *mimeTypeForUTI(NSString *aUTI) {
             NSLog(@"orphaned attachments: %@", attachmentFile);
             [orphanedAttachments addObject:attachmentsByFile[attachmentFile]];
         }
+        [AppDelegate.instance saveContext:context];
         [AppDelegate.instance performAfterCurrentContextFinishedInMainContextPassing:orphanedAttachments
                                                                            withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
                                                                                for (Attachment * attachment in managedObjects) {
