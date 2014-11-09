@@ -763,13 +763,13 @@ NSArray * TransferStateName = @[@"detached",
         block(nil, nil);
         return;
     }
-    // TODO - find a way how to retrieve artwork from a file
     NSArray * myArtworkImages = [[self class]artworksForFileAtFileURL: self.localURL];
     if ([myArtworkImages count]) {
         UIImage * myfirstImage = myArtworkImages[0];
         block(myfirstImage, nil);
     } else {
-        block([UIImage imageNamed:@"cover-art-fallback.png"], nil);
+        block([[UIImage alloc]init], nil);
+        //block([UIImage imageNamed:@"cover-art-fallback.png"], nil);
     }
 }
 

@@ -63,6 +63,9 @@
     _artwork = [[UIImageView alloc] initWithFrame: CGRectMake(0, 0, [self artworkSize], [self artworkSize])];
     _artwork.autoresizingMask = UIViewAutoresizingNone;
     _artwork.translatesAutoresizingMaskIntoConstraints = NO;
+    //_artwork.contentMode = UIViewContentModeScaleAspectFill;
+    _artwork.contentMode = UIViewContentModeScaleAspectFit;
+    
     [self.contentView addSubview: _artwork];
     
     UIView * title = _titleLabel;
@@ -187,8 +190,13 @@
         AttachmentInfo *info = [AttachmentInfo infoForAttachment:attachment];
         
         if ([attachment.mediaType isEqualToString:@"audio"]) {
-            self.titleLabel.text = info.audioTitle;
-            self.subtitleLabel.text = info.audioArtistAndAlbum;
+            if ([attachment.humanReadableFileName hasPrefix:@"recording"]) {
+                self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", info.duration, info.dataSize];
+                self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@",NSLocalizedString(@"attachment_type_audio_recording", nil),info.creationDate];
+            } else {
+                self.titleLabel.text = info.audioTitle;
+                self.subtitleLabel.text = info.audioArtistAndAlbum;
+            }
         } else if ([attachment.mediaType isEqualToString:@"video"]) {
             self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", info.duration, info.dataSize];
             self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", info.typeDescription, info.creationDate];;
@@ -205,16 +213,25 @@
             self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", info.filename, info.dataSize];
             self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", info.typeDescription, info.creationDate];;
         }
-        
-        self.artwork.image = attachment.previewImage;
-        if (!attachment.previewImage) {
-            [attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *error) {
-                if (error == nil) {
-                    self.artwork.image = attachment.previewImage;
-                } else {
-                    NSLog(@"ERROR: Loading audio artwork preview image failed: %@", error);
-                }
-            }];
+
+        if (([attachment.mediaType isEqualToString:@"audio"] && ![attachment.humanReadableFileName hasPrefix:@"recording"])||
+            [attachment.mediaType isEqualToString:@"video"] ||
+            [attachment.mediaType isEqualToString:@"image"] )
+        {
+            self.artwork.image = attachment.previewImage;
+            if (!attachment.previewImage) {
+                [attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *error) {
+                    if (error == nil &&  attachment.previewImage.size.height != 0) {
+                        self.artwork.image = attachment.previewImage;
+                    } else {
+                        self.artwork.image = attachment.previewIcon;
+                    }
+                }];
+            } else if (attachment.previewImage.size.height == 0) {
+                self.artwork.image = attachment.previewIcon;
+            }
+        } else {
+            self.artwork.image = attachment.previewIcon;
         }
     } else {
         self.titleLabel.text = @"";
