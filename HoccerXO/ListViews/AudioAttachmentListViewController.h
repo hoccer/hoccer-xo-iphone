@@ -24,4 +24,6 @@
 @property (nonatomic, strong) UIButton *deleteButton;
 @property (nonatomic, strong) UIButton *sendButton;
 
+@property (nonatomic,strong) UISegmentedControl * mediaTypeControl;
+
 @end

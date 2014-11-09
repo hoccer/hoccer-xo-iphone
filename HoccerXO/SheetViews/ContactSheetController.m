@@ -250,7 +250,7 @@ static int  groupMemberContext;
     if ([item isEqual: self.chatItem]) {
         return @(self.contact.messages.count);
     } else if ([item isEqual: self.attachmentItem]) {
-        NSFetchRequest *fetchRequest = [MusicBrowserDataSource fetchRequestForContact:self.contact managedObjectModel:AppDelegate.instance.managedObjectModel];
+        NSFetchRequest *fetchRequest = [MusicBrowserDataSource fetchRequestForContact:self.contact withMediaTypes:[Attachment allMediaTypes]  managedObjectModel:AppDelegate.instance.managedObjectModel];
         fetchRequest.includesPropertyValues = NO;
         fetchRequest.includesSubentities = NO;
         return @([AppDelegate.instance.mainObjectContext countForFetchRequest:fetchRequest error:nil]);

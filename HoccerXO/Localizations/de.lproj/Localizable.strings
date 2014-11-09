@@ -112,6 +112,10 @@
 "attachment_type_geolocation"            = "Ort";
 "attachment_type_data"                   = "Dokument";
 
+"attachment_type_images"                  = "Bilder";
+"attachment_type_audio_video"             = "AV";
+"attachment_type_other"                   = "Andere";
+
 "attachment_overlimit_title"             = "Nachricht versenden?";
 "attachment_overlimit_upload_question"   = "Der Anhang ist %@ groß. Willst du die Nachricht wirklich versenden?";
 "attachment_overlimit_confirm"           = "Senden";
@@ -151,13 +155,13 @@
 "audio_attachment_list_footer_delete"              = "löschen";
 "audio_attachment_list_footer_add"                 = "hinzufügen";
 
-"audio_attachment_list_count_attachments"          = "%u Songs";
-"audio_attachment_list_count_attachments (one)"    = "Einen Song";
+"audio_attachment_list_count_attachments"          = "%u Dateien";
+"audio_attachment_list_count_attachments (one)"    = "Eine Datei";
 "audio_attachment_list_confirm_delete_title"       = "%@ löschen?";
 "audio_attachment_list_remove_from_collection"     = "Aus Sammlung entfernen";
 
 "audio_attachment_list_search_section_senders"     = "Absender";
-"audio_attachment_list_search_section_attachments" = "Songs";
+"audio_attachment_list_search_section_attachments" = "Dateien";
 
 //==============================================================================
 // Audio Player
@@ -250,6 +254,7 @@
 //==============================================================================
 
 "collection_list_nav_title"         = "Sammlungen";
+"collection_list_nav_title_short"   = "Samml.";
 "collection_new_collection_title"   = "Neue Sammlung";
 "collection_new_collection_message" = "Bitte gib einen Namen für die neue Sammlung ein:";
 

@@ -26,6 +26,7 @@
 #import "MusicBrowserDataSource.h"
 #import "tab_attachments.h"
 
+#define FETCHED_RESULTS_DEBUG NO
 
 @interface AudioAttachmentListViewController ()
 
@@ -57,6 +58,17 @@
     [self preferredContentSizeChanged:nil];
     
     self.tableView.contentOffset = CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
+
+
+    self.mediaTypeControl = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"attachment_type_images", nil), NSLocalizedString(@"attachment_type_audio_video", nil), NSLocalizedString(@"attachment_type_other", nil)]];
+    self.mediaTypeControl.selectedSegmentIndex = 0;
+    [self.mediaTypeControl addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
+    self.navigationItem.titleView = self.mediaTypeControl;
+}
+
+- (void) segmentChanged: (id) sender {
+    if (FETCHED_RESULTS_DEBUG) NSLog(@"AudioAttachmentListViewController:segmentChanged, sender= %@", sender);
+    [self updateDataSource];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -124,7 +136,7 @@
         if (self.tableView.isEditing) {
             self.navigationItem.rightBarButtonItem = nil;
         } else {
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title_short", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
         }
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:editButton target:self action:@selector(toggleEditMode:)];
     }
@@ -171,10 +183,23 @@
 - (void) updateDataSource {
     if (self.collection) {
         self.dataSource = [[CollectionDataSource alloc] initWithCollection:self.collection];
-    } else if (self.contact) {
-        self.dataSource = [[MusicBrowserDataSource alloc] initWithContact:self.contact];
     } else {
-        self.dataSource = [[MusicBrowserDataSource alloc] init];
+        NSArray * mediaTypes = nil;
+        NSInteger selectedSegment = self.mediaTypeControl.selectedSegmentIndex;
+        switch (selectedSegment) {
+            case 0:
+                mediaTypes = [Attachment imageMediaTypes];
+                break;
+            case 1:
+                mediaTypes = [Attachment audioVideoMediaTypes];
+                break;
+            case 2:
+                mediaTypes = [Attachment otherMediaTypes];
+                break;
+            default:
+                break;
+        }
+        self.dataSource = [[MusicBrowserDataSource alloc] initWithContact:self.contact andMediaTypes:mediaTypes];
     }
 
     self.dataSource.delegate = self;

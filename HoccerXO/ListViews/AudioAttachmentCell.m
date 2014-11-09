@@ -147,6 +147,30 @@
     }
 }
 
+/*
+ @property (nonatomic,readonly) NSString * vcardName;
+ @property (nonatomic,readonly) NSString * vcardOrganization;
+ @property (nonatomic,readonly) NSString * vcardEmail;
+ 
+ @property (nonatomic,readonly) NSString * audioTitle;
+ @property (nonatomic,readonly) NSString * audioArtist;
+ @property (nonatomic,readonly) NSString * audioAlbum;
+ @property (nonatomic,readonly) NSTimeInterval avDuration;
+ @property (nonatomic,readonly) NSString * audioArtistAndAlbum;
+ @property (nonatomic,readonly) NSString * audioArtistAlbumAndDuration;
+ 
+ @property (nonatomic,readonly) NSString * avFormat;
+ @property (nonatomic,readonly) NSString * avDescription;
+ 
+ @property (nonatomic,readonly) NSString * frameSize; // audio, video and artwork size
+ @property (nonatomic,readonly) NSString * dataSize;
+ @property (nonatomic,readonly) NSString * duration;
+ @property (nonatomic,readonly) NSString * location;
+ @property (nonatomic,readonly) NSString * creationDate;
+ 
+ @property (nonatomic,readonly) NSString * typeDescription;
+*/
+
 - (void) setAttachment:(Attachment *)attachment {
     if (attachment == _attachment) {
         // This is particularly important to break an infinite loop where [attachment
@@ -161,10 +185,28 @@
 
     if (attachment) {
         AttachmentInfo *info = [AttachmentInfo infoForAttachment:attachment];
-        self.titleLabel.text = info.audioTitle;
-        self.subtitleLabel.text = info.audioArtistAndAlbum;
-        self.artwork.image = attachment.previewImage;
         
+        if ([attachment.mediaType isEqualToString:@"audio"]) {
+            self.titleLabel.text = info.audioTitle;
+            self.subtitleLabel.text = info.audioArtistAndAlbum;
+        } else if ([attachment.mediaType isEqualToString:@"video"]) {
+            self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", info.duration, info.dataSize];
+            self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", info.typeDescription, info.creationDate];;
+        } else if ([attachment.mediaType isEqualToString:@"image"]) {
+            self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", info.dataSize, info.frameSize];
+            self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", info.typeDescription, info.creationDate];;
+        } else if ([attachment.mediaType isEqualToString:@"geolocation"]) {
+            self.titleLabel.text = [NSString stringWithFormat:@"%@", info.location];
+            self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"attachment_type_geolocation",nil), info.creationDate];;
+        } else if ([attachment.mediaType isEqualToString:@"vcard"]) {
+            self.titleLabel.text = [NSString stringWithFormat:@"%@", info.vcardPreviewName];
+            self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", NSLocalizedString(@"attachment_type_vcard",nil), info.creationDate];;
+        } else if ([attachment.mediaType isEqualToString:@"data"]) {
+            self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", info.filename, info.dataSize];
+            self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", info.typeDescription, info.creationDate];;
+        }
+        
+        self.artwork.image = attachment.previewImage;
         if (!attachment.previewImage) {
             [attachment loadPreviewImageIntoCacheWithCompletion:^(NSError *error) {
                 if (error == nil) {

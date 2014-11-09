@@ -309,6 +309,7 @@
 		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
 		E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = E980E27418648D80004AF79D /* UIResponder+Debug.m */; };
+		E98769751A100DD70068CA33 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98769741A100DD70068CA33 /* ImageIO.framework */; };
 		E991E4FF1A0D11F300015BEE /* DAVConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E991E4F81A0D11F300015BEE /* DAVConnection.m */; };
 		E991E5001A0D11F300015BEE /* DAVResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E991E4FA1A0D11F300015BEE /* DAVResponse.m */; };
 		E991E5011A0D11F300015BEE /* DELETEResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E991E4FC1A0D11F300015BEE /* DELETEResponse.m */; };
@@ -1096,6 +1097,7 @@
 		E980D446171EF8950060C1B5 /* CryptingInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptingInputStream.m; sourceTree = "<group>"; };
 		E980E27318648D80004AF79D /* UIResponder+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIResponder+Debug.h"; sourceTree = "<group>"; };
 		E980E27418648D80004AF79D /* UIResponder+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIResponder+Debug.m"; sourceTree = "<group>"; };
+		E98769741A100DD70068CA33 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		E991E4F71A0D11F300015BEE /* DAVConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAVConnection.h; sourceTree = "<group>"; };
 		E991E4F81A0D11F300015BEE /* DAVConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAVConnection.m; sourceTree = "<group>"; };
 		E991E4F91A0D11F300015BEE /* DAVResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAVResponse.h; sourceTree = "<group>"; };
@@ -1281,6 +1283,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E98769751A100DD70068CA33 /* ImageIO.framework in Frameworks */,
 				E991E5121A0D134C00015BEE /* libxml2.2.dylib in Frameworks */,
 				6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */,
 				6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */,
@@ -1917,6 +1920,7 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E98769741A100DD70068CA33 /* ImageIO.framework */,
 				E991E5111A0D134C00015BEE /* libxml2.2.dylib */,
 				6327F37318B8C390007D79E3 /* Accelerate.framework */,
 				E92FAED61870A0F900D72D79 /* libz.dylib */,

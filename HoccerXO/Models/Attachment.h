@@ -195,4 +195,9 @@ typedef enum AttachmentStates {
 + (BOOL) tooLargeImage:(UIImage *)theFullImage;
 + (NSString*) getStateName:(AttachmentState)state;
 
++ (NSArray*)allMediaTypes;
++ (NSArray*)audioVideoMediaTypes;
++ (NSArray*)imageMediaTypes;
++ (NSArray*)otherMediaTypes;
+
 @end

@@ -30,7 +30,24 @@
     NSString *title = NSLocalizedString(@"collection_list_nav_title", nil);
     self.navigationItem.title = title;
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(newCollection:)];
+        
 }
+/*
+ 
+ "attachment_type_images"                  = "Images";
+ "attachment_type_audio_video"             = "AV";
+ "attachment_type_other"                   = "Other";
+
+- (void) setupTitle {
+    if (self.hasGroupContactToggle) {
+        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"contact_list_nav_title", nil), NSLocalizedString(@"group_list_nav_title", nil)]];
+        self.groupContactsToggle.selectedSegmentIndex = 0;
+        [self.groupContactsToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
+        self.navigationItem.titleView = self.groupContactsToggle;
+    }
+    self.navigationItem.title = NSLocalizedString(@"contact_list_nav_title", nil);
+}
+*/
 
 #pragma mark - Actions
 

@@ -144,6 +144,21 @@
     _transferRetryTimer = theTimer;
 }
 
++ (NSArray*)allMediaTypes {
+    return @[@"image",@"video",@"audio",@"vcard",@"geolocation",@"data"];
+}
+
++ (NSArray*)audioVideoMediaTypes {
+    return @[@"video",@"audio"];
+}
+
++ (NSArray*)imageMediaTypes {
+    return @[@"image"];
+}
+
++ (NSArray*)otherMediaTypes {
+    return @[@"vcard",@"geolocation",@"data"];
+}
 
 +(NSString*) getStateName:(AttachmentState)state {
 
