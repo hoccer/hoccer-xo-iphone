@@ -725,6 +725,8 @@ NSArray * TransferStateName = @[@"detached",
             }
         } else if ([keySpace isEqualToString:AVMetadataKeySpaceiTunes]) {
             imageData = [i.value copyWithZone:nil];
+        } else if ([keySpace isEqualToString:AVMetadataKeySpaceISOUserData]) {
+            imageData = [i.value copyWithZone:nil];
         } else {
             NSLog(@"=== unhandled media item %@", i);
         }

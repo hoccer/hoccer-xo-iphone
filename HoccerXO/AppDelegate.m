@@ -188,7 +188,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     // This block will be called when teh file changes
     dispatch_source_set_event_handler(_dirMonitorDispatchSource, ^(){
         // We call an NSNotification so the file can change can be detected anywhere
-        [[NSNotificationCenter defaultCenter] postNotificationName:kFileChangedNotification object:Nil];
+        [[NSNotificationCenter defaultCenter] postNotificationName:kFileChangedNotification object:nil];
     });
     
     // When we stop monitoring the file this will be called and it will close the file descriptor
@@ -203,7 +203,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     //dispatch_source_cancel(_dirMonitorDispatchSource);
     
     // To recieve a notification about the file change we can use the NSNotificationCenter
-    [[NSNotificationCenter defaultCenter] addObserverForName:kFileChangedNotification object:Nil queue:Nil usingBlock:^(NSNotification * notification) {
+    [[NSNotificationCenter defaultCenter] addObserverForName:kFileChangedNotification object:nil queue:nil usingBlock:^(NSNotification * notification) {
         NSLog(@"Document Directory file change detected!");
         [AppDelegate.instance handleDocumentDirectoryChanges];
     }];
@@ -220,7 +220,15 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return YES;
 }
 
+-(BOOL)emptyFile:(NSString*)file withEntity:(NSString*)entity {
+    if ([[entity substringWithRange:NSMakeRange(entity.length-2, 2)] isEqualToString:@"-0"]) {
+        return YES;
+    }
+    return NO;
+}
+
 -(void)handleDocumentDirectoryChanges {
+    NSLog(@"handleDocumentDirectoryChanges");
     NSDictionary * oldEntities = _fileEntities;
     
     NSURL * documentDirectory = [self applicationDocumentsDirectory];
@@ -244,15 +252,27 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         }
     }
     
+    BOOL retryScheduled = NO;
     // find new and changed files
     for (NSString * file in newEntities) {
         NSString * oldEntity = oldEntities[file];
         if (oldEntity == nil) {
+            if (!retryScheduled && [self emptyFile:file withEntity:newEntities[file]]) {
+                double delayInSeconds = 5;
+                NSLog(@"newFile: %@ is empty, retry changes in %f secs", file, delayInSeconds);
+                // this happens when files are added using itunes
+                
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                    [self handleDocumentDirectoryChanges];
+                });
+                retryScheduled = YES;
+            }
             if ([self considerFile:file withEntity:newEntities[file]]) {
                 NSLog(@"newFile: %@ (%@)", file, newEntities[file]);
                 [newFiles addObject:file];
             } else {
-                NSLog(@"Not considering newFile: %@ (%@)", file, oldEntities[file]);
+                NSLog(@"Not considering newFile: %@ (%@)", file, newEntities[file]);
             }
         } else {
             NSString * newEntity = newEntities[file];

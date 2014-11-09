@@ -43,7 +43,21 @@
     
     self.passwordTextField.backgroundColor = [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1.0];
     self.passwordTextField.delegate = self;
-}
+    self.statusLabel.text = @"";
+    
+    self.passwordLabel.text = NSLocalizedString(@"password_title", nil);
+    self.urlLabel.text = NSLocalizedString(@"server_adress_title", nil);
+    
+    NSString * password = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
+    if ([password isEqualToString:@"hoccer-pw"]) {
+        unsigned long randomNumber = abs(rand())%10000;
+        NSString * newPassword = [NSString stringWithFormat:@"miradumo%lu",randomNumber];
+        [[HXOUserDefaults standardUserDefaults] setValue:newPassword forKey:kHXOHttpServerPassword];
+        [[HXOUserDefaults standardUserDefaults] synchronize];
+        
+    }
+    self.passwordTextField.text = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
+ }
 
 - (void)didReceiveMemoryWarning
 {
@@ -144,28 +158,47 @@ static inline NSString * URLEncodedString(NSString *string)
 }
 
 -(void)updateTextFields {
+    NSDictionary * adresses = AppDelegate.instance.ownIPAddresses;
+    NSString * ipV4 = adresses[@"en0/ipv4"];
+#ifdef SHOW_DETAIL_STATUS
+    NSString * ipV6 = adresses[@"en0/ipv6"];
+    NSString * wanIPV4 = adresses[@"pdp_ip0/ipv4"];
+    NSString * wanIPV6 = adresses[@"pdp_ip0/ipv6"];
+#endif
+    BOOL canRun = (ipV4 != nil && ipV4.length > 0);
+    
     if (AppDelegate.instance.httpServerIsRunning) {
         HTTPServer * server = AppDelegate.instance.httpServer;
+        
+        if (!canRun) {
+            [AppDelegate.instance stopHttpServer];
+            return;
+        }
+        
         //self.statusTextField.text = NSLocalizedString(@"Server is running", nil);
-        NSDictionary * adresses = AppDelegate.instance.ownIPAddresses;
-        NSString * ipV4 = adresses[@"en0/ipv4"];
-        NSString * ipV6 = adresses[@"en0/ipv6"];
-        NSString * wanIPV4 = adresses[@"pdp_ip0/ipv4"];
-        NSString * wanIPV6 = adresses[@"pdp_ip0/ipv6"];
         int port = server.listeningPort;
+#ifdef SHOW_DETAIL_STATUS
         NSString * status = [NSString stringWithFormat:@"Server is running\nIPV4-LAN-Address:%@\nIPV6-LAN-Address:%@\nIPV4-WAN-Address:%@\nIPV6-WAN-Address:%@\nport=%d\nBonjour name=%@\nBonjour domain=%@",ipV4, ipV6, wanIPV4, wanIPV6,port,server.publishedName,server.domain];
         
         self.statusTextField.text = status;
+#else
+        self.statusTextField.text = NSLocalizedString(@"server_running", nil);
         //NSLog(@"%@",self.statusTextField.text);
-
+#endif
         //self.urlTextField.text = [NSString stringWithFormat:@"IPV4: http://%@:%d/ \nIPV6: http://[%@]:%d/",ipV4,port, ipV6,port];
+        self.urlLabel.text = NSLocalizedString(@"server_adress_title", nil);
         self.urlTextField.text = [NSString stringWithFormat:@"http://%@:%d/",ipV4,port];
         self.startButton.enabled = NO;
         self.stopButton.enabled = YES;
     } else {
         self.urlTextField.text = @"";//NSLocalizedString(@"Server is stopped", nil);
-        self.statusTextField.text = NSLocalizedString(@"Server is stopped", nil);
-        self.startButton.enabled = YES;
+        if (canRun) {
+            self.statusTextField.text = NSLocalizedString(@"server_stopped_can_run", nil);
+        } else {
+            self.statusTextField.text = NSLocalizedString(@"server_stopped_can_not_run", nil);
+        }
+        self.urlLabel.text = @"";
+        self.startButton.enabled = canRun;
         self.stopButton.enabled = NO;
     }
     self.passwordTextField.text = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
