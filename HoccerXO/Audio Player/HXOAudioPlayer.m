@@ -182,6 +182,7 @@
     self.playlistIndex = index;
     
     Attachment *attachment = [self.playlist attachmentAtIndex:self.currentTrackNumber];
+    NSLog(@"playAtIndex %d, attachment = %@", index, attachment.humanReadableFileName);
     return [self playAttachment:attachment];
 }
 

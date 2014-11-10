@@ -179,7 +179,7 @@
 - (void) loadInfoForImageAttachment: (Attachment *) attachment {
     
     if (attachment.height > 0) {
-        _frameSize = [NSString stringWithFormat:@"%fx%f", attachment.width, attachment.height];
+        _frameSize = [NSString stringWithFormat:@"%lux%lu", (unsigned long)attachment.width, (unsigned long)attachment.height];
         return;
     }
     
@@ -203,7 +203,7 @@
         
         attachment.width = [width doubleValue];
         attachment.height = [height doubleValue];
-        _frameSize = [NSString stringWithFormat:@"%@x%@", width, height];
+        _frameSize = [NSString stringWithFormat:@"%lux%lu", width.unsignedLongValue, height.unsignedLongValue];
         
         
         CFDictionaryRef exif = CFDictionaryGetValue(imageProperties, kCGImagePropertyExifDictionary);

@@ -71,7 +71,7 @@
         [fetchRequest setEntity:entity];
         NSArray *attachments = [context executeFetchRequest:fetchRequest error:nil];
         
-        NSMutableSet * brokenAttachments = [NSMutableSet new];
+        NSMutableArray * brokenAttachments = [NSMutableArray new];
         NSMutableSet * attachmentFiles = [NSMutableSet new];
         NSMutableDictionary * attachmentsByFile = [NSMutableDictionary new];
         NSMutableDictionary * attachmentsByURL = [NSMutableDictionary new]; // for non-file url duplicate detection
@@ -107,7 +107,14 @@
                          ++urlDuplicates;
                      }
                 } else {
-                    if (attachment.message == nil) {
+                    BOOL oldEnough = NO;
+                    if (attachment.creationDate == nil) {
+                        oldEnough = YES;
+                    } else {
+                        NSTimeInterval attachmentAge = -[attachment.creationDate timeIntervalSinceNow];
+                        oldEnough = attachmentAge > 60;
+                    }
+                    if (attachment.message == nil && oldEnough) {
                         NSLog(@"adding for deletion attachment without message and content: %@", attachment);
                         [brokenAttachments addObject:attachment];
                     }
@@ -163,27 +170,34 @@
         
         NSLog(@"Total attachments: %lu, total attached files: %lu, duplicates = %lu, orphaned attachments: %lu, broken attachments: %lu, total files: %lu, orphaned files:%lu", (unsigned long)attachments.count, (unsigned long)attachmentFiles.count, (unsigned long)attachments.count - (unsigned long)attachmentFiles.count,(unsigned long)orphanedAttachmentsSet.count, (unsigned long)brokenAttachments.count, (unsigned long)allFiles.count, (unsigned long)orphanedFilesSet.count);
         
-        [orphanedAttachmentsSet unionSet:brokenAttachments];
-        
         for (NSString * file in orphanedFilesSet) {
             [self adoptOrphanedFile:file inDirectory:inDirectory];
         }
         
         NSMutableArray * orphanedAttachments = [NSMutableArray new];
         for (NSString * attachmentFile in orphanedAttachmentsSet) {
-            NSLog(@"orphaned/broken attachments: %@", attachmentFile);
+            NSLog(@"orphaned attachments: %@", attachmentFile);
             [orphanedAttachments addObject:attachmentsByFile[attachmentFile]];
         }
         [AppDelegate.instance saveContext:context];
-        [AppDelegate.instance performAfterCurrentContextFinishedInMainContextPassing:orphanedAttachments
-                                                                           withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
-                                                                               for (Attachment * attachment in managedObjects) {
-                                                                                   NSLog(@"Deleting orphaned/broken attachment object pointing to %@", attachment.contentURL);
-#ifdef ARMED
-                                                                                   [AppDelegate.instance deleteObject:attachment inContext:context];
-#endif
-                                                                               }
-                                                                           }];
+        if (orphanedAttachments.count > 0) {
+            [AppDelegate.instance performAfterCurrentContextFinishedInMainContextPassing:orphanedAttachments
+                                                                               withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                                                                                   for (Attachment * attachment in managedObjects) {
+                                                                                       NSLog(@"Deleting orphaned attachment object pointing to %@", attachment.contentURL);
+                                                                                       [AppDelegate.instance deleteObject:attachment inContext:context];
+                                                                                   }
+                                                                               }];
+        }
+        if (brokenAttachments.count > 0) {
+            [AppDelegate.instance performAfterCurrentContextFinishedInMainContextPassing:brokenAttachments
+                                                                               withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
+                                                                                   for (Attachment * attachment in managedObjects) {
+                                                                                       NSLog(@"Deleting broken attachment object pointing to %@", attachment.contentURL);
+                                                                                       [AppDelegate.instance deleteObject:attachment inContext:context];
+                                                                                   }
+                                                                               }];
+        }
     }];
 }
 

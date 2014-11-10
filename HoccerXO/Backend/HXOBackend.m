@@ -628,21 +628,25 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) createUrlsForTransferOfAttachmentOfMessage:(HXOMessage*)message {
     if (CONNECTION_TRACE) {NSLog(@"createUrlsForTransferOfAttachmentOfMessage: %@", message);}
     Attachment * attachment = message.attachment;
-    [self createFileForTransferWithSize:attachment.cipheredSize completionHandler:^(NSDictionary *urls) {
-        if (urls && [urls[@"uploadUrl"] length]>0 && [urls[@"downloadUrl"] length]>0 && [urls[@"fileId"] length]>0) {
-            if (CONNECTION_TRACE) NSLog(@"createUrlsForTransferOfAttachmentOfMessage: got attachment urls=%@", urls);
-            attachment.uploadURL = urls[@"uploadUrl"];
-            attachment.remoteURL = urls[@"downloadUrl"];
-            message.attachmentFileId = urls[@"fileId"];
-            attachment.transferSize = @(0);
-            attachment.cipherTransferSize = @(0);
-            // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
-            [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:attachment];
-        } else {
-            NSLog(@"ERROR: Could not get attachment urls, retrying");
-            [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(retryCreateUrlsForTransferOfAttachment:) userInfo:message repeats:NO];
-        }
-    }];
+    if (attachment != nil) {
+        [self createFileForTransferWithSize:attachment.cipheredSize completionHandler:^(NSDictionary *urls) {
+            if (urls && [urls[@"uploadUrl"] length]>0 && [urls[@"downloadUrl"] length]>0 && [urls[@"fileId"] length]>0) {
+                if (CONNECTION_TRACE) NSLog(@"createUrlsForTransferOfAttachmentOfMessage: got attachment urls=%@", urls);
+                attachment.uploadURL = urls[@"uploadUrl"];
+                attachment.remoteURL = urls[@"downloadUrl"];
+                message.attachmentFileId = urls[@"fileId"];
+                attachment.transferSize = @(0);
+                attachment.cipherTransferSize = @(0);
+                // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
+                [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:attachment];
+            } else {
+                NSLog(@"ERROR: Could not get attachment urls, retrying");
+                [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(retryCreateUrlsForTransferOfAttachment:) userInfo:message repeats:NO];
+            }
+        }];
+    } else {
+        NSLog(@"ERROR: createUrlsForTransferOfAttachmentOfMessage: message without attachment");
+    }
 }
 
 - (void) retryCreateUrlsForTransferOfAttachment:(NSTimer*)theTimer {
