@@ -1094,7 +1094,7 @@ nil
     //NSData * previewData = UIImageJPEGRepresentation( preview, photoQualityCompressionSetting/10.0);
     NSData * previewData = UIImagePNGRepresentation( preview );
     
-    NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike: @"location.json"];
+    NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike: @"location.hcrgeo"];
     NSDictionary * json = @{ @"location": @{ @"type": @"point",
                                              @"coordinates": @[ @(placemark.coordinate.latitude), @(placemark.coordinate.longitude)]},
                              @"previewImage": [previewData asBase64EncodedString]};

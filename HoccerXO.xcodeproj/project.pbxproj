@@ -1099,6 +1099,7 @@
 		E980E27418648D80004AF79D /* UIResponder+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIResponder+Debug.m"; sourceTree = "<group>"; };
 		E98769741A100DD70068CA33 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
 		E98769841A104E110068CA33 /* AttachmentPresenterDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentPresenterDelegate.h; sourceTree = "<group>"; };
+		E98769861A1064E00068CA33 /* HoccerXO-46.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-46.xcdatamodel"; sourceTree = "<group>"; };
 		E991E4F71A0D11F300015BEE /* DAVConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAVConnection.h; sourceTree = "<group>"; };
 		E991E4F81A0D11F300015BEE /* DAVConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAVConnection.m; sourceTree = "<group>"; };
 		E991E4F91A0D11F300015BEE /* DAVResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAVResponse.h; sourceTree = "<group>"; };
@@ -4025,6 +4026,7 @@
 		E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				E98769861A1064E00068CA33 /* HoccerXO-46.xcdatamodel */,
 				E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */,
 				E9A7419419605104000E4C03 /* HoccerXO-43.xcdatamodel */,
 				C5C35982196AB09D00D835F3 /* HoccerXO-44.xcdatamodel */,
@@ -4054,7 +4056,7 @@
 				E94108F119472C4B00E95A50 /* HoccerXO-40.xcdatamodel */,
 				E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */,
 			);
-			currentVersion = C5C3599B196ACF5500D835F3 /* HoccerXO-45.xcdatamodel */;
+			currentVersion = E98769861A1064E00068CA33 /* HoccerXO-46.xcdatamodel */;
 			path = HoccerXO.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

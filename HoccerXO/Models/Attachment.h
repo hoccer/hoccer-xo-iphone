@@ -85,6 +85,13 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSData * sourceMAC;               // Message Authentication Code computed at data source
 @property (nonatomic, strong) NSData * destinationMAC;          // Message Authentication Code computed at data destination
 @property (nonatomic, strong) NSString * origCryptedJsonString; // the original encrypted json rep. of the incoming attachment for hmac calculation
+// new properties with Model Version 46 not reliably available yet on old databse
+@property (nonatomic)         double     width;                  // width for images and movies
+@property (nonatomic)         double     height;                 // width for images and movies
+@property (nonatomic, strong) NSString * entityTag;              // some content (file) unique tag that changes when the content changes
+@property (nonatomic, strong) NSString * duplicate;              // set to "YES" when there is at another attachment with the same content url that has the duplicate value not set
+@property (nonatomic, strong) NSString * universalType;          // the UTI
+@property (nonatomic, strong) NSDate   * creationDate;           // date when this record was created
 
 
 // virtual properties

@@ -28,6 +28,7 @@
 #import "HXOEnvironment.h"
 #import "HXOAudioPlayer.h"
 #import "AudioAttachmentListViewController.h"
+#import "NSString+Regexp.h"
 
 #import "Delivery.h" //DEBUG
 
@@ -205,7 +206,13 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     // To recieve a notification about the file change we can use the NSNotificationCenter
     [[NSNotificationCenter defaultCenter] addObserverForName:kFileChangedNotification object:nil queue:nil usingBlock:^(NSNotification * notification) {
         NSLog(@"Document Directory file change detected!");
-        [AppDelegate.instance handleDocumentDirectoryChanges];
+        //[AppDelegate.instance handleDocumentDirectoryChanges];
+        
+        double delayInSeconds = 1;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, _dirMonitorDispatchQueue, ^(void) {
+            [self handleDocumentDirectoryChanges];
+        });
     }];
     
 }
@@ -2807,7 +2814,8 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return -1;
 }
 
-+ (NSString*)mediaTypeOfUTI:(NSString*)documentType {
+// TODO: deal with mediatype text
++ (NSString*)mediaTypeOfUTI:(NSString*)documentType withFileName:(NSString*)filename{
     NSString * mediaType = nil;
     if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeText)) {
         mediaType=@"text";
@@ -2824,6 +2832,16 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeURL)) {
         mediaType=@"text";
     } else {
+        mediaType=@"data";
+    }
+    
+    if (filename != nil) {
+        if (([filename endsWith:@".json"] && [filename startsWith:@"location"]) || [filename endsWith:@".hcrgeo"]) {
+            mediaType = @"geolocation";
+        }
+    }
+    
+    if ([mediaType isEqualToString:@"text"]) {
         mediaType=@"data";
     }
     return mediaType;
@@ -2879,7 +2897,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     NSLog(@"destURL=%@", destURL);
 
     if (mediaType == nil) {
-        [AppDelegate mediaTypeOfUTI:mediaType];
+        [AppDelegate mediaTypeOfUTI:mediaType withFileName:fileName];
     }
     NSLog(@"mediaType=%@", mediaType);
 

@@ -62,9 +62,12 @@
     // general predicate
     [predicateArray addObject: [NSPredicate predicateWithFormat:@"message == nil OR (message.isOutgoingFlag == 0 AND contentSize == transferSize) OR (message.isOutgoingFlag == 1 AND assetURL != nil)"]];
     
+
     // contact predicate
     if (contact != nil) {
         [predicateArray addObject: [NSPredicate predicateWithFormat:@"message.contact == %@", contact]];
+    } else {
+        [predicateArray addObject: [NSPredicate predicateWithFormat:@"duplicate == 'NODUP'"]];        
     }
     if (mediaTypes != nil) {
         [self addPredicates: predicateArray forMediaTypes:mediaTypes];

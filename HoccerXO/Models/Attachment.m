@@ -112,6 +112,14 @@
 @dynamic transferPaused;
 @dynamic transferAborted;
 
+@dynamic width;                  // width for images and movies
+@dynamic height;                 // width for images and movies
+@dynamic entityTag;              // some content (file) unique tag that changes when the content changes
+@dynamic duplicate;              // set to "YES" when there is at another attachment with the same content url that has the duplicate value not set
+@dynamic universalType;          // the UTI
+@dynamic creationDate;           // date when this record was created
+
+
 @dynamic attachmentJsonString;
 @dynamic attachmentJsonStringCipherText;
 
@@ -389,7 +397,14 @@ NSArray * TransferStateName = @[@"detached",
     NSError *myError = nil;
     if (self.localURL != nil) {
         self.contentSize = [Attachment fileSize: self.localURL withError:&myError];
+        if (myError != nil) {
+            NSLog(@"ERROR: failed to get size for file %@", self.localURL);
+        }
         // NSLog(@"File Size = %@ (of file '%@')", self.contentSize, self.localURL);
+        NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[url path] error:NULL];
+        if (attributes) {
+            self.entityTag= [AppDelegate etagFromAttributes:attributes];
+        }
     } else if (self.assetURL != nil) {
         [self assetSizer:^(int64_t theSize, NSError * theError) {
             self.contentSize = @(theSize);
@@ -398,6 +413,7 @@ NSArray * TransferStateName = @[@"detached",
     } else {
         NSLog(@"ERROR: both urls are nil, could not determine content size");
     }
+    self.creationDate = [NSDate new];
     [self computeSourceMac];
 }
 
@@ -483,6 +499,8 @@ NSArray * TransferStateName = @[@"detached",
     } else {
         self.aspectRatio = (double)(theImage.size.width) / theImage.size.height;
     }
+    self.width = theImage.size.width;
+    self.height = theImage.size.height;
 }
 
 - (UIImage *)previewIcon {

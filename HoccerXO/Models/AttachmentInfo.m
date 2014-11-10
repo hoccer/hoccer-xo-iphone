@@ -178,6 +178,11 @@
 
 - (void) loadInfoForImageAttachment: (Attachment *) attachment {
     
+    if (attachment.height > 0) {
+        _frameSize = [NSString stringWithFormat:@"%fx%f", attachment.width, attachment.height];
+        return;
+    }
+    
     CGImageSourceRef imageSource = CGImageSourceCreateWithURL((CFURLRef)[attachment contentURL], NULL);
     if (imageSource == NULL) {
         // Error loading image
@@ -195,7 +200,11 @@
         NSNumber *height = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
         
         NSLog(@"Image dimensions: %@ x %@ px", width, height);
+        
+        attachment.width = [width doubleValue];
+        attachment.height = [height doubleValue];
         _frameSize = [NSString stringWithFormat:@"%@x%@", width, height];
+        
         
         CFDictionaryRef exif = CFDictionaryGetValue(imageProperties, kCGImagePropertyExifDictionary);
         if (exif) {
@@ -209,7 +218,7 @@
         CFDictionaryRef tiff = CFDictionaryGetValue(imageProperties, kCGImagePropertyTIFFDictionary);
         if (tiff) {
             NSString *cameraModel = (NSString *)CFDictionaryGetValue(tiff, kCGImagePropertyTIFFModel);
-            NSLog(@"Camera Model: %@", cameraModel);
+            if (cameraModel) NSLog(@"Camera Model: %@", cameraModel);
         }
         
         CFDictionaryRef gps = CFDictionaryGetValue(imageProperties, kCGImagePropertyGPSDictionary);
