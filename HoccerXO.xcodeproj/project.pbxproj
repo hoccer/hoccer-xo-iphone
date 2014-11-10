@@ -1098,6 +1098,7 @@
 		E980E27318648D80004AF79D /* UIResponder+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIResponder+Debug.h"; sourceTree = "<group>"; };
 		E980E27418648D80004AF79D /* UIResponder+Debug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIResponder+Debug.m"; sourceTree = "<group>"; };
 		E98769741A100DD70068CA33 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
+		E98769841A104E110068CA33 /* AttachmentPresenterDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentPresenterDelegate.h; sourceTree = "<group>"; };
 		E991E4F71A0D11F300015BEE /* DAVConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAVConnection.h; sourceTree = "<group>"; };
 		E991E4F81A0D11F300015BEE /* DAVConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAVConnection.m; sourceTree = "<group>"; };
 		E991E4F91A0D11F300015BEE /* DAVResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAVResponse.h; sourceTree = "<group>"; };
@@ -2032,6 +2033,7 @@
 				E9B7BAB4172D5E4D00212420 /* RPCObjectsModel.xcdatamodeld */,
 				63D8EE111722EB89000F9E53 /* UserProfile.h */,
 				63D8EE121722EB89000F9E53 /* UserProfile.m */,
+				E98769841A104E110068CA33 /* AttachmentPresenterDelegate.h */,
 			);
 			path = Models;
 			sourceTree = "<group>";

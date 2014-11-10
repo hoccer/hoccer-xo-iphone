@@ -81,9 +81,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 //@property (nonatomic, strong)   UIView                         * attachmentPreview;
 @property (nonatomic, strong)   NSIndexPath                    * firstNewMessage;
 @property (nonatomic, strong)   NSMutableDictionary            * cellPrototypes;
-@property (nonatomic, strong)   MPMoviePlayerViewController    *  moviePlayerViewController;
-@property (nonatomic, readonly) ImageViewController            * imageViewController;
-@property (nonatomic, readonly) ABUnknownPersonViewController  * vcardViewController;
+//@property (nonatomic, readonly) ImageViewController            * imageViewController;
+//@property (nonatomic, readonly) ABUnknownPersonViewController  * vcardViewController;
 @property (nonatomic, strong)   LabelWithLED                   * titleLabel;
 
 @property (strong, nonatomic)   HXOMessage                     * messageToForward;
@@ -115,9 +114,12 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 //@synthesize managedObjectContext = _managedObjectContext;
 @synthesize chatBackend = _chatBackend;
 @synthesize attachmentPicker = _attachmentPicker;
+
 @synthesize moviePlayerViewController = _moviePlayerViewController;
 @synthesize imageViewController = _imageViewController;
 @synthesize vcardViewController = _vcardViewController;
+@synthesize interactionController = _interactionController;
+
 @synthesize currentExportSession = _currentExportSession;
 @synthesize currentMultiExportSession = _currentMultiExportSession;
 @synthesize currentPickInfo = _currentPickInfo;
@@ -2950,6 +2952,10 @@ ready:;
 }
 
 - (void) presentViewForAttachment:(Attachment *) myAttachment {
+    [ChatViewController presentViewForAttachment:myAttachment withDelegate:self];
+}
+
++ (void) presentViewForAttachment:(Attachment *) myAttachment withDelegate:(id<AttachmentPresenterDelegate>)delegate {
     if ([myAttachment.mediaType isEqual: @"data"]
         || [myAttachment.mediaType isEqual: @"video"]
         // guard against old DB entries triggering https://github.com/hoccer/hoccer-xo-iphone/issues/211
@@ -2957,33 +2963,33 @@ ready:;
         //|| [myAttachment.mediaType isEqual: @"audio"]
         )
     {
-        [self previewAttachment:myAttachment];
+        [delegate previewAttachment:myAttachment];
     } else  if ([myAttachment.mediaType isEqual: @"video"]) {
         // TODO: lazily allocate _moviePlayerController once
-        _moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
-        _moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
-        _moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
-        [self presentMoviePlayerViewControllerAnimated: _moviePlayerViewController];
+        delegate.moviePlayerViewController = [[MPMoviePlayerViewController alloc] initWithContentURL: [myAttachment contentURL]];
+        delegate.moviePlayerViewController.moviePlayer.repeatMode = MPMovieRepeatModeNone;
+        delegate.moviePlayerViewController.moviePlayer.movieSourceType = MPMovieSourceTypeFile;
+        [delegate.thisViewController presentMoviePlayerViewControllerAnimated: delegate.moviePlayerViewController];
     } else  if ([myAttachment.mediaType isEqual: @"image"]) {
         // used with old DB entries preventing https://github.com/hoccer/hoccer-xo-iphone/issues/211
         [myAttachment loadImage:^(UIImage* theImage, NSError* error) {
             // NSLog(@"attachment view loadimage done");
             if (theImage != nil) {
-                self.imageViewController.image = theImage;
+                delegate.imageViewController.image = theImage;
                 //[self presentViewController: self.imageViewController animated: YES completion: nil];
-                [self.navigationController pushViewController: self.imageViewController animated: YES];
+                [delegate.thisViewController.navigationController pushViewController: delegate.imageViewController animated: YES];
             } else {
                 NSLog(@"image attachment view: Failed to get image: %@", error);
             }
         }];
     } else  if ([myAttachment.mediaType isEqual: @"vcard"]) {
         Vcard * myVcard = [[Vcard alloc] initWithVcardURL:myAttachment.contentURL];
-        self.vcardViewController.unknownPersonViewDelegate = self;
-        self.vcardViewController.displayedPerson = myVcard.person; // Assume person is already defined.
-        self.vcardViewController.allowsAddingToAddressBook = YES;
-        [self.navigationController pushViewController:self.vcardViewController animated:YES];
+        delegate.vcardViewController.unknownPersonViewDelegate = delegate;
+        delegate.vcardViewController.displayedPerson = myVcard.person; // Assume person is already defined.
+        delegate.vcardViewController.allowsAddingToAddressBook = YES;
+        [delegate.thisViewController.navigationController pushViewController:delegate.vcardViewController animated:YES];
     } else  if ([myAttachment.mediaType isEqual: @"geolocation"]) {
-        if (self.chatBackend.delegate.internetReachabilty.isReachable) {
+        if (AppDelegate.instance.internetReachabilty.isReachable) {
             // open map viewer when online
             [myAttachment loadAttachmentDict:^(NSDictionary * geoLocation, NSError * error) {
                 if (geoLocation != nil) {
@@ -3009,8 +3015,8 @@ ready:;
             [myAttachment loadImage:^(UIImage* theImage, NSError* error) {
                 // NSLog(@"attachment view loadimage done");
                 if (theImage != nil) {
-                    self.imageViewController.image = theImage;
-                    [self presentViewController: self.imageViewController animated: YES completion: nil];
+                    delegate.imageViewController.image = theImage;
+                    [delegate.thisViewController presentViewController: delegate.imageViewController animated: YES completion: nil];
                 } else {
                     NSLog(@"geo attachment view: Failed to get image: %@", error);
                 }
@@ -3088,6 +3094,9 @@ ready:;
 - (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
 }
 
+- (UIViewController*) thisViewController {
+    return self;
+}
 
 - (ImageViewController*) imageViewController {
     if (_imageViewController == nil) {

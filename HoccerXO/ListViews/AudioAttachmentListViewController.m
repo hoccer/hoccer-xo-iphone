@@ -25,6 +25,7 @@
 #import "HXOUI.h"
 #import "MusicBrowserDataSource.h"
 #import "tab_attachments.h"
+#import "ChatViewController.h"
 
 #define FETCHED_RESULTS_DEBUG NO
 
@@ -38,6 +39,12 @@
 
 
 @implementation AudioAttachmentListViewController
+
+@synthesize moviePlayerViewController = _moviePlayerViewController;
+@synthesize imageViewController = _imageViewController;
+@synthesize vcardViewController = _vcardViewController;
+@synthesize interactionController = _interactionController;
+
 
 #pragma mark - Lifecycle
 
@@ -60,11 +67,34 @@
     self.tableView.contentOffset = CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
 
 
-    self.mediaTypeControl = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"attachment_type_images", nil), NSLocalizedString(@"attachment_type_audio_video", nil), NSLocalizedString(@"attachment_type_other", nil)]];
+    self.mediaTypeControl = [[UISegmentedControl alloc] initWithItems:
+                             @[NSLocalizedString(@"attachment_type_visual", nil),
+                               NSLocalizedString(@"attachment_type_audios", nil),
+                               NSLocalizedString(@"attachment_type_other", nil)]];
+    
     self.mediaTypeControl.selectedSegmentIndex = 0;
     [self.mediaTypeControl addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
     self.navigationItem.titleView = self.mediaTypeControl;
 }
+
+static NSArray * mediaTypesForSegment(NSInteger segment) {
+    switch (segment) {
+        case 0:
+            return [Attachment visualMediaTypes];
+            break;
+        case 1:
+            return [Attachment audioMediaTypes];
+            break;
+        case 2:
+            return [Attachment otherMediaTypes];
+            break;
+        default:
+            NSLog(@"Bad segment number: %ld", (long)segment);
+            break;
+    }
+    return [Attachment allMediaTypes];
+}
+
 
 - (void) segmentChanged: (id) sender {
     if (FETCHED_RESULTS_DEBUG) NSLog(@"AudioAttachmentListViewController:segmentChanged, sender= %@", sender);
@@ -184,21 +214,8 @@
     if (self.collection) {
         self.dataSource = [[CollectionDataSource alloc] initWithCollection:self.collection];
     } else {
-        NSArray * mediaTypes = nil;
         NSInteger selectedSegment = self.mediaTypeControl.selectedSegmentIndex;
-        switch (selectedSegment) {
-            case 0:
-                mediaTypes = [Attachment imageMediaTypes];
-                break;
-            case 1:
-                mediaTypes = [Attachment audioVideoMediaTypes];
-                break;
-            case 2:
-                mediaTypes = [Attachment otherMediaTypes];
-                break;
-            default:
-                break;
-        }
+        NSArray * mediaTypes = mediaTypesForSegment(selectedSegment);
         self.dataSource = [[MusicBrowserDataSource alloc] initWithContact:self.contact andMediaTypes:mediaTypes];
     }
 
@@ -396,24 +413,34 @@
         viewController.contact = contact;
         [self.navigationController pushViewController:viewController animated:YES];
     } else {
-        id<HXOPlaylist> playlist = [[HXOAudioAttachmentDataSourcePlaylist alloc] initWithDataSource:self.dataSource];
         
         // Get track number in original playlist (independent of search mode)
-        NSUInteger trackNumber = [[self.dataSource indexPathForAttachment:[self.dataSource attachmentAtIndexPath:indexPath]] row];
-
-        BOOL success = [[HXOAudioPlayer sharedInstance] playWithPlaylist:playlist atTrackNumber:trackNumber];
+        Attachment * selected = [self.dataSource attachmentAtIndexPath:indexPath];
+        NSUInteger trackNumber = [[self.dataSource indexPathForAttachment:selected] row];
+        NSLog(@"trackNumber = %lu selected = %@", (unsigned long)trackNumber, selected.humanReadableFileName);
         
-        if (success) {
-            UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];
-            [self presentViewController:audioPlayerViewController animated:YES completion:NULL];
+        if ([selected.mediaType isEqualToString:@"audio"]) {
+            
+            id<HXOPlaylist> playlist = [[HXOAudioAttachmentDataSourcePlaylist alloc] initWithDataSource:self.dataSource];
+            
+            
+            
+            BOOL success = [[HXOAudioPlayer sharedInstance] playWithPlaylist:playlist atTrackNumber:trackNumber];
+            
+            if (success) {
+                UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];
+                [self presentViewController:audioPlayerViewController animated:YES completion:NULL];
+            } else {
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
+                                                                 message: NSLocalizedString(@"attachment_cannot_play_message", nil)
+                                                                delegate: nil
+                                                       cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                                       otherButtonTitles: nil];
+                [alert show];
+                [tableView deselectRowAtIndexPath:indexPath animated:YES];
+            }
         } else {
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
-                                                             message: NSLocalizedString(@"attachment_cannot_play_message", nil)
-                                                            delegate: nil
-                                                   cancelButtonTitle: NSLocalizedString(@"ok", nil)
-                                                   otherButtonTitles: nil];
-            [alert show];
-            [tableView deselectRowAtIndexPath:indexPath animated:YES];
+            [ChatViewController presentViewForAttachment:selected withDelegate:self];
         }
     }
 }
@@ -486,5 +513,63 @@
         [self askToDeleteAttachments:@[ attachment ]];
     }
 }
+
+#pragma mark - AttachmentPresenterDelegate stuff
+
+
+- (void) previewAttachment:(Attachment *)attachment {
+    // NSLog(@"previewAttachment");
+    if (attachment != nil && attachment.available) {
+        NSURL * myURL = [attachment contentURL];
+        NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
+        NSString * name = attachment.humanReadableFileName;
+        NSLog(@"openWithInteractionController: uti=%@, name = %@ url = %@", uti, name, myURL);
+        self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:myURL];
+        self.interactionController.delegate = self;
+        self.interactionController.UTI = uti;
+        self.interactionController.name = name;
+        [self.interactionController presentPreviewAnimated:YES];
+    }
+}
+
+- (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller
+{
+    return self;
+}
+
+- (UIView *)documentInteractionControllerViewForPreview:(UIDocumentInteractionController *)controller
+{
+    return self.view;
+}
+
+- (CGRect)documentInteractionControllerRectForPreview:(UIDocumentInteractionController *)controller
+{
+    return self.view.frame;
+}
+- (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
+}
+
+- (UIViewController*) thisViewController {
+    return self;
+}
+
+- (ImageViewController*) imageViewController {
+    if (_imageViewController == nil) {
+        _imageViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"ImageViewController"];
+    }
+    return _imageViewController;
+}
+
+- (ABUnknownPersonViewController*) vcardViewController {
+    if (_vcardViewController == nil) {
+        _vcardViewController = [[ABUnknownPersonViewController alloc] init];;
+    }
+    return _vcardViewController;
+}
+
+- (void)unknownPersonViewController:(ABUnknownPersonViewController *)unknownPersonView didResolveToPerson:(ABRecordRef)person {
+    [unknownPersonView dismissViewControllerAnimated:YES completion:nil];
+}
+
 
 @end

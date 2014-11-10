@@ -198,10 +198,10 @@
                 self.subtitleLabel.text = info.audioArtistAndAlbum;
             }
         } else if ([attachment.mediaType isEqualToString:@"video"]) {
-            self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", info.duration, info.dataSize];
+            self.titleLabel.text = [NSString stringWithFormat:@"%@ / %@", info.duration, info.dataSize];
             self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", info.typeDescription, info.creationDate];;
         } else if ([attachment.mediaType isEqualToString:@"image"]) {
-            self.titleLabel.text = [NSString stringWithFormat:@"%@ %@", info.dataSize, info.frameSize];
+            self.titleLabel.text = [NSString stringWithFormat:@"%@ / %@",  info.frameSize, info.dataSize];
             self.subtitleLabel.text = [NSString stringWithFormat:@"%@ %@", info.typeDescription, info.creationDate];;
         } else if ([attachment.mediaType isEqualToString:@"geolocation"]) {
             self.titleLabel.text = [NSString stringWithFormat:@"%@", info.location];

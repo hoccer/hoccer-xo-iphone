@@ -85,7 +85,7 @@
 "attachment_src_camera_btn_title"        = "Camera";
 "attachment_src_music_library_btn_title" = "Music Library";
 "attachment_src_recorder_btn_title"      = "Audio Recorder";
-"attachment_src_adressbook_btn_title"    = "Adressbook";
+"attachment_src_adressbook_btn_title"    = "Addressbook";
 "attachment_src_map_btn_title"           = "Map";
 
 "attachment_option_sheet_title"          = "Attachment";
@@ -107,11 +107,13 @@
 "attachment_type_video"                  = "Video";
 "attachment_type_audio"                  = "Audio";
 "attachment_type_audio_recording"        = "Voice Recording";
-"attachment_type_vcard"                  = "Adress";
+"attachment_type_vcard"                  = "Address";
 "attachment_type_geolocation"            = "Location";
 "attachment_type_data"                   = "Document";
 
 "attachment_type_images"                  = "Images";
+"attachment_type_audios"                  = "Audio";
+"attachment_type_visual"                  = "Visual";
 "attachment_type_audio_video"             = "AV";
 "attachment_type_other"                   = "Other";
 

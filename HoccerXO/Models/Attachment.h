@@ -197,6 +197,8 @@ typedef enum AttachmentStates {
 
 + (NSArray*)allMediaTypes;
 + (NSArray*)audioVideoMediaTypes;
++ (NSArray*)visualMediaTypes;
++ (NSArray*)audioMediaTypes;
 + (NSArray*)imageMediaTypes;
 + (NSArray*)otherMediaTypes;
 

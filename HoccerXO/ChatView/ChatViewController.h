@@ -12,6 +12,7 @@
 #import "MessageCell.h"
 #import "HXOHyperLabel.h"
 #import "Attachment.h"
+#import "AttachmentPresenterDelegate.h"
 
 @class HXOBackend;
 @class AVAssetExportSession;
@@ -24,8 +25,7 @@ typedef void (^ImageCompletionBlock)(UIImage * image, NSError* error);
 <
 UISplitViewControllerDelegate, AttachmentPickerControllerDelegate, UIActionSheetDelegate,
 UITextViewDelegate, NSFetchedResultsControllerDelegate, MessageViewControllerDelegate,
-ABUnknownPersonViewControllerDelegate, HXOHyperLabelDelegate, TransferProgressIndication,
-UIDocumentInteractionControllerDelegate
+ HXOHyperLabelDelegate, TransferProgressIndication, AttachmentPresenterDelegate
 >
 {
     NSMutableDictionary        *resultsControllers;
@@ -55,7 +55,8 @@ UIDocumentInteractionControllerDelegate
 
 @property (nonatomic, strong) id                                connectionInfoObserver;
 
-@property (nonatomic, strong) UIDocumentInteractionController * interactionController;
+//@property (nonatomic, strong) UIDocumentInteractionController * interactionController;
+//@property (nonatomic, strong) MPMoviePlayerViewController    *  moviePlayerViewController;
 
 - (void) setPartner: (Contact*) partner;
 - (void) scrollToBottomAnimated: (BOOL) animated;
@@ -65,5 +66,8 @@ UIDocumentInteractionControllerDelegate
 
 - (void) decorateAttachmentButton:(UIImage *) theImage;
 - (void) trashCurrentAttachment;
+
++ (void) presentViewForAttachment:(Attachment *) myAttachment withDelegate:(id<AttachmentPresenterDelegate>)delegate;
+
 
 @end

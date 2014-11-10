@@ -9,11 +9,12 @@
 #import "HXOTableViewController.h"
 #import "AddToCollectionListViewControllerDelegate.h"
 #import "AudioAttachmentDataSourceDelegate.h"
+#import "AttachmentPresenterDelegate.h"
 
 @class Collection;
 @class Contact;
 
-@interface AudioAttachmentListViewController : HXOTableViewController <AudioAttachmentDataSourceDelegate, AddToCollectionListViewControllerDelegate, UIActionSheetDelegate, UISearchBarDelegate, UISearchDisplayDelegate>
+@interface AudioAttachmentListViewController : HXOTableViewController <AudioAttachmentDataSourceDelegate, AddToCollectionListViewControllerDelegate, UIActionSheetDelegate, UISearchBarDelegate, UISearchDisplayDelegate, AttachmentPresenterDelegate>
 
 - (void)wasSelectedByTabBarController:(UITabBarController *)tabBarController;
 

@@ -113,6 +113,8 @@
 "attachment_type_data"                   = "Dokument";
 
 "attachment_type_images"                  = "Bilder";
+"attachment_type_audios"                  = "Audio";
+"attachment_type_visual"                  = "Visuell";
 "attachment_type_audio_video"             = "AV";
 "attachment_type_other"                   = "Andere";
 

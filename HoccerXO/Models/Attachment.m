@@ -156,6 +156,14 @@
     return @[@"image"];
 }
 
++ (NSArray*)audioMediaTypes {
+    return @[@"audio"];
+}
+
++ (NSArray*)visualMediaTypes {
+    return @[@"image", @"video"];
+}
+
 + (NSArray*)otherMediaTypes {
     return @[@"vcard",@"geolocation",@"data"];
 }
