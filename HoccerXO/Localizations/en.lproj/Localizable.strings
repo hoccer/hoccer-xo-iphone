@@ -279,8 +279,8 @@
 
 "contact_message_count_format"                  = "%@ messages";
 "contact_message_count_format (one)"            = "%@ message";
-"contact_audio_attachment_count_format"         = "%@ songs";
-"contact_audio_attachment_count_format (one)"   = "%@ song";
+"contact_audio_attachment_count_format"         = "%@ files";
+"contact_audio_attachment_count_format (one)"   = "%@ file";
 
 "contact_delete_btn_title"                      = "Delete contact";
 "contact_delete_safety_question"                = "Delete contact, chat and attachments?";
@@ -699,7 +699,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 // Server
 //==============================================================================
-"server_running"                = "The WEBDAV-Server is now running. You can connect from a computer in the local network by connecting to the above adress. \n\nOn a Mac, type ⌘K (cmd-K) in the Finder or choose \"Go->Connect to Server\" to bring up the connection dialog. Type in the whole line starting with \"http:\"  exactly as shown above.\n\nIn the password dialog that will appear you can leave the username blank and use the password shown above.\n\nOn Windows use \"Add Network Place\" (XP) or \"Map Network Drive\" (7 or later)";
+"server_running"                = "The WEBDAV-Server is now running. You can connect from a computer in the local network by connecting to the above address. \n\nOn a Mac, type ⌘K (cmd-K) in the Finder or choose \"Go->Connect to Server\" to bring up the connection dialog. Type in the whole line starting with \"http:\"  exactly as shown above.\n\nIn the password dialog that will appear you can leave the username blank and use the password shown above.\n\nOn Windows use \"Add Network Place\" (XP) or \"Map Network Drive\" (7 or later)";
 
 "server_stopped_can_run"        = "Press the start button to start a WEBDAV-Server on this device. You can then connect to the Hoccer App from a computer in the local network to copy media items between your device and your computer.\n\nDo not start the server when connected an untrusted public Wifi-network.\n\nYou can change the server password by touching it.";
 

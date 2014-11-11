@@ -282,8 +282,8 @@
 
 "contact_message_count_format"                        = "%@ Nachrichten";
 "contact_message_count_format (one)"                  = "%@ Nachricht";
-"contact_audio_attachment_count_format"               = "%@ Songs";
-"contact_audio_attachment_count_format (one)"         = "%@ Song";
+"contact_audio_attachment_count_format"               = "%@ Dateien";
+"contact_audio_attachment_count_format (one)"         = "%@ Datei";
 
 "contact_delete_btn_title"                            = "Kontakt löschen";
 "contact_delete_safety_question"                      = "Kontakt, Chat und Attachments löschen?";
@@ -710,7 +710,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 //==============================================================================
 // Server
 //==============================================================================
-"server_running"                = "The WEBDAV-Server läuft. Du kannst dich nun von einem Computer im lokalen Netzwerk zur obenstehen Adresse verbinden. above adress.\n\nAuf einem Mac tippe ⌘K (cmd-K) in the Finder or wähle \"Gehe->Verbinden mit\" um dich zu verbinden.\n\nGib die Zeile, die mit \"http:\" beginnt genau so ein wie obenstehend.\n\nIn der Kennwortabfrage kannst du den Nutzernamen leer lassen und musst nur obenstehened Kennwort eingeben.\n\nUnter Windows wähle \"Netzlaufwerk verbinden\" in \"Arbeitsplatz->Extras\" (XP) oder \"Startmenü->Computer\" (Win7 or später)";
+"server_running"                = "The WEBDAV-Server läuft. Du kannst dich nun von einem Computer im lokalen Netzwerk zur obenstehen Adresse verbinden.\n\nAuf einem Mac tippe ⌘K (cmd-K) in the Finder or wähle \"Gehe->Verbinden mit\" um dich zu verbinden.\n\nGib die Zeile, die mit \"http:\" beginnt genau so ein wie obenstehend.\n\nIn der Kennwortabfrage kannst du den Nutzernamen leer lassen und musst nur obenstehened Kennwort eingeben.\n\nUnter Windows wähle \"Netzlaufwerk verbinden\" in \"Arbeitsplatz->Extras\" (XP) oder \"Startmenü->Computer\" (Win7 or später)";
 
 "server_stopped_can_run"        = "Drücke den Startknopf um einen WEBDAV-Server auf diesem Gerät zu starten. Du kannst dich dann von einem Computer im lokalen Netzwerk mit Hoccer verbinden um Mediendateien zwischen Hoccer and dem Computer auszutauschen.\n\nNutze den Server aus Sichergründen nicht in einem öffentlichen Netzwerk.\n\nDurch tippen auf das Kennwort kannst du es ändern.";
 

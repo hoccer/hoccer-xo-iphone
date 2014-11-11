@@ -49,7 +49,19 @@
 
 	return [self matches: string];
 }
+/*
 
+if ([[file substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"."]) {
+    return NO;
+}
+if ([[entity substringWithRange:NSMakeRange(entity.length-2, 2)] isEqualToString:@"-0"]) {
+    return NO;
+}
+*/
+
+#if 0
+
+// these seem to fail for some cases, e.g. the string "." as argument
 - (BOOL)startsWith: (NSString *)startString {
 	return [self matches: [NSString stringWithFormat: @"^%@", startString]];
 }
@@ -57,6 +69,22 @@
 - (BOOL)endsWith: (NSString *)endString {
 	return [self matches: [NSString stringWithFormat: @"%@$", endString]];
 }
+#else
+
+- (BOOL)startsWith: (NSString *)startString {
+    if (self.length >= startString.length) {
+        return [[self substringWithRange:NSMakeRange(0, startString.length)] isEqualToString:startString];
+    }
+    return NO;
+}
+
+- (BOOL)endsWith: (NSString *)endString {
+    if (self.length >= endString.length) {
+        return [[self substringWithRange:NSMakeRange(self.length-endString.length, endString.length)] isEqualToString:endString];
+    }
+    return NO;
+}
+#endif
 
 - (BOOL)contains: (NSString *)substring {
 	return ([self rangeOfString:substring].location != NSNotFound);

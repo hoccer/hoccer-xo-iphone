@@ -119,6 +119,8 @@
 @dynamic universalType;          // the UTI
 @dynamic creationDate;           // date when this record was created
 
+@dynamic fileStatus;
+
 
 @dynamic attachmentJsonString;
 @dynamic attachmentJsonStringCipherText;
@@ -1893,8 +1895,12 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 +(NSError*) appendToFilePosix:(NSString*)fileURL thisData:(NSData *) data {
-    NSError * myError = nil;
     NSURL * myURL = [NSURL URLWithString: fileURL];
+    return [self appendToFileURLPosix:myURL thisData:data];
+}
+
++(NSError*) appendToFileURLPosix:(NSURL*)myURL thisData:(NSData *) data {
+    NSError * myError = nil;
     NSString * myPath = [myURL path];
     int fd = open([myPath UTF8String], O_WRONLY|O_APPEND|O_EXLOCK|O_CREAT,0777);
     if (fd == -1) {

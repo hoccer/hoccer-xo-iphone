@@ -177,6 +177,17 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 + (NSString *)etagFromAttributes:(NSDictionary*) attributes;
 
++ (BOOL)setPosixPermissions:(short)flags forPath:(NSString*)myFilePath;
++ (short)getPosixPermissionsForPath:(NSString*)myFilePath;
++ (BOOL)setPosixPermissionsReadOnlyForPath:(NSString*)myFilePath;
++ (BOOL)setPosixPermissionsReadWriteForPath:(NSString*)myFilePath;
++ (BOOL)isUserReadOnlyFile:(NSString*)myFilePath;
++ (BOOL)isUserReadWriteFile:(NSString*)myFilePath;
+
++ (BOOL)isBusyFileAtURL:(NSURL*)myFile;
++ (BOOL)isBusyFile:(NSString*)myFilePath;
+
+
 
 
 @end

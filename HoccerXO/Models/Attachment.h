@@ -74,7 +74,7 @@ typedef enum AttachmentStates {
 @property (nonatomic)         NSNumber * transferSize;          // number of plaintext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipherTransferSize;    // number of ciphertext bytes uploaded or downloaded; supports assignment by string
 @property (nonatomic)         NSNumber * cipheredSize;          // number of ciphertext bytes
-@property (nonatomic)         NSInteger  transferFailures;      // number of upload or download failures
+@property (nonatomic)         int        transferFailures;      // number of upload or download failures (is 32 Bit field in database)
 @property (nonatomic)         NSString * playable;              // whether the attachment can be played on the device (can be "YES", "NO", "UNKNOWN")
 @property (nonatomic, strong) NSData   * previewImageData;      // remote URL where the file should/was uploaded
 @property (nonatomic, strong) NSDate   * transferPaused;        // if not nil it containes the date the transfer was paused by the user
@@ -92,6 +92,8 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSString * duplicate;              // set to "YES" when there is at another attachment with the same content url that has the duplicate value not set
 @property (nonatomic, strong) NSString * universalType;          // the UTI
 @property (nonatomic, strong) NSDate   * creationDate;           // date when this record was created
+// new properties with Model Version 47 not reliably available yet on old databse
+@property (nonatomic, strong) NSString * fileStatus;             // indicates the status of the referenced file, currently only "DOES_NOT_EXIST"
 
 
 // virtual properties

@@ -217,18 +217,83 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
 }
 
--(BOOL)considerFile:(NSString*)file withEntity:(NSString*)entity {
-    if ([[file substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"."]) {
++ (BOOL)setPosixPermissions:(short)flags forPath:(NSString*)myFilePath {
+    NSError * error = nil;
+    [[NSFileManager defaultManager] setAttributes:@{NSFilePosixPermissions: @(flags)} ofItemAtPath:myFilePath error:&error];
+    if (error != nil) {
+        NSLog(@"Error setting posix permission for path %@, error=%@", myFilePath, error);
         return NO;
     }
-    if ([[entity substringWithRange:NSMakeRange(entity.length-2, 2)] isEqualToString:@"-0"]) {
+    return YES;
+}
+
++ (short)getPosixPermissionsForPath:(NSString*)myFilePath {
+    NSError * error = nil;
+    NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:myFilePath error:&error];
+    if (error != nil) {
+        NSLog(@"Error setting posix permission for path %@, error=%@", myFilePath, error);
+        return -1;
+    }
+    return [attributes filePosixPermissions];
+}
+
++ (BOOL)setPosixPermissionsReadOnlyForPath:(NSString*)myFilePath {
+    return [self setPosixPermissions:[@(0444) shortValue] forPath:myFilePath];
+}
+
++ (BOOL)setPosixPermissionsReadWriteForPath:(NSString*)myFilePath {
+    return [self setPosixPermissions:[@(0644) shortValue] forPath:myFilePath];
+}
+
+
++(BOOL)isUserReadOnlyFile:(NSString*)myFilePath {
+    short permissions = [self getPosixPermissionsForPath:myFilePath];
+    if (permissions != -1) {
+        return (permissions & 0200) == 0;
+    }
+    return NO;
+}
+
++(BOOL)isUserReadWriteFile:(NSString*)myFilePath {
+    short permissions = [self getPosixPermissionsForPath:myFilePath];
+    if (permissions != -1) {
+        return (permissions & 0600) == 0600;
+    }
+    return NO;
+}
+
++ (BOOL)isBusyFileAtURL:(NSURL*)myFile {
+    return [self isBusyFile:[myFile path]];
+}
++ (BOOL)isBusyFile:(NSString*)myFilePath {
+    
+    int result;
+    result = open([myFilePath UTF8String], O_RDONLY | O_NONBLOCK | O_EXLOCK);
+    if (result != -1) {
+        //The file is not busy
+        close(result);
+        return NO;
+    }
+    return YES;
+}
+
+-(BOOL)considerFile:(NSString*)file withEntity:(NSString*)entity inDirectoryPath:(NSString*)directoryPath {
+    if ([file startsWith:@"."]) {
+        return NO;
+    }
+    if ([entity endsWith:@"-0"]) {
+        return NO;
+    }
+    NSString * fullPath = [directoryPath stringByAppendingPathComponent: file];
+    if ([AppDelegate isBusyFile:fullPath]) {
+        NSLog(@"File is busy:%@", file);
         return NO;
     }
     return YES;
 }
 
 -(BOOL)emptyFile:(NSString*)file withEntity:(NSString*)entity {
-    if ([[entity substringWithRange:NSMakeRange(entity.length-2, 2)] isEqualToString:@"-0"]) {
+    if ([entity endsWith:@"-0"]) {
         return YES;
     }
     return NO;
@@ -239,6 +304,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSDictionary * oldEntities = _fileEntities;
     
     NSURL * documentDirectory = [self applicationDocumentsDirectory];
+    NSString * documentDirectoryPath = [documentDirectory path];
     NSArray * files = [AppDelegate fileNamesInDirectoryAtURL:documentDirectory ignorePaths:@[@"Inbox"] ignoreSuffixes:@[@"hciarch"]];
     NSMutableDictionary * newEntities = [AppDelegate entityIdsOfFiles:files inDirectory:documentDirectory];
     
@@ -250,7 +316,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     for (NSString * file in oldEntities) {
         NSString * newEntity = newEntities[file];
         if (newEntity == nil) {
-            if ([self considerFile:file withEntity:oldEntities[file]]) {
+            if ([self considerFile:file withEntity:oldEntities[file] inDirectoryPath:documentDirectoryPath]) {
                 NSLog(@"deletedFile: %@ (%@)", file, oldEntities[file]);
                 [deletedFiles addObject:file];
             } else {
@@ -275,7 +341,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 });
                 retryScheduled = YES;
             }
-            if ([self considerFile:file withEntity:newEntities[file]]) {
+            if ([self considerFile:file withEntity:newEntities[file] inDirectoryPath:documentDirectoryPath]) {
                 NSLog(@"newFile: %@ (%@)", file, newEntities[file]);
                 [newFiles addObject:file];
             } else {
@@ -285,7 +351,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
             NSString * newEntity = newEntities[file];
             if (newEntity != nil) {
                 if (![newEntity isEqualToString:oldEntity]) {
-                    if ([self considerFile:file withEntity:newEntities[file]]) {
+                    if ([self considerFile:file withEntity:newEntities[file]inDirectoryPath:documentDirectoryPath]) {
                         NSLog(@"changedFile: %@ (%@ -> %@)", file, oldEntity, newEntity);
                         [changedFiles addObject:file];
                     } else {
@@ -2326,13 +2392,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         unsigned long fileSystemNumber = [attributes fileSystemFileNumber];
         unsigned long long created = [[attributes fileCreationDate] timeIntervalSince1970];
         unsigned long long lastMod = [[attributes fileModificationDate] timeIntervalSince1970];
+        unsigned long permissions = [attributes filePosixPermissions];
         unsigned long long fileSize;
         NSString * etag;
         if ([attributes objectForKey:NSFileSize]) {
             fileSize= [attributes fileSize];
-            etag = [NSString stringWithFormat:@"ev1-%lu-%qu-%qu-%qu",fileSystemNumber, lastMod, created, fileSize];
+            etag = [NSString stringWithFormat:@"ev2-%#o-%lu-%qu-%qu-%qu",(short)permissions,fileSystemNumber, lastMod, created, fileSize];
         } else {
-            etag = [NSString stringWithFormat:@"ev1-%lu-%qu-%qu-d",fileSystemNumber, lastMod, created];
+            etag = [NSString stringWithFormat:@"ev2-%#o-%lu-%qu-%qu-d",(short)permissions,fileSystemNumber, lastMod, created];
         }
         // NSLog(@"return etag %@", etag);
         return etag;
@@ -2390,7 +2457,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 }
                 
                 for (NSString * is in ignorePaths) {
-                    if ([subpath rangeOfString:is].length == is.length) {
+                    if ([subpath startsWith:is]) {
                         ignore = YES;
                         break;
                     }
