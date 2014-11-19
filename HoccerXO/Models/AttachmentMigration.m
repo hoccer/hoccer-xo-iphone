@@ -66,7 +66,8 @@ static BOOL isOldAttachment(Attachment * attachment) {
         oldEnough = YES;
     } else {
         NSTimeInterval attachmentAge = -[attachment.creationDate timeIntervalSinceNow];
-        oldEnough = attachmentAge > 60;
+        NSLog(@"attachmentAge = %f", attachmentAge);
+        oldEnough = attachmentAge > 600;
     }
     return oldEnough;
 }
@@ -101,6 +102,9 @@ static NSString * filenameOf(Attachment * attachment) {
         NSEntityDescription *entity = [NSEntityDescription entityForName:[Attachment entityName] inManagedObjectContext:context];
         NSFetchRequest *fetchRequest = [NSFetchRequest new];
         [fetchRequest setEntity:entity];
+        NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"orderNumber" ascending:YES];
+        NSArray *sortDescriptors = @[sortDescriptor];
+        [fetchRequest setSortDescriptors:sortDescriptors];
         NSArray *attachments = [context executeFetchRequest:fetchRequest error:nil];
         
         NSMutableArray * brokenAttachments = [NSMutableArray new];
@@ -120,7 +124,13 @@ static NSString * filenameOf(Attachment * attachment) {
         unsigned long urlDuplicates = 0;
         
         // iterate over all attachments, mark duplicates and remember attachments owned by files
+        long long order = 0;
         for (Attachment * attachment in attachments) {
+            ++order;
+            if (attachment.orderNumber.longLongValue != order) {
+                NSLog(@"Changing order from %@ to %lld", attachment.orderNumber, order);
+                attachment.orderNumber =@(order);
+            }
             NSURL * attachmentURL = significantURL(attachment);
             if (DEBUG_MIGRATION)NSLog(@"Checking attachment %@, file %@", attachment.objectID.URIRepresentation, [attachmentURL lastPathComponent]);
             

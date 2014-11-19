@@ -120,6 +120,7 @@
 @dynamic creationDate;           // date when this record was created
 
 @dynamic fileStatus;
+@dynamic orderNumber;
 
 
 @dynamic attachmentJsonString;
@@ -178,9 +179,17 @@
     return @[@"vcard",@"geolocation",@"data"];
 }
 
-+(NSString*) getStateName:(AttachmentState)state {
+- (void) awakeFromInsert {
+    [super awakeFromInsert];
+    self.creationDate = [NSDate date];
+    // or [self setPrimitiveDate:[NSDate date]];
+    // to avoid triggering KVO notifications
+    
+}
 
-NSArray * TransferStateName = @[@"detached",
++(NSString*) getStateName:(AttachmentState)state {
+    
+    NSArray * TransferStateName = @[@"detached",
                                 @"empty",
                                 @"transfered",
                                 @"no transfer url",
