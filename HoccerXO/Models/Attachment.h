@@ -181,7 +181,6 @@ typedef enum AttachmentStates {
 - (NSURL *) contentURL; // best Effort content URL for playback, display etc. (localURL if available, otherwise assetURL)
 - (NSURL *) otherContentURL; // returns assetURL if localURL is available, otherwise nil
 
-- (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory;
 - (NSNumber*) calcCipheredSize;
 
 - (BOOL) overTransferLimit:(BOOL)isOutgoing;

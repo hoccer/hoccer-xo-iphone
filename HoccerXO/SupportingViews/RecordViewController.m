@@ -102,7 +102,7 @@ static const CGFloat kRingWidth = 6.0;
 -(NSURL*) ensureAudioURL {
     if (self.audioFileURL == nil) {
         NSString * newFileName = @"recording.m4a";
-        self.audioFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+        self.audioFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
     }
     return self.audioFileURL;
 }

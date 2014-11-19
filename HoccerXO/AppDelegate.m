@@ -221,7 +221,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSError * error = nil;
     [[NSFileManager defaultManager] setAttributes:@{NSFilePosixPermissions: @(flags)} ofItemAtPath:myFilePath error:&error];
     if (error != nil) {
-        NSLog(@"Error setting posix permission for path %@, error=%@", myFilePath, error);
+        NSLog(@"Error setting posix permissions %o for path %@, error=%@", flags, myFilePath, error);
         return NO;
     }
     return YES;
@@ -231,7 +231,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     NSError * error = nil;
     NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:myFilePath error:&error];
     if (error != nil) {
-        NSLog(@"Error setting posix permission for path %@, error=%@", myFilePath, error);
+        NSLog(@"Error getting posix permission for path %@, error=%@", myFilePath, error);
         return -1;
     }
     return [attributes filePosixPermissions];
@@ -281,6 +281,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     if ([file startsWith:@"."]) {
         return NO;
     }
+    if ([file isEqualToString:@"credentials.json"]) {
+        return NO;
+    }
     if ([entity endsWith:@"-0"]) {
         return NO;
     }
@@ -305,7 +308,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
     NSURL * documentDirectory = [self applicationDocumentsDirectory];
     NSString * documentDirectoryPath = [documentDirectory path];
-    NSArray * files = [AppDelegate fileNamesInDirectoryAtURL:documentDirectory ignorePaths:@[@"Inbox"] ignoreSuffixes:@[@"hciarch"]];
+    NSArray * files = [AppDelegate fileNamesInDirectoryAtURL:documentDirectory ignorePaths:@[] ignoreSuffixes:@[@"hciarch"]];
     NSMutableDictionary * newEntities = [AppDelegate entityIdsOfFiles:files inDirectory:documentDirectory];
     
     NSMutableArray * changedFiles = [NSMutableArray new];
@@ -548,6 +551,10 @@ BOOL sameObjects(id obj1, id obj2) {
     }
     
     application.applicationSupportsShakeToEdit = NO;
+    
+    if (![self applicationTemporaryDocumentsDirectory]) {
+        return NO;
+    }
 
     if ([self persistentStoreCoordinator] == nil) {
         return NO;
@@ -1745,6 +1752,36 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
+- (NSURL *)applicationTemporaryDocumentsDirectory {
+    NSURL * tmpdir = [self.applicationDocumentsDirectory URLByAppendingPathComponent:@"temporary" isDirectory:YES];
+    BOOL create = NO;
+    BOOL isDirectory = NO;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:[tmpdir path] isDirectory:&isDirectory]) {
+        create = YES;
+    } else {
+        if (!isDirectory) {
+            NSError * error = nil;
+            [[NSFileManager defaultManager] removeItemAtURL:tmpdir error:&error];
+            if (error != nil) {
+                NSLog(@"#ERROR: item at %@ is not a directory and can't be removed", tmpdir);
+                return nil;
+            }
+            create = YES;
+        }
+    }
+    if (create) {
+        NSError * error = nil;
+        NSLog(@"Creating directory for temporary file at %@", tmpdir);
+        
+        [[NSFileManager defaultManager] createDirectoryAtURL:tmpdir withIntermediateDirectories:NO attributes:@{NSFilePosixPermissions: @(0755)} error:&error];
+        if (error != nil) {
+            NSLog(@"#ERROR: temporary directory at %@ can not be created", tmpdir);
+            return nil;
+        }
+    }
+    return tmpdir;
+}
+
 - (NSURL *) applicationLibraryDirectory {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask] lastObject];
 }
@@ -2928,7 +2965,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     
     // handle other stuff
     NSString *fileName = [url lastPathComponent];
-    NSURL *destURL = [AppDelegate uniqueNewFileURLForFileLike:fileName];
+    NSURL *destURL = [AppDelegate uniqueNewFileURLForFileLike:fileName isTemporary:YES];
     NSError *error = nil;
     
     NSString * mimeType = nil;
@@ -3282,15 +3319,35 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 	return newFilename;
 }
 
-+ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint {
++ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint isTemporary:(BOOL)temporary {
     
     NSString *newFileName = [AppDelegate sanitizeFileNameString: fileNameHint];
-    NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+    NSURL * appDocDir;
+    if (temporary) {
+        appDocDir = AppDelegate.instance.applicationTemporaryDocumentsDirectory;
+    } else {
+        appDocDir = AppDelegate.instance.applicationDocumentsDirectory;
+    }
     NSString * myDocDir = [appDocDir path];
     NSString * myUniqueNewFile = [[self class]uniqueFilenameForFilename: newFileName inDirectory: myDocDir];
     NSString * savePath = [myDocDir stringByAppendingPathComponent: myUniqueNewFile];
     NSURL * myLocalURL = [NSURL fileURLWithPath:savePath];
     return myLocalURL;
+}
+
++ (NSURL *)moveDocumentToPermanentLocation:(NSURL*)temporaryFile {
+    
+    NSString * fileNameHint = [temporaryFile lastPathComponent];
+    NSURL * permanentURL = [self uniqueNewFileURLForFileLike:fileNameHint isTemporary:NO];
+    NSError * error = nil;
+    [[NSFileManager defaultManager] moveItemAtURL:temporaryFile toURL:permanentURL error:&error];
+    if (error != nil) {
+        NSLog(@"#ERROR moving temporary file from %@ to permanent location %@", temporaryFile, permanentURL);
+    } else {
+        NSLog(@"Moved temporary file from %@ to permanent location %@", temporaryFile, permanentURL);
+
+    }
+    return permanentURL;
 }
 
 @synthesize peoplePicker = _peoplePicker;
