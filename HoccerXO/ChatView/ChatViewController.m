@@ -467,7 +467,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     CGRect keyboardFrame = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    BOOL flipped = UIInterfaceOrientationIsLandscape(orientation) == UIInterfaceOrientationIsLandscape(orientation) && SYSTEM_VERSION_LESS_THAN(@"8.0");
+    BOOL flipped = UIInterfaceOrientationIsLandscape(orientation) && SYSTEM_VERSION_LESS_THAN(@"8.0");
     CGFloat height = flipped ? keyboardFrame.size.width : keyboardFrame.size.height;
     CGPoint contentOffset = self.tableView.contentOffset;
     contentOffset.y += height;
