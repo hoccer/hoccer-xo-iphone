@@ -120,6 +120,7 @@
 @dynamic creationDate;           // date when this record was created
 
 @dynamic fileStatus;
+@dynamic orderNumber;
 
 
 @dynamic attachmentJsonString;
@@ -178,9 +179,17 @@
     return @[@"vcard",@"geolocation",@"data"];
 }
 
-+(NSString*) getStateName:(AttachmentState)state {
+- (void) awakeFromInsert {
+    [super awakeFromInsert];
+    self.creationDate = [NSDate date];
+    // or [self setPrimitiveDate:[NSDate date]];
+    // to avoid triggering KVO notifications
+    
+}
 
-NSArray * TransferStateName = @[@"detached",
++(NSString*) getStateName:(AttachmentState)state {
+    
+    NSArray * TransferStateName = @[@"detached",
                                 @"empty",
                                 @"transfered",
                                 @"no transfer url",
@@ -1402,11 +1411,18 @@ NSArray * TransferStateName = @[@"detached",
     
     if (self.ownedURL == nil) {
         // create new destination file for download
-        NSURL *appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
-        self.ownedURL = [self localUrlForDownloadinDirectory: appDocDir];
+        //NSURL *appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+        NSURL * downloadURL = [self localUrlForDownload];
+        NSError * error = [Attachment createFileAtURLPosix:downloadURL];
+        if (error == nil) {
+            self.ownedURL = [downloadURL absoluteString];
+        } else {
+            NSLog(@"Attachment: could not create file, error=%@", error);
+            return;
+        }
     } else {
-        // until we use ranged requests, let us delete the file in case it is left over
 #ifdef NO_DOWNLOAD_RESUME
+        // without ranged requests, let us delete the file in case it is left over
         NSString * myPath = [[NSURL URLWithString: self.ownedURL] path];
         [[NSFileManager defaultManager] removeItemAtPath: myPath error:nil];
 #else
@@ -1677,15 +1693,30 @@ NSArray * TransferStateName = @[@"detached",
 }
 
 // WARNING: this version depends on remoteURLs to be unique, so is not suitable for remote URLs than are no UUIDs
-- (NSString *) localUrlForDownloadinDirectory: (NSURL *) theDirectory {
+- (NSURL *) localUrlForDownload {
+    /*
     NSURL * myRemoteURL = [NSURL URLWithString: [self remoteURL]];
     NSString * myRemoteFileName = myRemoteURL.lastPathComponent;
     NSURL * myNewFile = [NSURL URLWithString:myRemoteFileName relativeToURL:theDirectory];
+     NSString * myNewFilename = [[[myNewFile absoluteString] stringByAppendingString:@"." ] stringByAppendingString: [Attachment fileExtensionFromMimeType: self.mimeType]];
+     return myNewFilename;
+    */
+    
+    NSString * fileName = nil;
+    if (self.humanReadableFileName != nil && self.humanReadableFileName) {
+        fileName = self.humanReadableFileName;
+    }
+    if (fileName == nil) {
+        fileName = NSLocalizedString(self.mediaType, nil);
+    }
+    
     if (self.mimeType == nil) {
         self.mimeType = @"application/octet-stream";
     }
-    NSString * myNewFilename = [[[myNewFile absoluteString] stringByAppendingString:@"." ] stringByAppendingString: [Attachment fileExtensionFromMimeType: self.mimeType]];
-    return myNewFilename;
+    if (fileName.pathExtension == nil || fileName.pathExtension.length == 0) {
+        fileName = [fileName stringByAppendingPathExtension:[Attachment fileExtensionFromMimeType: self.mimeType]];
+    }
+    return [AppDelegate uniqueNewFileURLForFileLike:fileName isTemporary:YES];
 }
 
 
@@ -1731,9 +1762,18 @@ NSArray * TransferStateName = @[@"detached",
     if (someFileURL == nil) {
         return nil;
     }
-    NSURL *appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
+    NSURL * oldURL = [NSURL URLWithString:someFileURL];
+    
+    NSURL * newDir = AppDelegate.instance.applicationDocumentsDirectory;
+    NSArray * pathComponents = [oldURL pathComponents];
+    if (pathComponents.count > 2) {
+        NSString * dir = pathComponents[pathComponents.count-2];
+        if ([AppDelegate.instance.applicationTemporaryDocumentsDirectory.lastPathComponent isEqualToString:dir]) {
+            newDir = AppDelegate.instance.applicationTemporaryDocumentsDirectory;
+        }
+    }
     NSString * myFileName = [someFileURL lastPathComponent];
-    NSURL * myLocalURL = [NSURL URLWithString:myFileName relativeToURL:appDocDir];
+    NSURL * myLocalURL = [NSURL URLWithString:myFileName relativeToURL:newDir];
     return [myLocalURL absoluteString];
 }
 
@@ -1898,6 +1938,29 @@ NSArray * TransferStateName = @[@"detached",
     NSURL * myURL = [NSURL URLWithString: fileURL];
     return [self appendToFileURLPosix:myURL thisData:data];
 }
+
++(NSError*) createFileAtURLPosix:(NSURL*)myURL {
+    NSError * myError = nil;
+    NSString * myPath = [myURL path];
+    int fd = open([myPath UTF8String], O_WRONLY|O_APPEND|O_EXLOCK|O_CREAT,0777);
+    if (fd != -1) {
+        NSInteger result2 = close(fd);
+        if (result2 == -1) {
+            NSString * myDescription = [NSString stringWithFormat:@"Attachment createFileAtURLPosix close failed, errno=%d", errno];
+            NSLog(@"%@", myDescription);
+            myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment.io" code: 662 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+            return myError;
+        }
+    } else {
+        NSString * myDescription = [NSString stringWithFormat:@"Attachment createFileAtURLPosix open failed, errno=%d, path=%s", errno,[myPath UTF8String]];
+        NSLog(@"%@", myDescription);
+        myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment.io" code: 660 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+        return myError;
+        
+    }
+    return nil;
+}
+
 
 +(NSError*) appendToFileURLPosix:(NSURL*)myURL thisData:(NSData *) data {
     NSError * myError = nil;
@@ -2185,6 +2248,7 @@ NSArray * TransferStateName = @[@"detached",
 
             if ([self.transferSize isEqualToNumber: self.contentSize]) {
                 if (CONNECTION_TRACE) {NSLog(@"Attachment transferConnection connectionDidFinishLoading successfully downloaded attachment, size=%@", self.contentSize);}
+                self.ownedURL = [[AppDelegate moveDocumentToPermanentLocation:[NSURL URLWithString:self.ownedURL]] absoluteString];
                 self.localURL = self.ownedURL;
                 [self computeDestMac];
                 [self determinePlayability];

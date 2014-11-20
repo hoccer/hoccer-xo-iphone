@@ -819,10 +819,10 @@ nil
     [self trashCurrentAttachment]; // will be trashed only in case it is still set, otherwise only view will be cleared
 }
 
--(NSURL*) acquireAndReserveFileUrlFor:(NSString*)newFileName {
+-(NSURL*) acquireAndReserveFileUrlFor:(NSString*)newFileName isTemporary:(BOOL)isTemporary {
     NSURL * myURL = nil;
     @synchronized(self) {
-        myURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+        myURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:isTemporary];
         NSError * error = nil;
         //[@"" writeToURL:myURL atomically:NO encoding:NSUTF8StringEncoding error:&error];
         if (error != nil) {
@@ -924,12 +924,15 @@ nil
         // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
         myImage = [Attachment qualityAdjustedImage:myImage];
         
-        NSURL * myURL = [self acquireAndReserveFileUrlFor:@"reducedSnapshotImage.jpg"];
+        NSURL * myURL = [self acquireAndReserveFileUrlFor:@"reducedSnapshotImage.jpg" isTemporary:YES];
         
         float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
         [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
         
-        [attachment makeImageAttachment: [myURL absoluteString]
+        NSURL * permanentURL = [AppDelegate moveDocumentToPermanentLocation:myURL];
+        attachment.ownedURL = [permanentURL absoluteString];
+        
+        [attachment makeImageAttachment: attachment.ownedURL
                              anOtherURL:nil
                                   image: myImage
                          withCompletion:^(NSError *theError) {
@@ -938,7 +941,7 @@ nil
         
     } else if ([type isEqualToString:ALAssetTypeVideo]) {
         
-        NSURL * outputURL = [self acquireAndReserveFileUrlFor:@"video.mp4"];
+        NSURL * outputURL = [self acquireAndReserveFileUrlFor:@"video.mp4" isTemporary:YES];
         
         AVAsset *sourceAsset = [AVAsset assetWithURL:
                                 [NSURL URLWithString:
@@ -960,10 +963,12 @@ nil
             switch (exportSession.status) {
                 case AVAssetExportSessionStatusCompleted: {
                     NSLog (@"AVAssetExportSessionStatusCompleted");
-                    NSString * outputURLString = [outputURL absoluteString];
-                    attachment.ownedURL = outputURLString;
                     
-                    [attachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
+                    NSURL * permanentURL = [AppDelegate moveDocumentToPermanentLocation:outputURL];
+                    
+                    attachment.ownedURL = [permanentURL absoluteString];
+                    
+                    [attachment makeVideoAttachment:attachment.ownedURL anOtherURL:nil withCompletion:^(NSError *theError) {
                         completion(theError);
                      }];
                     return;
@@ -1094,7 +1099,7 @@ nil
     //NSData * previewData = UIImageJPEGRepresentation( preview, photoQualityCompressionSetting/10.0);
     NSData * previewData = UIImagePNGRepresentation( preview );
     
-    NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike: @"location.hcrgeo"];
+    NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike: @"location.hcrgeo" isTemporary:YES];
     NSDictionary * json = @{ @"location": @{ @"type": @"point",
                                              @"coordinates": @[ @(placemark.coordinate.latitude), @(placemark.coordinate.longitude)]},
                              @"previewImage": [previewData asBase64EncodedString]};
@@ -1107,8 +1112,9 @@ nil
     }
     [jsonData writeToURL:myLocalURL atomically:NO];
     
-    
-    [attachment makeGeoLocationAttachment: [myLocalURL absoluteString] anOtherURL: nil withCompletion:^(NSError *theError) {
+    myLocalURL = [AppDelegate moveDocumentToPermanentLocation:myLocalURL];
+    attachment.ownedURL = [myLocalURL absoluteString];
+    [attachment makeGeoLocationAttachment: attachment.ownedURL anOtherURL: nil withCompletion:^(NSError *theError) {
         [self finishPickedAttachmentProcessingWithImage: attachment.previewImage withError: theError];
     }];
 }
@@ -1120,13 +1126,16 @@ nil
     
     // find a suitable unique file name and path
     NSString * newFileName = [NSString stringWithFormat:@"%@.vcf",personName];
-    NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+    NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
     
     [vcardData writeToURL:myLocalURL atomically:NO];
     CompletionBlock completion  = ^(NSError *myerror) {
         UIImage * preview = attachment.previewImage != nil ? attachment.previewImage : [UIImage imageNamed: @"attachment_icon_contact"];
         [self finishPickedAttachmentProcessingWithImage: preview withError:myerror];
     };
+    
+    myLocalURL = [AppDelegate moveDocumentToPermanentLocation:myLocalURL];
+    attachment.ownedURL = [myLocalURL absoluteString];
     attachment.humanReadableFileName = [myLocalURL lastPathComponent];
     [attachment makeVcardAttachment:[myLocalURL absoluteString] anOtherURL:nil withCompletion:completion];
 }
@@ -1170,13 +1179,16 @@ nil
             
             // find a suitable unique file name and path
             NSString * newFileName = @"pastedImage.jpg";
-            NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+            NSURL * myLocalURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
             
             // write the image
             myImage = [Attachment qualityAdjustedImage:myImage];
             float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
             [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myLocalURL atomically:NO];
             
+            myLocalURL = [AppDelegate moveDocumentToPermanentLocation:myLocalURL];
+            attachment.ownedURL = [myLocalURL absoluteString];
+            attachment.humanReadableFileName = [myLocalURL lastPathComponent];
             [attachment makeImageAttachment: [myLocalURL absoluteString] anOtherURL:nil
                                                   image: myImage
                                          withCompletion:^(NSError *theError) {
@@ -1201,7 +1213,7 @@ nil
     // make a nice and unique filename
     NSString * newFileName = [NSString stringWithFormat:@"%@ - %@.%@",[song valueForProperty:MPMediaItemPropertyArtist],[song valueForProperty:MPMediaItemPropertyTitle],@"m4a" ];
     
-    NSURL * myExportURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+    NSURL * myExportURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
     
     NSURL *assetURL = [song valueForProperty:MPMediaItemPropertyAssetURL];
     // NSLog(@"audio assetURL = %@", assetURL);
@@ -1271,9 +1283,13 @@ nil
             }
             case AVAssetExportSessionStatusCompleted: {
                 if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted");
-                [attachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:[(*exportSession).outputURL absoluteString] withCompletion:^(NSError *theError) {
+                
+                NSURL * permanetExportURL = [AppDelegate moveDocumentToPermanentLocation:myExportURL];
+                attachment.ownedURL = [permanetExportURL absoluteString];
+                attachment.humanReadableFileName = [permanetExportURL lastPathComponent];
+                
+                [attachment makeAudioAttachment: [assetURL absoluteString] anOtherURL:attachment.ownedURL withCompletion:^(NSError *theError) {
                     *exportSession = nil;
-                    attachment.humanReadableFileName = [myExportURL lastPathComponent];
                     if (attachment.previewImage == nil) {
                         if (DEBUG_ATTACHMENT_BUTTONS) NSLog (@"AVAssetExportSessionStatusCompleted: makeAudioAttachment - creating preview image from db artwork");
                         // In case we fail getting the artwork from file try get artwork from Media Item
@@ -1326,7 +1342,7 @@ nil
         // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
         UIImage * myImage = [Attachment qualityAdjustedImage:myOriginalImage];
         NSString * newFileName = @"reducedSnapshotImage.jpg";
-        myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+        myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
         
         float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
         [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
@@ -1334,14 +1350,12 @@ nil
         // funky method using ALAssetsLibrary
         ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
             if (!error) {
-                if (myFileURL == nil) {
-                    myURL = assetURL;
-                } else {
-                    myURL = myFileURL;
-                }
                 
+                myURL = [AppDelegate moveDocumentToPermanentLocation:myFileURL];
+                attachment.ownedURL = [myURL absoluteString];
+                attachment.humanReadableFileName = [myURL lastPathComponent];
                 // create attachment with lower quality image dependend on settings
-                [attachment makeImageAttachment: [myURL absoluteString]
+                [attachment makeImageAttachment: attachment.ownedURL
                                                  anOtherURL:nil
                                                       image: myImage
                                              withCompletion:^(NSError *theError) {
@@ -1366,15 +1380,18 @@ nil
         // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
         //if ([Attachment tooLargeImage:myImage]) {
         myImage = [Attachment qualityAdjustedImage:myImage];
-        NSString * newFileName = @"reducedSnapshotImage.jpg";
-        myURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+        NSString * newFileName = @"reducedAlbumImage.jpg";
+        myURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
         
         float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
         [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
         //} else {
         //  TODO: save a local copy of the image without JPEG reencoding
         //}
-        [attachment makeImageAttachment: [myURL absoluteString]
+        myURL = [AppDelegate moveDocumentToPermanentLocation:myURL];
+        attachment.ownedURL = [myURL absoluteString];
+        attachment.humanReadableFileName = [myURL lastPathComponent];
+        [attachment makeImageAttachment: attachment.ownedURL
                                          anOtherURL:nil
                                               image: myImage
                                      withCompletion:^(NSError *theError) {
@@ -1393,7 +1410,7 @@ nil
 - (void) didPickCameraOrAlbumMovieAttachmentWithUrl:(NSURL *)mediaURL withReferenceUrl:(NSURL *) referenceURL into:(Attachment*)attachment {
     
     NSString * newFileName = @"video.mp4";
-    NSURL * outputURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName];
+    NSURL * outputURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
     
     if (_currentExportSession != nil) {
         NSString * myDescription = [NSString stringWithFormat:@"An audio or video export is still in progress"];
@@ -1426,10 +1443,11 @@ nil
                 }
             }
             
-            NSString * outputURLString = [outputURL absoluteString];
-            attachment.ownedURL = outputURLString;
+            NSURL * permanentURL = [AppDelegate moveDocumentToPermanentLocation:outputURL];
+            attachment.ownedURL = [permanentURL absoluteString];
+            attachment.humanReadableFileName = [permanentURL lastPathComponent];
             
-            [attachment makeVideoAttachment:outputURLString anOtherURL:nil withCompletion:^(NSError *theError) {
+            [attachment makeVideoAttachment:attachment.ownedURL anOtherURL:nil withCompletion:^(NSError *theError) {
                 [self finishPickedAttachmentProcessingWithImage:attachment.previewImage withError:theError];
             }];
         } else {

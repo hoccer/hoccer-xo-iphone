@@ -105,7 +105,9 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 - (void)assertMainContext;
 
 - (NSURL *)applicationDocumentsDirectory;
+- (NSURL *)applicationTemporaryDocumentsDirectory;
 - (NSURL *)applicationLibraryDirectory;
+
 - (void) setupDone: (BOOL) performRegistration;
 - (void) showCorruptedDatabaseAlert;
 - (void) showInvalidCredentialsWithInfo:(NSString*)info withContinueHandler:(ContinueBlock)onNotDeleted;
@@ -148,7 +150,9 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 + (NSString *)uniqueFilenameForFilename: (NSString *)theFilename inDirectory: (NSString *)directory;
 + (NSString *)sanitizeFileNameString:(NSString *)fileName;
-+ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint;
+//+ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint;
++ (NSURL *)uniqueNewFileURLForFileLike:(NSString *)fileNameHint isTemporary:(BOOL)temporary;
++ (NSURL *)moveDocumentToPermanentLocation:(NSURL*)temporaryFile;
 
 - (NSString *)ownIPAddress:(BOOL)preferIPv4;
 - (NSDictionary *)ownIPAddresses;

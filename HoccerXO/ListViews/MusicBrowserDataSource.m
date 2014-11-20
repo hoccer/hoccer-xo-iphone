@@ -67,7 +67,7 @@
     if (contact != nil) {
         [predicateArray addObject: [NSPredicate predicateWithFormat:@"message.contact == %@", contact]];
     } else {
-        [predicateArray addObject: [NSPredicate predicateWithFormat:@"duplicate == 'NODUP'"]];        
+        [predicateArray addObject: [NSPredicate predicateWithFormat:@"duplicate == 'ORIGINAL'"]];        
     }
     if (mediaTypes != nil) {
         [self addPredicates: predicateArray forMediaTypes:mediaTypes];

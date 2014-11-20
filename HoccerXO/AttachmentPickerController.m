@@ -417,6 +417,9 @@
 
 - (void)audiorecorder:(RecordViewController *)audioRecorder didRecordAudio:(NSURL *)audioFileURL {
     NSLog(@"audiorecorder didRecordAudio %@",audioFileURL);
+    
+    audioFileURL = [AppDelegate moveDocumentToPermanentLocation:audioFileURL];
+
     NSDictionary *myAttachmentInfo = @{@"com.hoccer.xo.mediaType": @"audio",
                                        @"com.hoccer.xo.mimeType": @"audio/mp4",
                                        @"com.hoccer.xo.fileName": [audioFileURL lastPathComponent],
