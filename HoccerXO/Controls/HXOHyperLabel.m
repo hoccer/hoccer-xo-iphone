@@ -54,6 +54,7 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
 }
 
 - (void) commonInit {
+    self.preferredMaxLayoutWidth = 320 - 2 * 16;
     self.textAlignment = NSTextAlignmentNatural;
     self.lineBreakMode = NSLineBreakByWordWrapping;
     self.textToViewTransform = CGAffineTransformIdentity;
@@ -64,11 +65,10 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     [self addGestureRecognizer: [[UILongPressGestureRecognizer alloc] initWithTarget: self action:@selector(tapped:)]];
 
     self.contentMode = UIViewContentModeRedraw;
-
 }
 
 - (CGSize) intrinsicContentSize {
-    CGSize size = CGSizeMake(320 - 32/* TODO */, 0);
+    CGSize size = CGSizeMake(MAX(self.preferredMaxLayoutWidth, self.bounds.size.width), 0);
     CGSize result = CTFramesetterSuggestFrameSizeWithConstraints(self.framesetter, CFRangeMake(0, 0), NULL, size, NULL);
 
     result.width = self.textAlignment == NSTextAlignmentCenter ? size.width : ceilf(result.width);
@@ -127,9 +127,10 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
 
 - (CGSize) sizeThatFits:(CGSize)size {
     size.height = 0;
+    size.width = MIN(self.preferredMaxLayoutWidth, size.width);
     CGSize fittingSize = CTFramesetterSuggestFrameSizeWithConstraints(self.framesetter, CFRangeMake(0, 0), NULL, size, NULL);
     fittingSize.width = ceilf(fittingSize.width);
-    //fittingSize.height = ceilf(fittingSize.height);
+    fittingSize.height = ceilf(fittingSize.height);
     return fittingSize;
 }
 

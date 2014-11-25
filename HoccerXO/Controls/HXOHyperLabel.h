@@ -35,6 +35,8 @@ FOUNDATION_EXTERN NSString * kHXOLinkAttributeName;
 @property (nonatomic,assign) NSTextAlignment      textAlignment;
 @property (nonatomic,assign) NSLineBreakMode      lineBreakMode;
 
+@property (nonatomic,assign) CGFloat              preferredMaxLayoutWidth;
+
 @property (nonatomic,weak) id<HXOHyperLabelDelegate> delegate;
 
 @end

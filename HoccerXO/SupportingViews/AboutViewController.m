@@ -18,9 +18,28 @@
 # define kReleaseBuild YES
 #endif
 
+@interface AboutCell : UITableViewCell
+
+@property (nonatomic,assign) IBOutlet UIImageView   * iconView;
+@property (nonatomic,assign) IBOutlet UILabel       * nameLabel;
+@property (nonatomic,assign) IBOutlet UILabel       * versionLabel;
+@property (nonatomic,assign) IBOutlet HXOHyperLabel * aboutLabel;
+
+@end
+
+@implementation AboutCell
+
+- (void) awakeFromNib {
+    [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: self.nameLabel attribute: NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem: self.iconView attribute: NSLayoutAttributeCenterY multiplier: 1 constant: 0]];
+    [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: self.versionLabel attribute: NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem: self.iconView attribute: NSLayoutAttributeCenterY multiplier: 1 constant: 0]];
+}
+
+
+@end
+
 @interface AboutViewController ()
 
-@property (strong, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (nonatomic,strong) AboutCell * sizingCell;
 
 @end
 
@@ -30,131 +49,56 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
 
-    self.scrollView.alwaysBounceVertical = YES;
+    self.sizingCell = (AboutCell*)[self.tableView dequeueReusableCellWithIdentifier: @"AboutCell"];
+}
 
-    NSDictionary *infoPlist = [NSDictionary dictionaryWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"Info" ofType:@"plist"]];
-    NSString *iconName = [[infoPlist valueForKeyPath:@"CFBundleIcons.CFBundlePrimaryIcon.CFBundleIconFiles"] lastObject];
-    if ([UIScreen mainScreen].scale == 2) {
-        iconName = [iconName stringByAppendingString:@"@2x"];
-    }
-    NSURL *iconURL = [[NSBundle mainBundle] URLForResource:iconName withExtension:@"png"];
-    UIImageView * appIcon = [[UIImageView alloc] initWithImage: [UIImage imageWithData: [NSData dataWithContentsOfURL: iconURL] scale: [UIScreen mainScreen].scale]];
-    appIcon.translatesAutoresizingMaskIntoConstraints = NO;
-    [self.scrollView addSubview: appIcon];
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView { return 1; }
 
-    HXOHyperLabel * appInfo = [[HXOHyperLabel alloc] initWithFrame: CGRectZero];
-    appInfo.translatesAutoresizingMaskIntoConstraints = NO;
-    appInfo.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
-    appInfo.attributedText = [self appInfoString: infoPlist];
-    [self.scrollView addSubview: appInfo];
+- (NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section { return 1; }
 
-    HXOHyperLabel * aboutProsa = [[HXOHyperLabel alloc] initWithFrame: CGRectZero];
-    aboutProsa.translatesAutoresizingMaskIntoConstraints = NO;
-    aboutProsa.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
-    aboutProsa.attributedText = [[NSAttributedString alloc] initWithString: NSLocalizedString(@"about_prosa", nil) attributes: nil];
-    [self.scrollView addSubview: aboutProsa];
+- (UITableViewCell*) tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    AboutCell * cell = [self.tableView dequeueReusableCellWithIdentifier: @"AboutCell" forIndexPath: indexPath];
+    [self configureCell: cell];
+    return cell;
+}
 
-#ifdef SHOW_PEOPLE
-    UILabel * teamLabel = [[UILabel alloc] initWithFrame: CGRectZero];
-    teamLabel.translatesAutoresizingMaskIntoConstraints = NO;
-    teamLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];
-    teamLabel.text = NSLocalizedString(@"about_team_heading", nil);
-    [self.scrollView addSubview: teamLabel];
-#endif
-    NSMutableDictionary * views = [NSMutableDictionary dictionaryWithDictionary:
-                                   @{@"icon":  appIcon,
-                                     @"info":  appInfo,
-                                     @"prosa": aboutProsa,
-                                     //@"team":  teamLabel
-                                     }];
-    NSString * format;
-#ifdef SHOW_PEOPLE
-    NSDictionary * sections = @{@"about_client_developers": @"HXOClientDevelopers",
-                                @"about_server_developers": @"HXOServerDevelopers",
-                                @"about_designers"        : @"HXODesigners"
-//                                @"about_operators"        : @"HXOOperators"
-                                };
-    UIFontDescriptor * bold = [[UIFontDescriptor preferredFontDescriptorWithTextStyle: UIFontTextStyleBody] fontDescriptorWithSymbolicTraits: UIFontDescriptorTraitBold];
-    
-    for (NSString * labelKey in sections) {
-        UILabel  * sectionTitle = [[UILabel alloc] initWithFrame: CGRectZero];
-        sectionTitle.translatesAutoresizingMaskIntoConstraints = NO;
-        sectionTitle.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
-        sectionTitle.text = NSLocalizedString(labelKey, nil);
-        [self.scrollView addSubview: sectionTitle];
-        views[labelKey] = sectionTitle;
+- (void) configureCell: (AboutCell*) cell {
+    cell.iconView.image = [self appIcon];
+    cell.iconView.backgroundColor = [UIColor blueColor];
+    cell.iconView.layer.cornerRadius = 2 * kHXOGridSpacing;
+    cell.iconView.layer.masksToBounds = YES;
+    cell.nameLabel.text = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    cell.versionLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 
-        NSString * infoKey = sections[labelKey];
-        UILabel * peopleList = [[UILabel alloc] initWithFrame: CGRectZero];
-        peopleList.translatesAutoresizingMaskIntoConstraints = NO;
-        peopleList.font = [UIFont fontWithDescriptor: bold size: sectionTitle.font.pointSize];
-        peopleList.numberOfLines = 0;
-        peopleList.text = [self peopleListAsText: infoKey];
-        [self.scrollView addSubview: peopleList];
-        views[infoKey] = peopleList;
-
-        format = [NSString stringWithFormat: @"H:|-%f-[%@]-%f-[%@]-%f-|", kHXOCellPadding, labelKey, kHXOCellPadding, infoKey, kHXOCellPadding];
-        [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-
-        [self.scrollView addConstraint: [NSLayoutConstraint constraintWithItem: sectionTitle attribute: NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem: peopleList attribute: NSLayoutAttributeTop multiplier: 1 constant: 0]];
-    }
-#endif
-    
-    format = [NSString stringWithFormat: @"H:|-%f-[icon]-%f-[info]-(>=%f)-|", kHXOCellPadding, kHXOCellPadding, kHXOCellPadding];
-    [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-
-    format = [NSString stringWithFormat: @"H:|-%f-[prosa]-%f-|", kHXOCellPadding, kHXOCellPadding];
-    [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-#ifdef SHOW_PEOPLE
-    format = [NSString stringWithFormat: @"H:|-%f-[team]-%f-|", kHXOCellPadding, kHXOCellPadding];
-    [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-#endif
-    format = [NSString stringWithFormat: @"V:|-%f-[icon]", kHXOCellPadding];
-    [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
-#ifdef SHOW_PEOPLE
-
-    format = [NSString stringWithFormat: @"V:|-%f-[info]-%f-[prosa]-%f-[team]-%f-[HXOClientDevelopers]-%f-[HXOServerDevelopers]-%f-[HXODesigners]-%f-|", kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding, kHXOCellPadding];
+    cell.aboutLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
+    cell.aboutLabel.preferredMaxLayoutWidth = 320 - 2 * 24;
+    cell.aboutLabel.attributedText = [[NSAttributedString alloc] initWithString:
+#ifdef DEBUG
+    @"HOCCER - Der Messenger\n\n"
+    "Tootsie roll bear claw pastry. Muffin candy chocolate cake powder powder. Marzipan chocolate cake lollipop candy. Soufflé brownie wafer biscuit marshmallow. Marzipan unerdwear.com pudding toffee liquorice. Icing wafer sweet roll cotton candy wafer sweet roll pudding unerdwear.com cheesecake. Macaroon donut danish. Cheesecake applicake candy canes chocolate cake cake chocolate bar cheesecake candy pie.\n\n"
+    "Pastry donut tiramisu halvah cotton candy dessert bonbon. Lollipop candy canes wafer candy ice cream. Dragée dragée apple pie topping chocolate sweet wafer cheesecake. Soufflé croissant cookie muffin donut liquorice wafer. Soufflé unerdwear.com biscuit chocolate bar sesame snaps halvah. Bear claw fruitcake halvah tiramisu ice cream. Carrot cake caramels topping jelly-o sugar plum bonbon danish."
 #else
-    format = [NSString stringWithFormat: @"V:|-%f-[info]-%f-[prosa]-%f-|", kHXOCellPadding, kHXOCellPadding, kHXOCellPadding];
+    NSLocalizedString(@"about_prosa", nil)
 #endif
-    [self.scrollView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+                                      ];
 }
 
-
-- (void) viewWillAppear:(BOOL)animated  {
-    [super viewWillAppear: animated];
+- (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    [self configureCell: self.sizingCell];
+    //[self.sizingCell setNeedsLayout];
+    //[self.sizingCell layoutIfNeeded];
+    CGSize size = [self.sizingCell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
+    return ceilf(size.height) + 1;
 }
 
-- (void) moveView: (UIView*) view by: (float) dy {
-    CGRect frame = view.frame;
-    frame.origin.y += dy;
-    view.frame = frame;
-}
-
-- (float) setLabel: (UILabel*) label toText: (NSString*) text andUpdateDy: (float) dy {
-    dy -= label.frame.size.height;
-    label.text = text;
-    [label sizeToFit];
-    dy += label.frame.size.height;
-    return dy;
-}
-
-- (NSString*) peopleListAsText: (NSString*) plistKey {
-    NSArray * people = [[NSBundle mainBundle] objectForInfoDictionaryKey: plistKey];
-    return [people componentsJoinedByString:@"\n"];
-}
-
-- (NSAttributedString*) appInfoString: (NSDictionary*) infoPlist {
-    NSMutableAttributedString * appInfo = [[NSMutableAttributedString alloc] initWithString: infoPlist[@"CFBundleDisplayName"] attributes: @{NSFontAttributeName: [UIFont boldSystemFontOfSize: 14]}];
-
-    NSString * releaseString = infoPlist[@"HXOReleaseName"];
-    if ( ! [[Environment sharedEnvironment].currentEnvironment isEqualToString: @"production"] || ! kReleaseBuild) {
-        releaseString = [NSString stringWithFormat: @"%@\n%@ – %@", releaseString, [Environment sharedEnvironment].currentEnvironment, kReleaseBuild ? @"release" : @"debug"];
+- (UIImage*) appIcon {
+    NSArray * names = [[NSBundle mainBundle] infoDictionary][@"CFBundleIcons"][@"CFBundlePrimaryIcon"][@"CFBundleIconFiles"];
+    UIImage * best;
+    for (NSString * name in names) {
+        UIImage * icon = [UIImage imageNamed: name];
+        best = icon.size.width > best.size.width ? icon : best;
     }
-    NSString * versionString = [NSString stringWithFormat: @"\nVersion: %@ - %@\n%@", infoPlist[@"CFBundleShortVersionString"], infoPlist[@"CFBundleVersion"], releaseString];
-    [appInfo appendAttributedString: [[NSAttributedString alloc] initWithString: versionString attributes: @{NSFontAttributeName: [UIFont systemFontOfSize: 14]}]];
-
-    return appInfo;
+    return best;
 }
 
 @end
