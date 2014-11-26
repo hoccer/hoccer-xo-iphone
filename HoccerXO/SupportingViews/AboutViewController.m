@@ -64,9 +64,11 @@
 
 - (void) configureCell: (AboutCell*) cell {
     cell.iconView.image = [self appIcon];
-    cell.iconView.backgroundColor = [UIColor blueColor];
-    cell.iconView.layer.cornerRadius = 2 * kHXOGridSpacing;
+    cell.iconView.backgroundColor = [UIColor clearColor];
+    cell.iconView.layer.cornerRadius = 1.5 * kHXOGridSpacing;
     cell.iconView.layer.masksToBounds = YES;
+    cell.iconView.layer.borderColor = [UIColor colorWithWhite: 0 alpha: 0.075].CGColor;
+    cell.iconView.layer.borderWidth = 1;
     cell.nameLabel.text = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
     cell.versionLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
 
