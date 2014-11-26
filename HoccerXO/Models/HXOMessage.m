@@ -20,6 +20,7 @@
 
 // TODO: a model accessing the theme? get rid of that...
 #import "HXOUI.h"
+#import "AppDelegate.h"
 
 #import <CommonCrypto/CommonHMAC.h>
 
@@ -187,13 +188,9 @@
 -(CGFloat) cachedCellHeight {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     double messageFontSize = [HXOUI theme].messageFont.pointSize;
-#ifdef USE_BUILD_NUMBER_CACHE
-    NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
-#endif
+
     if (messageFontSize == self.cachedMessageFontSize
-#ifdef USE_BUILD_NUMBER_CACHE
-        && [buildNumber isEqualToString:self.cachedBuildNumber]
-#endif
+        && [[AppDelegate appEntityId] isEqualToString:self.cachedBuildNumber]
         ) {
         if (orientation == UIInterfaceOrientationPortrait) {
             if (self.cachedPortraitCellHeight != 0) {
@@ -211,7 +208,8 @@
 -(void) setCachedCellHeight:(CGFloat)height {
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     self.cachedMessageFontSize = [HXOUI theme].messageFont.pointSize;
-    self.cachedBuildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
+    self.cachedBuildNumber = [AppDelegate appEntityId];
+    NSLog(@"setting cached cell height to %f for entity %@", height, [AppDelegate appEntityId]);
     
     if (orientation == UIInterfaceOrientationPortrait) {
         self.cachedPortraitCellHeight = height;

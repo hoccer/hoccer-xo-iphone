@@ -56,6 +56,8 @@
 
 #import <AVFoundation/AVFoundation.h>
 
+#import <sys/utsname.h>
+
 #define CONNECTION_TRACE            NO
 #define MIGRATION_DEBUG             NO
 #define AUDIOSESSION_DEBUG          NO
@@ -137,6 +139,31 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
 @synthesize rpcObjectModel = _rpcObjectModel;
 @synthesize userAgent;
+
+// a string that changes when the app version, the device, the OS-Version or system language changes
+// used to invalidate caches that may depend on these values
++(NSString*)appEntityId {
+    static NSString * appEntityString = nil;
+    if (appEntityString == nil) {
+#ifdef DEBUG
+        NSString * clientBuildVariant = @"debug";
+#else
+        NSString * clientBuildVariant = @"release";
+#endif
+        struct utsname systemInfo;
+        uname(&systemInfo);
+        NSString *machineName = [NSString stringWithCString:systemInfo.machine encoding:NSUTF8StringEncoding];
+        NSArray * initParams = @[[[NSLocale preferredLanguages] objectAtIndex:0],
+                                 machineName,
+                                 [UIDevice currentDevice].systemName,
+                                 [UIDevice currentDevice].systemVersion,
+                                 [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleName"],
+                                 clientBuildVariant, [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
+                                 [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]];
+        appEntityString = [initParams componentsJoinedByString:@"-"];
+    }
+    return appEntityString;
+}
 
 // see http://stackoverflow.com/questions/3181821/notification-of-changes-to-the-iphones-documents-directory
 

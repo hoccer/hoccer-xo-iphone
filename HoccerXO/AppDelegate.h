@@ -191,7 +191,6 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 + (BOOL)isBusyFileAtURL:(NSURL*)myFile;
 + (BOOL)isBusyFile:(NSString*)myFilePath;
 
-
-
++(NSString*)appEntityId;
 
 @end
