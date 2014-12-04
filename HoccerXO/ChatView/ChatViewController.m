@@ -423,15 +423,18 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 - (void) preferredContentSizeChanged: (NSNotification*) notification {
     for (id key in _cellPrototypes) {
-        for (id section in [_cellPrototypes[key] sections])
-        if ([section respondsToSelector: @selector(preferredContentSizeChanged:)]) {
-            [section preferredContentSizeChanged: notification];
+        for (id section in [_cellPrototypes[key] sections]) {
+            if ([section respondsToSelector: @selector(preferredContentSizeChanged:)]) {
+                [section preferredContentSizeChanged: notification];
+            }
         }
     }
     self.messageField.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     self.messageFieldPlaceholder.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     [self updateVisibleCells];
-    [self.tableView reloadData];
+    if (SYSTEM_VERSION_LESS_THAN(@"8.0")) {
+        [self.tableView reloadData];
+    }
 }
 
 #pragma mark - Split view
@@ -1764,6 +1767,17 @@ nil
     }
 
     MessageCell * cell = [_cellPrototypes objectForKey: [self cellIdentifierForMessage: message]];
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0")) {
+        // On iOS 8 UITableView automaticallay calls reloadData on UIContentSizeCategoryDidChangeNotification
+        // *before* our handler has a chance to reconfigure anything. That means the cache already grabs the new
+        // font size value but performs computations on cells that still use the old. As a workaround we enforce
+        // an update before updating the cache
+        for (id section in [cell sections]) {
+            if ([section respondsToSelector: @selector(preferredContentSizeChanged:)]) {
+                [section preferredContentSizeChanged: nil];
+            }
+        }
+    }
     [self configureCell: cell forMessage: message withAttachmentPreview:NO];
     CGFloat height = [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
     message.cachedCellHeight = height;
