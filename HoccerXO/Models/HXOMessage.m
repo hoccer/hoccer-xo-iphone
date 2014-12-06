@@ -190,8 +190,8 @@
     double messageFontSize = [HXOUI theme].messageFont.pointSize;
 
     if (messageFontSize == self.cachedMessageFontSize
-        && [[AppDelegate appEntityId] isEqualToString:self.cachedBuildNumber]
-        ) {
+        && [[AppDelegate appEntityId] isEqualToString:self.cachedBuildNumber])
+    {
         if (orientation == UIInterfaceOrientationPortrait) {
             if (self.cachedPortraitCellHeight != 0) {
                 return self.cachedPortraitCellHeight;
