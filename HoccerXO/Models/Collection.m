@@ -22,7 +22,7 @@
 
     for (Attachment *attachment in newAttachments) {
         CollectionItem *collectionItem = [NSEntityDescription insertNewObjectForEntityForName:@"CollectionItem" inManagedObjectContext:self.managedObjectContext];
-        collectionItem.index = [self.items count];
+        collectionItem.index = (int)[self.items count];
         collectionItem.attachment = attachment;
         collectionItem.collection = self;
     }
@@ -42,7 +42,7 @@
             } else if (item.index == sourceIndex) {
                 // item is moved item
                 // => move to destination
-                item.index = destinationIndex;
+                item.index = (int)destinationIndex;
             } else if (item.index <= destinationIndex) {
                 // item is between moved item and destination
                 // => move up by one
@@ -59,7 +59,7 @@
             } else if (item.index == sourceIndex) {
                 // item is moved item
                 // => move to destination
-                item.index = destinationIndex;
+                item.index = (int)destinationIndex;
             } else if (item.index >= destinationIndex) {
                 // item is between moved item and destination
                 // => move down by one

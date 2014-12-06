@@ -15,6 +15,6 @@
 
 @property (nonatomic, retain) Attachment *attachment;
 @property (nonatomic, retain) Collection *collection;
-@property (nonatomic, assign) NSInteger   index;
+@property (nonatomic, assign) int        index;
 
 @end

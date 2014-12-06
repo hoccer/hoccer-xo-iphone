@@ -67,14 +67,19 @@
     self.tableView.contentOffset = CGPointMake(0, self.searchDisplayController.searchBar.frame.size.height);
 
 
-    self.mediaTypeControl = [[UISegmentedControl alloc] initWithItems:
-                             @[NSLocalizedString(@"attachment_type_visual", nil),
-                               NSLocalizedString(@"attachment_type_audios", nil),
-                               NSLocalizedString(@"attachment_type_other", nil)]];
-    
-    self.mediaTypeControl.selectedSegmentIndex = 0;
-    [self.mediaTypeControl addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
-    self.navigationItem.titleView = self.mediaTypeControl;
+}
+
+- (void) ensureSegmentedMediaTypeControl {
+    if (_mediaTypeControl == nil) {
+        self.mediaTypeControl = [[UISegmentedControl alloc] initWithItems:
+                                 @[NSLocalizedString(@"attachment_type_visual", nil),
+                                   NSLocalizedString(@"attachment_type_audios", nil),
+                                   NSLocalizedString(@"attachment_type_other", nil)]];
+        
+        self.mediaTypeControl.selectedSegmentIndex = 0;
+        [self.mediaTypeControl addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
+        self.navigationItem.titleView = self.mediaTypeControl;
+    }
 }
 
 static NSArray * mediaTypesForSegment(NSInteger segment) {
@@ -158,10 +163,11 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:editButton target:self action:@selector(toggleEditMode:)];
 
     } else if (self.contact) {
+        [self ensureSegmentedMediaTypeControl];
         self.navigationItem.title = self.contact.nickNameOrAlias;
-
     // list of all music items
     } else {
+        [self ensureSegmentedMediaTypeControl];
         self.navigationItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
         if (self.tableView.isEditing) {
             self.navigationItem.rightBarButtonItem = nil;
