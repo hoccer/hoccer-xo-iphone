@@ -55,6 +55,7 @@
 @property (nonatomic) float      cachedLandscapeCellHeight;
 @property (nonatomic) NSString * cachedBuildNumber;
 @property (nonatomic) double     cachedMessageFontSize;
+@property (nonatomic) double     cachedAttachmentAspect;
 
 @property (nonatomic) CGFloat cachedCellHeight;
 

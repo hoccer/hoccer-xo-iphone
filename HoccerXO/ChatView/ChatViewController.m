@@ -1758,6 +1758,12 @@ nil
     }
 }
 
+- (CGFloat)calcAndCacheCellHeight:(MessageCell*)cell forMessage:(HXOMessage*)message {
+    CGFloat height = [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
+    message.cachedCellHeight = height;
+    return height;
+}
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
@@ -1779,9 +1785,7 @@ nil
         }
     }
     [self configureCell: cell forMessage: message withAttachmentPreview:NO];
-    CGFloat height = [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
-    message.cachedCellHeight = height;
-    return height;
+    return [self calcAndCacheCellHeight:cell forMessage:message];
 }
 
 - (NSString*) cellIdentifierForMessage: (HXOMessage*) message {
@@ -2077,7 +2081,9 @@ nil
     for (int i = 0; i < indexPaths.count; ++i) {
         NSIndexPath * indexPath = indexPaths[i];
         HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        [self configureCell: (MessageCell*)[self.tableView cellForRowAtIndexPath:indexPath] forMessage: message withAttachmentPreview:YES];
+        MessageCell * cell = (MessageCell*)[self.tableView cellForRowAtIndexPath:indexPath];
+        [self configureCell: cell forMessage: message withAttachmentPreview:YES];
+        [self calcAndCacheCellHeight:cell forMessage:message];
     }
     [self.tableView endUpdates];
 }
@@ -2138,6 +2144,7 @@ nil
             MessageCell * cell = (MessageCell*)[tableView cellForRowAtIndexPath:indexPath]; // returns nil if cell is not visible or index path is out of range
             if (cell != nil && message != nil) {
                 [self configureCell: cell forMessage: message withAttachmentPreview:YES];
+                [self calcAndCacheCellHeight:cell forMessage:message];
             }
             break;
         }

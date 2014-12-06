@@ -59,6 +59,7 @@
 @dynamic cachedBuildNumber;
 @dynamic cachedMessageFontSize;
 @dynamic cachedCellHeight;
+@dynamic cachedAttachmentAspect;
 
 @dynamic isOutgoing;
 @dynamic isRead;
@@ -190,6 +191,7 @@
     double messageFontSize = [HXOUI theme].messageFont.pointSize;
 
     if (messageFontSize == self.cachedMessageFontSize
+        && (self.attachment == nil || self.cachedAttachmentAspect == self.attachment.aspectRatio)
         && [[AppDelegate appEntityId] isEqualToString:self.cachedBuildNumber])
     {
         if (orientation == UIInterfaceOrientationPortrait) {
@@ -206,15 +208,22 @@
 }
 
 -(void) setCachedCellHeight:(CGFloat)height {
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    self.cachedMessageFontSize = [HXOUI theme].messageFont.pointSize;
-    self.cachedBuildNumber = [AppDelegate appEntityId];
-    NSLog(@"setting cached cell height to %f for entity %@", height, [AppDelegate appEntityId]);
-    
-    if (orientation == UIInterfaceOrientationPortrait) {
-        self.cachedPortraitCellHeight = height;
-    } else {
-        self.cachedLandscapeCellHeight = height;
+    CGFloat oldHeight = self.cachedCellHeight;
+    if ((float)oldHeight != (float)height) {
+        
+        UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+        self.cachedMessageFontSize = [HXOUI theme].messageFont.pointSize;
+        self.cachedBuildNumber = [AppDelegate appEntityId];
+        if (self.attachment!= nil) {
+            self.cachedAttachmentAspect = self.attachment.aspectRatio;
+        }
+        NSLog(@"setting cached cell height to %f (from %f) for entity %@", height, oldHeight, [AppDelegate appEntityId]);
+        
+        if (orientation == UIInterfaceOrientationPortrait) {
+            self.cachedPortraitCellHeight = height;
+        } else {
+            self.cachedLandscapeCellHeight = height;
+        }
     }
 }
 

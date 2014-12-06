@@ -1713,8 +1713,17 @@
     if (self.mimeType == nil) {
         self.mimeType = @"application/octet-stream";
     }
-    if (fileName.pathExtension == nil || fileName.pathExtension.length == 0) {
+    NSString * shouldHaveExtension = [Attachment fileExtensionFromMimeType: self.mimeType];
+    if (fileName.pathExtension == nil || fileName.pathExtension.length == 0 ) {
         fileName = [fileName stringByAppendingPathExtension:[Attachment fileExtensionFromMimeType: self.mimeType]];
+    } else {
+        // check if extension is correct
+        if (![shouldHaveExtension isEqualToString:fileName.pathExtension]) {
+            NSLog(@"Changing extension from file %@", fileName);
+            fileName = [fileName stringByDeletingPathExtension];
+            fileName = [fileName stringByAppendingPathExtension:shouldHaveExtension];
+            NSLog(@"Changing extension to file %@", fileName);
+        }
     }
     return [AppDelegate uniqueNewFileURLForFileLike:fileName isTemporary:YES];
 }
@@ -1747,6 +1756,15 @@
     }
     return myTranslatedURL;
 }
+
+/*
+- (void) setAspectRatio:(double)newValue {
+    [self willChangeValueForKey:@"aspectRatio"];
+    [self setPrimitiveValue:@(newValue) forKey:@"aspectRatio"];
+    NSLog(@"aspect ration set to %f", newValue);
+    [self didChangeValueForKey:@"aspectRatio"];
+}
+*/
 
 - (double) aspectRatio {
     [self willAccessValueForKey:@"aspectRatio"];
