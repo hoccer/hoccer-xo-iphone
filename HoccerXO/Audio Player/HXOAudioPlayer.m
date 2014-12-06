@@ -298,9 +298,6 @@
 #pragma mark - AVAudioPlayerDelegate methods
 
 - (void) audioPlayerDidFinishPlaying: (AVAudioPlayer *) player successfully: (BOOL) flag {
-    [AppDelegate setDefaultAudioSession];
-    [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
-    [[AppDelegate instance] resignFirstResponder];
 
     if (self.repeatState == HXOAudioPlayerRepeatStateOne) {
         [self play];
@@ -311,6 +308,9 @@
             if (self.repeatState == HXOAudioPlayerRepeatStateAll) {
                 [self playAtIndex:0];
             } else {
+                [AppDelegate setDefaultAudioSession];
+                [[UIApplication sharedApplication] endReceivingRemoteControlEvents];
+                [[AppDelegate instance] resignFirstResponder];
                 [self stop];
             }
         }
