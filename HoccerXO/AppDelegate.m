@@ -293,7 +293,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return [self isBusyFile:[myFile path]];
 }
 + (BOOL)isBusyFile:(NSString*)myFilePath {
-    
+    if (![[NSFileManager defaultManager] fileExistsAtPath:myFilePath]) {
+        return NO;
+    }
     int result;
     result = open([myFilePath UTF8String], O_RDONLY | O_NONBLOCK | O_EXLOCK);
     if (result != -1) {

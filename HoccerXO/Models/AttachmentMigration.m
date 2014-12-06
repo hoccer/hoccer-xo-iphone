@@ -49,6 +49,7 @@
 #define ARMED
 #ifdef ARMED
                 [Attachment makeAttachmentWithMediaType:mediaType mimeType:mimeType humanReadableFileName:file localURL:localURL assetURL:nil inContext:context whenReady:^(Attachment * attachment, NSError * error) {
+                    attachment.duplicate = @"ORIGINAL";
                     NSLog(@"Finished making attachment %@, error=%@",attachment, error);
                     [attachment determinePlayability];
                 }];
