@@ -215,7 +215,7 @@
                                                        withOKBlock:^{
                                                        }];
                 } else {                    
-                    [AppDelegate.instance openWithInteractionController:url withUTI:kHXOTransferArchiveUTI withName:kHXODefaultArchiveName inView:self.delegate.view withController:self.delegate];
+                    [AppDelegate.instance openWithInteractionController:url withUTI:kHXOTransferArchiveUTI withName:kHXODefaultArchiveName inView:self.delegate.view withController:self.delegate removeFile:YES];
                 }
             }];
             

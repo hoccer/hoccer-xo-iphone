@@ -123,6 +123,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 @property (nonatomic, strong) UIViewController * interactionViewController;
 @property (nonatomic, strong) UIView * interactionView;
 @property BOOL interactionSending;
+@property BOOL interactionRemoveFileFlag;
 
 @end
 
@@ -1944,15 +1945,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 
 #pragma mark - Document Interaction
 
-
-- (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller{
+- (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller removeFile:(BOOL) removeFileFlag {
     NSLog(@"openWithInteractionController");
     if (self.interactionView != nil) {
         NSLog(@"ERROR: interaction controller busy");
         return NO;
     }
     
-    NSLog(@"openWithInteractionController: uti=%@, name = %@, url = %@", uti, name, myURL);
+    NSLog(@"AppDelegate:openWithInteractionController: uti=%@, name = %@, url = %@", uti, name, myURL);
     self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:myURL];
     self.interactionController.delegate = self;
     self.interactionController.UTI = uti;
@@ -1960,6 +1960,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     self.interactionView = view;
     self.interactionViewController = controller;
     self.interactionSending = NO;
+    self.interactionRemoveFileFlag = removeFileFlag;
     CGRect navRect = controller.navigationController.navigationBar.frame;
     //navRect.size = CGSizeMake(1500.0f, 40.0f);
     //[self.interactionController presentOpenInMenuFromRect:CGRectNull inView:view animated:YES];
@@ -1983,12 +1984,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 - (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
     if (!self.interactionSending) {
         NSLog(@"documentInteractionControllerDidDismissOpenInMenu, not sending, cleaning up");
-        NSError * error = nil;
-        [[NSFileManager defaultManager] removeItemAtURL:self.interactionController.URL error:&error];
-        if (error == nil) {
-            NSLog(@"removed dismissed file URL %@",self.interactionController.URL);
-        } else {
-            NSLog(@"failed to remove sent file URL %@, error=%@",self.interactionController.URL, error);
+        if (self.interactionRemoveFileFlag) {
+            NSError * error = nil;
+            [[NSFileManager defaultManager] removeItemAtURL:self.interactionController.URL error:&error];
+            if (error == nil) {
+                NSLog(@"removed dismissed file URL %@",self.interactionController.URL);
+            } else {
+                NSLog(@"failed to remove sent file URL %@, error=%@",self.interactionController.URL, error);
+            }
         }
         self.interactionView = nil;
         self.interactionViewController = nil;
@@ -2183,7 +2186,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     [self makeArchive:archiveURL withHandler:^(NSURL *url) {
         if (url != nil) {
             UIViewController * vc = [AppDelegate getTopMostViewController];
-            BOOL ok = [AppDelegate.instance openWithInteractionController:url withUTI:kHXOTransferArchiveUTI withName:kHXODefaultArchiveName inView:vc.view withController:vc];
+            BOOL ok = [AppDelegate.instance openWithInteractionController:url withUTI:kHXOTransferArchiveUTI withName:kHXODefaultArchiveName inView:vc.view withController:vc removeFile:YES];
             handler(ok);
         } else {
             handler(NO);

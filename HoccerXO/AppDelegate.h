@@ -134,7 +134,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 - (BOOL)extractArchive:(NSURL*)archiveURL;
 
 + (UIViewController*) getTopMostViewController;
-- (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller;
+- (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller removeFile:(BOOL) removeFileFlag;
 
 + (void) setDefaultAudioSession;
 + (void) setRecordingAudioSession;

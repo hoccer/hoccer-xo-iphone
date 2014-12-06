@@ -927,7 +927,7 @@ nil
         // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
         myImage = [Attachment qualityAdjustedImage:myImage];
         
-        NSURL * myURL = [self acquireAndReserveFileUrlFor:@"reducedSnapshotImage.jpg" isTemporary:YES];
+        NSURL * myURL = [self acquireAndReserveFileUrlFor:@"albumImage.jpg" isTemporary:YES];
         
         float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
         [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
@@ -1344,7 +1344,7 @@ nil
         
         // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
         UIImage * myImage = [Attachment qualityAdjustedImage:myOriginalImage];
-        NSString * newFileName = @"reducedSnapshotImage.jpg";
+        NSString * newFileName = @"snapshot.jpg";
         myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
         
         float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
@@ -1383,7 +1383,7 @@ nil
         // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
         //if ([Attachment tooLargeImage:myImage]) {
         myImage = [Attachment qualityAdjustedImage:myImage];
-        NSString * newFileName = @"reducedAlbumImage.jpg";
+        NSString * newFileName = @"albumImage.jpg";
         myURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
         
         float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
@@ -2858,7 +2858,7 @@ ready:;
 - (void) messageCell:(MessageCell *)theCell shareMessage:(id)sender {
     // NSLog(@"saveMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
-    [self openWithActivityController:message];
+    [self openWithActivityController:message fromView:self.navigationItem.titleView];
 }
 
 - (void) messageCell:(MessageCell *)theCell copy:(id)sender {
@@ -3065,6 +3065,7 @@ ready:;
 }
 
 - (void) openWithInteractionController:(HXOMessage *)message {
+    
     NSLog(@"openWithInteractionController");
     Attachment * attachment = message.attachment;
     if (attachment != nil && attachment.available) {
@@ -3072,15 +3073,18 @@ ready:;
         NSString * uti = [Attachment UTIfromMimeType:attachment.mimeType];
         NSString * name = attachment.humanReadableFileName;
         NSLog(@"openWithInteractionController: uti=%@, name = %@", uti, name);
+        
         self.interactionController = [UIDocumentInteractionController interactionControllerWithURL:myURL];
         self.interactionController.delegate = self;
         self.interactionController.UTI = uti;
         self.interactionController.name = name;
-        [self.interactionController presentOpenInMenuFromRect:CGRectNull inView:self.view animated:YES];
+        CGRect navRect = self.navigationController.navigationBar.frame;
+        [self.interactionController presentOpenInMenuFromRect:navRect inView:self.view animated:YES];
+ 
     }
 }
 
-- (void) openWithActivityController:(HXOMessage *)message {
+- (void) openWithActivityController:(HXOMessage *)message fromView:(UIView*)sourceView{
     NSLog(@"openWithActivityController");
     Attachment * attachment = message.attachment;
     
@@ -3096,7 +3100,10 @@ ready:;
         }
         UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:activityItems applicationActivities:nil];
         activityViewController.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
-        
+        if ( [activityViewController respondsToSelector:@selector(popoverPresentationController)] ) {
+            // iOS8
+            activityViewController.popoverPresentationController.sourceView = sourceView;
+        }
         [self presentViewController:activityViewController animated:YES completion:nil];
     }
 }
@@ -3118,7 +3125,7 @@ ready:;
 
 - (UIViewController *)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller
 {
-	return self;
+	return self.navigationController;
 }
 
 - (UIView *)documentInteractionControllerViewForPreview:(UIDocumentInteractionController *)controller
@@ -3131,6 +3138,14 @@ ready:;
 	return self.view.frame;
 }
 - (void)documentInteractionControllerDidDismissOpenInMenu:(UIDocumentInteractionController *)controller {
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller willBeginSendingToApplication:(NSString *)application {
+    NSLog(@"willBeginSendingToApplication %@", application);
+}
+
+- (void)documentInteractionController:(UIDocumentInteractionController *)controller didEndSendingToApplication:(NSString *)application {
+    NSLog(@"didEndSendingToApplication %@", application);
 }
 
 - (UIViewController*) thisViewController {
