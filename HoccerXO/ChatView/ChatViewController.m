@@ -575,7 +575,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                       cancelButtonTitle: NSLocalizedString(@"cancel", nil)
                                  destructiveButtonTitle: NSLocalizedString(@"delete", nil)
                                       otherButtonTitles: nil];
-    [sheet showInView: self.view];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [sheet showInView: self.view];
+    });
 }
 
 // Return nil when __INDEX__ is beyond the bounds of the array
