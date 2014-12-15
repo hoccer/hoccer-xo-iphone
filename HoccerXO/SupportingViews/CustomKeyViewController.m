@@ -177,7 +177,7 @@
 }
 
 - (CGFloat) pickerView:(UIPickerView *)pickerView widthForComponent:(NSInteger)component {
-    return self.view.bounds.size.width;
+    return pickerView.bounds.size.width;
 }
 
 - (void) textViewDidChange:(UITextView *)textView {
