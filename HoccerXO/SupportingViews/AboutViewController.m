@@ -30,6 +30,7 @@
 @implementation AboutCell
 
 - (void) awakeFromNib {
+    self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: self.nameLabel attribute: NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem: self.iconView attribute: NSLayoutAttributeCenterY multiplier: 1 constant: 0]];
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: self.versionLabel attribute: NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem: self.iconView attribute: NSLayoutAttributeCenterY multiplier: 1 constant: 0]];
 }
@@ -87,8 +88,8 @@
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     [self configureCell: self.sizingCell];
-    //[self.sizingCell setNeedsLayout];
-    //[self.sizingCell layoutIfNeeded];
+    [self.sizingCell setNeedsLayout];
+    [self.sizingCell layoutIfNeeded];
     CGSize size = [self.sizingCell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
     return ceilf(size.height) + 1;
 }
