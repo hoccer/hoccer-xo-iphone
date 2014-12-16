@@ -316,8 +316,8 @@
 "contact_accept_friend_failed_message %@"      = "Accepting friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
 "contact_accept_friend_failed_title"           = "Accepting Friendship Failed";
 
-"contact_accept_friend_failed_message %@"      = "Refusing friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
-"contact_accept_friend_failed_title"           = "Refusing Friendship Failed";
+"contact_refuse_friend_failed_message %@"      = "Refusing friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
+"contact_refuse_friend_failed_title"           = "Refusing Friendship Failed";
 
 "contact_invite_friend_failed_message %@"      = "Friendship invitation of contact %@ failed. Check invitation status in contact's profile and your connection and eventually try again later.";
 "contact_invite_friend_failed_title"           = "Friendship Invitation Failed";

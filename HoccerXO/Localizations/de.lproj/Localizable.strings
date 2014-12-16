@@ -319,8 +319,8 @@
 "contact_accept_friend_failed_message %@"             = "Das Annehmen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
 "contact_accept_friend_failed_title"                  = "Freundschaft annehmen fehlgeschlagen";
 
-"contact_accept_friend_failed_message %@"             = "Das Ablehnen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
-"contact_accept_friend_failed_title"                  = "Freundschaft ablehnen fehlgeschlagen";
+"contact_refuse_friend_failed_message %@"             = "Das Ablehnen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_refuse_friend_failed_title"                  = "Freundschaft ablehnen fehlgeschlagen";
 
 "contact_invite_friend_failed_message %@"             = "Die Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
 "contact_invite_friend_failed_title"                  = "Freundschaftseinladung fehlgeschlagen";
