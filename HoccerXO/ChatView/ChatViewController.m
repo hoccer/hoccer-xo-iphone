@@ -924,8 +924,36 @@ nil
         
         // TODO: handle images from a photo stream/cloud
         ALAssetRepresentation * rep = asset.defaultRepresentation;
-        UIImage * myImage = [UIImage imageWithCGImage: rep.fullResolutionImage scale: rep.scale orientation: (UIImageOrientation)rep.orientation];
-        
+
+        UIImage * myImage;
+        if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8.0.2")) {
+            myImage = [UIImage imageWithCGImage: rep.fullResolutionImage scale: rep.scale orientation: (UIImageOrientation)rep.orientation];
+        } else {
+            CGImageRef fullResImage = [rep fullResolutionImage];
+            NSString *adjustment = rep.metadata[@"AdjustmentXMP"];
+            if (adjustment) {
+                NSData *xmpData = [adjustment dataUsingEncoding:NSUTF8StringEncoding];
+                CIImage *image = [CIImage imageWithCGImage:fullResImage];
+
+                NSError *error = nil;
+                NSArray *filterArray = [CIFilter filterArrayFromSerializedXMP: xmpData
+                                                             inputImageExtent: image.extent
+                                                                        error: &error];
+                CIContext *context = [CIContext contextWithOptions:nil];
+                if (filterArray && !error) {
+                    for (CIFilter *filter in filterArray) {
+                        [filter setValue:image forKey:kCIInputImageKey];
+                        image = [filter outputImage];
+                    }
+                    fullResImage = [context createCGImage:image fromRect:[image extent]];
+                }
+            }
+            myImage = [UIImage imageWithCGImage:fullResImage
+                                                  scale: rep.scale
+                                            orientation:(UIImageOrientation)rep.orientation];
+        }
+
+
         // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
         myImage = [Attachment qualityAdjustedImage:myImage];
         
@@ -1342,6 +1370,7 @@ nil
         // Image was just taken and is not yet in album
         
         UIImage * myOriginalImage = attachmentInfo[UIImagePickerControllerOriginalImage];
+
         NSURL * myFileURL = nil;
         
         // Always save a local copy. See https://github.com/hoccer/hoccer-xo-iphone/issues/211
