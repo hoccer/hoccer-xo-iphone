@@ -515,13 +515,13 @@
                                         <constraint firstAttribute="bottom" secondItem="GJ1-59-puL" secondAttribute="bottom" constant="32" id="2a1-ch-0gk"/>
                                         <constraint firstAttribute="trailing" secondItem="GJ1-59-puL" secondAttribute="trailing" priority="999" constant="24" id="2hz-6D-Jdh"/>
                                         <constraint firstItem="Qpg-Tb-7Sa" firstAttribute="leading" secondItem="9vd-IQ-N79" secondAttribute="leading" constant="32" id="2ur-cP-2MV"/>
-                                        <constraint firstItem="GdP-fs-RtD" firstAttribute="leading" secondItem="Qpg-Tb-7Sa" secondAttribute="trailing" constant="16" id="5TV-Pv-Oi4"/>
+                                        <constraint firstItem="GdP-fs-RtD" firstAttribute="leading" secondItem="Qpg-Tb-7Sa" secondAttribute="trailing" priority="999" constant="16" id="5TV-Pv-Oi4"/>
                                         <constraint firstAttribute="trailing" secondItem="GdP-fs-RtD" secondAttribute="trailing" constant="16" id="OOP-de-xef"/>
                                         <constraint firstItem="GJ1-59-puL" firstAttribute="leading" secondItem="9vd-IQ-N79" secondAttribute="leading" constant="24" id="Rw5-HN-AML"/>
                                         <constraint firstItem="Qpg-Tb-7Sa" firstAttribute="top" secondItem="9vd-IQ-N79" secondAttribute="top" constant="32" id="alP-TY-qRa"/>
                                         <constraint firstItem="LqS-cu-XLY" firstAttribute="top" secondItem="GdP-fs-RtD" secondAttribute="bottom" placeholder="YES" id="dxX-cX-eTE"/>
                                         <constraint firstItem="LqS-cu-XLY" firstAttribute="leading" secondItem="GdP-fs-RtD" secondAttribute="leading" id="l9O-YD-GGl"/>
-                                        <constraint firstItem="GJ1-59-puL" firstAttribute="top" secondItem="Qpg-Tb-7Sa" secondAttribute="bottom" constant="32" id="sWT-vS-mha"/>
+                                        <constraint firstItem="GJ1-59-puL" firstAttribute="top" secondItem="Qpg-Tb-7Sa" secondAttribute="bottom" priority="999" constant="32" id="sWT-vS-mha"/>
                                         <constraint firstItem="GdP-fs-RtD" firstAttribute="centerY" secondItem="Qpg-Tb-7Sa" secondAttribute="centerY" placeholder="YES" id="tFr-of-uK5"/>
                                     </constraints>
                                 </tableViewCellContentView>
