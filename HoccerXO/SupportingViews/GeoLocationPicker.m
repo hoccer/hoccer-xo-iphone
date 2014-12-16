@@ -17,8 +17,7 @@
 static const CGFloat kGeoLocationCityZoom = 500;
 
 
-@interface GeoLocationPicker ()
-{
+@interface GeoLocationPicker () {
     MKPointAnnotation * _placemark;
 }
 
@@ -41,7 +40,11 @@ static const CGFloat kGeoLocationCityZoom = 500;
     [super viewWillAppear: animated];
     self.mapView.showsUserLocation = YES;
 
-    [self.locationManager performAuthOrRun];
+    if ([self.locationManager respondsToSelector: @selector(performAuthOrRun)]) {
+        [self.locationManager performAuthOrRun];
+    } else {
+        [self locationManager: self.locationManager didChangeAuthorizationStatus: kCLAuthorizationStatusAuthorized];
+    }
 
     self.navigationItem.rightBarButtonItem.enabled = NO;
     _renderPreview = NO;
@@ -74,19 +77,27 @@ static const CGFloat kGeoLocationCityZoom = 500;
         MKCoordinateRegion region =  MKCoordinateRegionMakeWithDistance(newLocation.coordinate, kGeoLocationCityZoom, kGeoLocationCityZoom);
         [self.mapView setRegion: region animated: NO];
         _pinDraggedByUser = NO;
-        _placemark = [[MKPointAnnotation alloc] init];
-        _placemark.coordinate = newLocation.coordinate;
 
-        [self.mapView addAnnotation: _placemark];
-        [self.mapView selectAnnotation: _placemark animated: YES];
-        self.navigationItem.rightBarButtonItem.enabled = YES;
+        [self dropPin: newLocation.coordinate];
     } else if ( ! _pinDraggedByUser){
         _placemark.coordinate = newLocation.coordinate;
     }
 }
 
+- (void) dropPin:(CLLocationCoordinate2D) coordinate {
+    _placemark = [[MKPointAnnotation alloc] init];
+    _placemark.coordinate = coordinate;
+    _placemark.title = @"Here";
+
+    [self.mapView addAnnotation: _placemark];
+
+    self.navigationItem.rightBarButtonItem.enabled = _placemark != nil;
+}
+
 - (void) locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    [self.locationManager handleAuthorizationStatus: status];
+    if ([self.locationManager respondsToSelector: @selector(handleAuthorizationStatus:)]) {
+        [self.locationManager handleAuthorizationStatus: status];
+    }
 }
 
 #pragma mark - MKMapViewDelegate
@@ -102,13 +113,15 @@ static const CGFloat kGeoLocationCityZoom = 500;
 	}
 
 	static NSString * const kPinAnnotationIdentifier = @"PinIdentifier";
-	MKAnnotationView *draggablePinView = [self.mapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
+	MKPinAnnotationView *draggablePinView = (MKPinAnnotationView*)[self.mapView dequeueReusableAnnotationViewWithIdentifier:kPinAnnotationIdentifier];
 
 	if (draggablePinView) {
 		draggablePinView.annotation = annotation;
 	} else {
 		draggablePinView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier: kPinAnnotationIdentifier];
 		draggablePinView.draggable = YES;
+        //draggablePinView.canShowCallout = YES;
+        draggablePinView.animatesDrop = YES;
 	}
 
 	return draggablePinView;

@@ -839,24 +839,23 @@ http://doppelnarf.com</string>
                         <viewControllerLayoutGuide type="bottom" id="zwZ-8x-104"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="SMK-u8-fXi">
-                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2Im-gw-7Ar">
-                                <rect key="frame" x="-4" y="0.0" width="328" height="504"/>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="2Im-gw-7Ar">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="574"/>
                                 <connections>
                                     <outlet property="delegate" destination="7cB-uF-Ia0" id="Eb3-YA-Lml"/>
                                 </connections>
                             </mapView>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="2Im-gw-7Ar" firstAttribute="leading" secondItem="SMK-u8-fXi" secondAttribute="leadingMargin" constant="-20" id="P6m-F8-tXR"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="2Im-gw-7Ar" secondAttribute="trailing" constant="-20" id="hVg-5j-wMK"/>
-                            <constraint firstItem="2Im-gw-7Ar" firstAttribute="top" secondItem="Ure-6j-jwg" secondAttribute="bottom" id="jij-Gx-nad"/>
-                            <constraint firstItem="zwZ-8x-104" firstAttribute="top" secondItem="2Im-gw-7Ar" secondAttribute="bottom" id="tqo-ZF-tIa"/>
+                            <constraint firstItem="2Im-gw-7Ar" firstAttribute="leading" secondItem="SMK-u8-fXi" secondAttribute="leading" id="Wg8-Ol-Ry5"/>
+                            <constraint firstAttribute="trailing" secondItem="2Im-gw-7Ar" secondAttribute="trailing" id="hnS-jQ-RB9"/>
+                            <constraint firstItem="2Im-gw-7Ar" firstAttribute="top" secondItem="SMK-u8-fXi" secondAttribute="top" id="p4J-iS-feq"/>
+                            <constraint firstItem="zwZ-8x-104" firstAttribute="top" secondItem="2Im-gw-7Ar" secondAttribute="bottom" id="w5U-Gg-DCf"/>
                         </constraints>
                     </view>
-                    <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Drag the Pin" id="dZo-z5-Fid">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="kWP-8h-AdG">
                             <connections>
@@ -869,6 +868,9 @@ http://doppelnarf.com</string>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="mapView" destination="2Im-gw-7Ar" id="zKK-wj-7cg"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kom-cA-fQT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
