@@ -30,6 +30,9 @@
 @implementation AboutCell
 
 - (void) awakeFromNib {
+    NSDictionary * views = @{@"c": self.contentView};
+    [self addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|[c]|" options: 0 metrics: nil views: views]];
+    [self addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"V:|[c]|" options: 0 metrics: nil views: views]];
     self.contentView.translatesAutoresizingMaskIntoConstraints = NO;
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: self.nameLabel attribute: NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem: self.iconView attribute: NSLayoutAttributeCenterY multiplier: 1 constant: 0]];
     [self.contentView addConstraint: [NSLayoutConstraint constraintWithItem: self.versionLabel attribute: NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem: self.iconView attribute: NSLayoutAttributeCenterY multiplier: 1 constant: 0]];
@@ -51,6 +54,8 @@
     [super viewDidLoad];
 
     self.sizingCell = (AboutCell*)[self.tableView dequeueReusableCellWithIdentifier: @"AboutCell"];
+
+    self.navigationItem.title = NSLocalizedString(@"about_nav_title", nil);
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView { return 1; }
