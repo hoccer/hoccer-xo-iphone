@@ -12,6 +12,7 @@
 #import "HTTPServer.h"
 #import "GCDAsyncSocket.h"
 #import "HXOUserDefaults.h"
+#import "HXOUI.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -24,8 +25,6 @@
 
 
 @implementation ServerViewController
-
-@dynamic navigationItem;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -40,10 +39,14 @@
 {
     [super viewDidLoad];
     self.connectionInfoObserver = [HXOBackend registerConnectionInfoObserverFor:self];
-    
-    self.passwordTextField.backgroundColor = [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1.0];
-    self.passwordTextField.delegate = self;
-    self.statusLabel.text = @"";
+
+    self.serverButton.layer.cornerRadius = kHXOGridSpacing;
+    self.serverButton.titleEdgeInsets = UIEdgeInsetsMake(0, kHXOGridSpacing, 0, kHXOGridSpacing);
+
+
+    //self.passwordTextField.backgroundColor = [UIColor colorWithRed:0.7 green:0.7 blue:0.7 alpha:1.0];
+    //self.passwordTextField.delegate = self;
+    self.statusLabel.text = @"x";
     
     self.passwordLabel.text = NSLocalizedString(@"password_title", nil);
     self.urlLabel.text = NSLocalizedString(@"server_adress_title", nil);
@@ -56,8 +59,46 @@
         [[HXOUserDefaults standardUserDefaults] synchronize];
         
     }
-    self.passwordTextField.text = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
- }
+    self.passwordField.text = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
+    [self.passwordField addTarget: self action: @selector(passwordDidChange:) forControlEvents: UIControlEventEditingChanged];
+    self.passwordField.delegate = self;
+
+
+    id views = @{ @"tlg": self.topLayoutGuide,
+                  @"btn": self.serverButton,
+                  @"url": self.urlLabel,
+                  @"passwordLabel": self.passwordLabel,
+                  @"password": self.passwordField,
+                  @"status": self.statusLabel,
+                  @"blg": self.bottomLayoutGuide
+                  };
+
+    for (id key in views) {
+    //    [views[key] setBackgroundColor: [UIColor colorWithWhite: 0.96 alpha: 1]];
+    }
+
+    //self.urlLabel.backgroundColor = [UIColor orangeColor];
+    const double b = 2 *kHXOGridSpacing;
+    id format = [NSString stringWithFormat:@"V:|[tlg]-%f-[btn]-%f-[url]-%f-[password]-%f-[status]-(>=%f)-[blg]|",
+                 2 * b, b, b, b, b];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+
+    format = [NSString stringWithFormat: @"H:|-(>=%f)-[btn(80)]-(>=%f)-|", b, b];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:format options: 0 metrics: nil views: views]];
+
+    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.serverButton attribute: NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem: self.view attribute: NSLayoutAttributeCenterX multiplier: 1 constant: 0]];
+
+    format = [NSString stringWithFormat: @"H:|-%f-[url]-%f-|", b, b];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:format options: 0 metrics: nil views: views]];
+
+    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.passwordLabel attribute: NSLayoutAttributeBaseline relatedBy:NSLayoutRelationEqual toItem: self.passwordField attribute: NSLayoutAttributeBaseline multiplier: 1 constant: 0]];
+    
+    format = [NSString stringWithFormat: @"H:|-%f-[passwordLabel]-[password]-%f-|", b, b];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:format options: 0 metrics: nil views: views]];
+
+    format = [NSString stringWithFormat: @"H:|-%f-[status]-%f-|", b, b];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat:format options: 0 metrics: nil views: views]];
+}
 
 - (void)didReceiveMemoryWarning
 {
@@ -95,20 +136,13 @@
     [self stopTimer];
 }
 
-- (IBAction)startServer:(id)sender {
-    NSLog(@"ServerViewController:startServer");
-#ifdef WITH_WEBSERVER
-    [AppDelegate.instance startHttpServer];
+- (IBAction)toggleServer:(id)sender {
+    if (AppDelegate.instance.httpServerIsRunning) {
+        [AppDelegate.instance stopHttpServer];
+    } else {
+        [AppDelegate.instance startHttpServer];
+    }
     [self updateTextFields];
-#endif
-}
-
-- (IBAction)stopServer:(id)sender {
-    NSLog(@"ServerViewController:stopServer");
-#ifdef WITH_WEBSERVER
-    [AppDelegate.instance stopHttpServer];
-    [self updateTextFields];
-#endif
 }
 
 - (void)textViewDidBeginEditing:(UITextView *)textField {
@@ -117,39 +151,16 @@
 #ifdef WITH_WEBSERVER
 
 
-- (void)textViewDidEndEditing:(UITextView *)textField {
-    // NSLog(@"textViewDidEndEditing");
-    if ([textField isEqual:self.passwordTextField]) {
-        NSLog(@"%@",self.passwordTextField.text);
-        [[HXOUserDefaults standardUserDefaults] setValue:self.passwordTextField.text forKey:kHXOHttpServerPassword];
-        [[HXOUserDefaults standardUserDefaults] synchronize];
-        [self updateTextFields];
-        [self startTimer];
-    }
+- (void) passwordDidChange: (UITextField*) field {
+    NSLog(@"%@",self.passwordField.text);
+    [[HXOUserDefaults standardUserDefaults] setValue:self.passwordField.text forKey:kHXOHttpServerPassword];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
+    [self updateTextFields];
 }
 
-- (BOOL)textViewShouldEndEditing:(UITextView *)textField {
-    return YES;
-}
-
-- (BOOL)textViewShouldReturn:(UITextView *)textField {
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return NO;
-}
-
-- (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range
- replacementText:(NSString *)atext {
-    NSLog(@"shouldChangeTextInRange");
-	
-	//weird 1 pixel bug when clicking backspace when textView is empty
-	if(![textView hasText] && [atext isEqualToString:@""]) return NO;
-    
-	if ([atext isEqualToString:@"\n"]) {
-        [textView resignFirstResponder];
-        return NO;
-	}
-	
-	return YES;
 }
 
 static inline NSString * URLEncodedString(NSString *string)
@@ -159,15 +170,21 @@ static inline NSString * URLEncodedString(NSString *string)
 
 -(void)updateTextFields {
     NSDictionary * adresses = AppDelegate.instance.ownIPAddresses;
-    NSString * ipV4 = adresses[@"en0/ipv4"];
+    NSString * ipV4 =
+#if ! TARGET_IPHONE_SIMULATOR
+    adresses[@"en0/ipv4"];
+#else
+    adresses[adresses.allKeys.firstObject];  // use any interface (provided by the host) in the simulator
+#endif
+
 #ifdef SHOW_DETAIL_STATUS
     NSString * ipV6 = adresses[@"en0/ipv6"];
     NSString * wanIPV4 = adresses[@"pdp_ip0/ipv4"];
     NSString * wanIPV6 = adresses[@"pdp_ip0/ipv6"];
 #endif
     BOOL canRun = (ipV4 != nil && ipV4.length > 0);
-    
-    if (AppDelegate.instance.httpServerIsRunning) {
+    BOOL isRunning = AppDelegate.instance.httpServerIsRunning;
+    if (isRunning) {
         HTTPServer * server = AppDelegate.instance.httpServer;
         
         if (!canRun) {
@@ -180,28 +197,31 @@ static inline NSString * URLEncodedString(NSString *string)
 #ifdef SHOW_DETAIL_STATUS
         NSString * status = [NSString stringWithFormat:@"Server is running\nIPV4-LAN-Address:%@\nIPV6-LAN-Address:%@\nIPV4-WAN-Address:%@\nIPV6-WAN-Address:%@\nport=%d\nBonjour name=%@\nBonjour domain=%@",ipV4, ipV6, wanIPV4, wanIPV6,port,server.publishedName,server.domain];
         
-        self.statusTextField.text = status;
+        self.statusLabel.text = status;
 #else
-        self.statusTextField.text = NSLocalizedString(@"server_running", nil);
+        self.statusLabel.text = NSLocalizedString(@"server_running", nil);
         //NSLog(@"%@",self.statusTextField.text);
 #endif
         //self.urlTextField.text = [NSString stringWithFormat:@"IPV4: http://%@:%d/ \nIPV6: http://[%@]:%d/",ipV4,port, ipV6,port];
-        self.urlLabel.text = NSLocalizedString(@"server_adress_title", nil);
-        self.urlTextField.text = [NSString stringWithFormat:@"http://%@:%d/",ipV4,port];
-        self.startButton.enabled = NO;
-        self.stopButton.enabled = YES;
+        NSString * url = [NSString stringWithFormat:@"http://%@:%d/",ipV4,port];
+        NSString * title = NSLocalizedString(@"server_adress_title", nil);
+        NSRange urlRange = NSMakeRange(title.length, url.length);
+        NSString * text = [NSString stringWithFormat: @"%@%@", title, url];
+        NSMutableAttributedString * str = [[NSMutableAttributedString alloc] initWithString: text];
+        [str setAttributes: @{NSFontAttributeName : [UIFont boldSystemFontOfSize: self.urlLabel.font.pointSize]} range: urlRange];
+        self.urlLabel.attributedText = str;
+        self.serverButton.enabled = YES;
     } else {
-        self.urlTextField.text = @"";//NSLocalizedString(@"Server is stopped", nil);
         if (canRun) {
-            self.statusTextField.text = NSLocalizedString(@"server_stopped_can_run", nil);
+            self.statusLabel.text = NSLocalizedString(@"server_stopped_can_run", nil);
         } else {
-            self.statusTextField.text = NSLocalizedString(@"server_stopped_can_not_run", nil);
+            self.statusLabel.text = NSLocalizedString(@"server_stopped_can_not_run", nil);
         }
         self.urlLabel.text = @"";
-        self.startButton.enabled = canRun;
-        self.stopButton.enabled = NO;
+        self.serverButton.enabled = canRun;
     }
-    self.passwordTextField.text = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
+    self.serverButton.selected = isRunning;
+    self.passwordField.text = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
 
 }
 #endif

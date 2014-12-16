@@ -402,9 +402,9 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer.";
 
 "credentials_invalid_title"                    = "Credentials not accepted";
-"credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') It might also indicate tampering or a non-existent acount on the server. You can transfer credentials from other devices under 'Profile->Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+"credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') It might also indicate tampering or a non-existent acount on the server. You can transfer credentials from other devices under 'Profile→Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
-"credentials_invalid_changed_delete_question"  = "The server has refused your login credentials ('%@'). This happened probably because they are in use on another device or Hoccer-App. It might also indicate tampering. You can transfer credentials under 'Profile->Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+"credentials_invalid_changed_delete_question"  = "The server has refused your login credentials ('%@'). This happened probably because they are in use on another device or Hoccer-App. It might also indicate tampering. You can transfer credentials under 'Profile→Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
 "credentials_and_database_really_delete_title" = "Really delete Credentials and Database?";
 "credentials_database_delete_btn_title"        = "Delete All";
@@ -437,7 +437,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "credentials_fetch_confirm_btn_title"           = "Fetch Credentials Only";
 
 "credentials_verifier_changed_title"           = "Login Transfer Successful";
-"credentials_verifier_changed_message"         = "Imported login credentials have been successfully transfered to this app. You can no longer use them in the app or device where they originated. You can however transfer them from this app using functions in Profile->Edit.";
+"credentials_verifier_changed_message"         = "Imported login credentials have been successfully transfered to this app. You can no longer use them in the app or device where they originated. You can however transfer them from this app using functions in Profile→Edit.";
 
 //==============================================================================
 // Archive
@@ -668,10 +668,10 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 
 "permission_denied_title"                       = "Access Denied";
-"permission_denied_microphone_message"          = "Grant microphone access to Hoccer in System Settings->Privacy->Microphone if you want to record audio.";
-"permission_denied_location_nearby_message"     = "Grant location access to Hoccer in System Settings->Privacy->Location Services to chat with people nearby.";
-"permission_denied_location_placemarks_message" = "Grant location access to Hoccer in System Settings->Privacy->Location Services to pinpoint your current location.";
-"permission_denied_addressbook_message"         = "Grant address book access to Hoccer in System Settings->Privacy->Contacts to allow contact selection.";
+"permission_denied_microphone_message"          = "Grant microphone access to Hoccer in System Settings→Privacy→Microphone if you want to record audio.";
+"permission_denied_location_nearby_message"     = "Grant location access to Hoccer in System Settings→Privacy→Location Services to chat with people nearby.";
+"permission_denied_location_placemarks_message" = "Grant location access to Hoccer in System Settings→Privacy→Location Services to pinpoint your current location.";
+"permission_denied_addressbook_message"         = "Grant address book access to Hoccer in System Settings→Privacy→Contacts to allow contact selection.";
 
 
 //==============================================================================
@@ -699,13 +699,13 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 // Server
 //==============================================================================
-"server_running"                = "The WEBDAV-Server is now running. You can connect from a computer in the local network by connecting to the above address. \n\nOn a Mac, type ⌘K (cmd-K) in the Finder or choose \"Go->Connect to Server\" to bring up the connection dialog. Type in the whole line starting with \"http:\"  exactly as shown above.\n\nIn the password dialog that will appear you can leave the username blank and use the password shown above.\n\nOn Windows use \"Add Network Place\" (XP) or \"Map Network Drive\" (7 or later)";
+"server_running"                = "Connect from a computer in the local network by using the address above. \n\nOn a Mac, select  \"Go→Connect to Server (⌘K)\" in Finder. Type in the whole line starting with \"http:\"  exactly as shown above.\n\nIn the password dialog leave the username blank and just use the password.\n\nOn Windows use \"Add Network Place\" (XP) or \"Map Network Drive\" (7 or later)";
 
-"server_stopped_can_run"        = "Press the start button to start a WEBDAV-Server on this device. You can then connect to the Hoccer App from a computer in the local network to copy media items between your device and your computer.\n\nDo not start the server when connected an untrusted public Wifi-network.\n\nYou can change the server password by touching it.";
+"server_stopped_can_run"        = "Press the start button to start a WEBDAV-Server on this device. You can then connect to the Hoccer App from a computer in the local network to copy media items between your device and your computer.\n\nDo not start the server when connected an untrusted public Wifi-network.";
 
 "server_stopped_can_not_run"    = "You must be connected via WiFi in order to start the WEBDAV-Server on this device, but you are not.\n\nWith the server you can connect to the Hoccer-App from a computer in the local network and copy media items between your device and your computer.\n\nDo not start the server when connected an untrusted public Wifi-network.\n\nYou can change the server password by touching it.";
 
-"server_adress_title"           = "WebDav Server Address";
+"server_adress_title"           = "WebDav Server Address:\n\t";
 "password_title"                = "Password";
 
 //==============================================================================
