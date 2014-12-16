@@ -703,7 +703,6 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 // Recorder
 //==============================================================================
 
-
 "recorder_play_button_title"   = "Anhören";
 "recorder_use_button_title"    = "Benutzen";
 
@@ -725,6 +724,13 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 //==============================================================================
 
 "settings_nav_title" = "Einstellungen";
+
+//==============================================================================
+// 3rd Party
+//==============================================================================
+
+"This app does not have access to your photos or videos." = "Diese App hat keinen Zugriff auf deine Fotos oder Videos.";
+"You can enable access in Privacy Settings." = "Du kannst den Zugriff in den Datenschutzeinstellungen erlauben.";
 
 // See Settings.strings
 
