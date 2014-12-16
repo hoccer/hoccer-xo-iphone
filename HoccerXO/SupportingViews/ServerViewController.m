@@ -73,9 +73,8 @@
                   @"blg": self.bottomLayoutGuide
                   };
 
-    for (id key in views) {
-    //    [views[key] setBackgroundColor: [UIColor colorWithWhite: 0.96 alpha: 1]];
-    }
+
+    //for (id key in views) { [views[key] setBackgroundColor: [UIColor colorWithWhite: 0.96 alpha: 1]]; }
 
     //self.urlLabel.backgroundColor = [UIColor orangeColor];
     const double b = 2 *kHXOGridSpacing;
