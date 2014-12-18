@@ -13,6 +13,7 @@
 #import "GCDAsyncSocket.h"
 #import "HXOUserDefaults.h"
 #import "HXOUI.h"
+#import "tab_settings.h"
 
 #import <QuartzCore/QuartzCore.h>
 
@@ -33,6 +34,12 @@
         // Custom initialization
     }
     return self;
+}
+
+- (void) awakeFromNib {
+    [super awakeFromNib];
+    self.title = NSLocalizedString(@"server_nav_title", nil);
+    self.tabBarItem.image = [[tab_settings alloc] init].image;
 }
 
 

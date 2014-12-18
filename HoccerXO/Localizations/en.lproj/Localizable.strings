@@ -702,12 +702,15 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 "server_running"                = "Connect from a computer in the local network by using the address above. \n\nOn a Mac, select  \"Go→Connect to Server (⌘K)\" in Finder. Type in the whole line starting with \"http:\"  exactly as shown above.\n\nIn the password dialog leave the username blank and just use the password.\n\nOn Windows use \"Add Network Place\" (XP) or \"Map Network Drive\" (7 or later)";
 
-"server_stopped_can_run"        = "Press the start button to start a WEBDAV-Server on this device. You can then connect to the Hoccer App from a computer in the local network to copy media items between your device and your computer.\n\nDo not start the server when connected an untrusted public Wifi-network.";
+"server_stopped_can_run"        = "Press the start button to start a WebDAV-Server on this device. You can then connect to the Hoccer App from a computer in the local network to copy media items between your device and your computer.\n\nDo not start the server when connected to an untrusted public Wifi-network.";
 
-"server_stopped_can_not_run"    = "You must be connected via WiFi in order to start the WEBDAV-Server on this device, but you are not.\n\nWith the server you can connect to the Hoccer-App from a computer in the local network and copy media items between your device and your computer.\n\nDo not start the server when connected an untrusted public Wifi-network.\n\nYou can change the server password by touching it.";
+"server_stopped_can_not_run"    = "You must be connected via WiFi in order to start the WebDAV-Server on this device, but you are not.\n\nWith the server you can connect to the Hoccer-App from a computer in the local network and copy media items between your device and your computer.\n\nDo not start the server when connected to an untrusted public Wifi-network.\n\nYou can change the server password by touching it.";
 
-"server_adress_title"           = "WebDav Server Address:\n\t";
+"server_adress_title"           = "WebDAV Server Address:\n\t";
 "password_title"                = "Password";
+
+"server_nav_title"              = "WebDAV";
+
 
 //==============================================================================
 // Settings
