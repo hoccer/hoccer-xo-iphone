@@ -2012,6 +2012,7 @@
 				C576EC651934CCE000C0D254 /* AttachmentInfo.m */,
 				C5C3BD16194065100072AE5F /* AttachmentMigration.h */,
 				C5C3BD17194065100072AE5F /* AttachmentMigration.m */,
+				E98769841A104E110068CA33 /* AttachmentPresenterDelegate.h */,
 				C53954701959CDFC007DBD04 /* Collection.h */,
 				C53954711959CDFC007DBD04 /* Collection.m */,
 				C5B167E419657AA0004D3A28 /* CollectionItem.h */,
@@ -2037,7 +2038,6 @@
 				E9B7BAB4172D5E4D00212420 /* RPCObjectsModel.xcdatamodeld */,
 				63D8EE111722EB89000F9E53 /* UserProfile.h */,
 				63D8EE121722EB89000F9E53 /* UserProfile.m */,
-				E98769841A104E110068CA33 /* AttachmentPresenterDelegate.h */,
 			);
 			path = Models;
 			sourceTree = "<group>";
