@@ -712,9 +712,9 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 //==============================================================================
 "server_running"                = "Verbinde dich von einem Computer im lokalen Netzwerk.\n\nAuf einem Mac wähle \"Gehe→Verbinden mit (⌘K)\" im Finder.\n\nGib die Zeile, die mit \"http:\" beginnt genau so ein wie obenstehend.\n\nIn der Kennwortabfrage lasse den Nutzernamen leer und gib nur das Kennwort ein.\n\nUnter Windows wähle \"Netzlaufwerk verbinden\" in \"Arbeitsplatz→Extras\" (XP) oder \"Startmenü→Computer\" (Win7 or später)";
 
-"server_stopped_can_run"        = "Drücke den Startknopf um einen WebDAV-Server auf diesem Gerät zu starten. Du kannst dich dann von einem Computer im lokalen Netzwerk mit Hoccer verbinden um Mediendateien zwischen Hoccer and dem Computer auszutauschen.\n\nNutze den Server aus Sichergründen nicht in einem öffentlichen Netzwerk.";
+"server_stopped_can_run"        = "Drücke den Startknopf um einen WebDAV-Server auf diesem Gerät zu starten. Du kannst dich dann von einem Computer im lokalen Netzwerk mit Hoccer verbinden um Mediendateien zwischen Hoccer und dem Computer auszutauschen.\n\nNutze den Server aus Sichergründen nicht in einem öffentlichen Netzwerk.";
 
-"server_stopped_can_not_run"    = "Du musst mit einem WLAN verbunden sein, um den WebDAV-Server auf diesem Gerät zu starten.\n\nDu kannst dich dann von einem Computer im lokalen Netzwerk mit der Hoccer-App verbinden, um Mediendateien zwischen diesem Gerät and dem Computer auszutauschen.\n\nNutze den Server aus Sichergründen nicht in einem öffentlichen Netzwerk.\n\nDurch tippen auf das Kennwort kannst du es ändern.";
+"server_stopped_can_not_run"    = "Du musst mit einem WLAN verbunden sein, um den WebDAV-Server auf diesem Gerät zu starten.\n\nDu kannst dich dann von einem Computer im lokalen Netzwerk mit der Hoccer-App verbinden, um Mediendateien zwischen diesem Gerät und dem Computer auszutauschen.\n\nNutze den Server aus Sichergründen nicht in einem öffentlichen Netzwerk.\n\nDurch tippen auf das Kennwort kannst du es ändern.";
 
 "server_adress_title"           = "WebDAV Serveradresse:\n\t";
 "password_title"                = "Kennwort";
