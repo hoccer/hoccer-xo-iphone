@@ -145,7 +145,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     [[HXOUserDefaults standardUserDefaults] synchronize];
 
     id userInfo = @{ @"itemsChanged":itemsChanged};
-    NSLog(@"profileUpdatedByUser info %@",userInfo);
+    //NSLog(@"profileUpdatedByUser info %@",userInfo);
     NSNotification *notification = [NSNotification notificationWithName:@"profileUpdatedByUser" object:self userInfo:userInfo];
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
@@ -277,7 +277,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     }
     // NSLog(@"Credentials: %@", [NSString stringWithData:jsonData usingEncoding:NSUTF8StringEncoding]);
     NSData * cryptedJsonData = [CryptoJSON encryptedContainer:jsonData withPassword:passphrase withType:@"credentials"];
-    NSLog(@"Crypted Credentials: %@", [NSString stringWithData:cryptedJsonData usingEncoding:NSUTF8StringEncoding]);
+    //NSLog(@"Crypted Credentials: %@", [NSString stringWithData:cryptedJsonData usingEncoding:NSUTF8StringEncoding]);
     return cryptedJsonData;
 }
 
@@ -406,12 +406,12 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     }
     
     NSString * credentialsString = [jsonData hexadecimalString];
-    NSLog(@"Credentials: %@", credentialsString);
+    //NSLog(@"Credentials: %@", credentialsString);
     
     NSString * credentialsUrlString = [NSString stringWithFormat:@"%@://credentials/%@", kHXOTransferCredentialsURLImportScheme,credentialsString];
     
     NSURL * myUrl = [NSURL URLWithString:credentialsUrlString];
-    NSLog(@"Credentials URL: %@", myUrl);
+    //NSLog(@"Credentials URL: %@", myUrl);
     
     if ([[UIApplication sharedApplication] openURL:myUrl]) {
         NSLog(@"Credentials openURL returned true");

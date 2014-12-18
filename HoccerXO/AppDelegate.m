@@ -3466,6 +3466,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 	if([self.httpServer start:&error])
 	{
 		DDLogInfo(@"Started HTTP Server on port %hu", [self.httpServer listeningPort]);
+        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
 	}
 	else
 	{
@@ -3476,6 +3477,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 - (void)stopHttpServer {
     if (_httpServer) {
         [_httpServer stop];
+        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }
 }
 -(BOOL)httpServerIsRunning {
