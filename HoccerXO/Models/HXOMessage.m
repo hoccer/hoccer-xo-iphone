@@ -217,7 +217,7 @@
         if (self.attachment!= nil) {
             self.cachedAttachmentAspect = self.attachment.aspectRatio;
         }
-        NSLog(@"setting cached cell height to %f (from %f) for entity %@", height, oldHeight, [AppDelegate appEntityId]);
+        //NSLog(@"setting cached cell height to %f (from %f) for entity %@", height, oldHeight, [AppDelegate appEntityId]);
         
         if (orientation == UIInterfaceOrientationPortrait) {
             self.cachedPortraitCellHeight = height;

@@ -72,6 +72,7 @@
 #define TRACE_DELIVERY_SAVES        NO
 #define TRACE_CONTACT_SAVES         NO
 #define TRACE_FILE_SEARCH           NO
+#define TRACE_DOCDIR_CHANGES        NO
 
 
 #ifdef HOCCER_DEV
@@ -350,10 +351,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         NSString * newEntity = newEntities[file];
         if (newEntity == nil) {
             if ([self considerFile:file withEntity:oldEntities[file] inDirectoryPath:documentDirectoryPath]) {
-                NSLog(@"deletedFile: %@ (%@)", file, oldEntities[file]);
+                if (TRACE_DOCDIR_CHANGES) NSLog(@"deletedFile: %@ (%@)", file, oldEntities[file]);
                 [deletedFiles addObject:file];
             } else {
-                NSLog(@"Not considering deletedFile: %@ (%@)", file, oldEntities[file]);
+                if (TRACE_DOCDIR_CHANGES) NSLog(@"Not considering deletedFile: %@ (%@)", file, oldEntities[file]);
             }
         }
     }
@@ -365,7 +366,7 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         if (oldEntity == nil) {
             if (!retryScheduled && [self emptyFile:file withEntity:newEntities[file]]) {
                 double delayInSeconds = 5;
-                NSLog(@"newFile: %@ is empty, retry changes in %f secs", file, delayInSeconds);
+                if (TRACE_DOCDIR_CHANGES) NSLog(@"newFile: %@ is empty, retry changes in %f secs", file, delayInSeconds);
                 // this happens when files are added using itunes
                 
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -375,20 +376,20 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
                 retryScheduled = YES;
             }
             if ([self considerFile:file withEntity:newEntities[file] inDirectoryPath:documentDirectoryPath]) {
-                NSLog(@"newFile: %@ (%@)", file, newEntities[file]);
+                if (TRACE_DOCDIR_CHANGES) NSLog(@"newFile: %@ (%@)", file, newEntities[file]);
                 [newFiles addObject:file];
             } else {
-                NSLog(@"Not considering newFile: %@ (%@)", file, newEntities[file]);
+                if (TRACE_DOCDIR_CHANGES) NSLog(@"Not considering newFile: %@ (%@)", file, newEntities[file]);
             }
         } else {
             NSString * newEntity = newEntities[file];
             if (newEntity != nil) {
                 if (![newEntity isEqualToString:oldEntity]) {
                     if ([self considerFile:file withEntity:newEntities[file]inDirectoryPath:documentDirectoryPath]) {
-                        NSLog(@"changedFile: %@ (%@ -> %@)", file, oldEntity, newEntity);
+                        if (TRACE_DOCDIR_CHANGES) NSLog(@"changedFile: %@ (%@ -> %@)", file, oldEntity, newEntity);
                         [changedFiles addObject:file];
                     } else {
-                        NSLog(@"Not considering changedFiles: %@ (%@)", file, newEntities[file]);
+                        if (TRACE_DOCDIR_CHANGES) NSLog(@"Not considering changedFiles: %@ (%@)", file, newEntities[file]);
                     }
                 }
             }

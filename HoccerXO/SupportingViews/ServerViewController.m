@@ -35,6 +35,23 @@
     return self;
 }
 
+
+-(NSString*)niceRandomPassword {
+
+    NSArray * syllables = @[@"mi",@"ra",@"du",@"mo",@"pa",@"ge",@"da",@"ma",@"ka",@"tu",@"ki",@"so",@"da",@"ne",@"na",@"el",@"im"];
+    unsigned long numSyllables = syllables.count;
+    NSString * word = [NSString new];
+    for (unsigned long i = 0; i < 4;++i) {
+        unsigned long randomNumber = abs(rand())%numSyllables;
+        NSString * syllable = syllables[randomNumber];
+        word = [word stringByAppendingString:syllable];
+    }
+
+    unsigned long randomNumber2 = abs(rand())%10000;
+    NSString * newPassword = [NSString stringWithFormat:@"%@%lu",word, randomNumber2];
+    return newPassword;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -53,9 +70,7 @@
     
     NSString * password = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
     if ([password isEqualToString:@"hoccer-pw"]) {
-        unsigned long randomNumber = abs(rand())%10000;
-        NSString * newPassword = [NSString stringWithFormat:@"miradumo%lu",randomNumber];
-        [[HXOUserDefaults standardUserDefaults] setValue:newPassword forKey:kHXOHttpServerPassword];
+        [[HXOUserDefaults standardUserDefaults] setValue:[self niceRandomPassword] forKey:kHXOHttpServerPassword];
         [[HXOUserDefaults standardUserDefaults] synchronize];
         
     }
