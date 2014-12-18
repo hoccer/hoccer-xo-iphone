@@ -416,6 +416,7 @@
         NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:[url path] error:NULL];
         if (attributes) {
             self.entityTag= [AppDelegate etagFromAttributes:attributes];
+            self.fileModificationDate = [attributes fileModificationDate];
         }
     } else if (self.assetURL != nil) {
         [self assetSizer:^(int64_t theSize, NSError * theError) {
