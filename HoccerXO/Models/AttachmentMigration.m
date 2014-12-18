@@ -156,6 +156,10 @@ static NSString * filenameOf(Attachment * attachment) {
                         }
                     }
                     
+                    if (attachment.fileModificationDate == nil) {
+                        attachment.fileModificationDate = [AppDelegate getModificationDateForPath:fullPath];
+                    }
+                    
                     if (attachmentsByFile[file] == nil) {
                         attachmentsByFile[file] = attachment;
                     } else {

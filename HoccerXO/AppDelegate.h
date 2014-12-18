@@ -181,6 +181,8 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 + (NSString *)etagFromAttributes:(NSDictionary*) attributes;
 
++ (NSDate*)getModificationDateForPath:(NSString*)myFilePath;
+
 + (BOOL)setPosixPermissions:(short)flags forPath:(NSString*)myFilePath;
 + (short)getPosixPermissionsForPath:(NSString*)myFilePath;
 + (BOOL)setPosixPermissionsReadOnlyForPath:(NSString*)myFilePath;

@@ -246,6 +246,16 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     
 }
 
++ (NSDate*)getModificationDateForPath:(NSString*)myFilePath {
+    NSError * error = nil;
+    NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:myFilePath error:&error];
+    if (error != nil) {
+        NSLog(@"Error getting modification date for path %@, error=%@", myFilePath, error);
+        return nil;
+    }
+    return [attributes fileModificationDate];
+}
+
 + (BOOL)setPosixPermissions:(short)flags forPath:(NSString*)myFilePath {
     NSError * error = nil;
     [[NSFileManager defaultManager] setAttributes:@{NSFilePosixPermissions: @(flags)} ofItemAtPath:myFilePath error:&error];

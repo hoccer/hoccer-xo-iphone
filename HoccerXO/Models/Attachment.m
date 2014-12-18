@@ -122,6 +122,7 @@
 @dynamic fileStatus;
 @dynamic orderNumber;
 
+@dynamic fileModificationDate;
 
 @dynamic attachmentJsonString;
 @dynamic attachmentJsonStringCipherText;

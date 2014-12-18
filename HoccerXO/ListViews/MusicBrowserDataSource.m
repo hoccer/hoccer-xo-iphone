@@ -79,7 +79,8 @@
     NSPredicate * filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicateArray];
     [fetchRequest setPredicate:filterPredicate];
 #endif
-    NSArray *sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"message.timeAccepted" ascending: NO]];
+    //NSArray *sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"message.timeAccepted" ascending: NO]];
+    NSArray *sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"fileModificationDate" ascending: NO]];
     [fetchRequest setSortDescriptors:sortDescriptors];
     
     return fetchRequest;

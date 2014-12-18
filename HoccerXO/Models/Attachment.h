@@ -95,7 +95,7 @@ typedef enum AttachmentStates {
 // new properties with Model Version 47 not reliably available yet on old databse
 @property (nonatomic, strong) NSString * fileStatus;             // indicates the status of the referenced file, currently only "DOES_NOT_EXIST"
 @property (nonatomic)         NSNumber * orderNumber;            // number of ciphertext bytes
-
+@property (nonatomic, strong) NSDate   * fileModificationDate;   // lastModifiedDate of attached file
 
 // virtual properties
 @property (nonatomic) NSString * attachmentJsonString;
