@@ -608,8 +608,7 @@ BOOL sameObjects(id obj1, id obj2) {
     [self checkForCrash];
     self.chatBackend = [[HXOBackend alloc] initWithDelegate: self];
 
-    NSString * storyboardName = [[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad ? @"MainStoryboard_iPad" : @"MainStoryboard_iPhone";
-    [UIStoryboard storyboardWithName: storyboardName bundle: [NSBundle mainBundle]];
+    [UIStoryboard storyboardWithName: @"Main" bundle: [NSBundle mainBundle]];
 
     [[HXOUI theme] setupTheming];
 

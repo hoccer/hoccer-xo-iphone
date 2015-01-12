@@ -80,7 +80,6 @@
 		634010F6191AAA44007A2C67 /* avatar_location.m in Sources */ = {isa = PBXBuildFile; fileRef = 634010F5191AAA44007A2C67 /* avatar_location.m */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */; };
-		634C07F019B7B60F00808A85 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 634C07EF19B7B60F00808A85 /* MainStoryboard_iPad.storyboard */; };
 		63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */; };
 		6357A1791A03889400E87A96 /* InviteController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6357A1781A03889400E87A96 /* InviteController.m */; };
 		63638F8E18EC8210008DA997 /* avatar_group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63638F8D18EC8210008DA997 /* avatar_group.m */; };
@@ -127,7 +126,7 @@
 		63AE45471704945C0099F0CB /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE45461704945C0099F0CB /* WebViewController.m */; };
 		63AE454A170494AF0099F0CB /* AboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE4549170494AF0099F0CB /* AboutViewController.m */; };
 		63AE454D1705ADAF0099F0CB /* NSData+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE454C1705ADAF0099F0CB /* NSData+HexString.m */; };
-		63AE45511705E1440099F0CB /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */; };
+		63AE45511705E1440099F0CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 63AE454F1705E1430099F0CB /* Main.storyboard */; };
 		63AE455A1705EE770099F0CB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63AE45581705EE770099F0CB /* InfoPlist.strings */; };
 		63AE455D1705EE820099F0CB /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63AE455B1705EE820099F0CB /* Localizable.strings */; };
 		63AEE2D816CA4D0200522F92 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63AEE2D716CA4D0200522F92 /* UIKit.framework */; };
@@ -636,7 +635,6 @@
 		6343B4E416CD604700B3A29E /* MessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageCell.m; sourceTree = "<group>"; };
 		634BE1BC185C9B2B00B2DF05 /* UpDownLoadControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpDownLoadControl.h; sourceTree = "<group>"; };
 		634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpDownLoadControl.m; sourceTree = "<group>"; };
-		634C07EF19B7B60F00808A85 /* MainStoryboard_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		63540AAC16E671710087D24E /* NonFloatingSectionHeaderTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NonFloatingSectionHeaderTableView.h; sourceTree = "<group>"; };
 		63540AAD16E671710087D24E /* NonFloatingSectionHeaderTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NonFloatingSectionHeaderTableView.m; sourceTree = "<group>"; };
 		6357A1771A03889400E87A96 /* InviteController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InviteController.h; sourceTree = "<group>"; };
@@ -720,7 +718,7 @@
 		63AE4549170494AF0099F0CB /* AboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutViewController.m; sourceTree = "<group>"; };
 		63AE454B1705ADAE0099F0CB /* NSData+HexString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+HexString.h"; sourceTree = "<group>"; };
 		63AE454C1705ADAF0099F0CB /* NSData+HexString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+HexString.m"; sourceTree = "<group>"; };
-		63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
+		63AE454F1705E1430099F0CB /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63AE45591705EE770099F0CB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63AE455C1705EE820099F0CB /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
 		63AEE2D416CA4D0200522F92 /* Hoccer XO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer XO.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1883,8 +1881,7 @@
 		63AE45521705E18D0099F0CB /* StoryboardsAndNIBs */ = {
 			isa = PBXGroup;
 			children = (
-				634C07EF19B7B60F00808A85 /* MainStoryboard_iPad.storyboard */,
-				63AE454F1705E1430099F0CB /* MainStoryboard_iPhone.storyboard */,
+				63AE454F1705E1430099F0CB /* Main.storyboard */,
 				E9D1145A1732CFE800737EF7 /* VcardPreview.xib */,
 			);
 			path = StoryboardsAndNIBs;
@@ -2870,11 +2867,10 @@
 				63B1C9E71843E4FD00B75CD8 /* cnt-video.png in Resources */,
 				E9A85D9F184FD1AD00EB9B68 /* chatbar-attachment-icon-location@2x.png in Resources */,
 				E9A85D9C184FD1AD00EB9B68 /* chatbar-attachment-icon-contact.png in Resources */,
-				63AE45511705E1440099F0CB /* MainStoryboard_iPhone.storyboard in Resources */,
+				63AE45511705E1440099F0CB /* Main.storyboard in Resources */,
 				63AE455A1705EE770099F0CB /* InfoPlist.strings in Resources */,
 				6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */,
 				63AE455D1705EE820099F0CB /* Localizable.strings in Resources */,
-				634C07F019B7B60F00808A85 /* MainStoryboard_iPad.storyboard in Resources */,
 				C576EC621934CCB200C0D254 /* slider-thumb@2x.png in Resources */,
 				63DEC02919B0A720003804E8 /* Songs@2x.png in Resources */,
 				C576EC2B1934CCB200C0D254 /* button-play@2x.png in Resources */,
