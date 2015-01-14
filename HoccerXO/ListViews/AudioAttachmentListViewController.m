@@ -154,13 +154,19 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
 }
 
 - (void)updateNavigationBar {
-    UIBarButtonSystemItem editButton = self.tableView.isEditing ? UIBarButtonSystemItemDone : UIBarButtonSystemItemEdit;
+    BOOL isEditing = self.tableView.isEditing;
+    NSString * editButtonTitle = NSLocalizedString(isEditing ? @"done" : @"edit_short", nil);
+    UIBarButtonItemStyle editButtonStyle = isEditing ? UIBarButtonItemStyleDone : UIBarButtonItemStylePlain;
+    UIBarButtonItem * editButton = [[UIBarButtonItem alloc] initWithTitle: editButtonTitle
+                                                                    style: editButtonStyle
+                                                                   target: self
+                                                                   action: @selector(toggleEditMode:)];
     self.navigationItem.hidesBackButton = self.tableView.isEditing;
 
     // list of a collection
     if (self.collection) {
         self.navigationItem.title = self.collection.name;
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:editButton target:self action:@selector(toggleEditMode:)];
+        self.navigationItem.rightBarButtonItem = editButton;
 
     } else if (self.contact) {
         [self ensureSegmentedMediaTypeControl];
@@ -169,12 +175,12 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
     } else {
         [self ensureSegmentedMediaTypeControl];
         self.navigationItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);
-        if (self.tableView.isEditing) {
+        if (isEditing) {
             self.navigationItem.rightBarButtonItem = nil;
         } else {
-            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"collection_list_nav_title_short", nil) style:UIBarButtonItemStylePlain target:self action:@selector(showCollections:)];
+            self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"collection_list_nav_title_short", nil) style: UIBarButtonItemStylePlain target: self action: @selector(showCollections:)];
         }
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:editButton target:self action:@selector(toggleEditMode:)];
+        self.navigationItem.leftBarButtonItem = editButton;
     }
 }
 
