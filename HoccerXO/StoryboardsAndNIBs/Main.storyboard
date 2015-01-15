@@ -1162,14 +1162,14 @@ http://doppelnarf.com</string>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="rav-wy-jJw"/>
-        <segue reference="Kn0-3b-fVd"/>
-        <segue reference="NNl-EZ-WW3"/>
-        <segue reference="5v1-4P-ajP"/>
-        <segue reference="k8Y-EQ-OHi"/>
-        <segue reference="sc8-Bm-80f"/>
-        <segue reference="nwS-55-3Qg"/>
         <segue reference="GhN-Q6-qvN"/>
+        <segue reference="NNl-EZ-WW3"/>
+        <segue reference="4Tx-uH-B8w"/>
+        <segue reference="yj0-Vd-HPq"/>
+        <segue reference="UJI-wH-YH7"/>
+        <segue reference="nwS-55-3Qg"/>
+        <segue reference="rav-wy-jJw"/>
+        <segue reference="sc8-Bm-80f"/>
         <segue reference="r9n-Tc-8eU"/>
     </inferredMetricsTieBreakers>
 </document>

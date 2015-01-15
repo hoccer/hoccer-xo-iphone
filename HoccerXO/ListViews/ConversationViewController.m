@@ -186,6 +186,12 @@
     
 #pragma mark - Table View
 
+- (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    // prevent double triggering the transition in didSelectRowAtIndexPath by
+    // guarding against duplicate selection of the same row.
+    return [[tableView indexPathForSelectedRow] isEqual: indexPath] ? nil : indexPath;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self performSegueWithIdentifier: @"showChat" sender: indexPath];
 }
