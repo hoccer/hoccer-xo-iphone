@@ -420,4 +420,8 @@
     return [UIImage imageNamed: self.inNearbyMode ? @"placeholder-nearby" : @"placeholder-chats"];
 }
 
+- (SEL) placeholderAction {
+    return self.inNearbyMode ? NULL : @selector(addButtonPressed:);
+}
+
 @end

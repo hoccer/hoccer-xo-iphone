@@ -55,7 +55,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 @property (nonatomic, readonly) UITableViewCell              * cellPrototype;
 @property (nonatomic, readonly) UIView                       * placeholderView;
-@property (nonatomic, readonly) UIImageView                  * placeholderImageView;
+@property (nonatomic, readonly) UIButton                     * placeholderImageButton;
 @property (nonatomic, readonly) HXOHyperLabel                * placeholderLabel;
 @property (nonatomic, readonly) BOOL                           inGroupMode;
 
@@ -69,7 +69,7 @@ static const CGFloat kMagicSearchBarHeight = 44;
 
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize placeholderView = _placeholderView;
-@synthesize placeholderImageView = _placeholderImageView;
+@synthesize placeholderImageButton = _placeholderImageButton;
 @synthesize placeholderLabel = _placeholderLabel;
 @synthesize webViewController = _webViewController;
 
@@ -494,7 +494,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ContactListController:prepareForSegue %@ sender %@", segue, sender);
     NSString * sid = [segue identifier];
-    if ([sid isEqualToString: @"showGroup"] && [sender isEqual: self.navigationItem.rightBarButtonItem]) {
+    if ([sid isEqualToString: @"showGroup"] && ([sender isEqual: self.navigationItem.rightBarButtonItem] || [sender isEqual: self.placeholderImageButton])) {
         DatasheetViewController * vc = [segue destinationViewController];
         vc.inspectedObject = [[GroupInStatuNascendi alloc] init];
     } else if ([sid isEqualToString:@"showContact"] || [sid isEqualToString: @"showGroup"]) {
@@ -711,10 +711,10 @@ bool almostEqual(CGFloat a, CGFloat b) {
         _placeholderView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, h)];
         _placeholderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 
-        [_placeholderView addSubview: self.placeholderImageView];
+        [_placeholderView addSubview: self.placeholderImageButton];
         [_placeholderView addSubview: self.placeholderLabel];
 
-        NSDictionary * views = @{@"image": self.placeholderImageView, @"label": self.placeholderLabel};
+        NSDictionary * views = @{@"image": self.placeholderImageButton, @"label": self.placeholderLabel};
         NSString * format = [NSString stringWithFormat: @"H:|-[image]-|"];
         [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
@@ -727,13 +727,13 @@ bool almostEqual(CGFloat a, CGFloat b) {
     return _placeholderView;
 }
 
-- (UIImageView*) placeholderImageView {
-    if ( ! _placeholderImageView) {
-        _placeholderImageView = [[UIImageView alloc] initWithFrame: CGRectZero];
-        _placeholderImageView.translatesAutoresizingMaskIntoConstraints = NO;
-        _placeholderImageView.contentMode = UIViewContentModeCenter;
+- (UIButton*) placeholderImageButton {
+    if ( ! _placeholderImageButton) {
+        _placeholderImageButton = [UIButton buttonWithType: UIButtonTypeCustom];
+        _placeholderImageButton.translatesAutoresizingMaskIntoConstraints = NO;
+//        _placeholderImageButton.contentMode = UIViewContentModeCenter;
     }
-    return _placeholderImageView;
+    return _placeholderImageButton;
 }
 
 - (HXOHyperLabel*) placeholderLabel {
@@ -753,8 +753,12 @@ bool almostEqual(CGFloat a, CGFloat b) {
     BOOL hadTableHeader = self.tableView.tableHeaderView != nil;
     
     self.placeholderLabel.attributedText = [self placeholderText];
-    self.placeholderImageView.image = [self placeholderImage];
-    
+    [self.placeholderImageButton setImage: [self placeholderImage] forState: UIControlStateNormal];
+    [_placeholderImageButton removeTarget: self action: NULL forControlEvents: UIControlEventTouchUpInside];
+    if ([self placeholderAction]) {
+        [_placeholderImageButton addTarget: self action: [self placeholderAction] forControlEvents: UIControlEventTouchUpInside];
+    }
+
     BOOL isEmpty = [self tableViewIsEmpty];
     if (wasShowingPlaceHolder != isEmpty) {
         if (SEPERATOR_DEBUG) NSLog(@"Changing place holder from %d -> %d", wasShowingPlaceHolder, isEmpty);
@@ -794,6 +798,10 @@ bool almostEqual(CGFloat a, CGFloat b) {
 
 - (UIImage*) placeholderImage {
     return [UIImage imageNamed: self.inGroupMode ? @"placeholder-groups" : @"placeholder-chats"];
+}
+
+- (SEL) placeholderAction {
+    return @selector(addButtonPressed:);
 }
 
 - (void) hyperLabel: (HXOHyperLabel*) label didPressLink: (id) link long: (BOOL) longPress {
