@@ -16,6 +16,7 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "CopyableUITextField.h"
 #import "HXOThemedNavigationController.h"
+#import "HXOHyperLabel.h"
 
 @interface InvitationCodeViewController ()
 
@@ -32,6 +33,8 @@
 @property (nonatomic, strong)   AVCaptureVideoPreviewLayer * videoLayer;
 @property (nonatomic, strong)   HXOLabel                   * promptLabel;
 @property (nonatomic, readonly) HXOBackend                 * chatBackend;
+
+@property (nonatomic, strong)   HXOHyperLabel              * cameraPermissionLabel;
 
 @end
 
@@ -136,6 +139,19 @@
     [self.qrBackgroundView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: @{@"qr": self.qrCodeView}]];
     //self.qrCodeView.backgroundColor = [UIColor lightGrayColor];
 
+    self.cameraPermissionLabel = [[HXOHyperLabel alloc] initWithFrame: CGRectInset(self.view.bounds, kHXOCellPadding, kHXOCellPadding)];
+    self.cameraPermissionLabel.attributedText = HXOLocalizedStringWithLinks(@"permission_denied_camera_qr_scanner", nil);
+    self.cameraPermissionLabel.textAlignment = NSTextAlignmentCenter;
+    self.cameraPermissionLabel.hidden = YES;
+    [self.view addSubview: self.cameraPermissionLabel];
+    format = [NSString stringWithFormat: @"H:|-%f-[permission]-%f-|", kHXOCellPadding, kHXOCellPadding];
+
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: @{@"permission": self.cameraPermissionLabel}]];
+    format = [NSString stringWithFormat: @"V:|-%f-[permission]-%f-|", kHXOCellPadding, kHXOCellPadding];
+
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: @{@"permission": self.cameraPermissionLabel}]];
+
+
     self.scanOrGenerateToggle.selectedSegmentIndex = 0;
 
 }
@@ -151,7 +167,7 @@
 
 - (void) viewWillAppear: (BOOL) animated {
     [super viewWillAppear: animated];
-    [self setupCaptureSession];
+    [self requestCameraAccess];
 }
 
 - (void) viewDidDisappear: (BOOL) animated {
@@ -174,7 +190,28 @@
 
 #pragma mark - Video Capture and (QR) Codes
 
+- (void) requestCameraAccess {
+    if ([AVCaptureDevice respondsToSelector:@selector(requestAccessForMediaType: completionHandler:)]) {
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            // Will get here on both iOS 7 & 8 even though camera permissions weren't required
+            // until iOS 8. So for iOS 7 permission will always be granted.
+            if (granted) {
+                // Permission has been granted. Use dispatch_async for any UI updating
+                // code because this block may be executed in a thread.
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self setupCaptureSession];
+                });
+            }
+            self.cameraPermissionLabel.hidden = granted;
+        }];
+    } else {
+        // We are on iOS <= 6. Just do what we need to do.
+        [self setupCaptureSession];
+    }
+}
+
 - (void) setupCaptureSession {
+
     self.captureSession = [[AVCaptureSession alloc] init];
     AVCaptureDevice *videoCaptureDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
 

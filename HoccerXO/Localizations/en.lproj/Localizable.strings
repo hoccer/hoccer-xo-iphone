@@ -676,6 +676,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "permission_denied_location_placemarks_message" = "Grant location access to Hoccer in System Settings→Privacy→Location Services to pinpoint your current location.";
 "permission_denied_addressbook_message"         = "Grant address book access to Hoccer in System Settings→Privacy→Contacts to allow contact selection.";
 
+"permission_denied_camera_qr_scanner"           = "To scan QR codes grant camera access to Hoccer in System Settings→Privacy→Camera";
 
 //==============================================================================
 // Profile
