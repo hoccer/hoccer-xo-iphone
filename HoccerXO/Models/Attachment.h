@@ -53,6 +53,7 @@ typedef enum AttachmentStates {
 - (void) attachmentTransferFinished: (Attachment*) attachment;
 - (void) attachmentTransferScheduled: (Attachment*) attachment;
 
+- (void) attachmentDidChangeAspectRatio: (Attachment*) attachment;
 @end
 
 

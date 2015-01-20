@@ -3355,6 +3355,17 @@ ready:;
     }
 }
 
+- (void) attachmentDidChangeAspectRatio:(Attachment *)attachment {
+    NSIndexPath * indexPath = [self.fetchedResultsController indexPathForObject: attachment.message];
+    if (indexPath) {
+        MessageCell * cell = (MessageCell*)[self.tableView cellForRowAtIndexPath: indexPath];
+        [self configureCell: cell forMessage: attachment.message withAttachmentPreview: YES];
+
+    } else {
+        attachment.progressIndicatorDelegate = nil;
+    }
+}
+
 - (Contact*) inspectedObject {
     return self.partner;
 }

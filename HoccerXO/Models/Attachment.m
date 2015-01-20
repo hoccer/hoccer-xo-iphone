@@ -1759,14 +1759,13 @@
     return myTranslatedURL;
 }
 
-/*
 - (void) setAspectRatio:(double)newValue {
     [self willChangeValueForKey:@"aspectRatio"];
     [self setPrimitiveValue:@(newValue) forKey:@"aspectRatio"];
-    NSLog(@"aspect ration set to %f", newValue);
+    //NSLog(@"aspect ration set to %f", newValue);
     [self didChangeValueForKey:@"aspectRatio"];
+    [self.progressIndicatorDelegate attachmentDidChangeAspectRatio: self];
 }
-*/
 
 - (double) aspectRatio {
     [self willAccessValueForKey:@"aspectRatio"];
