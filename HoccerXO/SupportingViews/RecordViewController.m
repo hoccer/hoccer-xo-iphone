@@ -43,7 +43,7 @@ static const CGFloat kRingWidth = 6.0;
                                                     error: &error];
     
     if (error) {
-        NSLog(@"error: %@", [error localizedDescription]);
+        NSLog(@"error: %@", error);
         return;
     }
     _audioRecorder.delegate = self;
@@ -169,7 +169,7 @@ static const CGFloat kRingWidth = 6.0;
     _audioPlayer.delegate = self;
 
     if (error) {
-        NSLog(@"Error: %@", [error localizedDescription]);
+        NSLog(@"Error: %@", error);
     } else {
         // NSLog(@"Audioplayer play: %@", _audioRecorder.url);
         [_audioPlayer play];
