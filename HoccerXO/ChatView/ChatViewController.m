@@ -322,30 +322,31 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     [self scrollToRememberedCellOrToBottomIfNone];
     [AppDelegate setWhiteFontStatusbarForViewController:self];
-    
-    self.throwObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"gesturesInterpreterDidDetectThrow"
-                                                                    object:nil
-                                                                     queue:[NSOperationQueue mainQueue]
-                                                                usingBlock:^(NSNotification *note) {
-                                                                    if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: Throw");
-                                                                    if (self.sendButton.enabled) {
-                                                                        [self sendPressed:nil];
-                                                                    }
-                                                                }];
 
-    self.catchObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"gesturesInterpreterDidDetectCatch"
-                                                                           object:nil
-                                                                            queue:[NSOperationQueue mainQueue]
-                                                                       usingBlock:^(NSNotification *note) {
-                                                                           if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: Catch");
-                                                                       }];
-    self.loginObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"loginSucceeded"
-                                                                           object:nil
-                                                                            queue:[NSOperationQueue mainQueue]
-                                                                       usingBlock:^(NSNotification *note) {
-                                                                           if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: loginSucceeded");
-                                                                           [AppDelegate.instance configureForNearbyMode:self.partner.isNearby];
-                                                                       }];
+    NSNotificationCenter * nc = [NSNotificationCenter defaultCenter];
+    self.throwObserver = [nc addObserverForName:@"gesturesInterpreterDidDetectThrow"
+                                         object:nil
+                                          queue:[NSOperationQueue mainQueue]
+                                     usingBlock:^(NSNotification *note) {
+                                         if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: Throw");
+                                         if (self.sendButton.enabled) {
+                                             [self sendPressed:nil];
+                                         }
+                                     }];
+
+    self.catchObserver = [nc addObserverForName:@"gesturesInterpreterDidDetectCatch"
+                                         object:nil
+                                          queue:[NSOperationQueue mainQueue]
+                                     usingBlock:^(NSNotification *note) {
+                                         if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: Catch");
+                                     }];
+    self.loginObserver = [nc addObserverForName:@"loginSucceeded"
+                                         object:nil
+                                          queue:[NSOperationQueue mainQueue]
+                                     usingBlock:^(NSNotification *note) {
+                                         if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: loginSucceeded");
+                                         [AppDelegate.instance configureForNearbyMode:self.partner.isNearby];
+                                     }];
 }
 
 - (NSMutableDictionary*) messageItems {

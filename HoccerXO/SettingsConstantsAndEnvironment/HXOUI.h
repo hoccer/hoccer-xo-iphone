@@ -11,6 +11,15 @@
 #import "UIAlertView+BlockExtensions.h"
 #import "UIActionSheet+BlockExtensions.h"
 
+// When used in ObjC++ files (InvitationCodeViewController.mm) we need to
+// declare C linkage on free functions to disable C++ name mangeling and avoid
+// linker errors down the road.
+#ifdef __cplusplus
+# define HXO_OBJCPP_LINKAGE extern "C"
+#else
+# define HXO_OBJCPP_LINKAGE
+#endif
+
 FOUNDATION_EXPORT const CGFloat kHXOGridSpacing;
 FOUNDATION_EXPORT const CGFloat kHXOCellPadding;
 
@@ -23,12 +32,7 @@ typedef void(^HXOActionSheetCompletionBlock)(NSUInteger buttonIndex, UIActionShe
 typedef void(^HXOAlertViewCompletionBlock)(NSUInteger buttonIndex, UIAlertView * alertView);
 typedef void(^HXOStringEntryCompletion)(NSString* entry);
 
-// When used in ObjC++ files (InvitationCodeViewController.mm) we need to declare
-// C linkage to avoid C++ name mangeling and a linker error down the road.
-#ifdef __cplusplus
-extern "C"
-#endif
-NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comment);
+HXO_OBJCPP_LINKAGE NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comment);
 
 @interface HXOUI : NSObject
 
