@@ -30,7 +30,9 @@ static const CGFloat kRingWidth = 6.0;
     [super viewDidLoad];
     
     NSDictionary *recordSettings = @{AVEncoderAudioQualityKey : @(AVAudioQualityMin),
-                                     AVEncoderBitRateKey : @(16),
+                                     // setting a bitrate breaks things on iPhone 5s according to this stackoverflow:
+                                     // http://stackoverflow.com/questions/19192316/avaudiorecorder-not-working-on-iphone-5s
+                                     // AVEncoderBitRateKey : @(16),
                                      AVNumberOfChannelsKey : @(2),
                                      AVSampleRateKey : @(44100.0),
                                      AVFormatIDKey: @(kAudioFormatMPEG4AAC)};
