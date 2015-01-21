@@ -612,9 +612,10 @@ BOOL sameObjects(id obj1, id obj2) {
 
     [[HXOUI theme] setupTheming];
 
-    // NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
     BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
 
+    NSLog(@"isFirstRun:%d, isRegistered:%d", isFirstRun, [UserProfile sharedProfile].isRegistered);
+    
     if (isFirstRun || ![UserProfile sharedProfile].isRegistered) {
         [self.chatBackend disable];
         dispatch_async(dispatch_get_main_queue(), ^{  // delay until window is realized
