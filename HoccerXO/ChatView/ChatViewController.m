@@ -2284,7 +2284,7 @@ nil
 }
 
 - (void) configureAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message {
-    message.attachment.progressIndicatorDelegate = self;
+    message.attachment.uiDelegate = self;
     [section.upDownLoadControl addTarget: self action: @selector(didToggleTransfer:) forControlEvents: UIControlEventTouchUpInside];
     [self configureUpDownLoadControl: section.upDownLoadControl attachment: message.attachment];
 
@@ -3317,7 +3317,7 @@ ready:;
     if (indexPath) {
         return ((id<AttachmentMessageCell>)[self.tableView cellForRowAtIndexPath: indexPath]).attachmentSection;
     } else {
-        attachment.progressIndicatorDelegate = nil;
+        attachment.uiDelegate = nil;
     }
     return nil;
 }
@@ -3360,7 +3360,7 @@ ready:;
     if (indexPath) {
         [self.tableView reloadRowsAtIndexPaths: @[indexPath] withRowAnimation: UITableViewRowAnimationFade];
     } else {
-        attachment.progressIndicatorDelegate = nil;
+        attachment.uiDelegate = nil;
     }
 }
 

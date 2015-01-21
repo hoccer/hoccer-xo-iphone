@@ -25,7 +25,7 @@ typedef void (^ImageCompletionBlock)(UIImage * image, NSError* error);
 <
 UISplitViewControllerDelegate, AttachmentPickerControllerDelegate, UIActionSheetDelegate,
 UITextViewDelegate, NSFetchedResultsControllerDelegate, MessageViewControllerDelegate,
- HXOHyperLabelDelegate, TransferProgressIndication, AttachmentPresenterDelegate
+ HXOHyperLabelDelegate, AttachmentUIDelegate, AttachmentPresenterDelegate
 >
 {
     NSMutableDictionary        *resultsControllers;

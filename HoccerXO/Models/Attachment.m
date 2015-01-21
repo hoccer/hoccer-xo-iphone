@@ -138,7 +138,7 @@
 @synthesize transferHttpStatusCode;
 @synthesize chatBackend = _chatBackend;
 @synthesize previewImage = _previewImage;
-@synthesize progressIndicatorDelegate;
+@synthesize uiDelegate;
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
 @synthesize transferRetryTimer = _transferRetryTimer;
@@ -1764,7 +1764,7 @@
     [self setPrimitiveValue:@(newValue) forKey:@"aspectRatio"];
     //NSLog(@"aspect ration set to %f", newValue);
     [self didChangeValueForKey:@"aspectRatio"];
-    [self.progressIndicatorDelegate attachmentDidChangeAspectRatio: self];
+    [self.uiDelegate attachmentDidChangeAspectRatio: self];
 }
 
 - (double) aspectRatio {
@@ -2413,6 +2413,7 @@
             NSMutableDictionary * backwardsCompatibleJsonKeys = [NSMutableDictionary dictionaryWithDictionary: [self JsonKeys]];
             [backwardsCompatibleJsonKeys setObject: backwardsCompatibleJsonKeys[@"fileName"] forKey: @"filename"];
             [HXOModel updateObject:self withDictionary:json withKeys: backwardsCompatibleJsonKeys];
+            self.aspectRatio = 4;
         } else {
             NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", theJsonString);
         }
@@ -2491,32 +2492,32 @@
 
 
 - (void) notifyTransferScheduled {
-    if (progressIndicatorDelegate) {
-        [progressIndicatorDelegate attachmentTransferScheduled: self];
+    if (uiDelegate) {
+        [uiDelegate attachmentTransferScheduled: self];
     } else {
         if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"no delegate for attachmentTransferScheduled");}
     }
 }
 
 - (void) notifyTransferStarted {
-    if (progressIndicatorDelegate) {
-        [progressIndicatorDelegate attachmentTransferStarted: self];
+    if (uiDelegate) {
+        [uiDelegate attachmentTransferStarted: self];
     } else {
         if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"no delegate for attachmentTransferStarted");}
     }
 }
 
 - (void) notifyTransferFinished {
-    if (progressIndicatorDelegate) {
-        [progressIndicatorDelegate attachmentTransferFinished: self];
+    if (uiDelegate) {
+        [uiDelegate attachmentTransferFinished: self];
     } else {
         NSLog(@"no delegate to signal attachmentTransferFinished");
     }
 }
 
 - (void) notifyTransferProgress: (CGFloat) progress {
-    if (progressIndicatorDelegate) {
-        [progressIndicatorDelegate attachment: self transferDidProgress: progress];
+    if (uiDelegate) {
+        [uiDelegate attachment: self transferDidProgress: progress];
     } else {
         if (CONNECTION_DELEGATE_DEBUG) {NSLog(@"no delegate for transferDidProgress");}
     }
