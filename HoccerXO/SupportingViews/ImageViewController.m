@@ -113,6 +113,9 @@
 
     CGFloat newZoomScale = self.scrollView.zoomScale * 1.5f;
     newZoomScale = MIN(newZoomScale, self.scrollView.maximumZoomScale);
+    if (newZoomScale == self.scrollView.zoomScale) {
+        return;
+    }
 
     CGSize scrollViewSize = self.scrollView.bounds.size;
 

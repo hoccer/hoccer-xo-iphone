@@ -46,7 +46,7 @@ typedef enum AttachmentStates {
     kAttachmentTransferAborted
 } AttachmentState;
 
-@protocol TransferProgressIndication <NSObject>
+@protocol AttachmentUIDelegate <NSObject>
 
 - (void) attachment: (Attachment*) attachment transferDidProgress:(float) theProgress;
 - (void) attachmentTransferStarted: (Attachment*) attachment;
@@ -114,7 +114,7 @@ typedef enum AttachmentStates {
 
 @property (readonly, strong, nonatomic) HXOBackend *  chatBackend;
 
-@property (nonatomic, weak) id<TransferProgressIndication> progressIndicatorDelegate;
+@property (nonatomic, weak) id<AttachmentUIDelegate> uiDelegate;
 
 @property (nonatomic, strong) CryptoEngine * decryptionEngine;
 @property (nonatomic, strong) CryptoEngine * encryptionEngine;
