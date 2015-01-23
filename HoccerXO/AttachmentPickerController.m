@@ -309,6 +309,11 @@
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self showCameraPickerForType:type];
                 });
+            } else {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [AppDelegate.instance showGenericAlertWithTitle:@"permission_denied_title" andMessage:@"permission_denied_camera_attachment" withOKBlock:^{
+                    }];
+                });
             }
         }];
     } else {
