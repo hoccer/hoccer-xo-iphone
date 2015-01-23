@@ -143,6 +143,9 @@
         self.seekSlider.maximumValue = self.audioPlayer.duration;
         
         [attachment loadImage:^(UIImage *image, NSError *error) {
+            if (image == nil || image.size.width < 1.0 || image.size.height < 1.0) {
+                image = [UIImage imageNamed:@"cover-art-fallback.png"];
+            }
             self.artworkImageView.image = image;
             self.view.layer.contents = (id)[image applyBlurWithRadius: 3 * kHXOGridSpacing tintColor:[UIColor colorWithWhite:0.1 alpha:0.6] saturationDeltaFactor: 1.0 maskImage: nil].CGImage;
             CGSize screenSize = [[UIScreen mainScreen] bounds].size;

@@ -16,6 +16,8 @@
 #import "HXOArrayPlaylist.h"
 #import "NSMutableArray+Shuffle.h"
 
+#define DEBUG_PLAYLIST YES
+
 @interface HXOAudioPlayer ()
 
 @property (nonatomic, assign) BOOL isPlaying;
@@ -157,9 +159,18 @@
 
 #pragma mark - Private helpers
 
+- (void)printPlaylist:(id<HXOPlaylist>)playlist {
+    for (unsigned long i = 0; i < playlist.count;++i) {
+        NSLog(@"playlist item %lu name = %@", i, [playlist attachmentAtIndex:i].humanReadableFileName);
+    }
+}
+
 - (BOOL)updatePlaylist:(id<HXOPlaylist>)playlist withStartingTrackNumber:(NSUInteger)trackNumber {
     
     NSUInteger index = [self setPlaylist:playlist andGetIndexForTrackNumber:trackNumber];
+    
+    if (DEBUG_PLAYLIST) NSLog(@"updatePlaylist index = %lu, count = %lu", (unsigned long)index, (unsigned long)playlist.count);
+    if (DEBUG_PLAYLIST) [self printPlaylist:playlist];
     
     if ([self isPlaying]) {
         return [self playAtIndex:index];
@@ -171,6 +182,9 @@
 }
 
 - (NSUInteger) setPlaylist:(id<HXOPlaylist>)playlist andGetIndexForTrackNumber: (NSUInteger) trackNumber {
+    if (DEBUG_PLAYLIST) NSLog(@"setPlaylist trackNumber = %lu, count = %lu", (unsigned long)index, (unsigned long)playlist.count);
+    [self printPlaylist:playlist];
+    
     self.playlist = playlist;
     playlist.delegate = self;
     return [self orderTrackNumbersWithCurrentTrackNumber:trackNumber];
@@ -182,7 +196,7 @@
     self.playlistIndex = index;
     
     Attachment *attachment = [self.playlist attachmentAtIndex:self.currentTrackNumber];
-    NSLog(@"playAtIndex %lu, attachment = %@", (unsigned long)index, attachment.humanReadableFileName);
+    if (DEBUG_PLAYLIST) NSLog(@"playAtIndex %lu, attachment = %@", (unsigned long)index, attachment.humanReadableFileName);
     return [self playAttachment:attachment];
 }
 
@@ -244,10 +258,12 @@
         }
 
         [self.attachment loadImage:^(UIImage *image, NSError *error) {
-            if (image) {
-                MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
-                [nowPlayingInfo setObject:artwork forKey:MPMediaItemPropertyArtwork];
+            
+            if (image == nil || image.size.width < 1.0 || image.size.height < 1.0) {
+                image = [UIImage imageNamed:@"cover-art-fallback.png"];
             }
+            MPMediaItemArtwork *artwork = [[MPMediaItemArtwork alloc] initWithImage:image];
+            [nowPlayingInfo setObject:artwork forKey:MPMediaItemPropertyArtwork];
             
             [[MPNowPlayingInfoCenter defaultCenter] setNowPlayingInfo:nowPlayingInfo];
         }];
@@ -257,6 +273,7 @@
 }
 
 - (NSUInteger) orderTrackNumbersWithCurrentTrackNumber: (NSUInteger) trackNumber {
+    if (DEBUG_PLAYLIST) NSLog(@"orderTrackNumbersWithCurrentTrackNumber %lu, count = %lu, isSHuffled=%d", (unsigned long)trackNumber, (unsigned long)self.playlist.count,self.isShuffled);
     NSMutableArray *orderedTrackNumbers = [[NSMutableArray alloc] initWithCapacity:[self.playlist count]];
     for (int i = 0; i < [self.playlist count]; i++) {
         [orderedTrackNumbers addObject:[NSNumber numberWithInt:i]];
@@ -281,6 +298,7 @@
 
 - (void) playlistDidChange:(id<HXOPlaylist>)playlist {
     NSUInteger newTrackNumber = [playlist indexOfAttachment:self.attachment];
+    if (DEBUG_PLAYLIST) NSLog(@"playlistDidChange newTrackNumber = %lu, count = %lu", (unsigned long)newTrackNumber, (unsigned long)playlist.count);
     [self updatePlaylist:self.playlist withStartingTrackNumber:newTrackNumber];
 }
 
