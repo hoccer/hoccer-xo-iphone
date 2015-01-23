@@ -298,6 +298,39 @@
     }
 }
 
+- (void) requestCameraAccessForType: (AttachmentPickerType) type {
+    if ([AVCaptureDevice respondsToSelector:@selector(requestAccessForMediaType: completionHandler:)]) {
+        [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+            // Will get here on both iOS 7 & 8 even though camera permissions weren't required
+            // until iOS 8. So for iOS 7 permission will always be granted.
+            if (granted) {
+                // Permission has been granted. Use dispatch_async for any UI updating
+                // code because this block may be executed in a thread.
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self showCameraPickerForType:type];
+                });
+            }
+        }];
+    } else {
+        // We are on iOS <= 6. Just do what we need to do.
+        [self showCameraPickerForType:type];
+    }
+}
+
+- (void) showCameraPickerForType: (AttachmentPickerType) type {
+    BOOL wantsVideo = YES;
+    switch (type) {
+        case AttachmentPickerTypePhotoFromCamera:
+            wantsVideo = NO;
+            // no break
+        case AttachmentPickerTypePhotoVideoFromCamera:
+            [self showImagePickerWithSource: UIImagePickerControllerSourceTypeCamera withVideo: wantsVideo];
+            break;
+        default:
+            NSLog(@"showCameraPickerForType: not a camera picker");
+    }
+}
+
 - (void) showPickerForType: (AttachmentPickerType) type {
     BOOL wantsVideo = YES;
     // NSLog(@"showPickerForType=%d",type);
@@ -312,10 +345,8 @@
             [self showImagePickerWithSource: UIImagePickerControllerSourceTypePhotoLibrary withVideo: wantsVideo];
             break;
         case AttachmentPickerTypePhotoFromCamera:
-            wantsVideo = NO;
-            // no break
         case AttachmentPickerTypePhotoVideoFromCamera:
-            [self showImagePickerWithSource: UIImagePickerControllerSourceTypeCamera withVideo: wantsVideo];
+            [self requestCameraAccessForType:type];
             break;
         case AttachmentPickerTypeMediaFromLibrary:
             [self showMediaPicker];
