@@ -2413,7 +2413,6 @@
             NSMutableDictionary * backwardsCompatibleJsonKeys = [NSMutableDictionary dictionaryWithDictionary: [self JsonKeys]];
             [backwardsCompatibleJsonKeys setObject: backwardsCompatibleJsonKeys[@"fileName"] forKey: @"filename"];
             [HXOModel updateObject:self withDictionary:json withKeys: backwardsCompatibleJsonKeys];
-            self.aspectRatio = 4;
         } else {
             NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", theJsonString);
         }
