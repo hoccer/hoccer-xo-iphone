@@ -426,7 +426,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "credentials_receive_import_btn_title"         = "Übernehmen";
 
 "credentials_transfer_btn_title"               = "Zugangsdaten übertragen";
-"credentials_transfer_failed_no_xox_message"   = "Du must zuvor zusötzlich die Hoccer App installieren. Hierzu wird sich die Hoccer-Seite öffnen.";
+"credentials_transfer_failed_no_xox_message"   = "Du mußt zuvor zusätzlich die Hoccer App installieren. Hierzu wird sich die Hoccer-Seite öffnen.";
 "credentials_transfer_failed_no_xox_title"     = "Hoccer-App benötigt";
 "credentials_transfer_install_app_url"         = "http://hoccer.com";
 "credentials_transfer_safety_question"         = "Willst du deine Zugangsdaten auf die Hoccer-App übertragen?";
@@ -712,7 +712,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 //==============================================================================
 // Server
 //==============================================================================
-"server_running"                = "Verbinde dich von einem Computer im lokalen Netzwerk.\n\nAuf einem Mac wähle \"Gehe→Verbinden mit (⌘K)\" im Finder.\n\nGib die Zeile, die mit \"http:\" beginnt genau so ein wie obenstehend.\n\nIn der Kennwortabfrage lasse den Nutzernamen leer und gib nur das Kennwort ein.\n\nUnter Windows wähle \"Netzlaufwerk verbinden\" in \"Arbeitsplatz→Extras\" (XP) oder \"Startmenü→Computer\" (Win7 or später)";
+"server_running"                = "1. Auf dem Computer das Dialogfeld öffnen, um die Verbindung zu Hoccer herzustellen: \n\nOSX: |Finder|Gehe zu|mit Server verbinden|\n\nWindows XP:|Arbeitsplatz|Extras|Netzlaufwerk verbinden|\n\nWindows 7:|Computer|Rechtsklick in Fenster|Netzwerkadresse hinzufügen|\n\nWindows 8:|Dieser PC|Computer|Netzwerkadresse hinzufügen|\n\n2. Oben genannte http:// Adresse eingeben und \"verbinden\" klicken\n\n3. Beliebigen Benutzernamen auswählen und oben genanntes Kennwort verwenden.";
 
 "server_stopped_can_run"        = "Drücke den Startknopf um einen WebDAV-Server auf diesem Gerät zu starten. Du kannst dich dann von einem Computer im lokalen Netzwerk mit Hoccer verbinden um Mediendateien zwischen Hoccer und dem Computer auszutauschen.\n\nNutze den Server aus Sichergründen nicht in einem öffentlichen Netzwerk.";
 
