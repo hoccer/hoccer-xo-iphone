@@ -684,7 +684,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "permission_denied_location_placemarks_message" = "Um deinen Standort anzuzeigen, erlaube Hoccer in System Einstellungen→Datenschutz→Ortungsdienste den Zugriff.";
 "permission_denied_addressbook_message"         = "Um Kontakte auszuwählen, erlaube Hoccer in System Einstellungen→Datenschutz→Kontakte den Zugriff auf dein Adressbuch.";
 "permission_denied_camera_qr_scanner"           = "Um QR-Codes zu scannen erlaube Hoccer in System Einstellungen→Datenschutz→Kamera den Zugang.";
-"permission_denied_camera_attachment"           = "Um direct Kameraaufnahmen zu versenden erlaube Hoccer in System Einstellungen→Datenschutz→Kamera den Zugang.";
+"permission_denied_camera_attachment"           = "Um Kameraaufnahmen zu versenden, erlaube Hoccer in System Einstellungen→Datenschutz→Kamera den Zugang.";
 
 //==============================================================================
 // Profile
