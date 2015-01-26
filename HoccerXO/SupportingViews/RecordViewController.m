@@ -55,6 +55,7 @@ static const CGFloat kRingWidth = 6.0;
 
     self.view.tintColor = [UIColor whiteColor];
 
+    [self.cancelButton setTitle: NSLocalizedString(@"cancel", nil) forState: UIControlStateNormal];
     [self.useButton setTitle: NSLocalizedString(@"recorder_use_button_title", nil) forState: UIControlStateNormal];
     [self.playButton setTitle: NSLocalizedString(@"recorder_play_button_title", nil) forState: UIControlStateNormal];
 
