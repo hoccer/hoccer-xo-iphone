@@ -153,7 +153,14 @@
             NSUInteger keySize = [self.validKeySizes[[self.sizePicker selectedRowInComponent: 0]] unsignedIntegerValue];
             [AppDelegate renewRSAKeyPairWithSize: keySize];
         } else {
-            [[UserProfile sharedProfile] importKeypair: self.pemKeysTextView.text];
+            if ( ! [[UserProfile sharedProfile] importKeypair: self.pemKeysTextView.text]) {
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"key_import_failed_title", nil)
+                                                                 message: NSLocalizedString(@"key_import_failed", nil)
+                                                         completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alertView) { }
+                                                       cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                                       otherButtonTitles: nil];
+                [alert show];
+            }
         }
     }
     [self dismissViewControllerAnimated: YES completion: nil];

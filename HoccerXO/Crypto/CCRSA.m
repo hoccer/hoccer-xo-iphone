@@ -1007,7 +1007,7 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 
 -(BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString {
     NSData * myBits = [CCRSA extractPrivateKeyBitsFromPEM:pemPrivateKeyString];
-    return [self addPrivateKeyBits:myBits withTag:privateTag];
+    return myBits != nil && [self addPrivateKeyBits:myBits withTag:privateTag];
 }
 
 - (BOOL) importPublicKeyBits: (NSString*) pemText withTag: (NSData*) tag {

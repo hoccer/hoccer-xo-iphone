@@ -650,7 +650,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "key_import_private_btn_title"                   = "Priv. Schlüssel importieren";
 "key_import_success"                             = "Schlüssel wurde erfolgreich aus der Zwischenablage importiert.";
 "key_import_success_title"                       = "Schlüssel importiert";
-"key_import_failed"                              = "Es konnte kein Schlüssel aus der Zwischenablage importiert werden.";
+"key_import_failed"                              = "Dein alter Schlüssel wird weiter verwendet.";
 "key_import_failed_title"                        = "Schlüsselimport fehlgeschlagen";
 "key_import_confirm_btn_title"                   = "Import";
 "key_import_safety_question"                     = "Diese Funktion importiert einen RSA-Schlüssel im PEM-format aus der Zwischenablage. Du solltest das nur tun, wenn du weist, was du tust. Willst du den Schlüssel importieren?";
