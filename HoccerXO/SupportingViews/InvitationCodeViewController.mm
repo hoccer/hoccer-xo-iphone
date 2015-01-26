@@ -301,6 +301,7 @@
     self.qrCodeView.image = nil;
     self.qrBackgroundView.alpha = generate ? 1 : 0;
 
+    self.cameraPermissionLabel.alpha = generate ? 0 : 1;
     if (generate) {
         [self.chatBackend generatePairingTokenWithHandler: ^(id token) {
             if (token == nil || ! [token isKindOfClass:[NSString class]]) {
