@@ -116,6 +116,10 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 
     // A source of potential notifications
     dispatch_source_t _dirMonitorDispatchSource;
+    id<NSObject> _fileChangeObserver;
+    
+    unsigned long _documentDirectoryHandlingScheduledId;
+    unsigned long _cancelDirectoryHandlingScheduledId;
     
     NSDictionary *_fileEntities;
 }
@@ -170,6 +174,9 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
 // see http://stackoverflow.com/questions/3181821/notification-of-changes-to-the-iphones-documents-directory
 
 -(void) setupDocumentDirectoryMonitoring {
+    
+    [self cancelDocumentDirectoryMonitoring];
+    NSLog(@"setupDocumentDirectoryMonitoring");
     
     // Get the path to the home directory
     NSString * homeDirectory = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)[0];
@@ -230,21 +237,42 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     dispatch_resume(_dirMonitorDispatchSource);
     
     // When we want to stop monitoring the file we call this
-    //dispatch_source_cancel(_dirMonitorDispatchSource);
     
     // To recieve a notification about the file change we can use the NSNotificationCenter
-    [[NSNotificationCenter defaultCenter] addObserverForName:kFileChangedNotification object:nil queue:nil usingBlock:^(NSNotification * notification) {
+    _fileChangeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kFileChangedNotification object:nil queue:nil usingBlock:^(NSNotification * notification) {
         NSLog(@"Document Directory file change detected!");
         //[AppDelegate.instance handleDocumentDirectoryChanges];
         
         double delayInSeconds = 1;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        unsigned long scheduleId = ++_documentDirectoryHandlingScheduledId;
         dispatch_after(popTime, _dirMonitorDispatchQueue, ^(void) {
-            [self handleDocumentDirectoryChanges];
+            [self handleDocumentDirectoryChanges:scheduleId];
         });
     }];
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:kFileChangedNotification object:nil];
 }
+
+-(void) cancelDocumentDirectoryMonitoring {
+    NSLog(@"cancelDocumentDirectoryMonitoring");
+    _cancelDirectoryHandlingScheduledId = _documentDirectoryHandlingScheduledId;
+    if (_dirMonitorDispatchSource != nil) {
+        dispatch_source_cancel(_dirMonitorDispatchSource);
+    }
+    _dirMonitorDispatchSource = nil;
+
+    if (_fileChangeObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:_fileChangeObserver];
+    }
+    _fileChangeObserver = nil;
+
+    if (_dirMonitorDispatchQueue != nil) {
+        //dispatch_release(_dirMonitorDispatchQueue);
+    }
+    _dirMonitorDispatchQueue = nil;
+}
+
+
 
 + (NSDate*)getModificationDateForPath:(NSString*)myFilePath {
     NSError * error = nil;
@@ -254,6 +282,16 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         return nil;
     }
     return [attributes fileModificationDate];
+}
+
++ (NSDate*)getCreationDateForPath:(NSString*)myFilePath {
+    NSError * error = nil;
+    NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:myFilePath error:&error];
+    if (error != nil) {
+        NSLog(@"Error getting creation date for path %@, error=%@", myFilePath, error);
+        return nil;
+    }
+    return [attributes fileCreationDate];
 }
 
 + (BOOL)setPosixPermissions:(short)flags forPath:(NSString*)myFilePath {
@@ -343,8 +381,11 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     return NO;
 }
 
--(void)handleDocumentDirectoryChanges {
-    NSLog(@"handleDocumentDirectoryChanges");
+-(void)handleDocumentDirectoryChanges:(unsigned long)scheduleId {
+    NSLog(@"handleDocumentDirectoryChanges %ld",scheduleId);
+    if (scheduleId <= _cancelDirectoryHandlingScheduledId) {
+        NSLog(@"handleDocumentDirectoryChanges canceled up to %ld",_cancelDirectoryHandlingScheduledId);
+    }
     NSDictionary * oldEntities = _fileEntities;
     
     NSURL * documentDirectory = [self applicationDocumentsDirectory];
@@ -369,21 +410,34 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
         }
     }
     
-    BOOL retryScheduled = NO;
     // find new and changed files
     for (NSString * file in newEntities) {
         NSString * oldEntity = oldEntities[file];
         if (oldEntity == nil) {
+            BOOL retryScheduled = _documentDirectoryHandlingScheduledId > scheduleId;
+            BOOL cancelled = scheduleId <= _cancelDirectoryHandlingScheduledId;
+            if (cancelled) {
+                NSLog(@"handleDocumentDirectoryChanges(2) id %ld canceled up to %ld",scheduleId,_cancelDirectoryHandlingScheduledId);
+                return;
+            }
             if (!retryScheduled && [self emptyFile:file withEntity:newEntities[file]]) {
+                
                 double delayInSeconds = 5;
-                if (TRACE_DOCDIR_CHANGES) NSLog(@"newFile: %@ is empty, retry changes in %f secs", file, delayInSeconds);
+                if (TRACE_DOCDIR_CHANGES,YES) NSLog(@"newFile: %@ is empty, retry changes in %f secs", file, delayInSeconds);
+                NSString * fullPath = [documentDirectoryPath stringByAppendingPathComponent: file];
+
+                if (TRACE_DOCDIR_CHANGES,YES) NSLog(@"newFile: %@ created: %@ changed: %@", file, [AppDelegate getCreationDateForPath:fullPath], [AppDelegate getModificationDateForPath:fullPath]);
+                
+                
                 // this happens when files are added using itunes
                 
+                unsigned long retryScheduleId = ++_documentDirectoryHandlingScheduledId;
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+                NSLog(@"handleDocumentDirectoryChanges: scheduling retry id %ld in %f seconds", retryScheduleId, delayInSeconds);
                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-                    [self handleDocumentDirectoryChanges];
+                    NSLog(@"handleDocumentDirectoryChanges: retrying id %ld", retryScheduleId);
+                    [self handleDocumentDirectoryChanges:retryScheduleId];
                 });
-                retryScheduled = YES;
             }
             if ([self considerFile:file withEntity:newEntities[file] inDirectoryPath:documentDirectoryPath]) {
                 if (TRACE_DOCDIR_CHANGES) NSLog(@"newFile: %@ (%@)", file, newEntities[file]);
@@ -407,11 +461,17 @@ static const int ddLogLevel = LOG_LEVEL_VERBOSE;
     }
     if (changedFiles.count > 0 || newFiles.count > 0 || deletedFiles.count > 0) {
         dispatch_async(dispatch_get_main_queue(), ^{
+            BOOL cancelled = scheduleId <= _cancelDirectoryHandlingScheduledId;
+            if (cancelled) {
+                NSLog(@"handleDocumentDirectoryChanges(3) id %ld canceled up to %ld",scheduleId,_cancelDirectoryHandlingScheduledId);
+                return;
+            }
             [AttachmentMigration adoptOrphanedFiles:newFiles changedFiles:changedFiles deletedFiles:deletedFiles withRemovingAttachmentsNotInFiles:files inDirectory:documentDirectory];
         });
     }
     
     _fileEntities = newEntities;
+    [self saveDictionary:_fileEntities toFile:@"fileEntities"];
 }
 
 -(void)printInspection {
@@ -547,6 +607,17 @@ BOOL sameObjects(id obj1, id obj2) {
     return observer;
 }
 
+- (BOOL) saveDictionary:(NSDictionary*)dict toFile:(NSString*)fileName {
+    NSURL * fileURL = [self cacheFileURL:fileName];
+    return [dict writeToURL:fileURL atomically:YES];
+}
+
+- (NSMutableDictionary*) loadDictionary:(NSString*)fileName {
+    NSURL * fileURL = [self cacheFileURL:fileName];
+    NSMutableDictionary * result = [NSMutableDictionary dictionaryWithContentsOfURL:fileURL];
+    return result;
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
 #ifdef DEBUG
@@ -555,7 +626,12 @@ BOOL sameObjects(id obj1, id obj2) {
     _idLocks = [NSMutableDictionary new];
     _backgroundContexts = [NSMutableDictionary new];
     _inspectionLock = [NSObject new];
-    _fileEntities = [NSDictionary new];
+    _fileEntities = [self loadDictionary:@"fileEntities"];
+    if (_fileEntities == nil) {
+        _fileEntities = [NSDictionary new];
+    } else {
+        NSLog(@"initialized _fileEntities with %ld values", (unsigned long)_fileEntities.count);
+    }
 
 #ifdef DEBUG
 //#define DEFINE_OTHER_SERVERS
@@ -624,7 +700,6 @@ BOOL sameObjects(id obj1, id obj2) {
     } else {
         [self setupDone: NO];
     }
-
     
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
     NSString * lastRunBuildNumber = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
@@ -654,7 +729,6 @@ BOOL sameObjects(id obj1, id obj2) {
     [AppDelegate setDefaultAudioSession];
 
     [self setLastActiveDate];
-
     
     NSString * dumpRecordsForEntity = [[HXOUserDefaults standardUserDefaults] valueForKey: @"dumpRecordsForEntity"];
     if (dumpRecordsForEntity.length > 0) {
@@ -668,16 +742,11 @@ BOOL sameObjects(id obj1, id obj2) {
     NSData * myKey = [Crypto make256BitKeyFromPassword:@"myPassword" withSalt:mySalt];
     NSLog(@"myKey=%@", [myKey hexadecimalString]);
 #endif
-
     
-    //[AttachmentMigration findOrphanedFilesAndRegisterAsAttachment];
-    [self handleDocumentDirectoryChanges];
     [AttachmentMigration determinePlayabilityForAllAudioAttachments];
-    [self setupDocumentDirectoryMonitoring];
 
     NSAssert([self.window.rootViewController isKindOfClass:[UITabBarController class]], @"Expecting UITabBarController");
     ((UITabBarController *)self.window.rootViewController).delegate = self;
-    
     
     return YES;
 }
@@ -1573,6 +1642,12 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     NSString * preferencesName = [NSString stringWithFormat: @"Preferences/%@.plist", bundleId];
     NSURL *prefURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: preferencesName];
     return prefURL;
+}
+
+- (NSURL *)cacheFileURL:(NSString*)cacheName {
+    NSString * fileName = [NSString stringWithFormat: @"%@.%@", [[Environment sharedEnvironment] suffixedString: cacheName],@"hcache"];
+    NSURL *fileURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: fileName];
+    return fileURL;
 }
 
 
@@ -2642,12 +2717,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 - (void) makeArchive:(NSURL*)archiveURL withHandler:(URLResultHandler)onReady {
     ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_make_hud_title", nil)];
     [hud show];
+    [self cancelDocumentDirectoryMonitoring];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
         NSURL * url = [self makeArchive:archiveURL];
         dispatch_async(dispatch_get_main_queue(), ^{
             [hud dismiss];
             onReady(url);
+            [self setupDocumentDirectoryMonitoring];
         });
     });
 }
@@ -2744,10 +2821,27 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return archiveURL;
 }
 
+enum {
+    ARCHIVE_INSTALLED_CREDENTIALS_OLD = 0,
+    ARCHIVE_INSTALLED_CREDENTIALS_IDENTICAL = 1,
+    ARCHIVE_INSTALLED_CREDENTIALS_NEW = 2,
+    ARCHIVE_INSTALLED_CREDENTIALS_BROKEN = -80,
+    ARCHIVE_NOT_INSTALLED_CANT_MOVE_FILE = -70,
+    ARCHIVE_NOT_INSTALLED_ARCHIVE_DIR_ERROR = -60,
+    ARCHIVE_NOT_INSTALLED_CANT_REMOVE_FILE = -50,
+    ARCHIVE_NOT_INSTALLED_DOCUMENT_DIR_ERROR = -40,
+    ARCHIVE_NOT_INSTALLED_PREFERENCE_ERROR = -35,
+    ARCHIVE_NOT_INSTALLED_NEW_DATABASE_MOVE_ERROR = -30,
+    ARCHIVE_NOT_INSTALLED_OLD_DATABASE_MOVE_ERROR = -20,
+    ARCHIVE_NOT_INSTALLED_OLD_DB_BACKUP_REMOVE_ERROR = -10,
+    ARCHIVE_NOT_INSTALLED_NO_NEW_DATABASE_ERROR = -5,
+    ARCHIVE_NOT_INSTALLED_ERROR_NO_ARCHIVE_TO_INSTALL = -1
+};
 
 - (void) importArchive:(NSURL*)archiveURL withHandler:(GenericResultHandler)onReady {
     ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_import_hud_title", nil)];
     [hud show];
+    [self cancelDocumentDirectoryMonitoring];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         BOOL success = [self extractArchive:archiveURL];
@@ -2760,17 +2854,18 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 // total failure
                 success = NO;
             } else {
-                if (result == 1) {
+                if (result == ARCHIVE_INSTALLED_CREDENTIALS_IDENTICAL || result == ARCHIVE_INSTALLED_CREDENTIALS_NEW) {
                     // total success
                     success = YES;
                 } else {
-                    if (result == 0) {
+                    if (result == ARCHIVE_INSTALLED_CREDENTIALS_OLD) {
                         [hud dismiss];
                         // credentials import failed
                         [self showOperationFailedAlert:@"credentials_receive_old_message" withTitle:@"credentials_receive_old_title"
                                            withOKBlock:^{
                                                onReady(YES);
                                            }];
+                        return;
                     }
                 }
             }
@@ -2779,6 +2874,9 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         dispatch_async(dispatch_get_main_queue(), ^{
             [hud dismiss];
             onReady(success);
+            if (!success) {
+                [self setupDocumentDirectoryMonitoring];
+            }
         });
     });
 }
@@ -2787,10 +2885,6 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 - (BOOL)extractArchive:(NSURL*) archiveURL {
     NSError *error = nil;
     NSFileManager *fileMgr = [NSFileManager defaultManager];
-    
-    //if (archiveURL == nil) {
-    //    archiveURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent: @"archive.zip"];
-    //}
     
     if (![fileMgr fileExistsAtPath:[archiveURL path]]) {
         NSLog(@"Error: No archive at URL %@", archiveURL);
@@ -2831,6 +2925,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return NO;
 }
 
+
 -(int)installArchive {
     [self.chatBackend disable];
     NSError *error = nil;
@@ -2848,13 +2943,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             NSURL *backupdbURL = [archiveExtractDirURL URLByAppendingPathComponent: @"backupdb.sqlite"];
             if (![fileMgr fileExistsAtPath:[archivedbURL path]]) {
                 NSLog(@"#ERROR: no database to install found at archive URL %@", backupdbURL);
+                return ARCHIVE_NOT_INSTALLED_NO_NEW_DATABASE_ERROR;
             } else {
                 if ([fileMgr fileExistsAtPath:[backupdbURL path]]) {
                     // remove old backup if necessary
                     [fileMgr removeItemAtURL:backupdbURL error:&error];
                     if (error != nil) {
                         NSLog(@"Error removing old database backup at URL %@, error=%@", backupdbURL, error);
-                        return -10;
+                        return ARCHIVE_NOT_INSTALLED_OLD_DB_BACKUP_REMOVE_ERROR;
                     } else {
                         NSLog(@"Removed old database backup at URL %@", backupdbURL);
                     }
@@ -2863,9 +2959,9 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 [fileMgr moveItemAtURL:dbURL toURL:backupdbURL error:&error];
                 if (error != nil) {
                     NSLog(@"Error moving old database from %@ to backup URL %@, error=%@", dbURL, backupdbURL, error);
-                    return -20;
+                    return ARCHIVE_NOT_INSTALLED_OLD_DATABASE_MOVE_ERROR;
                 } else {
-                    NSLog(@"Move old database from %@ to backup at URL %@", dbURL, backupdbURL);
+                    NSLog(@"Moved old database from %@ to backup at URL %@", dbURL, backupdbURL);
                 }
                 
                 // move archive db to current
@@ -2877,7 +2973,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     if (error != nil) {
                         NSLog(@"Error moving back archived database from %@ to current URL %@, error=%@", backupdbURL, dbURL, error);
                     }
-                    return -30;
+                    return ARCHIVE_NOT_INSTALLED_NEW_DATABASE_MOVE_ERROR;
                 } else {
                     NSLog(@"Moved archive database from %@ to current at URL %@", archivedbURL, dbURL);
                 }
@@ -2887,6 +2983,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                 NSURL *backupPrefURL = [archiveExtractDirURL URLByAppendingPathComponent: @"backuped.preferences"];
                 if (![fileMgr fileExistsAtPath:[archivePrefURL path]]) {
                     NSLog(@"#ERROR: no preferences to install found at archive URL %@", backupPrefURL);
+                    return ARCHIVE_NOT_INSTALLED_PREFERENCE_ERROR;
                 } else {
                     NSDictionary * defaults = [NSDictionary dictionaryWithContentsOfURL:archivePrefURL];
                     [defaults enumerateKeysAndObjectsUsingBlock:^(id key, id object, BOOL *stop) {
@@ -2901,7 +2998,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                         NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:docDir includingPropertiesForKeys:@[] options:0 error:&error];
                         if (error != nil) {
                             NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
-                            return -40;
+                            return ARCHIVE_NOT_INSTALLED_DOCUMENT_DIR_ERROR;
                         }
                         NSURL * inbox = [docDir URLByAppendingPathComponent:@"Inbox"];
                         NSString * inboxPath = [inbox path];
@@ -2918,7 +3015,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                                 [fileMgr removeItemAtURL:fileToRemove error:&error];
                                 if (error != nil) {
                                     NSLog(@"Error removing file %@, error=%@", fileToRemove, error);
-                                    return -50;
+                                    return ARCHIVE_NOT_INSTALLED_CANT_REMOVE_FILE;
                                 } else {
                                     NSLog(@"Removed file %@", fileToRemove);
                                 }
@@ -2932,14 +3029,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     NSArray *fileArray = [fileMgr contentsOfDirectoryAtURL:archiveExtractDirURL includingPropertiesForKeys:@[] options:0 error:&error];
                     if (error != nil) {
                         NSLog(@"Error gettting content of document directory %@, error=%@", docDir, error);
-                        return -60;
+                        return ARCHIVE_NOT_INSTALLED_ARCHIVE_DIR_ERROR;
                     }
                     for (NSURL * fileToMove in fileArray)  {
                         NSURL * destURL = [docDir URLByAppendingPathComponent:[fileToMove lastPathComponent]];
                         [fileMgr moveItemAtURL:fileToMove toURL:destURL error:&error];
                         if (error != nil) {
                             NSLog(@"Error moving file %@ to %@, error=%@", fileToMove, destURL, error);
-                            return -70;
+                            return ARCHIVE_NOT_INSTALLED_CANT_MOVE_FILE;
                         } else {
                             NSLog(@"Moved file %@ to %@", fileToMove, destURL);
                         }
@@ -2947,19 +3044,24 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
                     
                     // get the credentials now
                     int result = [UserProfile.sharedProfile importCredentialsWithPassphrase:@"iafnf&/512%2773=!)/%JJNS&&/()JNjnwn" withForce:NO];
-                    if (result == -2) {
-                        return 0;
+                    if (result == CREDENTIALS_OLDER) {
+                        return ARCHIVE_INSTALLED_CREDENTIALS_OLD;
                     }
-                    if (result != -1) {
-                        return 1;
+                    if (result == CREDENTIALS_IMPORTED) {
+                        return ARCHIVE_INSTALLED_CREDENTIALS_NEW;
                     }
-                    
+                    if (result == CREDENTIALS_IDENTICAL) {
+                        return ARCHIVE_INSTALLED_CREDENTIALS_IDENTICAL;
+                    }
+                    return ARCHIVE_INSTALLED_CREDENTIALS_BROKEN;
+                    // CREDENTIALS_BROKEN
                 }
             }
         }
     }
-    return -1;
+    return ARCHIVE_NOT_INSTALLED_ERROR_NO_ARCHIVE_TO_INSTALL;
 }
+
 
 // TODO: deal with mediatype text
 + (NSString*)mediaTypeOfUTI:(NSString*)documentType withFileName:(NSString*)filename{

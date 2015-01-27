@@ -563,20 +563,21 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return nil;
 }
 
+
 // ret
 - (int) importCredentials:(NSDictionary*)credentials withForce:(BOOL)force{
     if (credentials != nil) {
         if (![self sameCredentialsInDict:credentials]) {
             if (force || ![self olderCredentialsForSameAccountInDict:credentials]) {
                 [self setCredentialsWithDict:credentials];
-                return 1;
+                return CREDENTIALS_IMPORTED;
             } else {
-                return -2;
+                return CREDENTIALS_OLDER;
             }
         }
-        return 0;
+        return CREDENTIALS_IDENTICAL;
     }
-    return -1;
+    return CREDENTIALS_BROKEN;
 }
 
 - (int) importCredentialsWithPassphrase:(NSString*)passphrase withForce:(BOOL)force{

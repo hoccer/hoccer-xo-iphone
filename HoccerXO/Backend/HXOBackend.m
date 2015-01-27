@@ -1142,6 +1142,8 @@ static NSTimer * _stateNotificationDelayTimer;
         [self flushIncomingDeliveriesInContext:context];
     }];
     [self flushPendingFiletransfers];
+    [AppDelegate.instance setupDocumentDirectoryMonitoring];
+
 }
 
 - (void)performParallelSync {
@@ -1266,6 +1268,9 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                                 object:self
                                                                               userInfo:nil
                              ];
+                            
+                            [AppDelegate.instance setupDocumentDirectoryMonitoring];
+                            
                             if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.inNearbyMode) {
                                 [HXOEnvironment.sharedInstance setActivation:YES];
                             }

@@ -133,6 +133,10 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 - (void) importArchive:(NSURL*)archiveURL withHandler:(GenericResultHandler)onReady;
 - (BOOL)extractArchive:(NSURL*)archiveURL;
 
+-(void) setupDocumentDirectoryMonitoring;
+-(void) cancelDocumentDirectoryMonitoring;
+
+
 + (UIViewController*) getTopMostViewController;
 - (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller removeFile:(BOOL) removeFileFlag;
 
@@ -182,6 +186,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 + (NSString *)etagFromAttributes:(NSDictionary*) attributes;
 
 + (NSDate*)getModificationDateForPath:(NSString*)myFilePath;
++ (NSDate*)getCreationDateForPath:(NSString*)myFilePath;
 
 + (BOOL)setPosixPermissions:(short)flags forPath:(NSString*)myFilePath;
 + (short)getPosixPermissionsForPath:(NSString*)myFilePath;

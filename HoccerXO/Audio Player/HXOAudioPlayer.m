@@ -16,7 +16,7 @@
 #import "HXOArrayPlaylist.h"
 #import "NSMutableArray+Shuffle.h"
 
-#define DEBUG_PLAYLIST YES
+#define DEBUG_PLAYLIST NO
 
 @interface HXOAudioPlayer ()
 
