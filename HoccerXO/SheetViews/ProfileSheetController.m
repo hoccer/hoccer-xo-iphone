@@ -187,7 +187,7 @@
     UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_import_safety_question", nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"import", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"archive_import_btn_title", nil)
                                       otherButtonTitles: nil];
     [sheet showInView: self.delegate.view];
 }

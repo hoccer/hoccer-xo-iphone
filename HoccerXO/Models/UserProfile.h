@@ -17,6 +17,13 @@ typedef void(^HXOKeypairRenewalCompletion)(BOOL success);
 
 FOUNDATION_EXPORT const NSUInteger kHXODefaultKeySize;
 
+enum {
+    CREDENTIALS_IMPORTED = 1,
+    CREDENTIALS_IDENTICAL = 0,
+    CREDENTIALS_OLDER = -2,
+    CREDENTIALS_BROKEN = -1
+};
+
 @interface UserProfile : NSObject <HXOClientProtocol>
 
 @property (nonatomic,strong)   UIImage  * avatarImage;
