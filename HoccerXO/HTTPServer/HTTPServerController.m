@@ -29,15 +29,29 @@
         self.server = [[HTTPServer alloc] init];
 
         [self.server setConnectionClass: [MyDAVConnection class]];
-        [self.server setType:@"_webdav._tcp"]; // set bonjour service type
+        [self.server setType: @"_webdav._tcp"]; // set bonjour service type
         [self.server setPort: 8899];
         
         //NSLog(@"Setting document root: %@", documentRoot);
         [self.server setDocumentRoot: documentRoot];
+        [self.server addObserver: self
+                      forKeyPath: @"isRunning"
+                         options: NSKeyValueObservingOptionNew
+                         context: NULL];
     }
     return self;
 }
 
+- (void) dealloc {
+    [self.server removeObserver: self forKeyPath: @"isRunning"];
+}
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([object isEqual: self.server] && [keyPath isEqualToString: NSStringFromSelector(@selector(isRunning))]) {
+        BOOL running = [change[NSKeyValueChangeNewKey] boolValue];
+        self.isRunning = running;
+    }
+}
 - (void) start {
     NSError *error;
     if([self.server start:&error]) {

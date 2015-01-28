@@ -59,11 +59,14 @@
         NSLog(@"stopping server");
         [(HTTPServerController*)self.inspectedObject stop];
     }
+    // Note(@agnat): Force an update of the table to update the footer text.
+    // There probably is a more elegant way to get this right...
+    [[(id)self.delegate tableView] reloadData];
 }
 
 - (BOOL) isItemEnabled:(DatasheetItem *)item {
     if ([item isEqual: self.serverSwitch]) {
-        return NO;
+        return YES;
     }
     return [super isItemEnabled: item];
 }
@@ -89,7 +92,8 @@
 
 - (NSAttributedString*) footerTextForSection: (DatasheetSection*) section {
     if ([section.identifier isEqualToString: self.serverSection.identifier]) {
-        return [[NSAttributedString alloc] initWithString: @"plonk"];
+        BOOL running = [self.inspectedObject isRunning];
+        return [[NSAttributedString alloc] initWithString: running ? @"Running" : @"Stopped"];
     }
     return nil;
 }
