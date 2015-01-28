@@ -74,9 +74,12 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 @property (nonatomic, strong) UIDocumentInteractionController * interactionController;
 
+@property (nonatomic, assign) BOOL deletedObject;
+
 
 #ifdef WITH_WEBSERVER
-@property (readonly,nonatomic, strong) HTTPServer *httpServer;
+@property (readonly,nonatomic, strong) HTTPServer * httpServer;
+@property (nonatomic, readonly)        NSString   * httpServerPassword;
 
 - (void)startHttpServer;
 - (void)stopHttpServer;

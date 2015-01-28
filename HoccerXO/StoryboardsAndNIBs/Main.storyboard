@@ -7,11 +7,11 @@
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
-        <!--Themed Navigation Controller-->
+        <!--Chats-->
         <scene sceneID="11">
             <objects>
                 <navigationController id="3" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" id="rtu-HQ-rkp"/>
+                    <tabBarItem key="tabBarItem" title="Chats" id="rtu-HQ-rkp"/>
                     <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="4">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -45,6 +45,7 @@
                         <segue destination="cUQ-wS-0VX" kind="relationship" relationship="viewControllers" id="qTr-Sa-EVe"/>
                         <segue destination="TcE-yq-ikP" kind="relationship" relationship="viewControllers" id="Ycj-Rj-5IS"/>
                         <segue destination="f9E-IB-ZAL" kind="relationship" relationship="viewControllers" id="VTA-Lj-Zct"/>
+                        <segue destination="fb2-9g-9x6" kind="relationship" relationship="viewControllers" id="jn8-mU-Te6"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fbs-dp-3Nq" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -55,7 +56,7 @@
         <scene sceneID="Pvk-PW-n2g">
             <objects>
                 <tableViewController id="gLM-u6-CgJ" userLabel="Profile Sheet View Controller" customClass="ProfileViewTabItemHelper" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Cw2-Md-oEv">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="Cw2-Md-oEv">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
@@ -91,7 +92,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Dk-FR-xbV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="637" y="2073"/>
+            <point key="canvasLocation" x="-370" y="3129"/>
         </scene>
         <!--Group Sheet Controller-->
         <scene sceneID="0sW-Zo-APz">
@@ -542,7 +543,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Eq7-wj-uw3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="655" y="2772"/>
+            <point key="canvasLocation" x="718" y="2330"/>
         </scene>
         <!--Contacts-->
         <scene sceneID="18">
@@ -758,7 +759,7 @@ http://doppelnarf.com</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dL5-qg-Q59" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1154" y="2389"/>
+            <point key="canvasLocation" x="107" y="3129"/>
         </scene>
         <!--Web View Controller-->
         <scene sceneID="cBy-9f-V3x">
@@ -792,7 +793,7 @@ http://doppelnarf.com</string>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2je-aZ-0XN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1170" y="3651"/>
+            <point key="canvasLocation" x="1112" y="3039"/>
         </scene>
         <!--Themed Navigation Controller-->
         <scene sceneID="MpI-0Y-HX1">
@@ -807,7 +808,7 @@ http://doppelnarf.com</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cQh-Jw-RvM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="654" y="3651"/>
+            <point key="canvasLocation" x="596" y="3039"/>
         </scene>
         <!--Record View Controller-->
         <scene sceneID="cfc-HL-dXX">
@@ -991,11 +992,11 @@ http://doppelnarf.com</string>
             </objects>
             <point key="canvasLocation" x="-357" y="1195"/>
         </scene>
-        <!--Themed Navigation Controller-->
+        <!--Contacts-->
         <scene sceneID="YWf-kL-LN8">
             <objects>
                 <navigationController definesPresentationContext="YES" id="ndO-Hb-TaY" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" id="93c-hp-8Jv"/>
+                    <tabBarItem key="tabBarItem" title="Contacts" id="93c-hp-8Jv"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="B5K-80-wga">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1007,11 +1008,11 @@ http://doppelnarf.com</string>
             </objects>
             <point key="canvasLocation" x="-357" y="-515"/>
         </scene>
-        <!--Themed Navigation Controller-->
+        <!--Profile-->
         <scene sceneID="389-Am-i9Z">
             <objects>
                 <navigationController definesPresentationContext="YES" id="dNK-Pr-I05" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="" id="Yft-kE-KJs"/>
+                    <tabBarItem key="tabBarItem" title="Profile" id="Yft-kE-KJs"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="wrH-DR-hdJ">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1075,7 +1076,7 @@ http://doppelnarf.com</string>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cSp-3o-2sE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-341" y="4342"/>
+            <point key="canvasLocation" x="-370" y="3922"/>
         </scene>
         <!--Credentials View Controller-->
         <scene sceneID="9Ao-JS-PbJ">
@@ -1098,7 +1099,47 @@ http://doppelnarf.com</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rxm-rk-W0f" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="dkh-x2-CyS" customClass="CredentialsSheet"/>
             </objects>
-            <point key="canvasLocation" x="38" y="4695"/>
+            <point key="canvasLocation" x="187" y="4313"/>
+        </scene>
+        <!--Server UI-->
+        <scene sceneID="e7s-zS-Vya">
+            <objects>
+                <navigationController id="fb2-9g-9x6" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Server UI" id="0XA-DL-LQL"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KYL-Jc-u0e">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="bZt-cZ-y4A" kind="relationship" relationship="rootViewController" id="8jZ-4R-eDF"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ncb-wV-c0K" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-584" y="5040"/>
+        </scene>
+        <!--Datasheet View Controller-->
+        <scene sceneID="RjK-aM-QbT">
+            <objects>
+                <tableViewController id="bZt-cZ-y4A" customClass="DatasheetViewController" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="v0b-AH-FWy">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <connections>
+                            <outlet property="dataSource" destination="bZt-cZ-y4A" id="oMe-hH-YZf"/>
+                            <outlet property="delegate" destination="bZt-cZ-y4A" id="Ppo-VJ-7q0"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="z7z-Np-Hp0"/>
+                    <connections>
+                        <outlet property="dataSheetController" destination="8Cd-Jx-8mF" id="hah-sR-9km"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dP7-Kk-tng" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="8Cd-Jx-8mF" customClass="ServerSheetController"/>
+            </objects>
+            <point key="canvasLocation" x="-122" y="5030"/>
         </scene>
         <!--Datasheet View Controller-->
         <scene sceneID="ew4-Wx-QhJ">
@@ -1121,7 +1162,7 @@ http://doppelnarf.com</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tri-wa-xr4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="Omk-bz-QtG" customClass="ProfileSetupSheet"/>
             </objects>
-            <point key="canvasLocation" x="654" y="4342"/>
+            <point key="canvasLocation" x="625" y="3922"/>
         </scene>
         <!--inAppSettingsViewController-->
         <scene sceneID="dgD-Nx-SfZ">
@@ -1162,14 +1203,14 @@ http://doppelnarf.com</string>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="Jku-Va-0fi"/>
+        <segue reference="KXG-tu-Cv6"/>
+        <segue reference="3XQ-ea-QwO"/>
         <segue reference="GhN-Q6-qvN"/>
-        <segue reference="NNl-EZ-WW3"/>
         <segue reference="4Tx-uH-B8w"/>
         <segue reference="yj0-Vd-HPq"/>
         <segue reference="UJI-wH-YH7"/>
-        <segue reference="nwS-55-3Qg"/>
-        <segue reference="rav-wy-jJw"/>
-        <segue reference="sc8-Bm-80f"/>
         <segue reference="r9n-Tc-8eU"/>
+        <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>

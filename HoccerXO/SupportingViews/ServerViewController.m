@@ -72,7 +72,7 @@
     //self.passwordTextField.delegate = self;
     self.statusLabel.text = @"x";
     
-    self.passwordLabel.text = NSLocalizedString(@"password_title", nil);
+    self.passwordLabel.text = NSLocalizedString(@"server_password_title", nil);
     self.urlLabel.text = NSLocalizedString(@"server_adress_title", nil);
     
     NSString * password = [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];

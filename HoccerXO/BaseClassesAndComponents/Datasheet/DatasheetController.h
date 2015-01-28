@@ -76,6 +76,12 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 - (NSString*) deleteButtonTitleForItem: (DatasheetItem*) item;
 
+- (UIKeyboardType) keyboardTypeForItem: (DatasheetItem*) item;
+- (UIReturnKeyType) returnKeyTypeForItem: (DatasheetItem*) item;
+
+
+- (void) didChangeCurrentValueForItem: (DatasheetItem*) item;
+
 @end
 
 @protocol DatasheetSectionDataSource <NSObject>
@@ -124,6 +130,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 
 @property (nonatomic, strong) id                        currentValue;
 @property (nonatomic, readonly) BOOL                    currentValueIsModified;
+@property (nonatomic, assign)   UIKeyboardType          keyboardType;
+@property (nonatomic, assign)   UIReturnKeyType         returnKeyType;
 
 @property (nonatomic, weak) id<DatasheetItemDelegate>   delegate;
 

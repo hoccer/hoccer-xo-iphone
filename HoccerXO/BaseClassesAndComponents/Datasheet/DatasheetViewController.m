@@ -11,6 +11,7 @@
 #import "DatasheetTextInputCell.h"
 #import "DatasheetKeyValueCell.h"
 #import "DatasheetActionCell.h"
+#import "DatasheetSwitchCell.h"
 #import "DatasheetHeaderFooterTextView.h"
 #import "HXOHyperLabel.h"
 #import "HXOUI.h"
@@ -60,6 +61,7 @@ static CGFloat kHeaderHeight;
     [self registerCellClass: [DatasheetTextInputCell class]];
     [self registerCellClass: [DatasheetKeyValueCell class]];
     [self registerCellClass: [DatasheetActionCell class]];
+    [self registerCellClass: [DatasheetSwitchCell class]];
 
     [self registerHeaderFooterViewClass: [DatasheetHeaderFooterTextView class]];
 
@@ -149,12 +151,20 @@ static CGFloat kHeaderHeight;
         if (item.valueFormatString) {
             currentValue = [NSString stringWithFormat: NSLocalizedString(item.valueFormatString, nil), currentValue];
         }
-        [valueView setText: currentValue];
+        if ([valueView respondsToSelector:@selector(setText:)]) {
+            [valueView setText: currentValue];
+        }
         if ([valueView respondsToSelector:@selector(setPlaceholder:)]) {
             [valueView setPlaceholder: item.valuePlaceholder];
         }
         if ([valueView respondsToSelector:@selector(setEnabled:)]) {
             [valueView setEnabled: item.isEnabled];
+        }
+        if ([valueView respondsToSelector:@selector(setKeyboardType:)]) {
+            [valueView setKeyboardType: item.keyboardType];
+        }
+        if ([valueView respondsToSelector:@selector(setReturnKeyType:)]) {
+            [valueView setReturnKeyType: item.returnKeyType];
         }
     }
 
@@ -472,7 +482,11 @@ static CGFloat kHeaderHeight;
 - (void) datasheetCell:(DatasheetCell *)cell didChangeValueForView:(id)valueView {
     NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
     DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
-    item.currentValue = [valueView text];
+    if ([valueView isKindOfClass: [UITextField class]]) {
+        item.currentValue = [valueView text];
+    } else if ([valueView isKindOfClass: [UISwitch class]]) {
+        item.currentValue = @([valueView isOn]);
+    }
     self.navigationItem.rightBarButtonItem.enabled = [self.dataSheetController allItemsValid];
 }
 

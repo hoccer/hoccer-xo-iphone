@@ -619,6 +619,9 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
 - (void) setCurrentValue:(id)currentValue {
     _currentValue = currentValue;
     _currentValueIsModified = YES;
+    if ([self.delegate respondsToSelector: @selector(didChangeCurrentValueForItem:)]) {
+        [self.delegate didChangeCurrentValueForItem: self];
+    }
 }
 
 - (void) clearCurrentValue {
@@ -726,6 +729,27 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     }
     return nil;
 }
+
+- (UIKeyboardType) keyboardType {
+    if (_keyboardType != UIKeyboardTypeDefault) {
+        return _keyboardType;
+    }
+    if ([self.delegate respondsToSelector: @selector(keyboardTypeForItem:)]) {
+        return [self.delegate keyboardTypeForItem: self];
+    }
+    return UIKeyboardTypeDefault;
+}
+
+- (UIReturnKeyType) returnKeyType {
+    if (_returnKeyType != UIReturnKeyDefault) {
+        return _returnKeyType;
+    }
+    if ([self.delegate respondsToSelector: @selector(returnKeyTypeForItem:)]) {
+        return [self.delegate returnKeyTypeForItem: self];
+    }
+    return UIReturnKeyDefault;
+}
+
 @end
 
 

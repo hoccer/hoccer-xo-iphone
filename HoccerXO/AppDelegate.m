@@ -3575,13 +3575,10 @@ enum {
     // Start the server (and check for problems)
 
 	NSError *error;
-	if([self.httpServer start:&error])
-	{
+	if([self.httpServer start:&error]) {
 		DDLogInfo(@"Started HTTP Server on port %hu", [self.httpServer listeningPort]);
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-	}
-	else
-	{
+	} else {
 		DDLogError(@"Error starting HTTP Server: %@", error);
 	}
 }
@@ -3598,6 +3595,11 @@ enum {
     }
     return NO;
 }
+
+- (NSString*) httpServerPassword {
+    return [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
+}
+
 #endif
 
 #define IOS_CELLULAR    @"pdp_ip0"
