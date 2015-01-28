@@ -155,7 +155,7 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
         }
         return NO;
     } sectionBlock: nil];
-    if (paths.count > 0) {
+    if (paths.count > 0 && [self.inspectedObject respondsToSelector: @selector(deletedObject)]) {
         [paths addObject:@"deletedObject"];
     }
     if (DEBUG_VALUE_UPDATING) NSLog(@"collectAllObservedPaths: paths =%@", paths);
@@ -543,14 +543,6 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     return allValid;
 }
 
-- (void) setDelegate:(UIViewController<DatasheetControllerDelegate>*)delegate {
-//    [self inspectedObjectWillChange];
-    _delegate = delegate;
-//    [self inspectedObjectDidChange];
-//    [self backgroundImageChanged];
-//    [self titleChanged];
-}
-
 - (void) inspectedObjectWillChange {
 }
 
@@ -831,6 +823,16 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
     }
     if ([self.delegate respondsToSelector: @selector(titleForSection:)]) {
         return [self.delegate titleForSection: self];
+    }
+    return nil;
+}
+
+- (NSAttributedString*) footerText {
+    if (_footerText) {
+        return _footerText;
+    }
+    if ([self.delegate respondsToSelector: @selector(footerTextForSection:)]) {
+        return [self.delegate footerTextForSection: self];
     }
     return nil;
 }

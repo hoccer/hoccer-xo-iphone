@@ -96,6 +96,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @optional
 
 - (NSAttributedString*) titleForSection: (DatasheetSection*) section;
+- (NSAttributedString*) footerTextForSection: (DatasheetSection*) section;
 
 @end
 

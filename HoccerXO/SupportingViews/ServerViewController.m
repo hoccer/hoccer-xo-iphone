@@ -9,7 +9,7 @@
 #import "ServerViewController.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
-#import "HTTPServer.h"
+#import "HTTPServerController.h"
 #import "GCDAsyncSocket.h"
 #import "HXOUserDefaults.h"
 #import "HXOUI.h"
@@ -158,10 +158,10 @@
 }
 
 - (IBAction)toggleServer:(id)sender {
-    if (AppDelegate.instance.httpServerIsRunning) {
-        [AppDelegate.instance stopHttpServer];
+    if (AppDelegate.instance.httpServer.isRunning) {
+        [AppDelegate.instance.httpServer stop];
     } else {
-        [AppDelegate.instance startHttpServer];
+        [AppDelegate.instance.httpServer start];
     }
     [self updateTextFields];
 }
@@ -204,17 +204,17 @@ static inline NSString * URLEncodedString(NSString *string)
     NSString * wanIPV6 = adresses[@"pdp_ip0/ipv6"];
 #endif
     BOOL canRun = (ipV4 != nil && ipV4.length > 0);
-    BOOL isRunning = AppDelegate.instance.httpServerIsRunning;
+    BOOL isRunning = AppDelegate.instance.httpServer.isRunning;
     if (isRunning) {
-        HTTPServer * server = AppDelegate.instance.httpServer;
+        HTTPServerController * server = AppDelegate.instance.httpServer;
         
         if (!canRun) {
-            [AppDelegate.instance stopHttpServer];
+            [server stop];
             return;
         }
         
         //self.statusTextField.text = NSLocalizedString(@"Server is running", nil);
-        int port = server.listeningPort;
+        int port = server.port;
 #ifdef SHOW_DETAIL_STATUS
         NSString * status = [NSString stringWithFormat:@"Server is running\nIPV4-LAN-Address:%@\nIPV6-LAN-Address:%@\nIPV4-WAN-Address:%@\nIPV6-WAN-Address:%@\nport=%d\nBonjour name=%@\nBonjour domain=%@",ipV4, ipV6, wanIPV4, wanIPV6,port,server.publishedName,server.domain];
         

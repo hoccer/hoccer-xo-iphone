@@ -37,12 +37,7 @@
 #import "CCRSA.h"
 
 #ifdef WITH_WEBSERVER
-#import "HTTPServer.h"
-#import "DDLog.h"
-#import "DDTTYLogger.h"
-#import "MyHttpConnection.h"
-#import "DAVConnection.h"
-#import "MyDAVConnection.h"
+#import "HTTPServerController.h"
 #endif
 
 #include <ifaddrs.h>
@@ -98,10 +93,6 @@ NSString * const kHXODefaultArchiveName = @"default.hciarch";
 NSString * const kFileChangedNotification = @"fileChangedNotification";
 
 static NSInteger validationErrorCount = 0;
-
-#ifdef WITH_WEBSERVER
-static const int ddLogLevel = LOG_LEVEL_VERBOSE;
-#endif
 
 @interface AppDelegate ()
 {
@@ -676,9 +667,6 @@ BOOL sameObjects(id obj1, id obj2) {
     if ([self persistentStoreCoordinator] == nil) {
         return NO;
     }
-#ifdef WITH_WEBSERVER
-    [DDLog addLogger:[DDTTYLogger sharedInstance]];
-#endif
     [self registerForRemoteNotifications];
     
     [self checkForCrash];
@@ -3538,69 +3526,12 @@ enum {
     }];
 }
 
-#ifdef WITH_WEBSERVER
-
--(HTTPServer*)httpServer {
+-(HTTPServerController*)httpServer {
     if (_httpServer == nil) {
-        // Create server using our custom MyHTTPServer class
-        _httpServer = [[HTTPServer alloc] init];
-        //[_httpServer setConnectionClass:[MyHTTPConnection class]];
-        //[_httpServer setConnectionClass:[DAVConnection class]];
-        [_httpServer setConnectionClass:[MyDAVConnection class]];
-
-        // Tell the server to broadcast its presence via Bonjour.
-        // This allows browsers such as Safari to automatically discover our service.
-        //[_httpServer setType:@"_http._tcp."];
-        [_httpServer setType:@"_webdav._tcp"];
-
-        [_httpServer setPort:8899];
-
-        // Normally there's no need to run our server on any specific port.
-        // Technologies like Bonjour allow clients to dynamically discover the server's port at runtime.
-        // However, for easy testing you may want force a certain port so you can just hit the refresh button.
-        // [httpServer setPort:12345];
-
-        // Serve files from our embedded Web folder
-        //        NSString *webPath = [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Web"];
-        NSString *webPath = [self.applicationDocumentsDirectory path];
-        DDLogInfo(@"Setting document root: %@", webPath);
-
-        [_httpServer setDocumentRoot:webPath];
+        _httpServer = [[HTTPServerController alloc] initWithDocumentRoot: [self.applicationDocumentsDirectory path]];
     }
     return _httpServer;
 }
-
-- (void)startHttpServer
-{
-    // Start the server (and check for problems)
-
-	NSError *error;
-	if([self.httpServer start:&error]) {
-		DDLogInfo(@"Started HTTP Server on port %hu", [self.httpServer listeningPort]);
-        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
-	} else {
-		DDLogError(@"Error starting HTTP Server: %@", error);
-	}
-}
-
-- (void)stopHttpServer {
-    if (_httpServer) {
-        [_httpServer stop];
-        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
-    }
-}
--(BOOL)httpServerIsRunning {
-    if (_httpServer) {
-        return _httpServer.isRunning;
-    }
-    return NO;
-}
-
-- (NSString*) httpServerPassword {
-    return [[HXOUserDefaults standardUserDefaults] valueForKey:kHXOHttpServerPassword];
-}
-
-#endif
 
 #define IOS_CELLULAR    @"pdp_ip0"
 #define IOS_WIFI        @"en0"

@@ -9,6 +9,7 @@
 #import "MyDAVConnection.h"
 #import "HTTPLogging.h"
 #import "AppDelegate.h"
+#import "HTTPServerController.h"
 
 #ifdef WITH_WEBSERVER
 static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
@@ -49,7 +50,7 @@ static const int httpLogLevel = HTTP_LOG_LEVEL_WARN; // | HTTP_LOG_FLAG_TRACE;
     // You can do all kinds of cool stuff here.
     // For simplicity, we're not going to check the username, only the password.
     // return @"secret";
-    return [AppDelegate instance].httpServerPassword;
+    return [AppDelegate instance].httpServer.password;
 }
 
 - (NSString *)realm

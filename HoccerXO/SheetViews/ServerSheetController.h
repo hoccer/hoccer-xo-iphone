@@ -8,6 +8,6 @@
 
 #import "DatasheetController.h"
 
-@interface ServerSheetController : DatasheetController
+@interface ServerSheetController : DatasheetController <DatasheetSectionDelegate>
 
 @end

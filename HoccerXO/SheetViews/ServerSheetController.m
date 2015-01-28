@@ -10,6 +10,7 @@
 
 #import "AppDelegate.h"
 #import "HXOUserDefaults.h"
+#import "HTTPServerController.h"
 
 @interface ServerSheetController ()
 
@@ -27,7 +28,7 @@
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    self.inspectedObject = [AppDelegate instance];
+    self.inspectedObject = [AppDelegate instance].httpServer;
 }
 
 - (NSString*) title {
@@ -43,14 +44,35 @@
         [[HXOUserDefaults standardUserDefaults] setValue: item.currentValue forKey:kHXOHttpServerPassword];
         [[HXOUserDefaults standardUserDefaults] synchronize];
     } else if ([item isEqual: self.serverSwitch]) {
-        NSLog(@"server: %@", item.currentValue);
+        [self toggleHTTPServer: [item.currentValue boolValue]];
     }
+}
+
+- (void) toggleHTTPServer: (BOOL) start {
+    BOOL httpPossible = YES;
+    if (start) {
+        if (httpPossible) {
+            NSLog(@"starting server");
+            [(HTTPServerController*)self.inspectedObject start];
+        }
+    } else {
+        NSLog(@"stopping server");
+        [(HTTPServerController*)self.inspectedObject stop];
+    }
+}
+
+- (BOOL) isItemEnabled:(DatasheetItem *)item {
+    if ([item isEqual: self.serverSwitch]) {
+        return NO;
+    }
+    return [super isItemEnabled: item];
 }
 
 - (DatasheetSection*) serverSection {
     if ( ! _serverSection) {
         _serverSection = [DatasheetSection datasheetSectionWithIdentifier: @"server_section"];
         _serverSection.items = @[self.serverSwitch, self.passwordItem];
+        _serverSection.delegate = self;
     }
     return _serverSection;
 }
@@ -58,17 +80,24 @@
 - (DatasheetItem*) passwordItem {
     if ( ! _passwordItem) {
         _passwordItem = [self itemWithIdentifier: @"server_password_title" cellIdentifier: @"DatasheetTextInputCell"];
-        _passwordItem.valuePath = @"httpServerPassword";
+        _passwordItem.valuePath = @"password";
         _passwordItem.valuePlaceholder = NSLocalizedString(@"server_password_placeholder", nil);
         _passwordItem.returnKeyType = UIReturnKeyDone;
     }
     return _passwordItem;
 }
 
+- (NSAttributedString*) footerTextForSection: (DatasheetSection*) section {
+    if ([section.identifier isEqualToString: self.serverSection.identifier]) {
+        return [[NSAttributedString alloc] initWithString: @"plonk"];
+    }
+    return nil;
+}
+
 - (DatasheetItem*) serverSwitch {
     if ( ! _serverSwitch) {
         _serverSwitch = [self itemWithIdentifier: @"server_nav_title" cellIdentifier: @"DatasheetSwitchCell"];
-        _serverSwitch.valuePath = @"httpServer.isRunning";
+        _serverSwitch.valuePath = @"isRunning";
     }
     return _serverSwitch;
 }
