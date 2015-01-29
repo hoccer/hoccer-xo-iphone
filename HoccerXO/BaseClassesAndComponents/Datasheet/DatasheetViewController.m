@@ -166,6 +166,9 @@ static CGFloat kHeaderHeight;
         if ([valueView respondsToSelector:@selector(setReturnKeyType:)]) {
             [valueView setReturnKeyType: item.returnKeyType];
         }
+        if ([valueView respondsToSelector:@selector(setAdjustsFontSizeToFitWidth:)]) {
+            [valueView setAdjustsFontSizeToFitWidth: item.adjustFontSize];
+        }
     }
 
     if ([cell respondsToSelector: @selector(busyIndicator)]) {

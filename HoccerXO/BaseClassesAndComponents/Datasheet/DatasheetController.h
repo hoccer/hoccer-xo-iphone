@@ -133,6 +133,8 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @property (nonatomic, readonly) BOOL                    currentValueIsModified;
 @property (nonatomic, assign)   UIKeyboardType          keyboardType;
 @property (nonatomic, assign)   UIReturnKeyType         returnKeyType;
+@property (nonatomic, assign)   BOOL                    adjustFontSize;
+
 
 @property (nonatomic, weak) id<DatasheetItemDelegate>   delegate;
 
