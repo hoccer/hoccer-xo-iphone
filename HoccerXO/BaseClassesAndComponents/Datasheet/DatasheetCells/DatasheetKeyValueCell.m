@@ -22,7 +22,7 @@
     self.valueView.text = @"Value";
 
 
-    self.valueView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
+    //self.valueView.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: self.valueView];
     NSDictionary * views = @{@"title": self.titleLabel, @"value": self.valueView};
     NSString * format = [NSString stringWithFormat: @"H:|-%f-[title]-%f-[value(>=20)]-%f-|", kHXOCellPadding, kHXOGridSpacing, kHXOCellPadding];
