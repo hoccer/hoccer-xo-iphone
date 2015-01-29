@@ -14,10 +14,12 @@
 
 @interface ServerSheetController ()
 
-@property (nonatomic, readonly) DatasheetSection * serverSection;
-@property (nonatomic, readonly) DatasheetItem    * serverSwitch;
-@property (nonatomic, readonly) DatasheetItem    * passwordItem;
-@property (nonatomic, readonly) DatasheetItem    * addressItem;
+@property (nonatomic,readonly) HTTPServerController * server;
+
+@property (nonatomic, readonly) DatasheetSection    * serverSection;
+@property (nonatomic, readonly) DatasheetItem       * serverSwitch;
+@property (nonatomic, readonly) DatasheetItem       * passwordItem;
+@property (nonatomic, readonly) DatasheetItem       * addressItem;
 
 @end
 
@@ -28,9 +30,32 @@
 @synthesize passwordItem  = _passwordItem;
 @synthesize addressItem   = _addressItem;
 
+- (HTTPServerController*) server {
+    return self.inspectedObject;
+}
+
 - (void) awakeFromNib {
     [super awakeFromNib];
     self.inspectedObject = [AppDelegate instance].httpServer;
+}
+
+- (void) setInspectedObject:(id)inspectedObject {
+    if (self.inspectedObject) {
+        [self.inspectedObject removeObserver: self forKeyPath: @"canRun"];
+    }
+    [super setInspectedObject: inspectedObject];
+    if (self.inspectedObject) {
+        [self.inspectedObject addObserver: self forKeyPath: @"canRun" options: NSKeyValueObservingOptionNew context: NULL];
+    }
+}
+
+- (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([object isEqual: self.inspectedObject] && [keyPath isEqualToString: @"canRun"]) {
+        if (self.server.isRunning && ! self.server.canRun) {
+            [self toggleHTTPServer: NO];
+        }
+        [self forceFooterTextRefresh];
+    }
 }
 
 - (NSString*) title {
@@ -45,7 +70,7 @@
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
     if ([item isEqual: self.addressItem]) {
-        return [self.inspectedObject isRunning];
+        return self.server.isRunning;
     }
     return [super isItemVisible: item];
 }
@@ -60,16 +85,21 @@
 }
 
 - (void) toggleHTTPServer: (BOOL) start {
-    BOOL httpPossible = YES;
     if (start) {
-        if (httpPossible) {
+        if (self.server.canRun && ! self.server.isRunning) {
             NSLog(@"starting server");
-            [(HTTPServerController*)self.inspectedObject start];
+            [self.server start];
         }
     } else {
-        NSLog(@"stopping server");
-        [(HTTPServerController*)self.inspectedObject stop];
+        if (self.server.isRunning) {
+            NSLog(@"stopping server");
+            [self.server stop];
+        }
     }
+    [self forceFooterTextRefresh];
+}
+
+- (void) forceFooterTextRefresh {
     // Note(@agnat): Force an update of the table to update the footer text.
     // There probably is a more elegant way to get this right...
     [[(id)self.delegate tableView] reloadData];
@@ -77,15 +107,15 @@
 
 - (BOOL) isItemEnabled:(DatasheetItem *)item {
     if ([item isEqual: self.serverSwitch]) {
-        return YES;
+        return self.server.canRun;
     }
     return [super isItemEnabled: item];
 }
 
 - (NSAttributedString*) footerTextForSection: (DatasheetSection*) section {
     if ([section.identifier isEqualToString: self.serverSection.identifier]) {
-        BOOL running = [self.inspectedObject isRunning];
-        BOOL can_run = YES;
+        BOOL running = self.server.isRunning;
+        BOOL can_run = self.server.canRun;
         NSString * text = NSLocalizedString(running ? @"server_running" : can_run ? @"server_stopped_can_run" : @"server_stopped_can_not_run", nil);
         return [[NSAttributedString alloc] initWithString: text];
     }
@@ -115,6 +145,7 @@
     if ( ! _serverSwitch) {
         _serverSwitch = [self itemWithIdentifier: @"server_nav_title" cellIdentifier: @"DatasheetSwitchCell"];
         _serverSwitch.valuePath = @"isRunning";
+        _serverSwitch.dependencyPaths = @[@"canRun"];
     }
     return _serverSwitch;
 }

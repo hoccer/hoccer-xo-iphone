@@ -14,7 +14,8 @@
 
 @interface HTTPServerController : NSObject
 
-@property (nonatomic,assign)   BOOL       isRunning;
+@property (nonatomic,readonly) BOOL       isRunning;
+@property (nonatomic,readonly) BOOL       canRun;
 @property (nonatomic,readonly) NSString * publishedName;
 @property (nonatomic,readonly) NSString * password;
 @property (nonatomic,readonly) int        port;

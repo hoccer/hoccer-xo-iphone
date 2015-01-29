@@ -16,7 +16,11 @@
 
 @interface HTTPServerController ()
 
+@property (nonatomic,assign) BOOL         isRunning;
+@property (nonatomic,assign) BOOL         canRun;
 @property (nonatomic,strong) HTTPServer * server;
+
+@property (nonatomic,strong) id           connectionObserver;
 
 @end
 
@@ -39,12 +43,28 @@
                       forKeyPath: @"isRunning"
                          options: NSKeyValueObservingOptionNew
                          context: NULL];
+
+        void(^reachablityBlock)(NSNotification*) = ^(NSNotification* note) {
+            NSString * ip = self.address;
+            BOOL can_run = ip != nil && ip.length > 0;
+            if (can_run != self.canRun) {
+                self.canRun = can_run;
+            }
+        };
+        reachablityBlock(nil);
+
+        self.connectionObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kGCNetworkReachabilityDidChangeNotification
+                                                                                    object:nil
+                                                                                     queue:[NSOperationQueue mainQueue]
+                                                                                usingBlock:reachablityBlock];
+
     }
     return self;
 }
 
 - (void) dealloc {
     [self.server removeObserver: self forKeyPath: @"isRunning"];
+    [[NSNotificationCenter defaultCenter] removeObserver: self.connectionObserver];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
