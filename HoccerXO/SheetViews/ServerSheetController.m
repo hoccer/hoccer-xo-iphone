@@ -85,7 +85,9 @@
 - (NSAttributedString*) footerTextForSection: (DatasheetSection*) section {
     if ([section.identifier isEqualToString: self.serverSection.identifier]) {
         BOOL running = [self.inspectedObject isRunning];
-        return [[NSAttributedString alloc] initWithString: running ? @"Running" : @"Stopped"];
+        BOOL can_run = YES;
+        NSString * text = NSLocalizedString(running ? @"server_running" : can_run ? @"server_stopped_can_run" : @"server_stopped_can_not_run", nil);
+        return [[NSAttributedString alloc] initWithString: text];
     }
     return nil;
 }
