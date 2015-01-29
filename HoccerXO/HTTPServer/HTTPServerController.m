@@ -12,6 +12,7 @@
 #import "HTTPServer.h"
 #import "MyDAVConnection.h"
 #import "DDTTYLogger.h"
+#import "AppDelegate.h"
 
 @interface HTTPServerController ()
 
@@ -83,6 +84,21 @@
 
 - (int) port {
     return self.server.listeningPort;
+}
+
+#if TARGET_IPHONE_SIMULATOR
+// use any interface (provided by the host) in the simulator
+# define HXO_HTTP_INTERFACE AppDelegate.instance.ownIPAddresses.allKeys.firstObject
+#else
+# define HXO_HTTP_INTERFACE @"en0/ipv4"
+#endif
+
+- (NSString*) address {
+    return AppDelegate.instance.ownIPAddresses[HXO_HTTP_INTERFACE];
+}
+
+- (NSString*) url {
+    return [NSString stringWithFormat: @"http://%@:%d/", self.address, self.port];
 }
 
 @end

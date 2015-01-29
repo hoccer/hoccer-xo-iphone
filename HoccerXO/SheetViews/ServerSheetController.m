@@ -17,6 +17,7 @@
 @property (nonatomic, readonly) DatasheetSection * serverSection;
 @property (nonatomic, readonly) DatasheetItem    * serverSwitch;
 @property (nonatomic, readonly) DatasheetItem    * passwordItem;
+@property (nonatomic, readonly) DatasheetItem    * addressItem;
 
 @end
 
@@ -25,6 +26,7 @@
 @synthesize serverSection = _serverSection;
 @synthesize serverSwitch  = _serverSwitch;
 @synthesize passwordItem  = _passwordItem;
+@synthesize addressItem   = _addressItem;
 
 - (void) awakeFromNib {
     [super awakeFromNib];
@@ -37,6 +39,15 @@
 
 - (NSArray*) buildSections {
     return @[self.serverSection];
+}
+
+- (BOOL) isCancelable { return NO; }
+
+- (BOOL) isItemVisible:(DatasheetItem *)item {
+    if ([item isEqual: self.addressItem]) {
+        return [self.inspectedObject isRunning];
+    }
+    return [super isItemVisible: item];
 }
 
 - (void) didChangeCurrentValueForItem:(DatasheetItem *)item {
@@ -71,10 +82,18 @@
     return [super isItemEnabled: item];
 }
 
+- (NSAttributedString*) footerTextForSection: (DatasheetSection*) section {
+    if ([section.identifier isEqualToString: self.serverSection.identifier]) {
+        BOOL running = [self.inspectedObject isRunning];
+        return [[NSAttributedString alloc] initWithString: running ? @"Running" : @"Stopped"];
+    }
+    return nil;
+}
+
 - (DatasheetSection*) serverSection {
     if ( ! _serverSection) {
         _serverSection = [DatasheetSection datasheetSectionWithIdentifier: @"server_section"];
-        _serverSection.items = @[self.serverSwitch, self.passwordItem];
+        _serverSection.items = @[self.serverSwitch, self.passwordItem, self.addressItem];
         _serverSection.delegate = self;
     }
     return _serverSection;
@@ -90,20 +109,21 @@
     return _passwordItem;
 }
 
-- (NSAttributedString*) footerTextForSection: (DatasheetSection*) section {
-    if ([section.identifier isEqualToString: self.serverSection.identifier]) {
-        BOOL running = [self.inspectedObject isRunning];
-        return [[NSAttributedString alloc] initWithString: running ? @"Running" : @"Stopped"];
-    }
-    return nil;
-}
-
 - (DatasheetItem*) serverSwitch {
     if ( ! _serverSwitch) {
         _serverSwitch = [self itemWithIdentifier: @"server_nav_title" cellIdentifier: @"DatasheetSwitchCell"];
         _serverSwitch.valuePath = @"isRunning";
     }
     return _serverSwitch;
+}
+
+- (DatasheetItem*) addressItem {
+    if ( ! _addressItem) {
+        _addressItem = [self itemWithIdentifier: @"server_address_title" cellIdentifier: @"DatasheetKeyValueCell"];
+        _addressItem.valuePath = @"url";
+        _addressItem.adjustFontSize = YES;
+    }
+    return _addressItem;
 }
 
 
