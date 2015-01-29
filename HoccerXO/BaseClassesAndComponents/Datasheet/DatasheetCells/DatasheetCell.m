@@ -34,6 +34,7 @@
     self.titleLabel.autoresizingMask = UIViewAutoresizingNone;
     self.titleLabel.numberOfLines = 1;
     self.titleLabel.lineBreakMode = NSLineBreakByClipping;
+    self.titleLabel.text = @"Title";
     //self.titleLabel.backgroundColor = [UIColor colorWithWhite: 0.96 alpha: 1.0];
     [self.contentView addSubview: self.titleLabel];
 
