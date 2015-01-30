@@ -97,6 +97,7 @@
         }
     }
     [self forceFooterTextRefresh];
+    [self updateCurrentItems];
 }
 
 - (void) forceFooterTextRefresh {
@@ -155,6 +156,7 @@
         _addressItem = [self itemWithIdentifier: @"server_address_title" cellIdentifier: @"DatasheetKeyValueCell"];
         _addressItem.valuePath = @"url";
         _addressItem.adjustFontSize = YES;
+        _addressItem.dependencyPaths = @[@"isRunning"];
     }
     return _addressItem;
 }
