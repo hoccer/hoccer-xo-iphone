@@ -37,25 +37,28 @@
 
 - (void) awakeFromNib {
     [super awakeFromNib];
-    self.inspectedObject = [AppDelegate instance].httpServer;
+
+    // Note(@agnat): See below...
+    [super setInspectedObject: [AppDelegate instance].httpServer];
 }
 
+
 - (void) setInspectedObject:(id)inspectedObject {
-    if (self.inspectedObject) {
-        [self.inspectedObject removeObserver: self forKeyPath: @"canRun"];
-    }
-    [super setInspectedObject: inspectedObject];
-    if (self.inspectedObject) {
-        [self.inspectedObject addObserver: self forKeyPath: @"canRun" options: NSKeyValueObservingOptionNew context: NULL];
-    }
+    // Note(@agnat): Workaround for pavels workaround. The DatasheetViewController
+    // currently clears the inspected object when the view disappears. This kind
+    // of fucks us here. As a workaround we overload setInspectedObject to do
+    // nothing and call [super setInspectedObject: ...] above.
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([object isEqual: self.inspectedObject] && [keyPath isEqualToString: @"canRun"]) {
+        /*
         if (self.server.isRunning && ! self.server.canRun) {
             [self toggleHTTPServer: NO];
         }
+         */
         [self forceFooterTextRefresh];
+        [self updateCurrentItems];
     }
 }
 
@@ -75,7 +78,7 @@
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
     if ([item isEqual: self.addressItem]) {
-        return self.server.isRunning;
+        return self.server.canRun && self.server.isRunning;
     }
     return [super isItemVisible: item];
 }
@@ -86,6 +89,7 @@
         [[HXOUserDefaults standardUserDefaults] synchronize];
     } else if ([item isEqual: self.serverSwitch]) {
         [self toggleHTTPServer: [item.currentValue boolValue]];
+        [item clearCurrentValue];
     }
 }
 
@@ -117,6 +121,14 @@
     }
     return [super isItemEnabled: item];
 }
+
+- (id) valueForItem:(DatasheetItem *)item {
+    if ([item isEqual: self.serverSwitch]) {
+        return @(self.server.canRun && self.server.isRunning);
+    }
+    return [super valueForItem: item];
+}
+
 
 - (NSAttributedString*) footerTextForSection: (DatasheetSection*) section {
     if ([section.identifier isEqualToString: self.serverSection.identifier]) {
@@ -150,8 +162,8 @@
 - (DatasheetItem*) serverSwitch {
     if ( ! _serverSwitch) {
         _serverSwitch = [self itemWithIdentifier: @"server_nav_title" cellIdentifier: @"DatasheetSwitchCell"];
-        _serverSwitch.valuePath = @"isRunning";
-        _serverSwitch.dependencyPaths = @[@"canRun"];
+        //_serverSwitch.valuePath = @"isRunning";
+        _serverSwitch.dependencyPaths = @[@"canRun", @"isRunning"];
     }
     return _serverSwitch;
 }
@@ -161,7 +173,7 @@
         _addressItem = [self itemWithIdentifier: @"server_address_title" cellIdentifier: @"DatasheetKeyValueCell"];
         _addressItem.valuePath = @"url";
         _addressItem.adjustFontSize = YES;
-        _addressItem.dependencyPaths = @[@"isRunning"];
+        _addressItem.dependencyPaths = @[@"isRunning", @"canRun"];
     }
     return _addressItem;
 }

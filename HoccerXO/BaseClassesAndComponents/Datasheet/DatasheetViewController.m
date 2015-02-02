@@ -155,12 +155,18 @@ static CGFloat kHeaderHeight;
     
     if ([cell respondsToSelector: @selector(valueView)]) {
         id valueView = [(id)cell valueView];
-        id currentValue = [item.currentValue isKindOfClass: [NSString class]] ? item.currentValue : [item.currentValue stringValue];
-        if (item.valueFormatString) {
-            currentValue = [NSString stringWithFormat: NSLocalizedString(item.valueFormatString, nil), currentValue];
-        }
         if ([valueView respondsToSelector:@selector(setText:)]) {
+            id currentValue = [item.currentValue isKindOfClass: [NSString class]] ? item.currentValue : [item.currentValue stringValue];
+            if (item.valueFormatString) {
+                currentValue = [NSString stringWithFormat: NSLocalizedString(item.valueFormatString, nil), currentValue];
+            }
             [valueView setText: currentValue];
+        }
+        if ([valueView respondsToSelector:@selector(setOn:animated:)]) {
+            BOOL v = [item.currentValue boolValue];
+            if (v != [valueView isOn]) {
+                [valueView setOn: v animated: YES];
+            }
         }
         if ([valueView respondsToSelector:@selector(setPlaceholder:)]) {
             [valueView setPlaceholder: item.valuePlaceholder];

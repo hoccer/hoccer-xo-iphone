@@ -53,6 +53,9 @@
             NSString * ip = self.address;
             BOOL can_run = ip != nil && ip.length > 0;
             if (can_run != self.canRun) {
+                if (self.isRunning && ! can_run) {
+                    [self stop];
+                }
                 self.canRun = can_run;
             }
         };
@@ -123,7 +126,8 @@
 }
 
 - (NSString*) url {
-    return [NSString stringWithFormat: @"http://%@:%d/", self.address, self.port];
+    NSString * address = self.address;
+    return address ? [NSString stringWithFormat: @"http://%@:%d/", address, self.port] : nil;
 }
 
 -(NSString*)niceRandomPassword {
