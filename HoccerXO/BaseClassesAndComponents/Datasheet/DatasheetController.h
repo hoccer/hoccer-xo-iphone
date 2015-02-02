@@ -13,6 +13,7 @@
 @class DatasheetItem;
 @class DatasheetSection;
 @class DatasheetViewController;
+@class VectorArt;
 
 typedef enum DatasheetChangeTypes {
     DatasheetChangeInsert,
@@ -172,6 +173,7 @@ typedef BOOL(^ChangeValidatorBlock)(id oldValue, id newValue);
 @property (nonatomic,strong) id inspectedObject;
 
 @property (nonatomic, strong)   NSString         * title;
+@property (nonatomic, strong)   VectorArt        * tabBarIcon;
 @property (nonatomic, strong)   NSString         * backButtonTitle;
 @property (nonatomic, strong)   DatasheetSection * items;
 @property (nonatomic, readonly) DatasheetSection * currentItems;

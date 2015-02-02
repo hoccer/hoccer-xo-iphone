@@ -29,6 +29,11 @@
 - (id) initWithDocumentRoot: (NSString*) documentRoot {
     self = [super init];
     if (self) {
+        if ([self.password isEqualToString:@"hoccer-pw"]) {
+            [[HXOUserDefaults standardUserDefaults] setValue: [self niceRandomPassword] forKey: kHXOHttpServerPassword];
+            [[HXOUserDefaults standardUserDefaults] synchronize];
+        }
+
         [DDLog addLogger: [DDTTYLogger sharedInstance]];
 
         self.server = [[HTTPServer alloc] init];
@@ -119,6 +124,21 @@
 
 - (NSString*) url {
     return [NSString stringWithFormat: @"http://%@:%d/", self.address, self.port];
+}
+
+-(NSString*)niceRandomPassword {
+    NSArray * syllables = @[@"mi",@"ra",@"du",@"mo",@"pa",@"ge",@"da",@"ma",@"ka",@"tu",@"ki",@"so",@"da",@"ne",@"na",@"el",@"im"];
+    unsigned long numSyllables = syllables.count;
+    NSString * word = [NSString new];
+    for (unsigned long i = 0; i < 4;++i) {
+        unsigned long randomNumber = abs(rand())%numSyllables;
+        NSString * syllable = syllables[randomNumber];
+        word = [word stringByAppendingString:syllable];
+    }
+
+    unsigned long randomNumber2 = abs(rand())%10000;
+    NSString * newPassword = [NSString stringWithFormat:@"%@%lu",word, randomNumber2];
+    return newPassword;
 }
 
 @end

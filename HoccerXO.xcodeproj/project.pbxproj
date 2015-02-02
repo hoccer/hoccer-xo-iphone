@@ -102,7 +102,6 @@
 		6378484D16F4210D00DE03C2 /* NSString+UUID.m in Sources */ = {isa = PBXBuildFile; fileRef = 6378484C16F4210A00DE03C2 /* NSString+UUID.m */; };
 		63793C0C18D5024800BB6951 /* paper_dart.m in Sources */ = {isa = PBXBuildFile; fileRef = 63793C0B18D5024800BB6951 /* paper_dart.m */; };
 		637DA53518D0BECF00B11AB9 /* VectorArtView.m in Sources */ = {isa = PBXBuildFile; fileRef = 637DA53418D0BECF00B11AB9 /* VectorArtView.m */; };
-		637FD6BA18FDCDCD0057F854 /* ProfileViewTabItemHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 637FD6B918FDCDCD0057F854 /* ProfileViewTabItemHelper.m */; };
 		63808A1D1857CF3F0001AC96 /* TextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A1C1857CF3F0001AC96 /* TextMessageCell.m */; };
 		63808A201858A6F90001AC96 /* MessageSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A1F1858A6F90001AC96 /* MessageSection.m */; };
 		63808A231858A76E0001AC96 /* TextSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 63808A221858A76E0001AC96 /* TextSection.m */; };
@@ -399,7 +398,6 @@
 		E9E92F7918733D01007B8042 /* HTTPFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F6618733D01007B8042 /* HTTPFileResponse.m */; };
 		E9E92F7A18733D01007B8042 /* HTTPRedirectResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F6818733D01007B8042 /* HTTPRedirectResponse.m */; };
 		E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F6A18733D01007B8042 /* WebSocket.m */; };
-		E9E92F8C18748F21007B8042 /* ServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F8B18748F21007B8042 /* ServerViewController.m */; };
 		E9E92F901874E7A3007B8042 /* MyHttpConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F8F1874E7A3007B8042 /* MyHttpConnection.m */; };
 		E9E92F93187503F7007B8042 /* NSString+HTML.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F92187503F7007B8042 /* NSString+HTML.m */; };
 		E9E92F961875D41E007B8042 /* TypedHTTPDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F951875D41E007B8042 /* TypedHTTPDataResponse.m */; };
@@ -680,8 +678,6 @@
 		63793C0B18D5024800BB6951 /* paper_dart.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = paper_dart.m; sourceTree = "<group>"; };
 		637DA53318D0BECF00B11AB9 /* VectorArtView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VectorArtView.h; sourceTree = "<group>"; };
 		637DA53418D0BECF00B11AB9 /* VectorArtView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VectorArtView.m; sourceTree = "<group>"; };
-		637FD6B818FDCDCD0057F854 /* ProfileViewTabItemHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProfileViewTabItemHelper.h; sourceTree = "<group>"; };
-		637FD6B918FDCDCD0057F854 /* ProfileViewTabItemHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProfileViewTabItemHelper.m; sourceTree = "<group>"; };
 		63808A1B1857CF3F0001AC96 /* TextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextMessageCell.h; sourceTree = "<group>"; };
 		63808A1C1857CF3F0001AC96 /* TextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextMessageCell.m; sourceTree = "<group>"; };
 		63808A1E1858A6F90001AC96 /* MessageSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageSection.h; sourceTree = "<group>"; };
@@ -1267,8 +1263,6 @@
 		E9E92F6818733D01007B8042 /* HTTPRedirectResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPRedirectResponse.m; sourceTree = "<group>"; };
 		E9E92F6918733D01007B8042 /* WebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSocket.h; sourceTree = "<group>"; };
 		E9E92F6A18733D01007B8042 /* WebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebSocket.m; sourceTree = "<group>"; };
-		E9E92F8A18748F21007B8042 /* ServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerViewController.h; sourceTree = "<group>"; };
-		E9E92F8B18748F21007B8042 /* ServerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServerViewController.m; sourceTree = "<group>"; };
 		E9E92F8E1874E7A3007B8042 /* MyHttpConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyHttpConnection.h; sourceTree = "<group>"; };
 		E9E92F8F1874E7A3007B8042 /* MyHttpConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyHttpConnection.m; sourceTree = "<group>"; };
 		E9E92F91187503F7007B8042 /* NSString+HTML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+HTML.h"; sourceTree = "<group>"; };
@@ -1788,8 +1782,6 @@
 				63CED3DF18F9A24F0095110B /* KeyStatusCell.m */,
 				63C1E88A18EB2B450066D5C6 /* ProfileSheetController.h */,
 				63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */,
-				637FD6B818FDCDCD0057F854 /* ProfileViewTabItemHelper.h */,
-				637FD6B918FDCDCD0057F854 /* ProfileViewTabItemHelper.m */,
 				63E091DC1A77B7BA0029DAE2 /* ServerSheetController.h */,
 				63E091DD1A77B7BA0029DAE2 /* ServerSheetController.m */,
 				63848A9318F473AC00C253A4 /* SmallContactCell.h */,
@@ -1878,8 +1870,6 @@
 				E9B7BAB8172EA15E00212420 /* RecordViewController.m */,
 				C576EBD31934CC8400C0D254 /* SeekSlider.h */,
 				C576EBD41934CC8400C0D254 /* SeekSlider.m */,
-				E9E92F8A18748F21007B8042 /* ServerViewController.h */,
-				E9E92F8B18748F21007B8042 /* ServerViewController.m */,
 				63AE4542170493140099F0CB /* SettingsViewController.h */,
 				63AE4543170493140099F0CB /* SettingsViewController.m */,
 				63CED3E118F9D86E0095110B /* SetupViewControllers.h */,
@@ -3042,7 +3032,6 @@
 				63DEC01A19B0A720003804E8 /* MPMediaItem+JGExtensions.m in Sources */,
 				6343B4E516CD604700B3A29E /* MessageCell.m in Sources */,
 				6318FB6E1999057000D018A8 /* CTAssetsSupplementaryView.m in Sources */,
-				637FD6BA18FDCDCD0057F854 /* ProfileViewTabItemHelper.m in Sources */,
 				E991E6E91A0E975000015BEE /* DDASLLogger.m in Sources */,
 				E9AF28A21927CBFF00E29A03 /* NSData+DictCompression.mm in Sources */,
 				630CAB8518E1E31600782507 /* DatasheetActionCell.m in Sources */,
@@ -3065,7 +3054,6 @@
 				C5C359AC196D395700D835F3 /* NSString+EnumerateRanges.m in Sources */,
 				C576EC6E1934CD1500C0D254 /* AudioAttachmentSection.m in Sources */,
 				6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */,
-				E9E92F8C18748F21007B8042 /* ServerViewController.m in Sources */,
 				E9E92F6D18733D01007B8042 /* DDRange.m in Sources */,
 				E95A75A818D257FD0027AE3E /* fmemopen.c in Sources */,
 				6318FB641999057000D018A8 /* ALAsset+isEqual.m in Sources */,

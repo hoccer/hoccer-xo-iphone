@@ -51,6 +51,14 @@ static CGFloat kHeaderHeight;
     self.navigationItem.title = NSLocalizedString(dataSheetController.title, nil);
 }
 
+
+- (void) awakeFromNib {
+    [super awakeFromNib];
+    self.title = NSLocalizedString(self.dataSheetController.title, nil);
+    self.tabBarItem.image = self.dataSheetController.tabBarIcon.image;
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 

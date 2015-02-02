@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "HXOUserDefaults.h"
 #import "HTTPServerController.h"
+#import "tab_settings.h"
 
 @interface ServerSheetController ()
 
@@ -60,6 +61,10 @@
 
 - (NSString*) title {
     return NSLocalizedString(@"server_nav_title", nil);
+}
+
+- (VectorArt*) tabBarIcon {
+    return [[tab_settings alloc] init];
 }
 
 - (NSArray*) buildSections {

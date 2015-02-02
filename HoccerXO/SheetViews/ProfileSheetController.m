@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "HXOUI.h"
 #import "ModalTaskHUD.h"
+#import "tab_profile.h"
 
 @interface ProfileSheetController ()
 
@@ -55,9 +56,11 @@
 }
 
 - (void) awakeFromNib {
-
-
     self.inspectedObject = [UserProfile sharedProfile];
+}
+
+- (VectorArt*) tabBarIcon {
+    return [[tab_profile alloc] init];
 }
 
 - (UserProfile*) userProfile {
