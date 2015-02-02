@@ -68,7 +68,6 @@
 		632502AD1866500800543D80 /* HXOHyperLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 632502AC1866500800543D80 /* HXOHyperLabel.m */; };
 		6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EAD6171841F200AF75E1 /* ContactListViewController.m */; };
 		6327EAEC171883C400AF75E1 /* ContactCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EAEB171883C300AF75E1 /* ContactCell.m */; };
-		6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327EB6E171D55DA00AF75E1 /* libcrypto.a */; };
 		6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */; };
 		6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327F37318B8C390007D79E3 /* Accelerate.framework */; };
 		6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F37618B8D018007D79E3 /* SegmentedViewController.m */; };
@@ -272,6 +271,7 @@
 		C576EC6F1934CD1500C0D254 /* AudioAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC6C1934CD1500C0D254 /* AudioAttachmentWithTextMessageCell.m */; };
 		C576EC741934CD2E00C0D254 /* tab_attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC711934CD2E00C0D254 /* tab_attachments.m */; };
 		C576EC791934CDD900C0D254 /* MessageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC781934CDD900C0D254 /* MessageItem.m */; };
+		C59E6FDC1A7FA9870068856C /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6302A99718DA88F200B2D04F /* libcrypto.a */; };
 		C5B167D01962B982004D3A28 /* AddToCollectionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */; };
 		C5B167E21963ECF6004D3A28 /* MediaAttachmentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E11963ECF6004D3A28 /* MediaAttachmentDataSource.m */; };
 		C5B167E619657AA0004D3A28 /* CollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E519657AA0004D3A28 /* CollectionItem.m */; };
@@ -617,7 +617,6 @@
 		6327EAD6171841F200AF75E1 /* ContactListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = ContactListViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		6327EAEA171883C200AF75E1 /* ContactCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContactCell.h; sourceTree = "<group>"; };
 		6327EAEB171883C300AF75E1 /* ContactCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContactCell.m; sourceTree = "<group>"; };
-		6327EB6E171D55DA00AF75E1 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = "../ObjCSRP/3rdParty/openssl-xcode/build/Release-iphoneos/libcrypto.a"; sourceTree = "<group>"; };
 		6327F34418B881A6007D79E3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		6327F37318B8C390007D79E3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
@@ -1290,6 +1289,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C59E6FDC1A7FA9870068856C /* libcrypto.a in Frameworks */,
 				E98769751A100DD70068CA33 /* ImageIO.framework in Frameworks */,
 				E991E5121A0D134C00015BEE /* libxml2.2.dylib in Frameworks */,
 				6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */,
@@ -1310,7 +1310,6 @@
 				633AA8E718C66DCE009403CB /* libTestFlight.a in Frameworks */,
 				E99886E617282C140089A510 /* AudioToolbox.framework in Frameworks */,
 				E99886CE1725CE0F0089A510 /* AddressBook.framework in Frameworks */,
-				6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */,
 				E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */,
 				E96CB012171217D3005F8FFA /* AVFoundation.framework in Frameworks */,
 				63126C30170E46F800A6804A /* MessageUI.framework in Frameworks */,
@@ -1943,7 +1942,6 @@
 				638EBE3817870E8600F1B9AD /* CoreText.framework */,
 				63A7F684172C2F3100C0EC26 /* CoreVideo.framework */,
 				63AEE2D916CA4D0200522F92 /* Foundation.framework */,
-				6327EB6E171D55DA00AF75E1 /* libcrypto.a */,
 				63A7F686172C2F6E00C0EC26 /* libiconv.dylib */,
 				63C413B416E8FD02004E1F6D /* libicucore.dylib */,
 				63A7F688172C328D00C0EC26 /* libstdc++.dylib */,
@@ -3540,6 +3538,227 @@
 			};
 			name = Release;
 		};
+		C59E6FC81A7F91F80068856C /* ReleaseStröer */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "162a6729-0062-41b5-8344-c1d632028f65";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+				VALID_ARCHS = armv7;
+			};
+			name = "ReleaseStröer";
+		};
+		C59E6FC91A7F91F80068856C /* ReleaseStröer */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLY_RULES_IN_COPY_FILES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = NO;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
+					"${SDK_DIR}/usr/include/libxml2",
+				);
+				HXO_BUNDLE_ID = com.stroeer.messenger;
+				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_URL_SCHEME = strm;
+				HXO_URL_SCHEME_ID = com.stroeer.messenger;
+				HXO_XFER_URL_SCHEME = xferdisabled;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
+				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "Ströer Messenger";
+				PROVISIONING_PROFILE = "";
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				VALID_ARCHS = "armv7 armv7s arm64";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "ReleaseStröer";
+		};
+		C59E6FCA1A7F91F80068856C /* ReleaseStröer */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
+				);
+				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = "ReleaseStröer";
+		};
+		C59E6FD91A7F97160068856C /* DebugStröer */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALID_ARCHS = armv7;
+			};
+			name = "DebugStröer";
+		};
+		C59E6FDA1A7F97160068856C /* DebugStröer */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLY_RULES_IN_COPY_FILES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = NO;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
+					"${SDK_DIR}/usr/include/libxml2",
+				);
+				HXO_BUNDLE_ID = "com.stroeer.messenger-dev";
+				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_URL_SCHEME = strmd;
+				HXO_URL_SCHEME_ID = "com.stroeer.messenger-dev";
+				HXO_XFER_URL_SCHEME = xferdisabled;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
+				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
+				);
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "Ströer Messenger Dev";
+				PROVISIONING_PROFILE = "";
+				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				VALID_ARCHS = "armv7 armv7s arm64";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "DebugStröer";
+		};
+		C59E6FDB1A7F97160068856C /* DebugStröer */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"3rdParty/openssl-xcode/openssl/include",
+				);
+				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = "DebugStröer";
+		};
 		E91168D219B61E38003D0C25 /* DebugClassic */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3992,9 +4211,11 @@
 			buildConfigurations = (
 				6302A9C318DA8A9600B2D04F /* Debug */,
 				E91168D419B61E38003D0C25 /* DebugClassic */,
+				C59E6FDB1A7F97160068856C /* DebugStröer */,
 				E95175F719112ED600EFD1C6 /* DebugDev */,
 				6302A9C418DA8A9600B2D04F /* Release */,
 				E91168E519B61E4B003D0C25 /* ReleaseClassic */,
+				C59E6FCA1A7F91F80068856C /* ReleaseStröer */,
 				E95175FA19112EE700EFD1C6 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -4005,9 +4226,11 @@
 			buildConfigurations = (
 				63AEE30016CA4D0300522F92 /* Debug */,
 				E91168D219B61E38003D0C25 /* DebugClassic */,
+				C59E6FD91A7F97160068856C /* DebugStröer */,
 				E95175F519112ED600EFD1C6 /* DebugDev */,
 				63AEE30116CA4D0300522F92 /* Release */,
 				E91168E319B61E4B003D0C25 /* ReleaseClassic */,
+				C59E6FC81A7F91F80068856C /* ReleaseStröer */,
 				E95175F819112EE700EFD1C6 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
@@ -4018,9 +4241,11 @@
 			buildConfigurations = (
 				63AEE30316CA4D0300522F92 /* Debug */,
 				E91168D319B61E38003D0C25 /* DebugClassic */,
+				C59E6FDA1A7F97160068856C /* DebugStröer */,
 				E95175F619112ED600EFD1C6 /* DebugDev */,
 				63AEE30416CA4D0300522F92 /* Release */,
 				E91168E419B61E4B003D0C25 /* ReleaseClassic */,
+				C59E6FC91A7F91F80068856C /* ReleaseStröer */,
 				E95175F919112EE700EFD1C6 /* ReleaseDev */,
 			);
 			defaultConfigurationIsVisible = 0;
