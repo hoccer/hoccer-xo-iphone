@@ -68,7 +68,7 @@
 #define FULL_HELLO
 #define TRACE_TIME_DIFFERENCE YES
 
-const NSString * const kHXOProtocol = @"com.hoccer.talk.v4";
+const NSString * const kHXOProtocol = @"com.hoccer.talk.v5";
 
 const NSString * kqMessaging = @"messaging";
 const NSString * kqContacts = @"contacts";
