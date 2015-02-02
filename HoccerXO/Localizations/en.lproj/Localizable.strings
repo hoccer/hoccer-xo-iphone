@@ -709,8 +709,8 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 
 "server_stopped_can_not_run"    = "You must be connected via WiFi in order to start the WebDAV-Server for the HoccerBox on this device, but you are not.\n\nWith the server you can connect to the Hoccer-App from a computer in the local network and copy media items between your device and your computer.\n\nDo not start the server when connected to an untrusted public Wifi-network.\n\nYou can change the server password by touching it.";
 
-"server_adress_title"           = "HoccerBox Server Address:\n\t";
-"password_title"                = "Password";
+"server_address_title"          = "Address:";
+"server_password_title"         = "Password:";
 
 "server_nav_title"              = "HoccerBox";
 

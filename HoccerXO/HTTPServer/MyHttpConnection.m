@@ -23,6 +23,7 @@
 #import "UserProfile.h"
 #import "Group.h"
 #import "Delivery.h"
+#import "HTTPServerController.h"
 
 // Log levels: off, error, warn, info, verbose
 // Other flags: trace

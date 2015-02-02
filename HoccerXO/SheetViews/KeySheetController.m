@@ -19,20 +19,20 @@
 @interface KeySheetController ()
 
 @property (nonatomic, readonly) DatasheetSection * fingerprintSection;
-@property (nonatomic, readonly) DatasheetItem * fingerprintItem;
-@property (nonatomic, readonly) DatasheetItem * keyLengthItem;
-@property (nonatomic, readonly) DatasheetItem * verificationItem;
+@property (nonatomic, readonly) DatasheetItem    * fingerprintItem;
+@property (nonatomic, readonly) DatasheetItem    * keyLengthItem;
+@property (nonatomic, readonly) DatasheetItem    * verificationItem;
 
 @property (nonatomic, readonly) DatasheetSection * renewKeypairSection;
-@property (nonatomic, readonly) DatasheetItem * renewKeypairItem;
-@property (nonatomic, readonly) DatasheetItem * exportKeypairItem;
+@property (nonatomic, readonly) DatasheetItem    * renewKeypairItem;
+@property (nonatomic, readonly) DatasheetItem    * exportKeypairItem;
 
 @property (nonatomic, readonly) id<HXOClientProtocol> client;
-@property (nonatomic, readonly) Contact * contact;
-@property (nonatomic, readonly) UserProfile * userProfile;
+@property (nonatomic, readonly) Contact          * contact;
+@property (nonatomic, readonly) UserProfile      * userProfile;
 
 @property (nonatomic, readonly) DatasheetSection * destructiveSection;
-@property (nonatomic, readonly) DatasheetItem * destructiveItem;
+@property (nonatomic, readonly) DatasheetItem    * destructiveItem;
 
 @end
 

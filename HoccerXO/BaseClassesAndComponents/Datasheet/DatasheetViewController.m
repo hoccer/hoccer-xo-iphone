@@ -11,6 +11,7 @@
 #import "DatasheetTextInputCell.h"
 #import "DatasheetKeyValueCell.h"
 #import "DatasheetActionCell.h"
+#import "DatasheetSwitchCell.h"
 #import "DatasheetHeaderFooterTextView.h"
 #import "HXOHyperLabel.h"
 #import "HXOUI.h"
@@ -50,6 +51,14 @@ static CGFloat kHeaderHeight;
     self.navigationItem.title = NSLocalizedString(dataSheetController.title, nil);
 }
 
+
+- (void) awakeFromNib {
+    [super awakeFromNib];
+    self.title = NSLocalizedString(self.dataSheetController.title, nil);
+    self.tabBarItem.image = self.dataSheetController.tabBarIcon.image;
+}
+
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
@@ -60,6 +69,7 @@ static CGFloat kHeaderHeight;
     [self registerCellClass: [DatasheetTextInputCell class]];
     [self registerCellClass: [DatasheetKeyValueCell class]];
     [self registerCellClass: [DatasheetActionCell class]];
+    [self registerCellClass: [DatasheetSwitchCell class]];
 
     [self registerHeaderFooterViewClass: [DatasheetHeaderFooterTextView class]];
 
@@ -145,16 +155,33 @@ static CGFloat kHeaderHeight;
     
     if ([cell respondsToSelector: @selector(valueView)]) {
         id valueView = [(id)cell valueView];
-        id currentValue = [item.currentValue isKindOfClass: [NSString class]] ? item.currentValue : [item.currentValue stringValue];
-        if (item.valueFormatString) {
-            currentValue = [NSString stringWithFormat: NSLocalizedString(item.valueFormatString, nil), currentValue];
+        if ([valueView respondsToSelector:@selector(setText:)]) {
+            id currentValue = [item.currentValue isKindOfClass: [NSString class]] ? item.currentValue : [item.currentValue stringValue];
+            if (item.valueFormatString) {
+                currentValue = [NSString stringWithFormat: NSLocalizedString(item.valueFormatString, nil), currentValue];
+            }
+            [valueView setText: currentValue];
         }
-        [valueView setText: currentValue];
+        if ([valueView respondsToSelector:@selector(setOn:animated:)]) {
+            BOOL v = [item.currentValue boolValue];
+            if (v != [valueView isOn]) {
+                [valueView setOn: v animated: YES];
+            }
+        }
         if ([valueView respondsToSelector:@selector(setPlaceholder:)]) {
             [valueView setPlaceholder: item.valuePlaceholder];
         }
         if ([valueView respondsToSelector:@selector(setEnabled:)]) {
             [valueView setEnabled: item.isEnabled];
+        }
+        if ([valueView respondsToSelector:@selector(setKeyboardType:)]) {
+            [valueView setKeyboardType: item.keyboardType];
+        }
+        if ([valueView respondsToSelector:@selector(setReturnKeyType:)]) {
+            [valueView setReturnKeyType: item.returnKeyType];
+        }
+        if ([valueView respondsToSelector:@selector(setAdjustsFontSizeToFitWidth:)]) {
+            [valueView setAdjustsFontSizeToFitWidth: item.adjustFontSize];
         }
     }
 
@@ -472,7 +499,11 @@ static CGFloat kHeaderHeight;
 - (void) datasheetCell:(DatasheetCell *)cell didChangeValueForView:(id)valueView {
     NSIndexPath * indexPath = [self.tableView indexPathForCell: cell];
     DatasheetItem * item = [self.dataSheetController itemAtIndexPath: indexPath];
-    item.currentValue = [valueView text];
+    if ([valueView isKindOfClass: [UITextField class]]) {
+        item.currentValue = [valueView text];
+    } else if ([valueView isKindOfClass: [UISwitch class]]) {
+        item.currentValue = @([valueView isOn]);
+    }
     self.navigationItem.rightBarButtonItem.enabled = [self.dataSheetController allItemsValid];
 }
 
