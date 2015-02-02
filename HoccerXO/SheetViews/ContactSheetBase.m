@@ -96,19 +96,19 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (DatasheetItem*) nicknameItem {
     if ( !_nicknameItem) {
-    _nicknameItem = [self itemWithIdentifier: NSLocalizedString(@"profile_name_label", nil) cellIdentifier: @"DatasheetTextInputCell"];
-    _nicknameItem.valuePath = kHXONickName;
-    _nicknameItem.valuePlaceholder = NSLocalizedString(@"profile_name_placeholder", nil);
-    _nicknameItem.enabledMask = DatasheetModeEdit;
-    _nicknameItem.validator = ^BOOL(DatasheetItem* item) {
-        return item.currentValue && ! [item.currentValue isEqualToString: @""];
-    };
-    _nicknameItem.changeValidator = ^BOOL(NSString * old, NSString * new) {
-        if (old.length > kHXOMaxNameLength) {
-            return new.length < old.length;
-        }
-        return new.length <= kHXOMaxNameLength;
-    };
+        _nicknameItem = [self itemWithIdentifier: NSLocalizedString(@"profile_name_label", nil) cellIdentifier: @"DatasheetTextInputCell"];
+        _nicknameItem.valuePath = kHXONickName;
+        _nicknameItem.valuePlaceholder = NSLocalizedString(@"profile_name_placeholder", nil);
+        _nicknameItem.enabledMask = DatasheetModeEdit;
+        _nicknameItem.validator = ^BOOL(DatasheetItem* item) {
+            return item.currentValue && ! [item.currentValue isEqualToString: @""];
+        };
+        _nicknameItem.changeValidator = ^BOOL(NSString * old, NSString * new) {
+            if (old.length > kHXOMaxNameLength) {
+                return new.length < old.length;
+            }
+            return new.length <= kHXOMaxNameLength;
+        };
     }
     return _nicknameItem;
 }

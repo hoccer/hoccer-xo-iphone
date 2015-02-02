@@ -34,7 +34,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
-@class HTTPServer;
+@class HTTPServerController;
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate, UITabBarControllerDelegate,UIDocumentInteractionControllerDelegate>
 {
@@ -74,14 +74,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 @property (nonatomic, strong) UIDocumentInteractionController * interactionController;
 
-
-#ifdef WITH_WEBSERVER
-@property (readonly,nonatomic, strong) HTTPServer *httpServer;
-
-- (void)startHttpServer;
-- (void)stopHttpServer;
-- (BOOL)httpServerIsRunning;
-#endif
+@property (readonly,nonatomic, strong) HTTPServerController * httpServer;
 
 @property BOOL launchedAfterCrash;
 @property BOOL runningNewBuild;

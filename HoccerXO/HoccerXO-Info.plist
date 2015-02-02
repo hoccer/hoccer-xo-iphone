@@ -73,21 +73,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>15742</string>
-	<key>HXOClientDevelopers</key>
-	<array>
-		<string>Pavel Mayer</string>
-	</array>
+	<string>15908</string>
 	<key>HXODefaultEnvironment</key>
 	<string>${HXO_DEFAULT_ENVIRONMENT}</string>
-	<key>HXODesigners</key>
-	<array>
-		<string>Peter Amende</string>
-	</array>
-	<key>HXOReleaseName</key>
-	<string>Slingbacks</string>
-	<key>HXOServerDevelopers</key>
-	<array/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
