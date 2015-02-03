@@ -153,7 +153,6 @@
     if ( ! _passwordItem) {
         _passwordItem = [self itemWithIdentifier: @"server_password_title" cellIdentifier: @"DatasheetTextInputCell"];
         _passwordItem.valuePath = @"password";
-        _passwordItem.valuePlaceholder = NSLocalizedString(@"server_password_placeholder", nil);
         _passwordItem.returnKeyType = UIReturnKeyDone;
     }
     return _passwordItem;
