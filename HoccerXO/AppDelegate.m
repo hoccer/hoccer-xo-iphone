@@ -71,14 +71,11 @@
 
 
 #ifdef HOCCER_DEV
-NSString * const kHXOURLScheme = @"hxod";
 static NSString * const kTestFlightAppToken = @"c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 #else
     #ifdef HOCCER_CLASSIC
-        NSString * const kHXOURLScheme = @"hcr";
         static NSString * const kTestFlightAppToken = @"cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
     #else
-        NSString * const kHXOURLScheme = @"hxo";
         static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
     #endif
 #endif
@@ -2100,7 +2097,8 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 #pragma mark - URL Handling
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
-    if ([[url scheme] isEqualToString: kHXOURLScheme]) {
+    Environment *environment = [Environment sharedEnvironment];
+    if ([[url scheme] isEqualToString:environment.inviteUrlScheme]) {
         // TODO: input verification
         [self.chatBackend acceptInvitation: url.host];
     }

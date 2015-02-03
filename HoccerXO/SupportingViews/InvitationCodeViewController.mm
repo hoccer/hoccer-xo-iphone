@@ -17,6 +17,7 @@
 #import "CopyableUITextField.h"
 #import "HXOThemedNavigationController.h"
 #import "HXOHyperLabel.h"
+#import "Environment.h"
 
 @interface InvitationCodeViewController ()
 
@@ -263,7 +264,7 @@
 
         if ( ! self.codes[readableObject.stringValue]) {
             NSURL * url = [NSURL URLWithString: readableObject.stringValue];
-            if ([url.scheme isEqualToString: kHXOURLScheme]) {
+            if ([url.scheme isEqualToString: [Environment sharedEnvironment].inviteUrlScheme]) {
                 [self.chatBackend pairByToken: url.host];
                 [self addFlash: readableObject];
             } else {
@@ -310,7 +311,7 @@
             }
             if (segmentedControl.selectedSegmentIndex == 1) { // monkey guard
                 self.codeTextField.text = token;
-                NSString * hxoURL = [NSString stringWithFormat: @"%@://%@", kHXOURLScheme, token];
+                NSString * hxoURL = [NSString stringWithFormat: @"%@://%@", [Environment sharedEnvironment].inviteUrlScheme, token];
                 DataMatrix * qrMatrix = [QREncoder encodeWithECLevel: QR_ECLEVEL_AUTO version: QR_VERSION_AUTO string: hxoURL];
                 [UIView transitionWithView: self.qrCodeView
                                   duration: 0.3f

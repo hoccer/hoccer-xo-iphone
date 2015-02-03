@@ -129,5 +129,8 @@ NSString * const kValidEnvironments = @"_validEnvironments";
     }
 }
 
+- (NSString*) inviteUrlScheme {
+    return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HXOUrlScheme"];
+}
 
 @end
