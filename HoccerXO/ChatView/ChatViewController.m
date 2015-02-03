@@ -211,6 +211,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.attachmentButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     //attachmentButton.backgroundColor = [UIColor orangeColor];
     //[attachmentButton setImage: icon forState: UIControlStateNormal];
+    self.attachmentButton.tintColor = [HXOUI theme].tintColor;
     [self.attachmentButton addTarget: self action:@selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
     //attachmentButton.enabled = NO;
     [self.chatbar addSubview: self.attachmentButton];

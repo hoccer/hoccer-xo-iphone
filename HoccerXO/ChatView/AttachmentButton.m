@@ -95,6 +95,11 @@ static NSString * kSpinnerAnim = @"spinnerAnim";
     [self configure];
 }
 
+- (void) setTintColor:(UIColor *)tintColor {
+    [super setTintColor:tintColor];
+    [self configure];
+}
+
 - (CAShapeLayer*) circleLayerInRect: (CGRect) rect {
     CAShapeLayer * circleLayer = [CAShapeLayer layer];
     circleLayer.bounds = rect;
