@@ -3587,7 +3587,7 @@
 					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = com.stroeer.messenger;
-				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_DEFAULT_ENVIRONMENT = stroeer;
 				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
 				HXO_URL_SCHEME = strm;
 				HXO_URL_SCHEME_ID = com.stroeer.messenger;
@@ -3699,7 +3699,7 @@
 					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = "com.stroeer.messenger-dev";
-				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_DEFAULT_ENVIRONMENT = stroeer;
 				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
 				HXO_URL_SCHEME = strmd;
 				HXO_URL_SCHEME_ID = "com.stroeer.messenger-dev";
