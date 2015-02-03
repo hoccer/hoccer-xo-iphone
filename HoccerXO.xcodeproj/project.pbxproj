@@ -3469,6 +3469,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_TESTFLIGHT_TOKEN = "26645843-f312-456c-8954-444e435d4ad2";
 				HXO_URL_SCHEME = hxo;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
 				HXO_XFER_URL_SCHEME = hcrexport;
@@ -3513,6 +3514,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_TESTFLIGHT_TOKEN = "26645843-f312-456c-8954-444e435d4ad2";
 				HXO_URL_SCHEME = hxo;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
 				HXO_XFER_URL_SCHEME = hcrexport;
@@ -3586,6 +3588,7 @@
 				);
 				HXO_BUNDLE_ID = com.stroeer.messenger;
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
 				HXO_URL_SCHEME = strm;
 				HXO_URL_SCHEME_ID = com.stroeer.messenger;
 				HXO_XFER_URL_SCHEME = xferdisabled;
@@ -3697,6 +3700,7 @@
 				);
 				HXO_BUNDLE_ID = "com.stroeer.messenger-dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
 				HXO_URL_SCHEME = strmd;
 				HXO_URL_SCHEME_ID = "com.stroeer.messenger-dev";
 				HXO_XFER_URL_SCHEME = xferdisabled;
@@ -3812,6 +3816,7 @@
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = hcr;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccer;
 				HXO_XFER_URL_SCHEME = hcrimport;
@@ -3922,6 +3927,7 @@
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = hcr;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccer;
 				HXO_XFER_URL_SCHEME = hcrimport;
@@ -4034,6 +4040,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_TESTFLIGHT_TOKEN = "c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 				HXO_URL_SCHEME = hxod;
 				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
 				HXO_XFER_URL_SCHEME = "xferdisabled\n";
@@ -4144,6 +4151,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_TESTFLIGHT_TOKEN = "c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 				HXO_URL_SCHEME = hxod;
 				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
 				HXO_XFER_URL_SCHEME = xferdisabled;

@@ -70,16 +70,6 @@
 #define TRACE_DOCDIR_CHANGES        NO
 
 
-#ifdef HOCCER_DEV
-static NSString * const kTestFlightAppToken = @"c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
-#else
-    #ifdef HOCCER_CLASSIC
-        static NSString * const kTestFlightAppToken = @"cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
-    #else
-        static NSString * const kTestFlightAppToken = @"26645843-f312-456c-8954-444e435d4ad2";
-    #endif
-#endif
-
 NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
 NSString * const kHXOTransferCredentialsURLCredentialsHost = @"credentials";
 NSString * const kHXOTransferCredentialsURLArchiveHost = @"archive";
@@ -644,7 +634,7 @@ BOOL sameObjects(id obj1, id obj2) {
 #endif
     
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
-        [TestFlight takeOff: kTestFlightAppToken];
+        [TestFlight takeOff: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HXOTestFlightToken"]];
     } else {
         NSLog(@"TestFlight crash reporting is disabled");
     }
