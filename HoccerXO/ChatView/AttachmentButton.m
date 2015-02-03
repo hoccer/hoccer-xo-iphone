@@ -40,7 +40,6 @@ static NSString * kSpinnerAnim = @"spinnerAnim";
     self.iconLayer.position = self.center;
     self.iconLayer.path = paperClip.path.CGPath;
     self.iconLayer.fillColor = paperClip.fillColor.CGColor;
-    //self.iconLayer.strokeColor = paperClip.strokeColor.CGColor;
     [self.layer addSublayer: self.iconLayer];
 
     self.circleLayer = [self circleLayerInRect: CGRectInset(self.bounds, kHXOGridSpacing, kHXOGridSpacing)];
