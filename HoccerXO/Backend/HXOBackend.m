@@ -1858,6 +1858,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 contact.type = [Contact entityName];
                 contact.clientId = clientId;
                 contact.nickName = kNickNewRelationship;
+                contact.latestMessageTime = [self estimatedServerTime];
                 [self.delegate saveContext:context];
             }
         }
@@ -2348,6 +2349,7 @@ static NSTimer * _stateNotificationDelayTimer;
             myContact.relationshipLastChanged = [NSDate dateWithTimeIntervalSince1970:0];
             myContact.avatarURL = @"";
             myContact.nickName = kNickNewPresence;
+            myContact.latestMessageTime = [self estimatedServerTime];
             [self checkRelationsipStateForGroupMembershipOfContact:myContact];
             newContact = YES;
             [self.delegate saveContext:context];
@@ -2598,6 +2600,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     group.type = [Group entityName];
     group.groupTag = [NSString stringWithUUID];
+    group.latestMessageTime = [self estimatedServerTime];
     //group.groupKey = [Crypto random256BitKey];
     
     GroupMembership * myMember = (GroupMembership*)[NSEntityDescription insertNewObjectForEntityForName: [GroupMembership entityName] inManagedObjectContext:self.delegate.mainObjectContext];
@@ -2903,6 +2906,7 @@ static NSTimer * _stateNotificationDelayTimer;
             group.type = [Group entityName];
             group.clientId = groupId;
             group.lastUpdateReceived = [NSDate date];
+            group.latestMessageTime = [self estimatedServerTime];
             if (GROUP_DEBUG) NSLog(@"updateGroupHere: created a new group with id %@",groupId);
         }
     }
@@ -3266,6 +3270,7 @@ static NSTimer * _stateNotificationDelayTimer;
     group.clientId = groupId;
     group.groupState = groupState;
     group.nickName = kNickTemporary;
+    group.latestMessageTime = [self estimatedServerTime];
     if (GROUP_DEBUG) NSLog(@"createLocalGroup: created a new group with id %@",groupId);
     return group;
 }
@@ -3317,6 +3322,7 @@ static NSTimer * _stateNotificationDelayTimer;
             memberContact.type = [Contact entityName];
             memberContact.clientId = memberClientId;
             memberContact.nickName = kNickNewMember;
+            memberContact.latestMessageTime = [self estimatedServerTime];
             
             [self.delegate saveContext:context];
         }

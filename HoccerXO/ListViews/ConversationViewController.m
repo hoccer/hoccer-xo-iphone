@@ -343,7 +343,7 @@
 
 /*
  
- This is a reminder because bugs concerning missing latest messages seen
+ This is a reminder because bugs concerning missing latest messages seem
  to reappear from time to time.
  
  When the latest message does not appear in the cell for group messages,
