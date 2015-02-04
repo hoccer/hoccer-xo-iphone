@@ -317,7 +317,8 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
         if (contacts != nil) {
             
             for (Attachment *attachment in selectedAttachments) {
-                if (![AppDelegate.instance hasManagedObjectBeenDeleted:attachment]) {
+                if (![AppDelegate.instance hasManagedObjectBeenDeleted:attachment] && !attachment.fileUnavailable) {
+                    [attachment protectFile];
                     for (Contact *contact in contacts) {
                         NSLog(@"Sending attachment %@ to %@", attachment.humanReadableFileName, contact.nickName);
                         [[[AppDelegate instance] chatBackend] sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:[attachment clone]];

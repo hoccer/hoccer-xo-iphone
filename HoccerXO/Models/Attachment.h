@@ -190,7 +190,8 @@ typedef enum AttachmentStates {
 - (void) determinePlayability;
 
 - (BOOL)fileUnavailable;
-
+- (void)protectFile;
+- (void)unprotectFile;
 
 - (Attachment *) clone;
 - (Attachment*) cloneWithCompletion:(AttachmentCompletionBlock)attachmentCompleted;

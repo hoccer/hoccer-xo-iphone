@@ -380,7 +380,7 @@
     if (self.localURL != nil) {
         NSNumber * currentContentSize = [Attachment fileSize: self.localURL withError:&myError];
         if (myError != nil) {
-            NSLog(@"ERROR: failed to get size for file %@", self.localURL);
+            //NSLog(@"ERROR: failed to get size for file %@", self.localURL);
             return YES;
         }
         if (currentContentSize == 0) {
@@ -388,6 +388,24 @@
         }
     }
     return NO;
+}
+
+- (void)protectFile {
+    if (self.localURL != nil && self.available) {
+        NSString * fullPath = [[NSURL URLWithString: self.localURL] path];
+        if ([AppDelegate isUserReadWriteFile:fullPath]) {
+            [AppDelegate setPosixPermissionsReadOnlyForPath:fullPath];
+        }
+    }
+}
+
+- (void)unprotectFile {
+    if (self.localURL != nil && self.available) {
+        NSString * fullPath = [[NSURL URLWithString: self.localURL] path];
+        if (![AppDelegate isUserReadWriteFile:fullPath]) {
+            [AppDelegate setPosixPermissionsReadWriteForPath:fullPath];
+        }
+    }
 }
 
 - (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
