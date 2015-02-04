@@ -10,7 +10,7 @@
 
 @class Contact;
 
-@interface MusicBrowserDataSource : AudioAttachmentDataSource
+@interface MediaBrowserDataSource : AudioAttachmentDataSource
 
 //+ (NSFetchRequest *)fetchRequestWithManagedObjectModel:(NSManagedObjectModel *)managedObjectModel;
 //+ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel;

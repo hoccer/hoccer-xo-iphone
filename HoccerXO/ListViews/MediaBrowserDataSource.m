@@ -6,20 +6,20 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "MusicBrowserDataSource.h"
+#import "MediaBrowserDataSource.h"
 
 #import "Attachment.h"
 #import "Contact.h"
 #import "AppDelegate.h"
 
-@interface MusicBrowserDataSource ()
+@interface MediaBrowserDataSource ()
 
 @property (nonatomic, strong) Contact *contact;
 @property (nonatomic, strong) NSArray *mediaTypes;
 
 @end
 
-@implementation MusicBrowserDataSource
+@implementation MediaBrowserDataSource
 
 #pragma mark - Initialization
 
@@ -88,7 +88,7 @@
 
 - (NSFetchRequest *) fetchRequest {
     //if (self.contact) {
-    return [MusicBrowserDataSource fetchRequestForContact:self.contact withMediaTypes:self.mediaTypes managedObjectModel:self.managedObjectModel];
+    return [MediaBrowserDataSource fetchRequestForContact:self.contact withMediaTypes:self.mediaTypes managedObjectModel:self.managedObjectModel];
     //} else {
     //    return [MusicBrowserDataSource fetchRequestWithManagedObjectModel:self.managedObjectModel];
     //}
@@ -140,7 +140,7 @@
 #pragma mark - NSCopying
 
 - (id)copyWithZone:(NSZone *)zone {
-    return [[MusicBrowserDataSource alloc] initWithContact:self.contact andMediaTypes:self.mediaTypes];
+    return [[MediaBrowserDataSource alloc] initWithContact:self.contact andMediaTypes:self.mediaTypes];
 }
 
 @end

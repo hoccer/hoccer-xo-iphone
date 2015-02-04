@@ -222,7 +222,7 @@
 		C51B1148194858EC00FBCD2B /* NSArray+RemoveObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C51B1147194858EC00FBCD2B /* NSArray+RemoveObject.m */; };
 		C53954721959CDFC007DBD04 /* Collection.m in Sources */ = {isa = PBXBuildFile; fileRef = C53954711959CDFC007DBD04 /* Collection.m */; };
 		C5395483195ABF66007DBD04 /* CollectionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5395482195ABF66007DBD04 /* CollectionListViewController.m */; };
-		C55E0A2319658787009A7238 /* MusicBrowserDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C55E0A2219658787009A7238 /* MusicBrowserDataSource.m */; };
+		C55E0A2319658787009A7238 /* MediaBrowserDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C55E0A2219658787009A7238 /* MediaBrowserDataSource.m */; };
 		C55E0A3419658798009A7238 /* CollectionDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C55E0A3319658798009A7238 /* CollectionDataSource.m */; };
 		C576EBB61934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB31934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m */; };
 		C576EBB71934CC3B00C0D254 /* HXOAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBB51934CC3B00C0D254 /* HXOAudioPlayer.m */; };
@@ -896,8 +896,8 @@
 		C53954711959CDFC007DBD04 /* Collection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Collection.m; sourceTree = "<group>"; };
 		C5395481195ABF66007DBD04 /* CollectionListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionListViewController.h; sourceTree = "<group>"; };
 		C5395482195ABF66007DBD04 /* CollectionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionListViewController.m; sourceTree = "<group>"; };
-		C55E0A2119658787009A7238 /* MusicBrowserDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicBrowserDataSource.h; sourceTree = "<group>"; };
-		C55E0A2219658787009A7238 /* MusicBrowserDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicBrowserDataSource.m; sourceTree = "<group>"; };
+		C55E0A2119658787009A7238 /* MediaBrowserDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaBrowserDataSource.h; sourceTree = "<group>"; };
+		C55E0A2219658787009A7238 /* MediaBrowserDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaBrowserDataSource.m; sourceTree = "<group>"; };
 		C55E0A3219658798009A7238 /* CollectionDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionDataSource.h; sourceTree = "<group>"; };
 		C55E0A3319658798009A7238 /* CollectionDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionDataSource.m; sourceTree = "<group>"; };
 		C576EBB21934CC3B00C0D254 /* HXOAudioPlaybackButtonController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOAudioPlaybackButtonController.h; sourceTree = "<group>"; };
@@ -1817,8 +1817,8 @@
 				63AEE2FA16CA4D0300522F92 /* ConversationViewController.h */,
 				63AEE2FB16CA4D0300522F92 /* ConversationViewController.m */,
 				63756A9F18F669DC003F7555 /* ContactCellProtocol.h */,
-				C55E0A2119658787009A7238 /* MusicBrowserDataSource.h */,
-				C55E0A2219658787009A7238 /* MusicBrowserDataSource.m */,
+				C55E0A2119658787009A7238 /* MediaBrowserDataSource.h */,
+				C55E0A2219658787009A7238 /* MediaBrowserDataSource.m */,
 			);
 			name = "List Views";
 			path = ListViews;
@@ -3210,7 +3210,7 @@
 				630CAB7B18E0F78500782507 /* DatasheetController.m in Sources */,
 				E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */,
 				E95176101913EB6100EFD1C6 /* LineFeature.m in Sources */,
-				C55E0A2319658787009A7238 /* MusicBrowserDataSource.m in Sources */,
+				C55E0A2319658787009A7238 /* MediaBrowserDataSource.m in Sources */,
 				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
 				634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */,
 				6318FB6F1999057000D018A8 /* CTAssetsViewCell.m in Sources */,

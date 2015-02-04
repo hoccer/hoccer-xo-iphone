@@ -23,7 +23,7 @@
 #import "HXOPluralocalization.h"
 #import "HXOThemedNavigationController.h"
 #import "HXOUI.h"
-#import "MusicBrowserDataSource.h"
+#import "MediaBrowserDataSource.h"
 #import "tab_attachments.h"
 #import "ChatViewController.h"
 
@@ -228,7 +228,7 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
     } else {
         NSInteger selectedSegment = self.mediaTypeControl.selectedSegmentIndex;
         NSArray * mediaTypes = mediaTypesForSegment(selectedSegment);
-        self.dataSource = [[MusicBrowserDataSource alloc] initWithContact:self.contact andMediaTypes:mediaTypes];
+        self.dataSource = [[MediaBrowserDataSource alloc] initWithContact:self.contact andMediaTypes:mediaTypes];
     }
 
     self.dataSource.delegate = self;
