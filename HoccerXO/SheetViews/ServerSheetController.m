@@ -12,6 +12,7 @@
 #import "HXOUserDefaults.h"
 #import "HTTPServerController.h"
 #import "tab_settings.h"
+#import "NSAttributedStringMarkdownParser.h"
 
 @interface ServerSheetController ()
 
@@ -130,7 +131,8 @@
         BOOL running = self.server.isRunning;
         BOOL can_run = self.server.canRun;
         NSString * text = NSLocalizedString(running ? @"server_running" : can_run ? @"server_stopped_can_run" : @"server_stopped_can_not_run", nil);
-        return [[NSAttributedString alloc] initWithString: text];
+        NSAttributedStringMarkdownParser * p = [[NSAttributedStringMarkdownParser alloc] init];
+        return [p attributedStringFromMarkdownString: text];
     }
     return nil;
 }
