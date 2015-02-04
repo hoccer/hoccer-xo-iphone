@@ -721,7 +721,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
         format = [NSString stringWithFormat: @"H:|-[label]-|"];
         [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
-        format = [NSString stringWithFormat: @"V:|-(%f)-[image]-(%f)-[label]-(>=%f)-|", 8 * kHXOGridSpacing, 4 * kHXOGridSpacing, kHXOGridSpacing];
+        format = [NSString stringWithFormat: @"V:|-(%f)-[image]-(%f)-[label(>=40)]-(>=%f)-|", 8 * kHXOGridSpacing, 4 * kHXOGridSpacing, kHXOGridSpacing];
         [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
     }
     return _placeholderView;
