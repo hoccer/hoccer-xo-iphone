@@ -62,13 +62,6 @@
 //==============================================================================
 
 "about_nav_title"         = "Über %@";
-"about_prosa"             = "HOCCER - Der Messenger\n\n Hoccer ist \"Der Messenger\" für anonyme, einfache und sichere Datenübertragung ohne Registrierungsprozess. Weder die Angabe der Mobilnummer noch der Mailadresse ist notwendig um mit Freunden oder Gruppen zu kommunizieren. Wir legen größten Wert auf Sicherheit, Datenschutz und Privatsphäre. Dank modernster Verschlüsselungs- und Übertragungstechnologien, setzt Hoccer neue Standards in der mobilen Datenübertragung und definiert Privatsphäre im Messaging-Sektor neu. Hoccer ermöglicht einen einfachen und unbegrenzten Datenaustausch zwischen Smartphones und Tablets ohne vorherige Eingabe von vertraulichen Nutzerdaten.";
-
-"about_team_heading"      = "Team";
-"about_client_developers" = "Client Developers:";
-"about_server_developers" = "Server Developers:";
-"about_designers"         = "Design:";
-"about_operators"         = "Operations:";
 
 //==============================================================================
 // Apple Push Notifications
