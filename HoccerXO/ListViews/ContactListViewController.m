@@ -15,6 +15,7 @@
 #import "HXOBackend.h"
 #import "DatasheetViewController.h"
 #import "HXOUI.h"
+#import "HXOLocalization.h"
 #import "LabelWithLED.h"
 #import "HXOUserDefaults.h"
 #import "InvitationCodeViewController.h"

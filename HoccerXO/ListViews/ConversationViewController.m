@@ -19,6 +19,7 @@
 #import "Attachment.h"
 #import "Environment.h"
 #import "HXOUI.h"
+#import "HXOLocalization.h"
 #import "AvatarView.h"
 #import "tab_chats.h"
 #import "GesturesInterpreter.h"

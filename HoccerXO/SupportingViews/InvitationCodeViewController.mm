@@ -9,6 +9,7 @@
 #import "InvitationCodeViewController.h"
 
 #import "HXOUI.h"
+#import "HXOLocalization.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "QREncoder.h"

@@ -279,6 +279,7 @@
 		C5C359FF196EC72F00D835F3 /* HXOArrayPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C359FE196EC72F00D835F3 /* HXOArrayPlaylist.m */; };
 		C5C35A03196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C35A02196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m */; };
 		C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C3BD17194065100072AE5F /* AttachmentMigration.m */; };
+		C5EB3CBB1A81186D00E236F6 /* HXOLocalization.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EB3CB91A81186D00E236F6 /* HXOLocalization.m */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
@@ -1022,6 +1023,8 @@
 		C5C35A02196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioAttachmentDataSourcePlaylist.m; sourceTree = "<group>"; };
 		C5C3BD16194065100072AE5F /* AttachmentMigration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentMigration.h; sourceTree = "<group>"; };
 		C5C3BD17194065100072AE5F /* AttachmentMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentMigration.m; sourceTree = "<group>"; };
+		C5EB3CB91A81186D00E236F6 /* HXOLocalization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLocalization.m; sourceTree = "<group>"; };
+		C5EB3CBA1A81186D00E236F6 /* HXOLocalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLocalization.h; sourceTree = "<group>"; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
 		E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-42.xcdatamodel"; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
@@ -1701,6 +1704,8 @@
 				636D400117106EC000304EDF /* Environment.h */,
 				636D400217106EC000304EDF /* Environment.m */,
 				636D400A171081AB00304EDF /* Environment.plist */,
+				C5EB3CBA1A81186D00E236F6 /* HXOLocalization.h */,
+				C5EB3CB91A81186D00E236F6 /* HXOLocalization.m */,
 				63E5698A196353B0007E06BF /* HXOPluralocalization.h */,
 				63E5698B196353B0007E06BF /* HXOPluralocalization.m */,
 				630FD45018BCCCA7000D8C55 /* HXOUI.h */,
@@ -3118,6 +3123,7 @@
 				E9E92F7318733D01007B8042 /* MultipartMessageHeader.m in Sources */,
 				630CAB8218E1E00C00782507 /* DatasheetTextInputCell.m in Sources */,
 				E96CB03417145AC0005F8FFA /* Base64Transcoder.c in Sources */,
+				C5EB3CBB1A81186D00E236F6 /* HXOLocalization.m in Sources */,
 				E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */,
 				E991E6731A0E975000015BEE /* GCDAsyncSocket.m in Sources */,
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
