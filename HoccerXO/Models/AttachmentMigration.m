@@ -50,7 +50,8 @@
 #ifdef ARMED
                 [Attachment makeAttachmentWithMediaType:mediaType mimeType:mimeType humanReadableFileName:file localURL:localURL assetURL:nil inContext:context whenReady:^(Attachment * attachment, NSError * error) {
                     attachment.duplicate = @"ORIGINAL";
-                    NSLog(@"Finished making attachment %@, error=%@",attachment, error);
+                    //NSLog(@"Finished making attachment %@, error=%@",attachment, error);
+                    NSLog(@"Finished making attachment %@",attachment.humanReadableFileName);
                     [attachment determinePlayability];
                 }];
 #endif
