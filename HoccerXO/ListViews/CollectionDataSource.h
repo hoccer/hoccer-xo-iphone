@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "AudioAttachmentDataSource.h"
+#import "MediaAttachmentDataSource.h"
 
 @class Collection;
 
-@interface CollectionDataSource : AudioAttachmentDataSource
+@interface CollectionDataSource : MediaAttachmentDataSource
 
 - (id) initWithCollection:(Collection *)collection;
 

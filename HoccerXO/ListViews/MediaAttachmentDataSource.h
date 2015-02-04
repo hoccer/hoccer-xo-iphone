@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AudioAttachmentDataSourceDelegate.h"
+#import "MediaAttachmentDataSourceDelegate.h"
 
 @class Attachment;
 @class Contact;
 
-@interface AudioAttachmentDataSource : NSObject <UITableViewDataSource, NSFetchedResultsControllerDelegate, NSCopying>
+@interface MediaAttachmentDataSource : NSObject <UITableViewDataSource, NSFetchedResultsControllerDelegate, NSCopying>
 
 - (Attachment *) attachmentAtIndexPath:(NSIndexPath *)indexPath;
 - (Contact *) contactAtIndexPath:(NSIndexPath *)indexPath;
@@ -25,7 +25,7 @@
 - (BOOL) isContactSection:(NSInteger)section;
 
 @property (nonatomic, readonly) NSArray *attachments;
-@property (nonatomic, weak) id<AudioAttachmentDataSourceDelegate> delegate;
+@property (nonatomic, weak) id<MediaAttachmentDataSourceDelegate> delegate;
 
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, readonly) NSManagedObjectContext *mainObjectContext;

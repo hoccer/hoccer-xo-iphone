@@ -8,7 +8,7 @@
 
 #import "CollectionListViewController.h"
 
-#import "AudioAttachmentListViewController.h"
+#import "MediaAttachmentListViewController.h"
 #import "AppDelegate.h"
 #import "Collection.h"
 
@@ -159,8 +159,8 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([segue.identifier isEqualToString:@"showCollection"] && [segue.destinationViewController isKindOfClass:[AudioAttachmentListViewController class]]) {
-        AudioAttachmentListViewController *audioAttachmentListViewController = (AudioAttachmentListViewController *)segue.destinationViewController;
+    if ([segue.identifier isEqualToString:@"showCollection"] && [segue.destinationViewController isKindOfClass:[MediaAttachmentListViewController class]]) {
+        MediaAttachmentListViewController *audioAttachmentListViewController = (MediaAttachmentListViewController *)segue.destinationViewController;
         audioAttachmentListViewController.collection = sender;
     }
 }

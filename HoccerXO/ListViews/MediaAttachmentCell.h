@@ -13,7 +13,7 @@
 @class Attachment;
 @class AvatarView;
 
-@interface AudioAttachmentCell : HXOTableViewCell
+@interface MediaAttachmentCell : HXOTableViewCell
 
 @property (nonatomic,readonly) UILabel     * titleLabel;
 @property (nonatomic,readonly) UILabel     * subtitleLabel;

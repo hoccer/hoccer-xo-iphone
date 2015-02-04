@@ -6,11 +6,11 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "AudioAttachmentDataSource.h"
+#import "MediaAttachmentDataSource.h"
 
 @class Contact;
 
-@interface MediaBrowserDataSource : AudioAttachmentDataSource
+@interface MediaBrowserDataSource : MediaAttachmentDataSource
 
 //+ (NSFetchRequest *)fetchRequestWithManagedObjectModel:(NSManagedObjectModel *)managedObjectModel;
 //+ (NSFetchRequest *)fetchRequestForContact:(Contact *)contact managedObjectModel:(NSManagedObjectModel *)managedObjectModel;

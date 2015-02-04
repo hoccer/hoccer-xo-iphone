@@ -8,7 +8,7 @@
 
 #import "Attachment.h"
 #import "AttachmentInfo.h"
-#import "AudioAttachmentCell.h"
+#import "MediaAttachmentCell.h"
 #import "HXOAudioPlayer.h"
 #import "HXOUI.h"
 #import "HXOLabel.h"
@@ -17,13 +17,13 @@
 #import "VectorArtView.h"
 #import "player_icon_now_playing.h"
 
-@interface AudioAttachmentCell ()
+@interface MediaAttachmentCell ()
 
 @property (nonatomic,strong) NSArray * verticalConstraints;
 
 @end
 
-@implementation AudioAttachmentCell
+@implementation MediaAttachmentCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];

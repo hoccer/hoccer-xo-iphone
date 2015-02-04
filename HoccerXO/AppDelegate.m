@@ -27,7 +27,7 @@
 #import "GesturesInterpreter.h"
 #import "HXOEnvironment.h"
 #import "HXOAudioPlayer.h"
-#import "AudioAttachmentListViewController.h"
+#import "MediaAttachmentListViewController.h"
 #import "NSString+Regexp.h"
 
 #import "Delivery.h" //DEBUG

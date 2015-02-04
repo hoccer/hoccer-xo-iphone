@@ -10,7 +10,7 @@
 
 #import "Contact.h"
 #import "Group.h"
-#import "AudioAttachmentListViewController.h"
+#import "MediaAttachmentListViewController.h"
 #import "ChatViewController.h"
 #import "HXOUserDefaults.h"
 #import "HXOBackend.h"
@@ -581,7 +581,7 @@ static int  groupMemberContext;
         ChatViewController * chatView = segue.destinationViewController;
         chatView.inspectedObject = self.contact;
     } else if ([segue.identifier isEqualToString: @"showAttachments"]) {
-        AudioAttachmentListViewController * attachmentView = segue.destinationViewController;
+        MediaAttachmentListViewController * attachmentView = segue.destinationViewController;
         attachmentView.contact = self.contact;
     }
 }

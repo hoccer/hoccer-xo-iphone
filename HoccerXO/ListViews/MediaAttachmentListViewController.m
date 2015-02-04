@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "AudioAttachmentListViewController.h"
+#import "MediaAttachmentListViewController.h"
 
 #import "AddToCollectionListViewController.h"
 #import "AppDelegate.h"
 #import "Attachment.h"
-#import "AudioAttachmentCell.h"
+#import "MediaAttachmentCell.h"
 #import "Collection.h"
 #import "CollectionDataSource.h"
 #import "Contact.h"
@@ -29,16 +29,16 @@
 
 #define FETCHED_RESULTS_DEBUG NO
 
-@interface AudioAttachmentListViewController ()
+@interface MediaAttachmentListViewController ()
 
 @property (nonatomic, strong) UIView                         * footerContainerView;
-@property (nonatomic, strong) AudioAttachmentDataSource      * dataSource;
+@property (nonatomic, strong) MediaAttachmentDataSource      * dataSource;
 @property (nonatomic, strong) NSArray                        * attachmentsToDelete;
 
 @end
 
 
-@implementation AudioAttachmentListViewController
+@implementation MediaAttachmentListViewController
 
 @synthesize moviePlayerViewController = _moviePlayerViewController;
 @synthesize imageViewController = _imageViewController;
@@ -58,7 +58,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self registerCellClass:[AudioAttachmentCell class]];
+    [self registerCellClass:[MediaAttachmentCell class]];
     [self updateDataSource];
 
     [[NSNotificationCenter defaultCenter] addObserver:self selector: @selector(preferredContentSizeChanged:) name:UIContentSizeCategoryDidChangeNotification object:nil];
@@ -406,7 +406,7 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
 
 - (CGFloat) calculateRowHeight {
     // HACK: Add one to fix layout constraint errors
-    UITableViewCell *prototypeCell = [self prototypeCellOfClass:[AudioAttachmentCell class]];
+    UITableViewCell *prototypeCell = [self prototypeCellOfClass:[MediaAttachmentCell class]];
     return ceilf([prototypeCell systemLayoutSizeFittingSize:UILayoutFittingCompressedSize].height) + 1;
 }
 
@@ -421,7 +421,7 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
         [self updateFooterButtons];
     } else if ([self.dataSource isContactSection:indexPath.section]) {
         Contact *contact = [self.dataSource contactAtIndexPath:indexPath];
-        AudioAttachmentListViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioAttachmentListViewController"];
+        MediaAttachmentListViewController *viewController = [self.storyboard instantiateViewControllerWithIdentifier:@"MediaAttachmentListViewController"];
         viewController.contact = contact;
         [self.navigationController pushViewController:viewController animated:YES];
     } else {
@@ -476,7 +476,7 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
 #pragma mark - Search Display Delegate
 
 - (void)searchDisplayController:(UISearchDisplayController *)controller didLoadSearchResultsTableView:(UITableView *)tableView {
-    [tableView registerClass:[AudioAttachmentCell class] forCellReuseIdentifier:[AudioAttachmentCell reuseIdentifier]];
+    [tableView registerClass:[MediaAttachmentCell class] forCellReuseIdentifier:[MediaAttachmentCell reuseIdentifier]];
     [tableView registerClass:[ContactCell class] forCellReuseIdentifier:[ContactCell reuseIdentifier]];
     tableView.rowHeight = self.tableView.rowHeight;
 }
@@ -487,11 +487,11 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
 
 #pragma mark - Audio Attachment Data Source Delegate
 
-- (void)dataSourceWillChangeContent:(AudioAttachmentDataSource *)dataSource {
+- (void)dataSourceWillChangeContent:(MediaAttachmentDataSource *)dataSource {
     [self.tableView beginUpdates];
 }
 
-- (void)dataSource:(AudioAttachmentDataSource *)dataSource didChangeAttachmentAtIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+- (void)dataSource:(MediaAttachmentDataSource *)dataSource didChangeAttachmentAtIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     
     UITableView *tableView = self.tableView;
     
@@ -516,11 +516,11 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
     }
 }
 
-- (void)dataSourceDidChangeContent:(AudioAttachmentDataSource *)dataSource {
+- (void)dataSourceDidChangeContent:(MediaAttachmentDataSource *)dataSource {
     [self.tableView endUpdates];
 }
 
-- (void)dataSource:(AudioAttachmentDataSource *)dataSource commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forAttachment:(Attachment *)attachment {
+- (void)dataSource:(MediaAttachmentDataSource *)dataSource commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forAttachment:(Attachment *)attachment {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self askToDeleteAttachments:@[ attachment ]];
     }

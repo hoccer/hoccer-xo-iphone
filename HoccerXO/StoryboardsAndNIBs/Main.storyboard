@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14C109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="YW5-Fa-tl0">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
@@ -832,10 +832,10 @@
             </objects>
             <point key="canvasLocation" x="2602" y="1375"/>
         </scene>
-        <!--Music-->
+        <!--Media-->
         <scene sceneID="E9G-9o-6Wq">
             <objects>
-                <tableViewController storyboardIdentifier="AudioAttachmentListViewController" id="69M-9C-Zrd" customClass="AudioAttachmentListViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="MediaAttachmentListViewController" id="69M-9C-Zrd" customClass="MediaAttachmentListViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="sUa-X3-jUc">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -852,7 +852,7 @@
                             <outlet property="delegate" destination="69M-9C-Zrd" id="dav-kS-dMr"/>
                         </connections>
                     </tableView>
-                    <tabBarItem key="tabBarItem" title="Music" id="2OT-aj-jRR"/>
+                    <tabBarItem key="tabBarItem" title="Media" id="2OT-aj-jRR"/>
                     <navigationItem key="navigationItem" id="Skk-N9-fJi"/>
                     <connections>
                         <outlet property="searchDisplayController" destination="VxP-px-D8F" id="fzW-FQ-jRg"/>
@@ -872,11 +872,11 @@
             </objects>
             <point key="canvasLocation" x="107" y="1195"/>
         </scene>
-        <!--Music Navigation-->
+        <!--Media Navigation-->
         <scene sceneID="QCC-p9-EDN">
             <objects>
-                <navigationController definesPresentationContext="YES" id="cUQ-wS-0VX" userLabel="Music Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Music" id="dRm-Zp-puv"/>
+                <navigationController definesPresentationContext="YES" id="cUQ-wS-0VX" userLabel="Media Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Media" id="dRm-Zp-puv"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Fbf-Xb-aYg">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1100,9 +1100,9 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="57k-z7-2Ln"/>
-        <segue reference="yj0-Vd-HPq"/>
         <segue reference="4Tx-uH-B8w"/>
         <segue reference="UJI-wH-YH7"/>
+        <segue reference="yj0-Vd-HPq"/>
         <segue reference="8jZ-4R-eDF"/>
         <segue reference="Jku-Va-0fi"/>
         <segue reference="3XQ-ea-QwO"/>

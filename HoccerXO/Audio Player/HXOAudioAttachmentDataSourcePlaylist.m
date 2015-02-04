@@ -10,7 +10,7 @@
 
 @interface HXOAudioAttachmentDataSourcePlaylist ()
 
-@property (nonatomic, strong) AudioAttachmentDataSource *dataSource;
+@property (nonatomic, strong) MediaAttachmentDataSource *dataSource;
 
 @end
 
@@ -18,7 +18,7 @@
 
 #pragma mark - Lifecycle
 
-- (id) initWithDataSource:(AudioAttachmentDataSource *)dataSource {
+- (id) initWithDataSource:(MediaAttachmentDataSource *)dataSource {
     self = [super init];
     
     if (self) {
@@ -45,11 +45,11 @@
 
 #pragma mark - AudioAttachmentDataSourceDelegate
 
-- (void) dataSourceWillChangeContent:(AudioAttachmentDataSource *)dataSource {}
-- (void) dataSourceDidChangeContent:(AudioAttachmentDataSource *)dataSource {}
-- (void) dataSource:(AudioAttachmentDataSource *)dataSource commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forAttachment:(Attachment *)attachment {}
+- (void) dataSourceWillChangeContent:(MediaAttachmentDataSource *)dataSource {}
+- (void) dataSourceDidChangeContent:(MediaAttachmentDataSource *)dataSource {}
+- (void) dataSource:(MediaAttachmentDataSource *)dataSource commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forAttachment:(Attachment *)attachment {}
 
-- (void) dataSource:(AudioAttachmentDataSource *)dataSource didChangeAttachmentAtIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
+- (void) dataSource:(MediaAttachmentDataSource *)dataSource didChangeAttachmentAtIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type newIndexPath:(NSIndexPath *)newIndexPath {
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.delegate playlistDidChange:self];

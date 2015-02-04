@@ -8,12 +8,12 @@
 
 #import <Foundation/Foundation.h>
 
-#import "AudioAttachmentDataSource.h"
+#import "MediaAttachmentDataSource.h"
 #import "HXOPlaylist.h"
 
-@interface HXOAudioAttachmentDataSourcePlaylist : NSObject <HXOPlaylist, AudioAttachmentDataSourceDelegate>
+@interface HXOAudioAttachmentDataSourcePlaylist : NSObject <HXOPlaylist, MediaAttachmentDataSourceDelegate>
 
-- (id) initWithDataSource:(AudioAttachmentDataSource *)dataSource;
+- (id) initWithDataSource:(MediaAttachmentDataSource *)dataSource;
 
 @property (nonatomic, weak) id<HXOPlaylistDelegate> delegate;
 

@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1FA4DE52195D9B400008C9DD /* AudioAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBDB1934CC9E00C0D254 /* AudioAttachmentListViewController.m */; };
+		1FA4DE52195D9B400008C9DD /* MediaAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBDB1934CC9E00C0D254 /* MediaAttachmentListViewController.m */; };
 		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
 		6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97318DA870400B2D04F /* BigNumUtilities.m */; };
 		6302A98818DA870400B2D04F /* Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97518DA870400B2D04F /* Digest.m */; };
@@ -231,7 +231,7 @@
 		C576EBCE1934CC6100C0D254 /* UIImage+Tint.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBCB1934CC6100C0D254 /* UIImage+Tint.m */; };
 		C576EBD61934CC8400C0D254 /* AudioPlayerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD21934CC8400C0D254 /* AudioPlayerViewController.m */; };
 		C576EBD71934CC8400C0D254 /* SeekSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD41934CC8400C0D254 /* SeekSlider.m */; };
-		C576EBDC1934CC9E00C0D254 /* AudioAttachmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD91934CC9E00C0D254 /* AudioAttachmentCell.m */; };
+		C576EBDC1934CC9E00C0D254 /* MediaAttachmentCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBD91934CC9E00C0D254 /* MediaAttachmentCell.m */; };
 		C576EC281934CCB200C0D254 /* button-pause.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBDF1934CCB100C0D254 /* button-pause.png */; };
 		C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBE01934CCB100C0D254 /* button-pause@2x.png */; };
 		C576EC2A1934CCB200C0D254 /* button-play.png in Resources */ = {isa = PBXBuildFile; fileRef = C576EBE11934CCB100C0D254 /* button-play.png */; };
@@ -273,7 +273,7 @@
 		C576EC741934CD2E00C0D254 /* tab_attachments.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC711934CD2E00C0D254 /* tab_attachments.m */; };
 		C576EC791934CDD900C0D254 /* MessageItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EC781934CDD900C0D254 /* MessageItem.m */; };
 		C5B167D01962B982004D3A28 /* AddToCollectionListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */; };
-		C5B167E21963ECF6004D3A28 /* AudioAttachmentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E11963ECF6004D3A28 /* AudioAttachmentDataSource.m */; };
+		C5B167E21963ECF6004D3A28 /* MediaAttachmentDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E11963ECF6004D3A28 /* MediaAttachmentDataSource.m */; };
 		C5B167E619657AA0004D3A28 /* CollectionItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C5B167E519657AA0004D3A28 /* CollectionItem.m */; };
 		C5C359AC196D395700D835F3 /* NSString+EnumerateRanges.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C359AB196D395700D835F3 /* NSString+EnumerateRanges.m */; };
 		C5C359FF196EC72F00D835F3 /* HXOArrayPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C359FE196EC72F00D835F3 /* HXOArrayPlaylist.m */; };
@@ -914,10 +914,10 @@
 		C576EBD21934CC8400C0D254 /* AudioPlayerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioPlayerViewController.m; sourceTree = "<group>"; };
 		C576EBD31934CC8400C0D254 /* SeekSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SeekSlider.h; sourceTree = "<group>"; };
 		C576EBD41934CC8400C0D254 /* SeekSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SeekSlider.m; sourceTree = "<group>"; };
-		C576EBD81934CC9E00C0D254 /* AudioAttachmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentCell.h; sourceTree = "<group>"; };
-		C576EBD91934CC9E00C0D254 /* AudioAttachmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentCell.m; sourceTree = "<group>"; };
-		C576EBDA1934CC9E00C0D254 /* AudioAttachmentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentListViewController.h; sourceTree = "<group>"; };
-		C576EBDB1934CC9E00C0D254 /* AudioAttachmentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentListViewController.m; sourceTree = "<group>"; };
+		C576EBD81934CC9E00C0D254 /* MediaAttachmentCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaAttachmentCell.h; sourceTree = "<group>"; };
+		C576EBD91934CC9E00C0D254 /* MediaAttachmentCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaAttachmentCell.m; sourceTree = "<group>"; };
+		C576EBDA1934CC9E00C0D254 /* MediaAttachmentListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaAttachmentListViewController.h; sourceTree = "<group>"; };
+		C576EBDB1934CC9E00C0D254 /* MediaAttachmentListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaAttachmentListViewController.m; sourceTree = "<group>"; };
 		C576EBDF1934CCB100C0D254 /* button-pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause.png"; sourceTree = "<group>"; };
 		C576EBE01934CCB100C0D254 /* button-pause@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-pause@2x.png"; sourceTree = "<group>"; };
 		C576EBE11934CCB100C0D254 /* button-play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-play.png"; sourceTree = "<group>"; };
@@ -1006,9 +1006,9 @@
 		C5B167CE1962B982004D3A28 /* AddToCollectionListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddToCollectionListViewController.h; sourceTree = "<group>"; };
 		C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddToCollectionListViewController.m; sourceTree = "<group>"; };
 		C5B167DF1962BE07004D3A28 /* AddToCollectionListViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AddToCollectionListViewControllerDelegate.h; sourceTree = "<group>"; };
-		C5B167E01963ECF6004D3A28 /* AudioAttachmentDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentDataSource.h; sourceTree = "<group>"; };
-		C5B167E11963ECF6004D3A28 /* AudioAttachmentDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioAttachmentDataSource.m; sourceTree = "<group>"; };
-		C5B167E31963FFD7004D3A28 /* AudioAttachmentDataSourceDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AudioAttachmentDataSourceDelegate.h; sourceTree = "<group>"; };
+		C5B167E01963ECF6004D3A28 /* MediaAttachmentDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaAttachmentDataSource.h; sourceTree = "<group>"; };
+		C5B167E11963ECF6004D3A28 /* MediaAttachmentDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MediaAttachmentDataSource.m; sourceTree = "<group>"; };
+		C5B167E31963FFD7004D3A28 /* MediaAttachmentDataSourceDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaAttachmentDataSourceDelegate.h; sourceTree = "<group>"; };
 		C5B167E419657AA0004D3A28 /* CollectionItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollectionItem.h; sourceTree = "<group>"; };
 		C5B167E519657AA0004D3A28 /* CollectionItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollectionItem.m; sourceTree = "<group>"; };
 		C5C35982196AB09D00D835F3 /* HoccerXO-44.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-44.xcdatamodel"; sourceTree = "<group>"; };
@@ -1797,13 +1797,13 @@
 				C5B167CE1962B982004D3A28 /* AddToCollectionListViewController.h */,
 				C5B167CF1962B982004D3A28 /* AddToCollectionListViewController.m */,
 				C5B167DF1962BE07004D3A28 /* AddToCollectionListViewControllerDelegate.h */,
-				C576EBD81934CC9E00C0D254 /* AudioAttachmentCell.h */,
-				C576EBD91934CC9E00C0D254 /* AudioAttachmentCell.m */,
-				C5B167E01963ECF6004D3A28 /* AudioAttachmentDataSource.h */,
-				C5B167E11963ECF6004D3A28 /* AudioAttachmentDataSource.m */,
-				C5B167E31963FFD7004D3A28 /* AudioAttachmentDataSourceDelegate.h */,
-				C576EBDA1934CC9E00C0D254 /* AudioAttachmentListViewController.h */,
-				C576EBDB1934CC9E00C0D254 /* AudioAttachmentListViewController.m */,
+				C576EBD81934CC9E00C0D254 /* MediaAttachmentCell.h */,
+				C576EBD91934CC9E00C0D254 /* MediaAttachmentCell.m */,
+				C5B167E01963ECF6004D3A28 /* MediaAttachmentDataSource.h */,
+				C5B167E11963ECF6004D3A28 /* MediaAttachmentDataSource.m */,
+				C5B167E31963FFD7004D3A28 /* MediaAttachmentDataSourceDelegate.h */,
+				C576EBDA1934CC9E00C0D254 /* MediaAttachmentListViewController.h */,
+				C576EBDB1934CC9E00C0D254 /* MediaAttachmentListViewController.m */,
 				C5395481195ABF66007DBD04 /* CollectionListViewController.h */,
 				C5395482195ABF66007DBD04 /* CollectionListViewController.m */,
 				6327EAEA171883C200AF75E1 /* ContactCell.h */,
@@ -3108,7 +3108,7 @@
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				6318FB671999057000D018A8 /* CTAssetScrollView.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
-				C576EBDC1934CC9E00C0D254 /* AudioAttachmentCell.m in Sources */,
+				C576EBDC1934CC9E00C0D254 /* MediaAttachmentCell.m in Sources */,
 				630CAA5518DCC8AE00782507 /* DatasheetViewController.m in Sources */,
 				630CAB8818E1E84400782507 /* DatasheetCell.m in Sources */,
 				63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */,
@@ -3129,7 +3129,7 @@
 				63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */,
 				63DEC01C19B0A720003804E8 /* MPMediaPlaylist+JGExtensions.m in Sources */,
 				C576EBCD1934CC6100C0D254 /* NSString+FromTimeInterval.m in Sources */,
-				1FA4DE52195D9B400008C9DD /* AudioAttachmentListViewController.m in Sources */,
+				1FA4DE52195D9B400008C9DD /* MediaAttachmentListViewController.m in Sources */,
 				631FE51A1919A3B60073E980 /* HXOActivityIndicatorView.m in Sources */,
 				6318FB721999057000D018A8 /* NSDateFormatter+timeIntervalFormatter.m in Sources */,
 				63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */,
@@ -3232,7 +3232,7 @@
 				63808A291859426B0001AC96 /* ImageAttachmentMessageCell.m in Sources */,
 				E991E5021A0D11F300015BEE /* PUTResponse.m in Sources */,
 				63CA315518D272E70069A0C2 /* InvitationCodeViewController.mm in Sources */,
-				C5B167E21963ECF6004D3A28 /* AudioAttachmentDataSource.m in Sources */,
+				C5B167E21963ECF6004D3A28 /* MediaAttachmentDataSource.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
 				E9E92F7118733D01007B8042 /* HTTPServer.m in Sources */,
 				63DEC01D19B0A720003804E8 /* UIImage+JGExtensions.m in Sources */,

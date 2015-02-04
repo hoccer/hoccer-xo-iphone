@@ -6,24 +6,24 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "AudioAttachmentDataSource.h"
+#import "MediaAttachmentDataSource.h"
 
 #import "AppDelegate.h"
 #import "Attachment.h"
 #import "AttachmentInfo.h"
-#import "AudioAttachmentCell.h"
-#import "AudioAttachmentDataSourceDelegate.h"
+#import "MediaAttachmentCell.h"
+#import "MediaAttachmentDataSourceDelegate.h"
 #import "Contact.h"
 #import "ContactCell.h"
 
-@interface AudioAttachmentDataSource ()
+@interface MediaAttachmentDataSource ()
 
 @property (nonatomic, strong) NSArray *filteredAttachments;
 @property (nonatomic, strong) NSArray *filteredContacts;
 
 @end
 
-@implementation AudioAttachmentDataSource
+@implementation MediaAttachmentDataSource
 
 #pragma mark - Core Data Stack
 
@@ -129,13 +129,13 @@
         [self configureContactCell:cell atIndexPath:indexPath];
         return cell;
     } else {
-        AudioAttachmentCell *cell = [tableView dequeueReusableCellWithIdentifier:[AudioAttachmentCell reuseIdentifier] forIndexPath:indexPath];
+        MediaAttachmentCell *cell = [tableView dequeueReusableCellWithIdentifier:[MediaAttachmentCell reuseIdentifier] forIndexPath:indexPath];
         [self configureAudioAttachmentCell:cell atIndexPath:indexPath];
         return cell;
     }
 }
 
-- (void) configureAudioAttachmentCell:(AudioAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
+- (void) configureAudioAttachmentCell:(MediaAttachmentCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     Attachment *attachment = [self attachmentAtIndexPath:indexPath];
     cell.attachment = attachment;
     [cell highlightText:self.searchText];
