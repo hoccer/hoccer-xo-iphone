@@ -189,6 +189,9 @@ typedef enum AttachmentStates {
 - (void) trySaveToAlbum;
 - (void) determinePlayability;
 
+- (BOOL)fileUnavailable;
+
+
 - (Attachment *) clone;
 - (Attachment*) cloneWithCompletion:(AttachmentCompletionBlock)attachmentCompleted;
 

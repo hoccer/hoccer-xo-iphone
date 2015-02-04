@@ -1781,7 +1781,7 @@ nil
     // NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath: indexPath];
 
-    if (message.attachment.available) {
+    if (message.attachment.available && !message.attachment.fileUnavailable) {
         [self presentViewForAttachment: message.attachment];
     }
 }
@@ -2289,7 +2289,7 @@ nil
 }
 
 - (void) configureUpDownLoadControl: (UpDownLoadControl*) upDownLoadControl attachment: (Attachment*) attachment{
-    upDownLoadControl.hidden = attachment.available && attachment.state == kAttachmentTransfered;
+    upDownLoadControl.hidden = attachment.available && (attachment.state == kAttachmentTransfered || attachment.fileUnavailable);
     BOOL isActive = [self attachmentIsActive: attachment];
     upDownLoadControl.selected = isActive;
     if (attachment.state == kAttachmentWantsTransfer || attachment.state == kAttachmentTransferScheduled) {
@@ -2310,9 +2310,13 @@ nil
 
     NSString * title = message.attachment.humanReadableFileName;
     if (title == nil || [title isEqualToString: @""]) {
-
+        title = @"<>";
     }
     section.title.text = [self attachmentTitle: message];
+    if (message.attachment.fileUnavailable) {
+        section.title.attributedText = [self strikeThroughText:section.title.text];
+    }
+    
 }
 
 - (void)finishConfigureGenericAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
@@ -2354,12 +2358,26 @@ nil
         ImageAttachmentSection * imageSection = (ImageAttachmentSection*)section;
         if (loadPreview && attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
             imageSection.image = message.attachment.previewImage;
+            
         } else {
             imageSection.image = nil;
+        }
+        if (message.attachment.fileUnavailable) {
+            imageSection.showCorrupted =YES;
+        } else {
+            imageSection.showCorrupted = NO;
         }
         imageSection.subtitle.hidden = imageSection.image != nil;
         imageSection.showPlayButton = [attachment.mediaType isEqualToString: @"video"] && imageSection.image != nil;
     }
+}
+
+- (NSAttributedString*) strikeThroughText:(NSString*)title {
+    NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc] initWithString:title];
+    NSRange range = NSMakeRange(0,title.length);
+    [attributedTitle setAttributes:@{ NSStrikethroughStyleAttributeName: @(YES),
+                                      NSStrikethroughColorAttributeName: [UIColor redColor] } range:range];
+    return attributedTitle;
 }
 
 - (void) configureAudioAttachmentSection: (AudioAttachmentSection*) section forMessage: (HXOMessage*) message {
@@ -2367,6 +2385,10 @@ nil
     section.title.text = [self attachmentTitle: message];
     
     Attachment *attachment = message.attachment;
+
+    if (attachment.fileUnavailable) {
+        section.title.attributedText = [self strikeThroughText:section.title.text];
+    }
     
     if (attachment.state == kAttachmentTransfered) {
         section.playbackButtonController = [[HXOAudioPlaybackButtonController alloc] initWithButton:section.playbackButton attachment:attachment];
@@ -2869,7 +2891,7 @@ ready:;
     // NSLog(@"saveMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     Attachment * attachment = message.attachment;
-    if (attachment != nil) {
+    if (attachment != nil && attachment.available && !attachment.fileUnavailable) {
         [attachment trySaveToAlbum];
     }
 }
@@ -2878,7 +2900,7 @@ ready:;
     // NSLog(@"saveMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     Attachment * attachment = message.attachment;
-    if (attachment != nil) {
+    if (attachment != nil && attachment.available && !attachment.fileUnavailable) {
         [self openWithInteractionController:message];
     }
 }

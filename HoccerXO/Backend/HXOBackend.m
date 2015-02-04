@@ -565,6 +565,17 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
     
+    if (attachment != nil) {
+        if ([AppDelegate.instance hasManagedObjectBeenDeleted:attachment] || [attachment fileUnavailable]) {
+            [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"attachment_not_available_message",nil) withTitle:NSLocalizedString(@"attachment_not_available_title",nil) withOKBlock:^{
+            }];
+            if (![AppDelegate.instance hasManagedObjectBeenDeleted:attachment]) {
+                [AppDelegate.instance deleteObject:attachment];
+            }
+            return;
+        }
+    }
+    
     //NSString * lockId = [self chatLockForSenderId:[UserProfile sharedProfile].clientId andGroupId: contact.isGroup ? contact.clientId : nil];
     
     NSManagedObjectID * contactId = contact.objectID;

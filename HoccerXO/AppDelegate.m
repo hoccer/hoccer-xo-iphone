@@ -1109,6 +1109,26 @@ BOOL sameObjects(id obj1, id obj2) {
     return false;
 }
 
+// returns NO when a managed object still is in the database and
+// YES if it has either been marked for deletion or has been deleted from the database
+- (BOOL)hasManagedObjectBeenDeleted:(NSManagedObject *)managedObject {
+    
+    if (managedObject.isDeleted) {
+        return YES;
+    }
+    
+    NSManagedObjectContext *moc = [self mainObjectContext];
+    
+    NSManagedObjectID   *objectID           = [managedObject objectID];
+    NSManagedObject     *managedObjectClone = [moc existingObjectWithID:objectID error:NULL];
+    
+    if (!managedObjectClone) {
+        return YES;                 // Deleted.
+    } else {
+        return NO;                  // Not deleted.
+    }
+}
+
 - (void)saveDatabase
 {
     NSString * savePolicy = [[HXOUserDefaults standardUserDefaults] objectForKey: kHXOSaveDatabasePolicy];

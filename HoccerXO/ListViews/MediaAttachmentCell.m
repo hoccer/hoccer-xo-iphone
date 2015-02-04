@@ -209,6 +209,9 @@
         } else {
             self.artwork.image = attachment.previewIcon;
         }
+        if (attachment.fileUnavailable) {
+            [self strikeThroughTitle];
+        }
     } else {
         self.titleLabel.text = @"";
         self.subtitleLabel.text = @"";
@@ -217,6 +220,17 @@
 
     [self updatePlaybackState];
 }
+
+- (void) strikeThroughTitle {
+    NSString *title = self.titleLabel.text;
+    NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc] initWithString:title];
+    NSRange range = NSMakeRange(0,title.length);
+    [attributedTitle setAttributes:@{ NSStrikethroughStyleAttributeName: @(YES),
+                                      NSStrikethroughColorAttributeName: [UIColor redColor] } range:range];
+
+    self.titleLabel.attributedText = attributedTitle;
+}
+
 
 - (void) highlightText:(NSString *)highlightText {
     NSString *title = self.titleLabel.text;

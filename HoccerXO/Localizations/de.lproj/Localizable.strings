@@ -150,6 +150,9 @@
 "Paste data Attachment %@"="Ablage (%@)";
 "Opened data Attachment %@"="Extern (%@)";
 
+"attachment_not_available_message"        = "Nachricht wurde nicht gesendet weil der Anhang nicht mehr vorhanden ist.";
+"attachment_not_available_title"          = "Anhang nicht verfügbar";
+
 //==============================================================================
 // Audio Attachment List
 //==============================================================================

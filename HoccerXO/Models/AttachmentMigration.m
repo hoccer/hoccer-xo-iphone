@@ -62,6 +62,8 @@
 }
 
 static BOOL isOldAttachment(Attachment * attachment) {
+    return YES;
+    ///
     BOOL oldEnough = NO;
     if (attachment.creationDate == nil) {
         oldEnough = YES;
@@ -149,6 +151,7 @@ static NSString * filenameOf(Attachment * attachment) {
                     if (attachment.message != nil && attachment.available) {
                         if ([AppDelegate isUserReadWriteFile:fullPath]) {
                             [AppDelegate setPosixPermissionsReadOnlyForPath:fullPath];
+                            //[AppDelegate setPosixPermissionsReadWriteForPath:fullPath];
                         }
                     } else {
                         if (![AppDelegate isUserReadWriteFile:fullPath]) {

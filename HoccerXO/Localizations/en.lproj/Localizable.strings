@@ -150,6 +150,9 @@
 "Paste data Attachment"="Pasteboard (%@)";
 "Opened data Attachment %@"="External (%@)";
 
+"attachment_not_available_message"        = "Message was not sent because the Attachment file is not available, probably deleted";
+"attachment_not_available_title"          = "Attachment not available";
+
 //==============================================================================
 // Audio Attachment List
 //==============================================================================
