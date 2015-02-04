@@ -1378,32 +1378,40 @@ nil
         float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
         [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
         
-        // funky method using ALAssetsLibrary
-        ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
-            if (!error) {
-                
-                myURL = [AppDelegate moveDocumentToPermanentLocation:myFileURL];
-                attachment.ownedURL = [myURL absoluteString];
-                attachment.humanReadableFileName = [myURL lastPathComponent];
-                // create attachment with lower quality image dependend on settings
-                [attachment makeImageAttachment: attachment.ownedURL
-                                                 anOtherURL:nil
-                                                      image: myImage
-                                             withCompletion:^(NSError *theError) {
-                                                 [self finishPickedAttachmentProcessingWithImage: attachment.previewImage withError:error];
-                                             }];
-            } else {
-                NSLog(@"Error saving image in Library, error = %@", error);
-                [self finishPickedAttachmentProcessingWithImage: nil withError:error];
-            }
-        };
+        myURL = [AppDelegate moveDocumentToPermanentLocation:myFileURL];
+        attachment.ownedURL = [myURL absoluteString];
+        attachment.humanReadableFileName = [myURL lastPathComponent];
+        // create attachment with lower quality image dependend on settings
+        [attachment makeImageAttachment: attachment.ownedURL
+                             anOtherURL:nil
+                                  image: myImage
+                         withCompletion:^(NSError *theError) {
+                             [self finishPickedAttachmentProcessingWithImage: attachment.previewImage withError:theError];
+                         }];
+       
+        // write full size full quality image to library if authorized
+        ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
         
-        // write full size full quality image to library
-        if(myImage) {
-            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-            [library writeImageToSavedPhotosAlbum:[myOriginalImage CGImage]
-                                      orientation:(ALAssetOrientation)[myOriginalImage imageOrientation]
-                                  completionBlock:completeBlock];
+        if (status == ALAuthorizationStatusDenied || status == ALAuthorizationStatusRestricted) {
+            //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention" message:@"Please give this app permission to access your photo library in your settings app!" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+            //[alert show];
+            NSLog(@"Not saving photo to album because album access is denied");
+        } else {
+            if(myImage) {
+                // funky method using ALAssetsLibrary
+                ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
+                    if (!error) {
+                        
+                     } else {
+                        NSLog(@"Error saving image in Library, error = %@", error);
+                        [self finishPickedAttachmentProcessingWithImage: nil withError:error];
+                    }
+                };
+                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+                [library writeImageToSavedPhotosAlbum:[myOriginalImage CGImage]
+                                          orientation:(ALAssetOrientation)[myOriginalImage imageOrientation]
+                                      completionBlock:completeBlock];
+            }
         }
     } else {
         // image from album
@@ -1460,17 +1468,26 @@ nil
             _currentExportSession = nil;
             
             if (referenceURL == nil) { // video was just recorded
-                NSString *outputFilePath = [outputURL path];
                 
-                if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFilePath)) {
-                    UISaveVideoAtPathToSavedPhotosAlbum(outputFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
-                    NSLog(@"Saved new video at %@ to album",outputFilePath);
+                // write full size full quality image to library if authorized
+                ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+                
+                if (status == ALAuthorizationStatusDenied || status == ALAuthorizationStatusRestricted) {
+                    NSLog(@"Not saving video to album because album access is denied");
                 } else {
-                    NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",outputFilePath];
-                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                    NSLog(@"%@", myDescription);
-                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-                    return;
+                
+                    NSString *outputFilePath = [outputURL path];
+                    
+                    if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFilePath)) {
+                        UISaveVideoAtPathToSavedPhotosAlbum(outputFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+                        NSLog(@"Saved new video at %@ to album",outputFilePath);
+                    } else {
+                        NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",outputFilePath];
+                        NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                        NSLog(@"%@", myDescription);
+                        [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                        return;
+                    }
                 }
             }
             
