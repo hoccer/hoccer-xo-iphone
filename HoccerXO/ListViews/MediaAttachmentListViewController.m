@@ -171,7 +171,7 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
     } else if (self.contact) {
         [self ensureSegmentedMediaTypeControl];
         self.navigationItem.title = self.contact.nickNameOrAlias;
-    // list of all music items
+    // list of all media items
     } else {
         [self ensureSegmentedMediaTypeControl];
         self.navigationItem.title = NSLocalizedString(@"audio_attachment_list_nav_title", nil);

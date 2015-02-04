@@ -1,5 +1,5 @@
 //
-//  MusicBrowserDataSource.h
+//  MediaBrowserDataSource.h
 //  HoccerXO
 //
 //  Created by Guido Lorenz on 03.07.14.

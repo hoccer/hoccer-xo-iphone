@@ -1,5 +1,5 @@
 //
-//  MusicBrowserDataSource.m
+//  MediaBrowserDataSource.m
 //  HoccerXO
 //
 //  Created by Guido Lorenz on 03.07.14.
@@ -40,18 +40,10 @@
 
 
 #pragma mark - Fetch Request
-/*
-+ (NSFetchRequest *)fetchRequestWithManagedObjectModel:(NSManagedObjectModel *)managedObjectModel {
-    return [MusicBrowserDataSource fetchRequestForContact:nil managedObjectModel:managedObjectModel];
-}
-*/
+
 
 + (NSFetchRequest *)fetchRequestForContact:(Contact *)contact withMediaTypes:(NSArray*)mediaTypes managedObjectModel:(NSManagedObjectModel *)managedObjectModel {
-#ifdef orig
-    NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null] };
-    
-    NSFetchRequest *fetchRequest = [managedObjectModel fetchRequestFromTemplateWithName:@"AudioAttachments" substitutionVariables:vars];
-#else
+
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName: [Attachment entityName] inManagedObjectContext: AppDelegate.instance.mainObjectContext];
     [fetchRequest setEntity:entity];
@@ -72,13 +64,10 @@
     if (mediaTypes != nil) {
         [self addPredicates: predicateArray forMediaTypes:mediaTypes];
     }
-    //[self addPredicates: predicateArray forMediaTypes:@[@"audio"]];
-    //if(searchString.length) {
-    //    [self addSearchPredicates: predicateArray searchString: searchString];
-    //}
+
     NSPredicate * filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicateArray];
     [fetchRequest setPredicate:filterPredicate];
-#endif
+
     //NSArray *sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"message.timeAccepted" ascending: NO]];
     NSArray *sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"fileModificationDate" ascending: NO]];
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -93,14 +82,7 @@
     //    return [MusicBrowserDataSource fetchRequestWithManagedObjectModel:self.managedObjectModel];
     //}
 }
-/*
-+ (void) addPredicates: (NSMutableArray*) predicates forContact:(Contact *)contact {
-    //NSDictionary *vars = @{ @"contact" : contact ? contact : [NSNull null] };
-    
-    //[predicates addObject: [NSPredicate predicateWithFormat:@"mediaType == 'audio'"]];
-    [predicates addObject: [NSPredicate predicateWithFormat:@"mediaType == 'audio' AND (message == nil OR (message.isOutgoingFlag == 0 AND contentSize == transferSize) OR (message.isOutgoingFlag == 1 AND assetURL != nil)) AND playable == 'YES' AND (%K == nil OR message.contact == %K) AND (NOT humanReadableFileName BEGINSWITH 'recording')", contact, contact]];
-}
-*/
+
 + (void) addPredicates: (NSMutableArray*) predicates forMediaTypes:(NSArray *)mediaTypes {
     NSMutableArray *predicateArray = [NSMutableArray array];
     for (NSString * mediaType in mediaTypes) {
