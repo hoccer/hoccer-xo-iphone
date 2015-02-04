@@ -8,6 +8,7 @@
 
 #import "InviteController.h"
 #import "HXOUI.h"
+#import "HXOLocalization.h"
 #import "HXOBackend.h"
 #import "Environment.h"
 #import "HXOUserDefaults.h"
@@ -103,11 +104,10 @@
                 MFMailComposeViewController * mailView = [[MFMailComposeViewController alloc] init];
                 vc = mailView;
                 mailView.mailComposeDelegate = self;
-                [mailView setSubject:  NSLocalizedString(@"invite_mail_subject", nil)];
+                [mailView setSubject:  HXOLocalizedString(@"invite_mail_subject", nil, HXOAppName())];
                 [mailView setBccRecipients: recipients];
 
-                NSString * body = NSLocalizedString(@"invite_mail_body", nil);
-                body = [NSString stringWithFormat: body, [self inviteURL: token]];
+                NSString * body = HXOLocalizedString(@"invite_mail_body", nil, HXOAppName(), [self inviteURL: token]);
                 [mailView setMessageBody: body isHTML: NO];
             } break;
             case PeoplePickerModeText: {
@@ -115,9 +115,7 @@
                 vc = messageView;
                 messageView.messageComposeDelegate = self;
                 messageView.recipients = recipients;
-
-                NSString * smsText = NSLocalizedString(@"invite_sms_text", nil);
-                messageView.body = [NSString stringWithFormat: smsText, [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]];
+                messageView.body = HXOLocalizedString(@"invite_sms_text", nil, HXOAppName(), [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]);
             } break;
         }
         [self.composerCoolingPond insertObject: vc atIndex: 0];

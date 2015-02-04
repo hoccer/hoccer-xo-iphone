@@ -7,6 +7,7 @@
 //
 
 #import "HXOEnvironment.h"
+#import "HXOLocalization.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "UserProfile.h"
@@ -101,7 +102,7 @@ static HXOEnvironment *instance;
 
     if ( ! [_locationManager performAuthOrRun]) {
         [[[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
-                                    message: NSLocalizedString(@"permission_denied_location_nearby_message", nil)
+                                    message: HXOLocalizedString(@"permission_denied_location_nearby_message", nil, HXOAppName())
                                    delegate: nil
                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
                           otherButtonTitles: nil] show];
@@ -136,7 +137,7 @@ static HXOEnvironment *instance;
     
     if (error.code == kCLErrorDenied){
         UIAlertView *locationAlert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
-                                                                message: NSLocalizedString(@"permission_denied_location_nearby_message", nil)
+                                                                message: HXOLocalizedString(@"permission_denied_location_nearby_message", nil, HXOAppName())
                                                                delegate: nil
                                                       cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                       otherButtonTitles: nil];

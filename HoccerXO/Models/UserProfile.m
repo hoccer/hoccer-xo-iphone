@@ -371,7 +371,9 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 -(void)verfierChangeDone {
     [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:@"changeVerifier"]];
     [[HXOUserDefaults standardUserDefaults] synchronize];
-    [AppDelegate.instance showGenericAlertWithTitle:@"credentials_verifier_changed_title" andMessage:@"credentials_verifier_changed_message" withOKBlock:nil];
+    [AppDelegate.instance showGenericAlertWithTitle:NSLocalizedString(@"credentials_verifier_changed_title", nil)
+                                         andMessage:NSLocalizedString(@"credentials_verifier_changed_message", nil)
+                                        withOKBlock:nil];
 }
 
 -(BOOL)verfierChangeRequested {

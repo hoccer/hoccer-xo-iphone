@@ -142,7 +142,7 @@
     //self.qrCodeView.backgroundColor = [UIColor lightGrayColor];
 
     self.cameraPermissionLabel = [[HXOHyperLabel alloc] initWithFrame: CGRectInset(self.view.bounds, kHXOCellPadding, kHXOCellPadding)];
-    self.cameraPermissionLabel.attributedText = HXOLocalizedStringWithLinks(@"permission_denied_camera_qr_scanner", nil);
+    self.cameraPermissionLabel.attributedText = [[NSAttributedString alloc] initWithString:HXOLocalizedString(@"permission_denied_camera_qr_scanner", nil, HXOAppName())];
     self.cameraPermissionLabel.textAlignment = NSTextAlignmentCenter;
     self.cameraPermissionLabel.hidden = YES;
     [self.view addSubview: self.cameraPermissionLabel];
@@ -269,7 +269,7 @@
                 [self.chatBackend pairByToken: url.host];
                 [self addFlash: readableObject];
             } else {
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invite_no_xo_qr_code_title", nil)
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: HXOLocalizedString(@"invite_no_xo_qr_code_title", nil, HXOAppName())
                                                                  message: readableObject.stringValue
                                                          completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alert) {
                                                              if (buttonIndex != alert.cancelButtonIndex) {

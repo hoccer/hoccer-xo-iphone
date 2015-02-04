@@ -10,6 +10,7 @@
 
 #import "Environment.h"
 #import "HXOHyperLabel.h"
+#import "HXOLocalization.h"
 #import "HXOUI.h"
 
 #ifdef DEBUG
@@ -55,7 +56,7 @@
 
     self.sizingCell = (AboutCell*)[self.tableView dequeueReusableCellWithIdentifier: @"AboutCell"];
 
-    self.navigationItem.title = NSLocalizedString(@"about_nav_title", nil);
+    self.navigationItem.title = HXOLocalizedString(@"about_nav_title", nil, HXOAppName());
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView { return 1; }

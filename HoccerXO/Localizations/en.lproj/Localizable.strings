@@ -49,7 +49,7 @@
 "search_placeholder" = "search";
 
 "fatal_error_default_title"   = "Fatal Error";
-"fatal_error_default_message" = "An unrecoverable error occured and Hoccer will quit. Please restart Hoccer.";
+"fatal_error_default_message" = "An unrecoverable error occured and %@ will quit. Please restart %@.";
 
 "operation_failed_default_title"    = "Operation Failed";
 "operation_failed_default_message"  = "The operation has failed. Check you network connection and try again later";
@@ -62,7 +62,7 @@
 // About
 //==============================================================================
 
-"about_nav_title"         = "About";
+"about_nav_title"         = "About %@";
 "about_prosa"             = "HOCCER - The Messenger\n\nHoccer is \"The Messenger\" for fast, easy and secure file transfer between smartphones and tablets, with unlimited data exchange without any setup or exchange of any personal data and the possibility of gesture controlled anonymous communication. Security, data protection and the protection of privacy are of extreme importance to us. Hoccer sets new standards in mobile data transmission and puts mobile privacy to a new level, due to latest encryption and transmission technologies. No registration needed, no need of mobile number or mailadress to add friends.";
 
 "about_team_heading"      = "Team";
@@ -196,7 +196,7 @@
 //==============================================================================
 
 "certificate_invalid_title"   = "Invalid Server Certificate";
-"certificate_invalid_message" = "Hoccer could not establish a secure connection to the Hoccer server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
+"certificate_invalid_message" = "%@ could not establish a secure connection to the server. Most probably you are connected to a public hotspot, but not to the internet. It is also possible there is a technical problem or an unsuccessful attempt to eavesdrop on your connection.";
 
 //==============================================================================
 // Chat
@@ -350,7 +350,7 @@
 //==============================================================================
 
 "credentials_setup_nav_title"                  = "Account";
-"credentials_setup_found_old_text"             = "This app has been installed before. You can reactivate your old account and keep all contacts.";
+"credentials_setup_found_old_text"             = "%@ has been installed before. You can reactivate your old account and keep all contacts.";
 "credentials_setup_found_backup_text"          = "A login backup exists. You can restore an account from this backup.";
 "credentials_setup_found_file_text"            = "An exported login (credentials.json) has been found. You can import this login.";
 "credentials_setup_keep_btn_title"             = "Reactivate Old Account";
@@ -385,34 +385,30 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "credentials_exported_alert"                   = "Login credentials have been exported to the document directory. If you transfer them to a another device, you can no longer use them here!";
 
 "credentials_import_btn_title"                 = "Import Login Credentials";
-"credentials_import_safety_question"           = "Importing credentials might result in the permanent loss of your current login and all Hoccer Contacts. Do you really want to import new credentials?";
+"credentials_import_safety_question"           = "Importing credentials might result in the permanent loss of your current login and all contacts. Do you really want to import new credentials?";
 "credentials_key_import_confirm_btn_title"     = "Import";
 
 "credentials_delete_btn_title"                 = "Delete Login Credentials";
-"credentials_delete_safety_question"           = "Deleting credentials might result in the permanent loss of your current login all Hoccer Contacts. Do you really want to delete your credentials?";
+"credentials_delete_safety_question"           = "Deleting credentials might result in the permanent loss of your current login all contacts. Do you really want to delete your credentials?";
 
 "credentials_deleted_title"                     = "Credentials Deleted";
-"credentials_deleted_message"                   = "Credentials have been deleted. Please restart Hoccer.";
+"credentials_deleted_message"                   = "Credentials have been deleted. Please restart the app.";
 
 "credentials_and_database_deleted_title"       = "Credentials Deleted";
-"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer.";
-
+"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart the app.";
 
 "credentials_and_database_not_deleted_title"   = "Nothing was deleted";
 "credentials_and_database_not_deleted_message" = "Try restoring from backup or import saved credentials";
 
-"credentials_and_database_deleted_title"       = "Credentials Deleted";
-"credentials_and_database_deleted_message"     = "Credentials and database have been deleted. Please restart Hoccer.";
-
 "credentials_invalid_title"                    = "Credentials not accepted";
 "credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') It might also indicate tampering or a non-existent acount on the server. You can transfer credentials from other devices under 'Profile→Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
-"credentials_invalid_changed_delete_question"  = "The server has refused your login credentials ('%@'). This happened probably because they are in use on another device or Hoccer-App. It might also indicate tampering. You can transfer credentials under 'Profile→Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+"credentials_invalid_changed_delete_question"  = "The server has refused your login credentials ('%@'). This happened probably because they are in use on another device or app. It might also indicate tampering. You can transfer credentials under 'Profile→Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
 "credentials_and_database_really_delete_title" = "Really delete Credentials and Database?";
 "credentials_database_delete_btn_title"        = "Delete All";
 
-"credentials_imported_message"                 = "New login credentials have been imported. Restart Hoccer to use them.";
+"credentials_imported_message"                 = "New login credentials have been imported. Restart the app to use them.";
 "credentials_imported_title"                   = "New Login Credentials Imported";
 
 "credentials_receive_import_failed_message"    = "Error transfering credentials";
@@ -484,9 +480,9 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 
 "database_corrupt_not_deleted_title"   = "Database not deleted";
-"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. Hoccer will not work.";
+"database_corrupt_not_deleted_message" = "Outdated or corrupted database was not deleted. %@ will not work.";
 "database_corrupt_deleted_title"       = "Database deleted";
-"database_corrupt_deleted_message"     = "The database was deleted. Please restart Hoccer.";
+"database_corrupt_deleted_message"     = "The database was deleted. Please restart %@.";
 
 "database_delete_btn_title"="Delete Database";
 
@@ -587,9 +583,9 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 
 "invite_recipient_picker_title"   = "Recipients";
 
-"invite_mail_subject"             = "Hoccer Invitation";
-"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app Hoccer XO to chat securely with my friends.\nDownload it now and accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
-"invite_sms_text"                 = "Hey! I'm now using the free app Hoccer XO for secure chatting. Download it now and add me as a contact: %@ \nxo %@ ";
+"invite_mail_subject"             = "%@ Invitation";
+"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app %@ to chat securely with my friends.\nDownload it now and accept my friend request by clicking this link: %@.\n\nLet's go!\n\nxo";
+"invite_sms_text"                 = "Hey! I'm now using the free app %@ for secure chatting. Download it now and add me as a contact: %@ \nxo %@ ";
 
 "invite_scan_nav_title"           = "Scan";
 "invite_generate_nav_title"       = "Generate";
@@ -600,7 +596,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "invite_error_alert_title"        = "Invite failed";
 "invite_error_rejected_by_server" = "The code has been rejected";
 
-"invite_no_xo_qr_code_title"      = "Not a Hoccer code";
+"invite_no_xo_qr_code_title"      = "Not a %@ code";
 
 //==============================================================================
 // Keys
@@ -620,7 +616,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "key_length_unit_format"                         = "%@ bit";
 
 "key_renew_keypair"                              = "Renew RSA Keypair";
-"key_renew_keypair_info"                         = "Hoccer protects your privacy using public key cryptography. If your device got in the wrong hands renew your key pair.";
+"key_renew_keypair_info"                         = "If your device got into the wrong hands [renew your key pair](http://hoccer.com/xo/explain/new_keys).";
 
 "key_renew_option_sheet_title"                   = "Create new RSA Keypair?";
 "key_renew_option_automatic"                     = "Automatic";
@@ -671,12 +667,11 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 
 "permission_denied_title"                       = "Access Denied";
-"permission_denied_microphone_message"          = "Grant microphone access to Hoccer in System Settings→Privacy→Microphone if you want to record audio.";
-"permission_denied_location_nearby_message"     = "Grant location access to Hoccer in System Settings→Privacy→Location Services to chat with people nearby.";
-"permission_denied_location_placemarks_message" = "Grant location access to Hoccer in System Settings→Privacy→Location Services to pinpoint your current location.";
-"permission_denied_addressbook_message"         = "Grant address book access to Hoccer in System Settings→Privacy→Contacts to allow contact selection.";
-"permission_denied_camera_qr_scanner"           = "To scan QR codes grant camera access to Hoccer in System Settings→Privacy→Camera";
-"permission_denied_camera_attachment"           = "To directly attach snapshots grant camera access to Hoccer in System Settings→Privacy→Camera";
+"permission_denied_microphone_message"          = "Grant microphone access to %@ in System Settings→Privacy→Microphone if you want to record audio.";
+"permission_denied_location_nearby_message"     = "Grant location access to %@ in System Settings→Privacy→Location Services to chat with people nearby.";
+"permission_denied_addressbook_message"         = "Grant address book access to %@ in System Settings→Privacy→Contacts to allow contact selection.";
+"permission_denied_camera_qr_scanner"           = "To scan QR codes grant camera access to %@ in System Settings→Privacy→Camera";
+"permission_denied_camera_attachment"           = "To directly attach snapshots grant camera access to %@ in System Settings→Privacy→Camera";
 
 //==============================================================================
 // Profile
