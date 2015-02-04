@@ -2,7 +2,7 @@
 // Pluralocalization:
 //
 // Application texts containing numeric values may require inflection of nouns
-// and/or grammar changes. Hoccer XO automatically appends a plural category to
+// and/or grammar changes. Hoccer automatically appends a plural category to
 // these localization keys depending on the current numeric value and locale.
 //
 // Plural Categories:
@@ -458,7 +458,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "archive_imported_title"                        = "Archiv importiert";
 "archive_import_safety_question"                = "Das Importieren eines Archivs überschreibt die aktuelle Datenbank und Benutzerkonto mit den Daten des Accounts, mit dem das Archiv angelegt wurde. Wirklich fortfahren?";
 "archive_fetch_btn_title"                       = "Alles von XO übertragen";
-"archive_fetch_safety_question"                 = "Diese Funktion Übertragen alle Daten von Hoccer XO einschlisslich der Anmeldeinfomation in diese App. Willst du forfahren?";
+"archive_fetch_safety_question"                 = "Diese Funktion überträgt alle Daten von Hoccer XO einschleisslich der Anmeldeinfomation in diese App. Willst du forfahren?";
 "archive_fetch_confirm_btn_title"               = "Alles Holen";
 
 "archive_transfer_safety_question"              = "Willst du alle Daten einschliesslich der Anmeldedaten von XO zur neuen Hoccer App übertragen?";
