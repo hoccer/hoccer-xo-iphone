@@ -7,6 +7,7 @@
 //
 
 #import "HXOUI.h"
+#import "HXOLocalization.h"
 #import "UIColor+HSBUtilities.h"
 #import "UIColor+HexUtilities.h"
 #import "HXOThemedNavigationController.h"
@@ -29,7 +30,7 @@ static HXOUI * _currentTheme;
 #pragma mark - Applicationwide Colors
 
 - (UIColor*) tintColor {
-    return [UIColor colorWithHexString: @"#0079FF"];
+    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"tint_color", nil)];
 }
 
 - (UIColor*) navigationBarBackgroundColor {
@@ -37,7 +38,7 @@ static HXOUI * _currentTheme;
 }
 
 - (UIColor*) navigationBarTintColor {
-    return [UIColor colorWithHexString: @"#4DBFAC"];
+    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"navigation_bar_tint_color", nil)];
 }
 
 - (UIColor*) tableSeparatorColor {
@@ -53,7 +54,7 @@ static HXOUI * _currentTheme;
 }
 
 - (UIColor*) cellAccessoryColor {
-    return [UIColor colorWithHexString:@"#20B4A4"];
+    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"cell_accessory_color", nil)];
 }
 
 - (UIColor*) messageFieldBackgroundColor {
@@ -110,8 +111,8 @@ static HXOUI * _currentTheme;
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
         case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: @"#E6E7EB"];
-        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: @"#4DBFAC"];
-        case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: @"#B8CCCA"];
+        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_success", nil)];
+        case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_in_progress", nil)];
         case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: @"#BD3935"];
     }
 }
