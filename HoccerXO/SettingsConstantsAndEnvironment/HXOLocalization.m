@@ -24,6 +24,11 @@ NSString* HXOLocalizedString(NSString* key, NSString* comment, ...) {
     return string;
 }
 
+NSString* HXOLabelledLocalizedString(NSString* key, NSString* comment) {
+    NSString* bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+    return NSLocalizedStringFromTable(key, bundleName, comment);
+}
+
 NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comment) {
     NSError * error;
     NSRegularExpression * regex = [NSRegularExpression regularExpressionWithPattern: @"\\[([^\\]]+)\\]\\(([^)]+)\\)" options: 0 error: &error];

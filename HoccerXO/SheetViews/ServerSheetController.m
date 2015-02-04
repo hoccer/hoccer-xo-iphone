@@ -9,6 +9,7 @@
 #import "ServerSheetController.h"
 
 #import "AppDelegate.h"
+#import "HXOLocalization.h"
 #import "HXOUserDefaults.h"
 #import "HTTPServerController.h"
 #import "tab_settings.h"
@@ -58,7 +59,7 @@
 }
 
 - (NSString*) title {
-    return NSLocalizedString(@"server_nav_title", nil);
+    return HXOLabelledLocalizedString(@"server_nav_title", nil);
 }
 
 - (VectorArt*) tabBarIcon {
@@ -129,7 +130,11 @@
     if ([section.identifier isEqualToString: self.serverSection.identifier]) {
         BOOL running = self.server.isRunning;
         BOOL can_run = self.server.canRun;
-        NSString * text = NSLocalizedString(running ? @"server_running" : can_run ? @"server_stopped_can_run" : @"server_stopped_can_not_run", nil);
+
+        NSString * boxName = HXOLabelledLocalizedString(@"server_nav_title", nil);
+        NSString * appName = HXOAppName();
+
+        NSString * text = HXOLocalizedString(running ? @"server_running" : can_run ? @"server_stopped_can_run" : @"server_stopped_can_not_run", nil, boxName, appName);
         return [[NSAttributedString alloc] initWithString: text];
     }
     return nil;
