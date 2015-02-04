@@ -52,11 +52,6 @@
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
     if ([object isEqual: self.inspectedObject] && [keyPath isEqualToString: @"canRun"]) {
-        /*
-        if (self.server.isRunning && ! self.server.canRun) {
-            [self toggleHTTPServer: NO];
-        }
-         */
         [self forceFooterTextRefresh];
         [self updateCurrentItems];
     }
@@ -153,7 +148,6 @@
     if ( ! _passwordItem) {
         _passwordItem = [self itemWithIdentifier: @"server_password_title" cellIdentifier: @"DatasheetTextInputCell"];
         _passwordItem.valuePath = @"password";
-        _passwordItem.valuePlaceholder = NSLocalizedString(@"server_password_placeholder", nil);
         _passwordItem.returnKeyType = UIReturnKeyDone;
     }
     return _passwordItem;
@@ -162,7 +156,6 @@
 - (DatasheetItem*) serverSwitch {
     if ( ! _serverSwitch) {
         _serverSwitch = [self itemWithIdentifier: @"server_nav_title" cellIdentifier: @"DatasheetSwitchCell"];
-        //_serverSwitch.valuePath = @"isRunning";
         _serverSwitch.dependencyPaths = @[@"canRun", @"isRunning"];
     }
     return _serverSwitch;
@@ -177,6 +170,5 @@
     }
     return _addressItem;
 }
-
 
 @end

@@ -9,6 +9,7 @@
 #import "AttachmentSection.h"
 #import "UpDownLoadControl.h"
 #import "MessageCell.h"
+#import "HXOUI.h"
 
 @implementation AttachmentSection
 
@@ -16,12 +17,13 @@
     [super commonInit];
 
     _subtitle = [[UILabel alloc] init];
-    self.subtitle.textColor = self.tintColor;
+    self.subtitle.textColor = [HXOUI theme].tintColor;
     self.subtitle.lineBreakMode = NSLineBreakByTruncatingMiddle;
     [self addSubview: self.subtitle];
 
     _upDownLoadControl = [[UpDownLoadControl alloc] initWithFrame: [self attachmentControlFrame]];
     self.upDownLoadControl.frame = [self attachmentControlFrame];
+    self.upDownLoadControl.tintColor = [HXOUI theme].tintColor;
     [self addSubview: self.upDownLoadControl];
 }
 

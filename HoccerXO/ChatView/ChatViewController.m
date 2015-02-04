@@ -209,10 +209,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.attachmentButton = [[AttachmentButton alloc] initWithFrame: CGRectMake(0, 0, s, s)];
     self.attachmentButton.frame = CGRectMake(0, 0, 50, s);
     self.attachmentButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    //attachmentButton.backgroundColor = [UIColor orangeColor];
-    //[attachmentButton setImage: icon forState: UIControlStateNormal];
+    self.attachmentButton.tintColor = [HXOUI theme].tintColor;
     [self.attachmentButton addTarget: self action:@selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
-    //attachmentButton.enabled = NO;
     [self.chatbar addSubview: self.attachmentButton];
 
     CGFloat height = MIN(150, MAX( s - 2 * kHXOGridSpacing, 0));
@@ -244,10 +242,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
     self.sendButton.frame = CGRectMake(CGRectGetMaxX(self.messageField.frame), 0, s, s);
     self.sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
-    //sendButton.backgroundColor = [UIColor orangeColor];
     [self.sendButton setImage: icon forState: UIControlStateNormal];
     [self.sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
-    //sendButton.enabled = NO;
     [self.chatbar addSubview: self.sendButton];
     
     self.attachmentExportProgress = [[UILabel alloc] initWithFrame:CGRectMake(2, 2, 2*kHXOGridSpacing, 2*kHXOGridSpacing)];

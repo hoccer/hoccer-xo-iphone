@@ -65,6 +65,11 @@ NSString * kSpinnerAnim = @"spinner";
     [self.layer addSublayer: self.progressLayer];
 }
 
+- (void) setTintColor:(UIColor *)tintColor {
+    [super setTintColor:tintColor];
+    self.progressLayer.strokeColor = tintColor.CGColor;
+}
+
 - (void) setProgress:(CGFloat)progress {
     _progress = progress;
     [self.progressLayer removeAnimationForKey: kSpinnerAnim];
