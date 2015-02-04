@@ -231,7 +231,7 @@ static NSInteger validationErrorCount = 0;
     
     // To recieve a notification about the file change we can use the NSNotificationCenter
     _fileChangeObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kFileChangedNotification object:nil queue:nil usingBlock:^(NSNotification * notification) {
-        NSLog(@"Document Directory file change detected!");
+        NSLog(@"Document Directory file change detected.");
         //[AppDelegate.instance handleDocumentDirectoryChanges];
         
         double delayInSeconds = 1;
@@ -376,6 +376,11 @@ static NSInteger validationErrorCount = 0;
     NSLog(@"handleDocumentDirectoryChanges %ld",scheduleId);
     if (scheduleId <= _cancelDirectoryHandlingScheduledId) {
         NSLog(@"handleDocumentDirectoryChanges canceled up to %ld",_cancelDirectoryHandlingScheduledId);
+        return;
+    }
+    if (_documentDirectoryHandlingScheduledId > scheduleId) {
+        NSLog(@"handleDocumentDirectoryChanges skipping %ld because more is already scheduled",scheduleId);
+        return;
     }
     NSDictionary * oldEntities = _fileEntities;
     
