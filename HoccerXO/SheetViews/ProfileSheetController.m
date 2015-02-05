@@ -449,7 +449,7 @@
     HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             [[UserProfile sharedProfile] deleteCredentials];
-            [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: @"credentials_deleted_message" withTitle:@"credentials_deleted_title"];
+            [((AppDelegate *)[[UIApplication sharedApplication] delegate]) showFatalErrorAlertWithMessage: NSLocalizedString(@"credentials_deleted_message", nil) withTitle:NSLocalizedString(@"credentials_deleted_title",nil)];
 
         }
     };
