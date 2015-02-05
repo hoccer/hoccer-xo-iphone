@@ -63,15 +63,19 @@
 }
 
 static BOOL isOldAttachment(Attachment * attachment) {
-    return YES;
-    ///
+
+    BOOL inserted = attachment.isInserted;
+    BOOL isTemporary = [[attachment objectID] isTemporaryID];
+    if (inserted || isTemporary) {
+        return NO;
+    }
     BOOL oldEnough = NO;
     if (attachment.creationDate == nil) {
         oldEnough = YES;
     } else {
         NSTimeInterval attachmentAge = -[attachment.creationDate timeIntervalSinceNow];
         NSLog(@"attachmentAge = %f", attachmentAge);
-        oldEnough = attachmentAge > 600;
+        oldEnough = attachmentAge > 10;
     }
     return oldEnough;
 }

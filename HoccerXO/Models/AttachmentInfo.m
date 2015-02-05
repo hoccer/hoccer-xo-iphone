@@ -21,6 +21,8 @@
 
 #import "ImageIO/ImageIO.h"
 
+#define DEBUG_INFO NO
+
 @implementation AttachmentInfo
 
 + (AttachmentInfo *) infoForAttachment:(Attachment *)attachment {
@@ -199,7 +201,7 @@
         NSNumber *width = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelWidth);
         NSNumber *height = (NSNumber *)CFDictionaryGetValue(imageProperties, kCGImagePropertyPixelHeight);
         
-        NSLog(@"Image dimensions: %@ x %@ px", width, height);
+        if (DEBUG_INFO) NSLog(@"Image dimensions: %@ x %@ px", width, height);
         
         attachment.width = [width doubleValue];
         attachment.height = [height doubleValue];
@@ -218,7 +220,7 @@
         CFDictionaryRef tiff = CFDictionaryGetValue(imageProperties, kCGImagePropertyTIFFDictionary);
         if (tiff) {
             NSString *cameraModel = (NSString *)CFDictionaryGetValue(tiff, kCGImagePropertyTIFFModel);
-            if (cameraModel) NSLog(@"Camera Model: %@", cameraModel);
+            if (DEBUG_INFO) if (cameraModel) NSLog(@"Camera Model: %@", cameraModel);
         }
         
         CFDictionaryRef gps = CFDictionaryGetValue(imageProperties, kCGImagePropertyGPSDictionary);
@@ -227,7 +229,7 @@
             NSString *latitudeRef = (NSString *)CFDictionaryGetValue(gps, kCGImagePropertyGPSLatitudeRef);
             NSString *longitudeString = (NSString *)CFDictionaryGetValue(gps, kCGImagePropertyGPSLongitude);
             NSString *longitudeRef = (NSString *)CFDictionaryGetValue(gps, kCGImagePropertyGPSLongitudeRef);
-            NSLog(@"GPS Coordinates: %@ %@ / %@ %@", longitudeString, longitudeRef, latitudeString, latitudeRef);
+            if (DEBUG_INFO) NSLog(@"GPS Coordinates: %@ %@ / %@ %@", longitudeString, longitudeRef, latitudeString, latitudeRef);
             _location = [NSString stringWithFormat:@"%@ %@ / %@ %@", longitudeString, longitudeRef, latitudeString, latitudeRef];
         }
         CFRelease(imageProperties);
