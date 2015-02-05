@@ -66,6 +66,7 @@
 #define DEBUG_APPEAR NO
 #define READ_DEBUG NO
 #define DEBUG_OBSERVERS NO
+#define DEBUG_CELL_HEIGHT_CACHING NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
@@ -1805,15 +1806,33 @@ nil
 
 - (CGFloat)calcAndCacheCellHeight:(MessageCell*)cell forMessage:(HXOMessage*)message {
     CGFloat height = [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
-    message.cachedCellHeight = height;
+
+    if (CGRectGetWidth(_tableView.bounds) == [UIScreen mainScreen].applicationFrame.size.width) {
+        message.cachedCellHeight = height;
+    } else {
+        if (DEBUG_CELL_HEIGHT_CACHING) {
+        NSLog(@"calcAndCacheCellHeight: Tableview width = %f, screen width %f", CGRectGetWidth(_tableView.bounds), [UIScreen mainScreen].applicationFrame.size.width);
+        NSLog(@"calcAndCacheCellHeight: not caching height for prefinal tableview");
+        }
+    }
+    if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"calcAndCacheCellHeight: returning new calculated value %f, cached value = %f", height, message.cachedCellHeight);
     return height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+
+
+    if (CGRectGetWidth(_tableView.bounds) != [UIScreen mainScreen].applicationFrame.size.width) {
+        if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"Tableview width = %f, screen width %f", CGRectGetWidth(tableView.bounds), [UIScreen mainScreen].applicationFrame.size.width);
+        CGFloat myHeight = CGRectGetHeight(_tableView.bounds)/4.0;
+        if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"heightForRowAtIndexPath: returning faked cached value %f", myHeight);
+        return myHeight;
+    }
     
     CGFloat myHeight = message.cachedCellHeight;
     if (myHeight != 0) {
+        if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"heightForRowAtIndexPath: returning cached value %f", myHeight);
         return myHeight;
     }
 
@@ -1823,13 +1842,16 @@ nil
         // *before* our handler has a chance to reconfigure anything. That means the cache already grabs the new
         // font size value but performs computations on cells that still use the old. As a workaround we enforce
         // an update before updating the cache
+        if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"heightForRowAtIndexPath: forcing >iOS 8.0 layout update.");
         for (id section in [cell sections]) {
             if ([section respondsToSelector: @selector(preferredContentSizeChanged:)]) {
                 [section preferredContentSizeChanged: nil];
             }
         }
     }
+    
     [self configureCell: cell forMessage: message withAttachmentPreview:NO];
+    
     return [self calcAndCacheCellHeight:cell forMessage:message];
 }
 

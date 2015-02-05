@@ -204,6 +204,8 @@
             }
         }
     }
+    // NSLog(@"returning 0.0 cell height for entity %@", [AppDelegate appEntityId]);
+
     return 0.0;
 }
 
@@ -217,7 +219,7 @@
         if (self.attachment!= nil) {
             self.cachedAttachmentAspect = self.attachment.aspectRatio;
         }
-        //NSLog(@"setting cached cell height to %f (from %f) for entity %@", height, oldHeight, [AppDelegate appEntityId]);
+        // NSLog(@"setting cached cell height to %f (from %f) for entity %@", height, oldHeight, [AppDelegate appEntityId]);
         
         if (orientation == UIInterfaceOrientationPortrait) {
             self.cachedPortraitCellHeight = height;
