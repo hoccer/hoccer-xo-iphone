@@ -64,7 +64,9 @@
 }
 
 - (NSDictionary*) cellLayoutViews {
-    return @{@"title": self.titleLabel, @"value": self.valueView, @"dots": self.dots};
+    NSMutableDictionary * result = [NSMutableDictionary dictionaryWithDictionary: [super cellLayoutViews]];
+    result[@"dots"] = self.dots;
+    return result;
 }
 
 @end
