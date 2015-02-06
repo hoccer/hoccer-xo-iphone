@@ -3760,7 +3760,7 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = "com.hoccer.whitelabel.stroeer-dev";
+				HXO_BUNDLE_ID = com.hoccer.whitelabel.stroeer;
 				HXO_DEFAULT_ENVIRONMENT = stroeer;
 				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
 				HXO_URL_SCHEME = strmd;
