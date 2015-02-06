@@ -52,7 +52,7 @@
     NSMutableArray *predicateArray = [NSMutableArray array];
     
     // general predicate
-    [predicateArray addObject: [NSPredicate predicateWithFormat:@"message == nil OR (message.isOutgoingFlag == 0 AND contentSize == transferSize) OR (message.isOutgoingFlag == 1 AND assetURL != nil)"]];
+    [predicateArray addObject: [NSPredicate predicateWithFormat:@"message == nil OR (message.isOutgoingFlag == 0 AND contentSize == transferSize) OR (message.isOutgoingFlag == 1 AND localURL != nil)"]];
     
 
     // contact predicate
