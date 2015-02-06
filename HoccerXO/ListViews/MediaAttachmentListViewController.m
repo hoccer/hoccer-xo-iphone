@@ -451,8 +451,18 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
                 UIViewController *audioPlayerViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioPlayerViewController"];
                 [self presentViewController:audioPlayerViewController animated:YES completion:NULL];
             } else {
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"attachment_cannot_play_title", nil)
-                                                                 message: NSLocalizedString(@"attachment_cannot_play_message", nil)
+                NSString * title;
+                NSString * message;
+                if (selected.fileUnavailable) {
+                    title = NSLocalizedString(@"attachment_file_gone_title", nil);
+                    message = NSLocalizedString(@"attachment_file_gone_message", nil);
+                } else {
+                    title = NSLocalizedString(@"attachment_cannot_play_title", nil);
+                    message = NSLocalizedString(@"attachment_cannot_play_message", nil);
+                }
+                
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: title
+                                                                 message: message
                                                                 delegate: nil
                                                        cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                        otherButtonTitles: nil];

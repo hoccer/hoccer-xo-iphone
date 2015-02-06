@@ -132,6 +132,9 @@
 "attachment_cannot_play_title"           = "Cannot Play Audio Attachment";
 "attachment_cannot_play_message"         = "The audio attachment cannot be played on this device.";
 
+"attachment_file_gone_title"             = "Attachment File Not Available";
+"attachment_file_gone_message"           = "The file belonging to this attachment is not on the device. It was probably deleted using the HoccerBox or iTunes.";
+
 "attachment_browse_album"                = "Album";
 "attachment_browse_library"              = "Library";
 

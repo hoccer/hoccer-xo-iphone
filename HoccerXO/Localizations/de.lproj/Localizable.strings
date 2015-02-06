@@ -132,6 +132,9 @@
 "attachment_cannot_play_title"           = "Anhang kann nicht abgespielt werden";
 "attachment_cannot_play_message"         = "Das Format der Audiodatei wird auf diesem Gerät nicht unterstützt.";
 
+"attachment_file_gone_title"             = "Anhang-Datei nicht vorhanden";
+"attachment_file_gone_message"           = "Die zum Anhang gehörende Datei ist nicht vorhanden, weil sie vermutlich in der HoccerBox oder mit iTunes gelöscht wurde.";
+
 "attachment_browse_album"                = "Alben";
 "attachment_browse_library"              = "Bibliothek";
 
