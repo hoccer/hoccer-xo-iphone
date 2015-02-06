@@ -311,16 +311,24 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
 }
 
 - (void) sendPressed:(id)sender {
+    NSArray *selectedAttachments = [self selectedAttachments];
+
     ContactPickerCompletion completion = ^(NSArray *contacts) {
         if (contacts != nil) {
-            NSArray *selectedAttachments = [self selectedAttachments];
-
-            for (Contact *contact in contacts) {
-                for (Attachment *attachment in selectedAttachments) {
-                    [[[AppDelegate instance] chatBackend] sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:[attachment clone]];
+            
+            for (Attachment *attachment in selectedAttachments) {
+                if (![AppDelegate.instance hasManagedObjectBeenDeleted:attachment] && !attachment.fileUnavailable) {
+                    [attachment protectFile];
+                    for (Contact *contact in contacts) {
+                        NSLog(@"Sending attachment %@ to %@", attachment.humanReadableFileName, contact.nickName);
+                        [[[AppDelegate instance] chatBackend] sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:[attachment clone]];
+                    }
+                } else {
+                    [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"attachment_not_available_message",nil) withTitle:NSLocalizedString(@"attachment_not_available_title",nil) withOKBlock:^{
+                    }];
                 }
             }
-        
+            
             [self toggleEditMode:nil];
         }
     };

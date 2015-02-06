@@ -147,17 +147,18 @@
             if (passphrase != nil) {
                 int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:passphrase withForce:NO];
                 switch (result) {
-                    case 1:
+                    case CREDENTIALS_IMPORTED:
                         [[UserProfile sharedProfile] verfierChangePlease];
                         [(UIViewController*)self.delegate performSegueWithIdentifier: @"showProfileSetup" sender: self];
                         break;
-                    case -1:
+                    case CREDENTIALS_BROKEN:
                         [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_decryption_failed_message" withTitle:@"credentials_file_import_failed_title"];
                         break;
-                    case 0:
+                    case CREDENTIALS_IDENTICAL:
                         [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_equals_current_message" withTitle:@"credentials_file_equals_current_title"];
+                        [(UIViewController*)self.delegate performSegueWithIdentifier: @"showProfileSetup" sender: self];
                         break;
-                    case -2:
+                    case CREDENTIALS_OLDER:
                         [HXOUI showErrorAlertWithMessageAsync:@"credentials_receive_old_message" withTitle:@"credentials_receive_old_title"];
                         break;
                     default:
@@ -175,17 +176,18 @@
     } else  if ([sender isEqual: self.optionRestore]) {
         int result = [[UserProfile sharedProfile] restoreCredentialsWithForce:NO];
         switch (result) {
-            case 1:
+            case CREDENTIALS_IMPORTED:
                 [[UserProfile sharedProfile] verfierChangePlease];
                 [(UIViewController*)self.delegate performSegueWithIdentifier: @"showProfileSetup" sender: self];
                 break;
-            case -1:
+            case CREDENTIALS_BROKEN:
                 [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_decryption_failed_message" withTitle:@"credentials_file_import_failed_title"];
                 break;
-            case 0:
+            case CREDENTIALS_IDENTICAL:
                 [HXOUI showErrorAlertWithMessageAsync:@"credentials_file_equals_current_message" withTitle:@"credentials_file_equals_current_title"];
+                [(UIViewController*)self.delegate performSegueWithIdentifier: @"showProfileSetup" sender: self];
                 break;
-            case -2:
+            case CREDENTIALS_OLDER:
                 [HXOUI showErrorAlertWithMessageAsync:@"credentials_receive_old_message" withTitle:@"credentials_receive_old_title"];
                 break;
             default:

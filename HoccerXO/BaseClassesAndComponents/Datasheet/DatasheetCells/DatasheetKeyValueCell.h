@@ -12,4 +12,6 @@
 
 @property (nonatomic,readonly) UILabel * valueView;
 
+- (NSDictionary*) cellLayoutViews;
+
 @end

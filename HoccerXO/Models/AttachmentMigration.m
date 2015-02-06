@@ -50,7 +50,8 @@
 #ifdef ARMED
                 [Attachment makeAttachmentWithMediaType:mediaType mimeType:mimeType humanReadableFileName:file localURL:localURL assetURL:nil inContext:context whenReady:^(Attachment * attachment, NSError * error) {
                     attachment.duplicate = @"ORIGINAL";
-                    NSLog(@"Finished making attachment %@, error=%@",attachment, error);
+                    //NSLog(@"Finished making attachment %@, error=%@",attachment, error);
+                    NSLog(@"Finished making attachment %@",attachment.humanReadableFileName);
                     [attachment determinePlayability];
                 }];
 #endif
@@ -62,13 +63,19 @@
 }
 
 static BOOL isOldAttachment(Attachment * attachment) {
+
+    BOOL inserted = attachment.isInserted;
+    BOOL isTemporary = [[attachment objectID] isTemporaryID];
+    if (inserted || isTemporary) {
+        return NO;
+    }
     BOOL oldEnough = NO;
     if (attachment.creationDate == nil) {
         oldEnough = YES;
     } else {
         NSTimeInterval attachmentAge = -[attachment.creationDate timeIntervalSinceNow];
         NSLog(@"attachmentAge = %f", attachmentAge);
-        oldEnough = attachmentAge > 600;
+        oldEnough = attachmentAge > 10;
     }
     return oldEnough;
 }
@@ -149,6 +156,7 @@ static NSString * filenameOf(Attachment * attachment) {
                     if (attachment.message != nil && attachment.available) {
                         if ([AppDelegate isUserReadWriteFile:fullPath]) {
                             [AppDelegate setPosixPermissionsReadOnlyForPath:fullPath];
+                            //[AppDelegate setPosixPermissionsReadWriteForPath:fullPath];
                         }
                     } else {
                         if (![AppDelegate isUserReadWriteFile:fullPath]) {

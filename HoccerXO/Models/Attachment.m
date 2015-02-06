@@ -283,15 +283,14 @@
     return self.message.isIncoming;
 }
 
-
 - (BOOL) available {
     AttachmentState myState = self.state;
-    return myState == kAttachmentTransfered || (self.outgoing && (myState != kAttachmentEmpty)) || (myState == kAttachmentDetached);
+    return (myState == kAttachmentTransfered || (self.outgoing && (myState != kAttachmentEmpty)) || (myState == kAttachmentDetached));
 }
 
 - (BOOL) uploadable {
     AttachmentState myState = self.state;
-    return (myState == kAttachmentWantsTransfer || myState == kAttachmentUploadIncomplete) && self.outgoing;
+    return (myState == kAttachmentWantsTransfer || myState == kAttachmentUploadIncomplete) && self.outgoing && ![self fileUnavailable];
 }
 
 - (BOOL) downloadable {
@@ -375,6 +374,39 @@
     }
     return nil;
 };
+
+- (BOOL)fileUnavailable {
+    NSError *myError = nil;
+    if (self.localURL != nil) {
+        NSNumber * currentContentSize = [Attachment fileSize: self.localURL withError:&myError];
+        if (myError != nil) {
+            //NSLog(@"ERROR: failed to get size for file %@", self.localURL);
+            return YES;
+        }
+        if (currentContentSize == 0) {
+            return YES;
+        }
+    }
+    return NO;
+}
+
+- (void)protectFile {
+    if (self.localURL != nil && self.available) {
+        NSString * fullPath = [[NSURL URLWithString: self.localURL] path];
+        if ([AppDelegate isUserReadWriteFile:fullPath]) {
+            [AppDelegate setPosixPermissionsReadOnlyForPath:fullPath];
+        }
+    }
+}
+
+- (void)unprotectFile {
+    if (self.localURL != nil && self.available) {
+        NSString * fullPath = [[NSURL URLWithString: self.localURL] path];
+        if (![AppDelegate isUserReadWriteFile:fullPath]) {
+            [AppDelegate setPosixPermissionsReadWriteForPath:fullPath];
+        }
+    }
+}
 
 - (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
     NSURL * url = [NSURL URLWithString: theURL];

@@ -66,6 +66,7 @@
 #define DEBUG_APPEAR NO
 #define READ_DEBUG NO
 #define DEBUG_OBSERVERS NO
+#define DEBUG_CELL_HEIGHT_CACHING NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
@@ -1378,32 +1379,40 @@ nil
         float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
         [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
         
-        // funky method using ALAssetsLibrary
-        ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
-            if (!error) {
-                
-                myURL = [AppDelegate moveDocumentToPermanentLocation:myFileURL];
-                attachment.ownedURL = [myURL absoluteString];
-                attachment.humanReadableFileName = [myURL lastPathComponent];
-                // create attachment with lower quality image dependend on settings
-                [attachment makeImageAttachment: attachment.ownedURL
-                                                 anOtherURL:nil
-                                                      image: myImage
-                                             withCompletion:^(NSError *theError) {
-                                                 [self finishPickedAttachmentProcessingWithImage: attachment.previewImage withError:error];
-                                             }];
-            } else {
-                NSLog(@"Error saving image in Library, error = %@", error);
-                [self finishPickedAttachmentProcessingWithImage: nil withError:error];
-            }
-        };
+        myURL = [AppDelegate moveDocumentToPermanentLocation:myFileURL];
+        attachment.ownedURL = [myURL absoluteString];
+        attachment.humanReadableFileName = [myURL lastPathComponent];
+        // create attachment with lower quality image dependend on settings
+        [attachment makeImageAttachment: attachment.ownedURL
+                             anOtherURL:nil
+                                  image: myImage
+                         withCompletion:^(NSError *theError) {
+                             [self finishPickedAttachmentProcessingWithImage: attachment.previewImage withError:theError];
+                         }];
+       
+        // write full size full quality image to library if authorized
+        ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
         
-        // write full size full quality image to library
-        if(myImage) {
-            ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-            [library writeImageToSavedPhotosAlbum:[myOriginalImage CGImage]
-                                      orientation:(ALAssetOrientation)[myOriginalImage imageOrientation]
-                                  completionBlock:completeBlock];
+        if (status == ALAuthorizationStatusDenied || status == ALAuthorizationStatusRestricted) {
+            //UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Attention" message:@"Please give this app permission to access your photo library in your settings app!" delegate:nil cancelButtonTitle:@"Close" otherButtonTitles:nil, nil];
+            //[alert show];
+            NSLog(@"Not saving photo to album because album access is denied");
+        } else {
+            if(myImage) {
+                // funky method using ALAssetsLibrary
+                ALAssetsLibraryWriteImageCompletionBlock completeBlock = ^(NSURL *assetURL, NSError *error){
+                    if (!error) {
+                        
+                     } else {
+                        NSLog(@"Error saving image in Library, error = %@", error);
+                        [self finishPickedAttachmentProcessingWithImage: nil withError:error];
+                    }
+                };
+                ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+                [library writeImageToSavedPhotosAlbum:[myOriginalImage CGImage]
+                                          orientation:(ALAssetOrientation)[myOriginalImage imageOrientation]
+                                      completionBlock:completeBlock];
+            }
         }
     } else {
         // image from album
@@ -1460,17 +1469,26 @@ nil
             _currentExportSession = nil;
             
             if (referenceURL == nil) { // video was just recorded
-                NSString *outputFilePath = [outputURL path];
                 
-                if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFilePath)) {
-                    UISaveVideoAtPathToSavedPhotosAlbum(outputFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
-                    NSLog(@"Saved new video at %@ to album",outputFilePath);
+                // write full size full quality image to library if authorized
+                ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+                
+                if (status == ALAuthorizationStatusDenied || status == ALAuthorizationStatusRestricted) {
+                    NSLog(@"Not saving video to album because album access is denied");
                 } else {
-                    NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",outputFilePath];
-                    NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
-                    NSLog(@"%@", myDescription);
-                    [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
-                    return;
+                
+                    NSString *outputFilePath = [outputURL path];
+                    
+                    if ( UIVideoAtPathIsCompatibleWithSavedPhotosAlbum(outputFilePath)) {
+                        UISaveVideoAtPathToSavedPhotosAlbum(outputFilePath, self, @selector(video:didFinishSavingWithError:contextInfo:), nil);
+                        NSLog(@"Saved new video at %@ to album",outputFilePath);
+                    } else {
+                        NSString * myDescription = [NSString stringWithFormat:@"didPickAttachment: failed to save video in album at path = %@",outputFilePath];
+                        NSError * myError = [NSError errorWithDomain:@"com.hoccer.xo.attachment" code:556 userInfo:@{NSLocalizedDescriptionKey: myDescription}];
+                        NSLog(@"%@", myDescription);
+                        [self finishPickedAttachmentProcessingWithImage:nil withError:myError];
+                        return;
+                    }
                 }
             }
             
@@ -1781,22 +1799,40 @@ nil
     // NSLog(@"tableView:didSelectRowAtIndexPath: %@",indexPath);
     HXOMessage * message = (HXOMessage*)[self.fetchedResultsController objectAtIndexPath: indexPath];
 
-    if (message.attachment.available) {
+    if (message.attachment.available && !message.attachment.fileUnavailable) {
         [self presentViewForAttachment: message.attachment];
     }
 }
 
 - (CGFloat)calcAndCacheCellHeight:(MessageCell*)cell forMessage:(HXOMessage*)message {
     CGFloat height = [cell sizeThatFits: CGSizeMake(self.tableView.bounds.size.width, FLT_MAX)].height;
-    message.cachedCellHeight = height;
+
+    if (CGRectGetWidth(_tableView.bounds) == [UIScreen mainScreen].applicationFrame.size.width) {
+        message.cachedCellHeight = height;
+    } else {
+        if (DEBUG_CELL_HEIGHT_CACHING) {
+        NSLog(@"calcAndCacheCellHeight: Tableview width = %f, screen width %f", CGRectGetWidth(_tableView.bounds), [UIScreen mainScreen].applicationFrame.size.width);
+        NSLog(@"calcAndCacheCellHeight: not caching height for prefinal tableview");
+        }
+    }
+    if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"calcAndCacheCellHeight: returning new calculated value %f, cached value = %f", height, message.cachedCellHeight);
     return height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath:indexPath];
+
+
+    if (CGRectGetWidth(_tableView.bounds) != [UIScreen mainScreen].applicationFrame.size.width) {
+        if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"Tableview width = %f, screen width %f", CGRectGetWidth(tableView.bounds), [UIScreen mainScreen].applicationFrame.size.width);
+        CGFloat myHeight = CGRectGetHeight(_tableView.bounds)/4.0;
+        if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"heightForRowAtIndexPath: returning faked cached value %f", myHeight);
+        return myHeight;
+    }
     
     CGFloat myHeight = message.cachedCellHeight;
     if (myHeight != 0) {
+        if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"heightForRowAtIndexPath: returning cached value %f", myHeight);
         return myHeight;
     }
 
@@ -1806,13 +1842,16 @@ nil
         // *before* our handler has a chance to reconfigure anything. That means the cache already grabs the new
         // font size value but performs computations on cells that still use the old. As a workaround we enforce
         // an update before updating the cache
+        if (DEBUG_CELL_HEIGHT_CACHING) NSLog(@"heightForRowAtIndexPath: forcing >iOS 8.0 layout update.");
         for (id section in [cell sections]) {
             if ([section respondsToSelector: @selector(preferredContentSizeChanged:)]) {
                 [section preferredContentSizeChanged: nil];
             }
         }
     }
+    
     [self configureCell: cell forMessage: message withAttachmentPreview:NO];
+    
     return [self calcAndCacheCellHeight:cell forMessage:message];
 }
 
@@ -2289,7 +2328,7 @@ nil
 }
 
 - (void) configureUpDownLoadControl: (UpDownLoadControl*) upDownLoadControl attachment: (Attachment*) attachment{
-    upDownLoadControl.hidden = attachment.available && attachment.state == kAttachmentTransfered;
+    upDownLoadControl.hidden = attachment.available && (attachment.state == kAttachmentTransfered || attachment.fileUnavailable);
     BOOL isActive = [self attachmentIsActive: attachment];
     upDownLoadControl.selected = isActive;
     if (attachment.state == kAttachmentWantsTransfer || attachment.state == kAttachmentTransferScheduled) {
@@ -2310,9 +2349,13 @@ nil
 
     NSString * title = message.attachment.humanReadableFileName;
     if (title == nil || [title isEqualToString: @""]) {
-
+        title = @"<>";
     }
     section.title.text = [self attachmentTitle: message];
+    if (message.attachment.fileUnavailable) {
+        section.title.attributedText = [self strikeThroughText:section.title.text];
+    }
+    
 }
 
 - (void)finishConfigureGenericAttachmentSection: (AttachmentSection*) section forMessage: (HXOMessage*) message withAttachmentPreview:(BOOL)loadPreview {
@@ -2354,12 +2397,26 @@ nil
         ImageAttachmentSection * imageSection = (ImageAttachmentSection*)section;
         if (loadPreview && attachment.previewImage.size.height != 0 && attachment.state == kAttachmentTransfered) {
             imageSection.image = message.attachment.previewImage;
+            
         } else {
             imageSection.image = nil;
+        }
+        if (message.attachment.fileUnavailable) {
+            imageSection.showCorrupted =YES;
+        } else {
+            imageSection.showCorrupted = NO;
         }
         imageSection.subtitle.hidden = imageSection.image != nil;
         imageSection.showPlayButton = [attachment.mediaType isEqualToString: @"video"] && imageSection.image != nil;
     }
+}
+
+- (NSAttributedString*) strikeThroughText:(NSString*)title {
+    NSMutableAttributedString *attributedTitle = [[NSMutableAttributedString alloc] initWithString:title];
+    NSRange range = NSMakeRange(0,title.length);
+    [attributedTitle setAttributes:@{ NSStrikethroughStyleAttributeName: @(YES),
+                                      NSStrikethroughColorAttributeName: [UIColor redColor] } range:range];
+    return attributedTitle;
 }
 
 - (void) configureAudioAttachmentSection: (AudioAttachmentSection*) section forMessage: (HXOMessage*) message {
@@ -2367,6 +2424,10 @@ nil
     section.title.text = [self attachmentTitle: message];
     
     Attachment *attachment = message.attachment;
+
+    if (attachment.fileUnavailable) {
+        section.title.attributedText = [self strikeThroughText:section.title.text];
+    }
     
     if (attachment.state == kAttachmentTransfered) {
         section.playbackButtonController = [[HXOAudioPlaybackButtonController alloc] initWithButton:section.playbackButton attachment:attachment];
@@ -2869,7 +2930,7 @@ ready:;
     // NSLog(@"saveMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     Attachment * attachment = message.attachment;
-    if (attachment != nil) {
+    if (attachment != nil && attachment.available && !attachment.fileUnavailable) {
         [attachment trySaveToAlbum];
     }
 }
@@ -2878,7 +2939,7 @@ ready:;
     // NSLog(@"saveMessage");
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
     Attachment * attachment = message.attachment;
-    if (attachment != nil) {
+    if (attachment != nil && attachment.available && !attachment.fileUnavailable) {
         [self openWithInteractionController:message];
     }
 }

@@ -133,8 +133,16 @@
 
         NSString * boxName = HXOLabelledLocalizedString(@"server_nav_title", nil);
         NSString * appName = HXOAppName();
+        NSString * text;
 
-        NSString * text = HXOLocalizedString(running ? @"server_running" : can_run ? @"server_stopped_can_run" : @"server_stopped_can_not_run", nil, boxName, appName);
+        if (running) {
+            text = HXOLocalizedString(@"server_running", nil, boxName, boxName, boxName, boxName, appName, appName, boxName);
+        } else if (can_run) {
+            text = HXOLocalizedString(@"server_stopped_can_run", nil, boxName, boxName, appName);
+        } else {
+            text = HXOLocalizedString(@"server_stopped_can_not_run", nil, boxName, appName);
+        }
+
         return [[NSAttributedString alloc] initWithString: text];
     }
     return nil;

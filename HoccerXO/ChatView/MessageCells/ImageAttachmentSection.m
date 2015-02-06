@@ -11,12 +11,13 @@
 #import "MessageCell.h"
 #import "UpDownLoadControl.h"
 #import "HXOUI.h"
-#import "HXOUI.h"
+#import "ghost_busters_sign.h"
 
 @interface ImageAttachmentSection ()
 
 @property (nonatomic,strong) CALayer* imageLayer;
 @property (nonatomic,strong) CAShapeLayer* playButton;
+@property (nonatomic,strong) CAShapeLayer* corruptedLayer;
 
 @end
 
@@ -43,7 +44,39 @@
     self.playButton.strokeColor = [UIColor colorWithWhite: 1.0 alpha:0.5].CGColor;
     self.playButton.fillColor = NULL;
     [self.layer insertSublayer: self.playButton atIndex: 1];
+
+ 
 }
+
+- (BOOL)showCorrupted {
+    return self.corruptedLayer != nil;
+}
+
+- (void)setShowCorrupted:(BOOL)showCorrupted {
+    if (showCorrupted) {
+        if (self.corruptedLayer == nil) {
+            self.corruptedLayer = [CAShapeLayer layer];
+            //CGSize ovlySize = CGSizeMake(self.bounds.size.width / 2, self.bounds.size.height);
+            //self.corruptedLayer.frame = self.bounds;
+            self.corruptedLayer.frame = [self corruptedFrame];
+            //self.corruptedLayer.mask = self.bubbleLayer;
+            self.corruptedLayer.contentsGravity = kCAGravityResizeAspect;
+            
+            VectorArt * blockedSign = [[ghost_busters_sign alloc] init];
+            self.corruptedLayer.fillColor = blockedSign.fillColor.CGColor;
+            self.corruptedLayer.strokeColor = blockedSign.strokeColor.CGColor;
+            
+            self.corruptedLayer.path = [blockedSign pathScaledToSize: self.corruptedLayer.bounds.size].CGPath;
+            [self.layer insertSublayer: self.corruptedLayer atIndex: 2];
+        }
+    } else {
+        if (self.corruptedLayer != nil) {
+            [self.corruptedLayer removeFromSuperlayer];
+            self.corruptedLayer = nil;
+        }
+    }
+}
+
 
 - (void) setImage:(UIImage *)image {
     _image = image;
@@ -61,7 +94,18 @@
     if (layer == self.layer) {
         self.imageLayer.frame = self.bounds;
         self.playButton.frame = [self attachmentControlFrame];
+        if (self.corruptedLayer != nil) {
+            self.corruptedLayer.frame = [self corruptedFrame];
+        }
     }
+}
+
+- (CGRect) corruptedFrame {
+    CGFloat s = MIN(14 * kHXOGridSpacing, MIN(self.bounds.size.height, self.bounds.size.width));
+    s = MAX(s - 2 * kHXOGridSpacing, 3 * kHXOGridSpacing);
+    CGFloat x = 0.5 * (self.bounds.size.width - s);
+    CGFloat y = 0.5 * (self.bounds.size.height - s);
+    return CGRectMake(x, y, s, s);
 }
 
 - (UIBezierPath*) playButtonPathWithSize: (CGFloat) size {
