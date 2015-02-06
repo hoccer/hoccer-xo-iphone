@@ -640,6 +640,7 @@ BOOL sameObjects(id obj1, id obj2) {
 #endif
     
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
+        NSLog(@"TestFlight launching with token %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HXOTestFlightToken"]);
         [TestFlight takeOff: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HXOTestFlightToken"]];
     } else {
         NSLog(@"TestFlight crash reporting is disabled");

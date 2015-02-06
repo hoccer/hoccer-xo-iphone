@@ -1,1 +1,13 @@
 "about_prosa" = "HOCCER - Der Messenger\n\n Hoccer ist \"Der Messenger\" für anonyme, einfache und sichere Datenübertragung ohne Registrierungsprozess. Weder die Angabe der Mobilnummer noch der Mailadresse ist notwendig um mit Freunden oder Gruppen zu kommunizieren. Wir legen größten Wert auf Sicherheit, Datenschutz und Privatsphäre. Dank modernster Verschlüsselungs- und Übertragungstechnologien, setzt Hoccer neue Standards in der mobilen Datenübertragung und definiert Privatsphäre im Messaging-Sektor neu. Hoccer ermöglicht einen einfachen und unbegrenzten Datenaustausch zwischen Smartphones und Tablets ohne vorherige Eingabe von vertraulichen Nutzerdaten.";
+
+"server_nav_title"              = "HoccerBox";
+
+//==============================================================================
+// Color Scheme
+//==============================================================================
+
+"tint_color" = "#0079FF";
+"navigation_bar_tint_color" = "#4DBFAC";
+"cell_accessory_color" = "#20B4A4";
+"message_background_color_success" = "#4DBFAC";
+"message_background_color_in_progress" = "#B8CCCA";
