@@ -9,6 +9,7 @@
 #import "KeySheetController.h"
 
 #import "HXOBackend.h"
+#import "HXOLocalization.h"
 #import "Contact.h"
 #import "CCRSA.h"
 #import "HXOUI.h"

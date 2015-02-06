@@ -15,7 +15,6 @@
 #import "GCNetworkReachability.h"
 
 
-FOUNDATION_EXPORT NSString * const kHXOURLScheme;
 FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLImportScheme;
 FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLCredentialsHost;
 FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLArchiveHost;

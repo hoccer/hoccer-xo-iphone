@@ -10,6 +10,7 @@
 
 #import "Environment.h"
 #import "HXOHyperLabel.h"
+#import "HXOLocalization.h"
 #import "HXOUI.h"
 
 #ifdef DEBUG
@@ -55,7 +56,7 @@
 
     self.sizingCell = (AboutCell*)[self.tableView dequeueReusableCellWithIdentifier: @"AboutCell"];
 
-    self.navigationItem.title = NSLocalizedString(@"about_nav_title", nil);
+    self.navigationItem.title = HXOLocalizedString(@"about_nav_title", nil, HXOAppName());
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView { return 1; }
@@ -80,15 +81,7 @@
 
     cell.aboutLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     cell.aboutLabel.preferredMaxLayoutWidth = 320 - 2 * 24;
-    cell.aboutLabel.attributedText = [[NSAttributedString alloc] initWithString:
-#ifdef DEBUG
-    @"HOCCER - Der Messenger\n\n"
-    "Tootsie roll bear claw pastry. Muffin candy chocolate cake powder powder. Marzipan chocolate cake lollipop candy. Soufflé brownie wafer biscuit marshmallow. Marzipan unerdwear.com pudding toffee liquorice. Icing wafer sweet roll cotton candy wafer sweet roll pudding unerdwear.com cheesecake. Macaroon donut danish. Cheesecake applicake candy canes chocolate cake cake chocolate bar cheesecake candy pie.\n\n"
-    "Pastry donut tiramisu halvah cotton candy dessert bonbon. Lollipop candy canes wafer candy ice cream. Dragée dragée apple pie topping chocolate sweet wafer cheesecake. Soufflé croissant cookie muffin donut liquorice wafer. Soufflé unerdwear.com biscuit chocolate bar sesame snaps halvah. Bear claw fruitcake halvah tiramisu ice cream. Carrot cake caramels topping jelly-o sugar plum bonbon danish."
-#else
-    NSLocalizedString(@"about_prosa", nil)
-#endif
-                                      ];
+    cell.aboutLabel.attributedText = [[NSAttributedString alloc] initWithString:HXOLabelledLocalizedString(@"about_prosa", nil)];
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {

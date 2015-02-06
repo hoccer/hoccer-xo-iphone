@@ -9,6 +9,7 @@
 #import "InvitationCodeViewController.h"
 
 #import "HXOUI.h"
+#import "HXOLocalization.h"
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "QREncoder.h"
@@ -17,6 +18,7 @@
 #import "CopyableUITextField.h"
 #import "HXOThemedNavigationController.h"
 #import "HXOHyperLabel.h"
+#import "Environment.h"
 
 @interface InvitationCodeViewController ()
 
@@ -140,7 +142,7 @@
     //self.qrCodeView.backgroundColor = [UIColor lightGrayColor];
 
     self.cameraPermissionLabel = [[HXOHyperLabel alloc] initWithFrame: CGRectInset(self.view.bounds, kHXOCellPadding, kHXOCellPadding)];
-    self.cameraPermissionLabel.attributedText = HXOLocalizedStringWithLinks(@"permission_denied_camera_qr_scanner", nil);
+    self.cameraPermissionLabel.attributedText = [[NSAttributedString alloc] initWithString:HXOLocalizedString(@"permission_denied_camera_qr_scanner", nil, HXOAppName())];
     self.cameraPermissionLabel.textAlignment = NSTextAlignmentCenter;
     self.cameraPermissionLabel.hidden = YES;
     [self.view addSubview: self.cameraPermissionLabel];
@@ -263,11 +265,11 @@
 
         if ( ! self.codes[readableObject.stringValue]) {
             NSURL * url = [NSURL URLWithString: readableObject.stringValue];
-            if ([url.scheme isEqualToString: kHXOURLScheme]) {
+            if ([url.scheme isEqualToString: [Environment sharedEnvironment].inviteUrlScheme]) {
                 [self.chatBackend pairByToken: url.host];
                 [self addFlash: readableObject];
             } else {
-                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"invite_no_xo_qr_code_title", nil)
+                UIAlertView * alert = [[UIAlertView alloc] initWithTitle: HXOLocalizedString(@"invite_no_xo_qr_code_title", nil, HXOAppName())
                                                                  message: readableObject.stringValue
                                                          completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alert) {
                                                              if (buttonIndex != alert.cancelButtonIndex) {
@@ -310,7 +312,7 @@
             }
             if (segmentedControl.selectedSegmentIndex == 1) { // monkey guard
                 self.codeTextField.text = token;
-                NSString * hxoURL = [NSString stringWithFormat: @"%@://%@", kHXOURLScheme, token];
+                NSString * hxoURL = [NSString stringWithFormat: @"%@://%@", [Environment sharedEnvironment].inviteUrlScheme, token];
                 DataMatrix * qrMatrix = [QREncoder encodeWithECLevel: QR_ECLEVEL_AUTO version: QR_VERSION_AUTO string: hxoURL];
                 [UIView transitionWithView: self.qrCodeView
                                   duration: 0.3f

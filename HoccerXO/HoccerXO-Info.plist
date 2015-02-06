@@ -76,6 +76,10 @@
 	<string>16014</string>
 	<key>HXODefaultEnvironment</key>
 	<string>${HXO_DEFAULT_ENVIRONMENT}</string>
+	<key>HXOTestFlightToken</key>
+	<string>${HXO_TESTFLIGHT_TOKEN}</string>
+	<key>HXOUrlScheme</key>
+	<string>${HXO_URL_SCHEME}</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>

@@ -12,6 +12,7 @@
 #import "ProfileSheetController.h"
 #import "UserProfile.h"
 #import "HXOUI.h"
+#import "HXOLocalization.h"
 #import "AppDelegate.h"
 #import "Environment.h"
 #import "HXOUserDefaults.h"
@@ -75,7 +76,7 @@
     }
     
     if ([UserProfile sharedProfile].isRegistered) {
-        [texts addObject: NSLocalizedString(@"credentials_setup_found_old_text", nil)];
+        [texts addObject: HXOLocalizedString(@"credentials_setup_found_old_text", nil, HXOAppName())];
     }
     
     if ([UserProfile sharedProfile].foundCredentialsFile) {

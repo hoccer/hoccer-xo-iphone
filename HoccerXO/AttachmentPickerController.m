@@ -10,6 +10,7 @@
 #import "RecordViewController.h"
 #import "ABPersonVCardCreator.h"
 #import "HXOUserDefaults.h"
+#import "HXOLocalization.h"
 #import "TDSemiModal.h"
 #import "GeoLocationPicker.h"
 #import "AppDelegate.h"
@@ -311,8 +312,9 @@
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [AppDelegate.instance showGenericAlertWithTitle:@"permission_denied_title" andMessage:@"permission_denied_camera_attachment" withOKBlock:^{
-                    }];
+                    [AppDelegate.instance showGenericAlertWithTitle:NSLocalizedString(@"permission_denied_title", nil)
+                                                         andMessage:HXOLocalizedString(@"permission_denied_camera_attachment", nil, HXOAppName())
+                                                        withOKBlock:^{}];
                 });
             }
         }];
@@ -473,7 +475,7 @@
             [_viewController presentViewController:peoplePicker animated:YES completion:nil];
             [AppDelegate setBlackFontStatusbarForViewController:_viewController];
         } else {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"permission_denied_title", "") message:NSLocalizedString(@"permission_denied_addressbook_message", "") delegate:nil cancelButtonTitle:NSLocalizedString(@"ok","") otherButtonTitles:nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"permission_denied_title", "") message:HXOLocalizedString(@"permission_denied_addressbook_message", nil, HXOAppName()) delegate:nil cancelButtonTitle:NSLocalizedString(@"ok","") otherButtonTitles:nil];
             [alert show];
         }
     }];
