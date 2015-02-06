@@ -6,8 +6,8 @@
 // Color Scheme
 //==============================================================================
 
-"tint_color" = "#FE5A12";
-"navigation_bar_tint_color" = "#081F49";
-"cell_accessory_color" = "#C7C7CC";
+"tint_color" = "#FF5A10";
+"navigation_bar_tint_color" = "#08204A";
+"cell_accessory_color" = "#C6C6C6";
 "message_background_color_success" = "#081F49";
 "message_background_color_in_progress" = "#394D6E";
