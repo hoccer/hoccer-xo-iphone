@@ -20,6 +20,7 @@
 #import "VectorArtView.h"
 #import "WebViewController.h"
 #import "AppDelegate.h"
+#import "HXOLocalization.h"
 
 #define SEGUE_DEBUG         NO
 #define INSPECTION_DEBUG    NO
@@ -122,6 +123,9 @@ static CGFloat kHeaderHeight;
 - (void) configureCell: (DatasheetCell*) cell withItem: (DatasheetItem*) item forRowAtIndexPath: (NSIndexPath*) indexPath {
 
     NSString * title = NSLocalizedString(item.title, nil);
+    if ([title isEqualToString:item.title]) {
+        title = HXOLabelledLocalizedString(item.title,nil);
+    }
     title = title;
     cell.titleLabel.text = title;
 
