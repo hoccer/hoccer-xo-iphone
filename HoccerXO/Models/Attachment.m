@@ -2469,6 +2469,7 @@
     self.attachmentJsonString = [self.message decryptString:theB64String];
 }
 
+
 - (void) prepareForDeletion {
     [super prepareForDeletion];
     // cancel a potential open transferconnection

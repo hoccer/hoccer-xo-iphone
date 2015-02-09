@@ -160,7 +160,14 @@
 
 "audio_attachment_list_count_attachments"          = "%u Dateien";
 "audio_attachment_list_count_attachments (one)"    = "Eine Datei";
-"audio_attachment_list_confirm_delete_title"       = "%@ löschen?";
+"audio_attachment_list_count_messages"             = "%u Nachrichten";
+"audio_attachment_list_count_messages (one)"       = "eine Nachricht";
+"audio_attachment_list_confirm_delete_title"       = "%@ löschen? %@";
+"audio_attachment_list_confirm_delete_more_title"  = "%@ und %@ löschen? %@";
+
+"audio_attachment_list_count_attachment_duplicates"         = "(einschliesslich %u Duplikate)";
+"audio_attachment_list_count_attachment_duplicates (one)"   = "(einschliesslich eines Duplikats)";
+
 "audio_attachment_list_remove_from_collection"     = "Aus Sammlung entfernen";
 
 "audio_attachment_list_search_section_senders"     = "Absender";
@@ -711,7 +718,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 //==============================================================================
 // Server
 //==============================================================================
-"server_running"                = "Führe folgende Schritte auf einem Computer aus, um diesen mit der %@ zu verbinden:\n\n1. Auf dem Computer das Dialogfeld öffnen, um die Verbindung zur %@ herzustellen: \n\nOSX: |Finder|Gehe zu|mit Server verbinden|\n\nWindows XP:|Arbeitsplatz|Extras|Netzlaufwerk verbinden|\n\nWindows 7:|Computer|Rechtsklick in Fenster|Netzwerkadresse hinzufügen|\n\nWindows 8:|Dieser PC|Computer|Netzwerkadresse hinzufügen|\n\n2. Oben genannte http:// Adresse eingeben und \"verbinden\" klicken\n\n3. Beliebigen Benutzernamen auswählen und oben genanntes Kennwort verwenden.\n\n4. Es öffnet sich ein Fenster, in dem nach einigen Sekunden die Dateien in der %@ angezeigt werden. \n\n5. Du kannst nun wie gewohnt Dateien zwischen diesem Fenster und anderen Dateisystemen auf deinem Computer kopieren. Dateien, die in die %@ kopiert werden, erscheinen in der %@ App nach einigen Sekunden im Bereich Medien. \n\nEs können nur Dateien gelöscht werden, die noch nicht Teil einer Konversation sind. \n\nBitte beachte, dass die %@ App im Vordergrund laufen muss, damit auf die %@ zugegriffen werden kann.";
+"server_running"                = "Führe folgende Schritte auf einem Computer aus, um diesen mit der %@ zu verbinden:\n\n1. Auf dem Computer das Dialogfeld öffnen, um die Verbindung zur %@ herzustellen: \n\nOSX: |Finder|Gehe zu|mit Server verbinden|\n\nWindows XP:|Arbeitsplatz|Extras|Netzlaufwerk verbinden|\n\nWindows 7:|Computer|Rechtsklick in Fenster|Netzwerkadresse hinzufügen|\n\nWindows 8:|Dieser PC|Computer|Netzwerkadresse hinzufügen|\n\n2. Oben genannte http:// Adresse eingeben und \"verbinden\" klicken\n\n3. Beliebigen Benutzernamen auswählen und oben genanntes Kennwort verwenden.\n\n4. Es öffnet sich ein Fenster, in dem nach einigen Sekunden die Dateien in der %@ angezeigt werden. \n\n5. Du kannst nun wie gewohnt Dateien zwischen diesem Fenster und anderen Dateisystemen auf deinem Computer kopieren. Dateien, die in die %@ kopiert werden, erscheinen in der %@ App nach einigen Sekunden im Bereich Medien. \n\nBitte beachte, dass die %@ App im Vordergrund laufen muss, damit auf die %@ zugegriffen werden kann.";
 
 "server_stopped_can_run"        = "Aktiviere die %@ um einen WebDAV-Server auf diesem Gerät zu starten. Du kannst dich dann von einem Computer im lokalen Netzwerk mit der %@ verbinden, um Mediendateien zwischen %@ und dem Computer auszutauschen.\n\nNutze den Server aus Sicherheitsgründen nicht in einem öffentlichen Netzwerk. \n\nDurch tippen auf das Kennwort kannst du es ändern.";
 

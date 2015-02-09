@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="25" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="13F34" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="25" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="6254" systemVersion="14C109" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
         <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
@@ -178,10 +178,10 @@
     <fetchRequest name="MessageByMessageId" entity="HXOMessage" predicateString="messageId == $messageId"/>
     <fetchRequest name="MessageByMessageTag" entity="HXOMessage" predicateString="messageTag == $messageTag"/>
     <fetchRequest name="MessagesByContact" entity="HXOMessage" predicateString="contact == $contact"/>
-    <fetchRequest name="MessagesByContactAfterTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted > $afterTime AND timeAccepted &lt; $beforeTime"/>
-    <fetchRequest name="MessagesByContactAfterTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted > $afterTime AND timeAccepted &lt;= $untilTime"/>
-    <fetchRequest name="MessagesByContactSinceTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt; $beforeTime"/>
-    <fetchRequest name="MessagesByContactSinceTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted >= $sinceTime AND timeAccepted &lt;= $untilTime"/>
+    <fetchRequest name="MessagesByContactAfterTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted &gt; $afterTime AND timeAccepted &lt; $beforeTime"/>
+    <fetchRequest name="MessagesByContactAfterTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted &gt; $afterTime AND timeAccepted &lt;= $untilTime"/>
+    <fetchRequest name="MessagesByContactSinceTimeBeforeTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted &gt;= $sinceTime AND timeAccepted &lt; $beforeTime"/>
+    <fetchRequest name="MessagesByContactSinceTimeUntilTime" entity="HXOMessage" predicateString="contact == $contact AND timeAccepted &gt;= $sinceTime AND timeAccepted &lt;= $untilTime"/>
     <elements>
         <element name="Attachment" positionX="0" positionY="0" width="128" height="555"/>
         <element name="Collection" positionX="9" positionY="153" width="128" height="73"/>

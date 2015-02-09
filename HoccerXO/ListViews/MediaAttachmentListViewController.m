@@ -282,14 +282,52 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
     [self askToDeleteAttachments:[self selectedAttachments]];
 }
 
+/*
+"contact_message_count_format"                        = "%@ Nachrichten";
+"contact_message_count_format (one)"                  = "%@ Nachricht";
+"contact_audio_attachment_count_format"               = "%@ Dateien";
+"contact_audio_attachment_count_format (one)"         = "%@ Datei";
+
+*/
 - (void) askToDeleteAttachments:(NSArray *)attachments {
     NSAssert(self.attachmentsToDelete == nil, @"AttachmentsToDelete not reset properly");
 
-    self.attachmentsToDelete = attachments;
-    NSString *attachmentCount = [NSString stringWithFormat:HXOPluralocalizedString(@"audio_attachment_list_count_attachments", [attachments count], NO), [attachments count]];
+    NSArray * allToDelete = [self allAttachmentsWithSameMACSas:attachments];
+    unsigned long duplicateCount = 0;
+    NSString * duplicateCountString = @"";
+    if (allToDelete.count < attachments.count) {
+        self.attachmentsToDelete = attachments;
+    } else {
+        self.attachmentsToDelete = allToDelete;
+        duplicateCount = allToDelete.count - attachments.count;
+        if (duplicateCount > 0) {
+            duplicateCountString = [NSString stringWithFormat:HXOPluralocalizedString(@"audio_attachment_list_count_attachment_duplicates", duplicateCount, NO), duplicateCount];
+        }
+    }
+    
+    unsigned long messageCount = 0;
+    unsigned long attachmentCount = [self.attachmentsToDelete count];
+    
+    NSString *attachmentCountString = nil;
+    NSString *actionSheetTitle = nil;
 
+    for (Attachment * attachment in self.attachmentsToDelete) {
+        if (attachment.message != nil) {
+            messageCount++;
+        }
+    }
+    
+    attachmentCountString = [NSString stringWithFormat:HXOPluralocalizedString(@"audio_attachment_list_count_attachments", attachmentCount, NO), attachmentCount];
+    
+    if (messageCount == 0) {
+        actionSheetTitle = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_confirm_delete_title", nil), attachmentCountString, duplicateCountString];
+    } else {
+        NSString * messageCountString = [NSString stringWithFormat:HXOPluralocalizedString(@"audio_attachment_list_count_messages", messageCount, NO), messageCount];
+        actionSheetTitle = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_confirm_delete_more_title", nil), attachmentCountString, messageCountString,duplicateCountString];
+    }
+ 
     UIActionSheet *actionSheet = [[UIActionSheet alloc] init];
-    actionSheet.title = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_confirm_delete_title", nil), attachmentCount];
+    actionSheet.title = actionSheetTitle;
 
     if (self.collection) {
         [actionSheet addButtonWithTitle:NSLocalizedString(@"audio_attachment_list_remove_from_collection", nil)];
@@ -370,6 +408,48 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
     return [NSArray arrayWithArray:attachments];
 }
 
+// return all attachments that are duplicates (have the same MAC) of the attachmentsToDelete
+-(NSArray*)allAttachmentsWithSameMACSas:(NSArray*)attachmentsToDelete {
+    NSMutableSet * macsToDelete = [NSMutableSet new];
+    for (Attachment * attachment in attachmentsToDelete) {
+        NSData * hmac = nil;
+        if (attachment.sourceMAC != nil && attachment.sourceMAC.length>0) {
+            hmac = attachment.sourceMAC;
+        } else if (attachment.destinationMAC != nil && attachment.destinationMAC.length>0) {
+            hmac = attachment.destinationMAC;
+        }
+        if (hmac != nil) {
+            [macsToDelete addObject:hmac];
+        }
+    }
+    
+    // Not sure if we can make fetch requests with NSData as key, so we search them all
+    NSManagedObjectContext *context = AppDelegate.instance.currentObjectContext;
+    NSEntityDescription *entity = [NSEntityDescription entityForName:[Attachment entityName] inManagedObjectContext:context];
+    NSFetchRequest *fetchRequest = [NSFetchRequest new];
+    [fetchRequest setEntity:entity];
+    //NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"orderNumber" ascending:YES];
+    //NSArray *sortDescriptors = @[sortDescriptor];
+    //[fetchRequest setSortDescriptors:sortDescriptors];
+    NSArray *attachments = [context executeFetchRequest:fetchRequest error:nil];
+    NSMutableArray * sameAttachments = [NSMutableArray new];
+    for (Attachment * attachment in attachments) {
+        for (NSData * macToDelete in macsToDelete) {
+            NSData * hmac = nil;
+            if (attachment.sourceMAC != nil && attachment.sourceMAC.length>0) {
+                hmac = attachment.sourceMAC;
+            } else if (attachment.destinationMAC != nil && attachment.destinationMAC.length>0) {
+                hmac = attachment.destinationMAC;
+            }
+            if (hmac != nil && [hmac isEqualToData:macToDelete]) {
+                [sameAttachments addObject:attachment];
+            }
+        }
+    }
+    return sameAttachments;
+}
+
+
 #pragma mark - Action Sheet Delegate
 
 - (void) actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -378,9 +458,14 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
     BOOL cancel = buttonIndex == actionSheet.cancelButtonIndex;
 
     if (delete) {
+        
         // delete attachments
         for (Attachment *attachment in self.attachmentsToDelete) {
-            [[AppDelegate instance] deleteObject:attachment.message];
+            if (attachment.message != nil) {
+                [[AppDelegate instance] deleteObject:attachment.message];
+            } else {
+                [[AppDelegate instance] deleteObject:attachment];
+            }
         }
     } else if (cancel) {
         if (usedSwipeToDelete) {
@@ -442,8 +527,6 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
         if ([selected.mediaType isEqualToString:@"audio"]) {
             
             id<HXOPlaylist> playlist = [[HXOAudioAttachmentDataSourcePlaylist alloc] initWithDataSource:self.dataSource];
-            
-            
             
             BOOL success = [[HXOAudioPlayer sharedInstance] playWithPlaylist:playlist atTrackNumber:trackNumber];
             

@@ -136,7 +136,7 @@ static NSString * filenameOf(Attachment * attachment) {
         for (Attachment * attachment in attachments) {
             ++order;
             if (attachment.orderNumber.longLongValue != order) {
-                NSLog(@"Changing order from %@ to %lld", attachment.orderNumber, order);
+                if (DEBUG_MIGRATION)NSLog(@"Changing order from %@ to %lld", attachment.orderNumber, order);
                 attachment.orderNumber =@(order);
             }
             NSURL * attachmentURL = significantURL(attachment);
