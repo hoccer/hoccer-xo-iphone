@@ -36,7 +36,7 @@
     if ([specifier.key isEqualToString: @"showTutorial"]) {
         url = @"http://hoccer.com/hoccer-xo-tutorial/";
     } else if ([specifier.key isEqualToString: @"showFaq"]) {
-        url= @"http://hoccer.com/hoccer-xo-faq/";
+        url = @"http://hoccer.com/hoccer-xo-faq/";
     }
     if (url){
         [self performSegueWithIdentifier: @"showURL" sender: url];
