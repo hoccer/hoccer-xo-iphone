@@ -280,10 +280,10 @@
 		C5C35A03196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C35A02196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m */; };
 		C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C3BD17194065100072AE5F /* AttachmentMigration.m */; };
 		C5EB3CBB1A81186D00E236F6 /* HXOLocalization.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EB3CB91A81186D00E236F6 /* HXOLocalization.m */; };
-		C5EB3CCC1A824EFC00E236F6 /* Hoccer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CCE1A824EFC00E236F6 /* Hoccer.strings */; };
-		C5EB3CD21A824FEE00E236F6 /* Ströer Messenger.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CD41A824FEE00E236F6 /* Ströer Messenger.strings */; };
-		C5EB3CD81A82646800E236F6 /* Hoccer Dev.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CDA1A82646800E236F6 /* Hoccer Dev.strings */; };
-		C5EB3CDE1A82658900E236F6 /* Hoccer XO.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CE01A82658900E236F6 /* Hoccer XO.strings */; };
+		C5EB3CCC1A824EFC00E236F6 /* com.artcom.Hoccer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */; };
+		C5EB3CD21A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */; };
+		C5EB3CD81A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */; };
+		C5EB3CDE1A82658900E236F6 /* com.hoccer.Hoccer-XO.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CE01A82658900E236F6 /* com.hoccer.Hoccer-XO.strings */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
@@ -1029,14 +1029,14 @@
 		C5C3BD17194065100072AE5F /* AttachmentMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentMigration.m; sourceTree = "<group>"; };
 		C5EB3CB91A81186D00E236F6 /* HXOLocalization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLocalization.m; sourceTree = "<group>"; };
 		C5EB3CBA1A81186D00E236F6 /* HXOLocalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLocalization.h; sourceTree = "<group>"; };
-		C5EB3CCD1A824EFC00E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Hoccer.strings; sourceTree = "<group>"; };
-		C5EB3CCF1A824F0300E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Hoccer.strings; sourceTree = "<group>"; };
-		C5EB3CD31A824FEE00E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Ströer Messenger.strings"; sourceTree = "<group>"; };
-		C5EB3CD51A824FF000E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Ströer Messenger.strings"; sourceTree = "<group>"; };
-		C5EB3CD91A82646800E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Hoccer Dev.strings"; sourceTree = "<group>"; };
-		C5EB3CDB1A82646A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Hoccer Dev.strings"; sourceTree = "<group>"; };
-		C5EB3CDF1A82658900E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/Hoccer XO.strings"; sourceTree = "<group>"; };
-		C5EB3CE11A82658A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/Hoccer XO.strings"; sourceTree = "<group>"; };
+		C5EB3CCD1A824EFC00E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.artcom.Hoccer.strings; sourceTree = "<group>"; };
+		C5EB3CCF1A824F0300E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.artcom.Hoccer.strings; sourceTree = "<group>"; };
+		C5EB3CD31A824FEE00E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.hoccer.whitelabel.stroeer.strings; sourceTree = "<group>"; };
+		C5EB3CD51A824FF000E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.stroeer.strings; sourceTree = "<group>"; };
+		C5EB3CD91A82646800E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
+		C5EB3CDB1A82646A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
+		C5EB3CDF1A82658900E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO.strings"; sourceTree = "<group>"; };
+		C5EB3CE11A82658A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO.strings"; sourceTree = "<group>"; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
 		E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-42.xcdatamodel"; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
@@ -1911,10 +1911,10 @@
 			children = (
 				63AE455B1705EE820099F0CB /* Localizable.strings */,
 				63AE45581705EE770099F0CB /* InfoPlist.strings */,
-				C5EB3CCE1A824EFC00E236F6 /* Hoccer.strings */,
-				C5EB3CD41A824FEE00E236F6 /* Ströer Messenger.strings */,
-				C5EB3CDA1A82646800E236F6 /* Hoccer Dev.strings */,
-				C5EB3CE01A82658900E236F6 /* Hoccer XO.strings */,
+				C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */,
+				C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */,
+				C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */,
+				C5EB3CE01A82658900E236F6 /* com.hoccer.Hoccer-XO.strings */,
 			);
 			path = Localizations;
 			sourceTree = "<group>";
@@ -2892,7 +2892,7 @@
 				E9A85D9F184FD1AD00EB9B68 /* chatbar-attachment-icon-location@2x.png in Resources */,
 				E9A85D9C184FD1AD00EB9B68 /* chatbar-attachment-icon-contact.png in Resources */,
 				63AE45511705E1440099F0CB /* Main.storyboard in Resources */,
-				C5EB3CD21A824FEE00E236F6 /* Ströer Messenger.strings in Resources */,
+				C5EB3CD21A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings in Resources */,
 				63AE455A1705EE770099F0CB /* InfoPlist.strings in Resources */,
 				6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */,
 				63AE455D1705EE820099F0CB /* Localizable.strings in Resources */,
@@ -2913,7 +2913,7 @@
 				C576EC631934CCB200C0D254 /* slider-track.png in Resources */,
 				C576EC381934CCB200C0D254 /* fullscreen-icon-volume-up.png in Resources */,
 				C576EC2E1934CCB200C0D254 /* fullscreen-button-back.png in Resources */,
-				C5EB3CD81A82646800E236F6 /* Hoccer Dev.strings in Resources */,
+				C5EB3CD81A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings in Resources */,
 				63B1C9E51843E4FD00B75CD8 /* cnt-record.png in Resources */,
 				E92FAEC4186DF49800D72D79 /* chatbar-attachment-icon-data@2x.png in Resources */,
 				63DEC01E19B0A720003804E8 /* AlbumArtPlaceholder.png in Resources */,
@@ -2953,13 +2953,13 @@
 				63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */,
 				E991E6721A0E975000015BEE /* Documentation.html in Resources */,
 				C576EC331934CCB200C0D254 /* fullscreen-button-pause@2x.png in Resources */,
-				C5EB3CDE1A82658900E236F6 /* Hoccer XO.strings in Resources */,
+				C5EB3CDE1A82658900E236F6 /* com.hoccer.Hoccer-XO.strings in Resources */,
 				E9A85DA1184FD1AD00EB9B68 /* chatbar-attachment-icon-music@2x.png in Resources */,
 				E9DFD23C1922749800CC1202 /* talkserver.talk.hoccer.de.der in Resources */,
 				63DEC01F19B0A720003804E8 /* AlbumArtPlaceholder@2x.png in Resources */,
 				C576EC311934CCB200C0D254 /* fullscreen-button-forward@2x.png in Resources */,
 				C576EC2A1934CCB200C0D254 /* button-play.png in Resources */,
-				C5EB3CCC1A824EFC00E236F6 /* Hoccer.strings in Resources */,
+				C5EB3CCC1A824EFC00E236F6 /* com.artcom.Hoccer.strings in Resources */,
 				63DEC02519B0A720003804E8 /* Artists@2x.png in Resources */,
 				E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */,
 				E9DFD23B1922749800CC1202 /* filecache.talk.hoccer.de.der in Resources */,
@@ -3341,40 +3341,40 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		C5EB3CCE1A824EFC00E236F6 /* Hoccer.strings */ = {
+		C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				C5EB3CCD1A824EFC00E236F6 /* en */,
 				C5EB3CCF1A824F0300E236F6 /* de */,
 			);
-			name = Hoccer.strings;
+			name = com.artcom.Hoccer.strings;
 			sourceTree = "<group>";
 		};
-		C5EB3CD41A824FEE00E236F6 /* Ströer Messenger.strings */ = {
+		C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				C5EB3CD31A824FEE00E236F6 /* en */,
 				C5EB3CD51A824FF000E236F6 /* de */,
 			);
-			name = "Ströer Messenger.strings";
+			name = com.hoccer.whitelabel.stroeer.strings;
 			sourceTree = "<group>";
 		};
-		C5EB3CDA1A82646800E236F6 /* Hoccer Dev.strings */ = {
+		C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				C5EB3CD91A82646800E236F6 /* en */,
 				C5EB3CDB1A82646A00E236F6 /* de */,
 			);
-			name = "Hoccer Dev.strings";
+			name = "com.hoccer.Hoccer-XO-Dev.strings";
 			sourceTree = "<group>";
 		};
-		C5EB3CE01A82658900E236F6 /* Hoccer XO.strings */ = {
+		C5EB3CE01A82658900E236F6 /* com.hoccer.Hoccer-XO.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				C5EB3CDF1A82658900E236F6 /* en */,
 				C5EB3CE11A82658A00E236F6 /* de */,
 			);
-			name = "Hoccer XO.strings";
+			name = "com.hoccer.Hoccer-XO.strings";
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -3635,8 +3635,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Ströer";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Ströer";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Stroeer";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Stroeer";
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -3747,8 +3747,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Ströer";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Ströer";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Stroeer";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Stroeer";
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";

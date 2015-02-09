@@ -25,7 +25,7 @@ NSString* HXOLocalizedString(NSString* key, NSString* comment, ...) {
 }
 
 NSString* HXOLabelledLocalizedString(NSString* key, NSString* comment) {
-    NSString* bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleName"];
+    NSString* bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
     NSString * locString = NSLocalizedStringFromTable(key, bundleName, comment);
     if (locString == nil) {
         NSLog(@"#ERROR: HXOLabelledLocalizedString: no label found for key '%@' in bundle '%@'", key, bundleName);
