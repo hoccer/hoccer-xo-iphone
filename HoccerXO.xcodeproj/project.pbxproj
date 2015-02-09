@@ -3666,7 +3666,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Ströer Messenger";
+				PRODUCT_NAME = "Ströer";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3778,7 +3778,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = "Ströer Messenger";
+				PRODUCT_NAME = "Ströer";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
