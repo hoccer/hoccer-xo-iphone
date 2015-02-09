@@ -2471,6 +2471,7 @@
 
 
 - (void) prepareForDeletion {
+    NSLog(@"Attachment: prepareForDeletion: contentURL %@", self.contentURL);
     [super prepareForDeletion];
     // cancel a potential open transferconnection
     if (self.transferConnection != nil) {
@@ -2500,13 +2501,13 @@
                 // delete ownedURL because it is only referenced by one message
                 NSLog(@"Deleting ownedURL %@, not referenced by other messages", self.ownedURL);
                 NSURL * myURL = [NSURL URLWithString:self.ownedURL];
-                if ([myURL isFileURL]) {
-                    [[NSFileManager defaultManager] removeItemAtURL:myURL error:nil];
-                }
+                [Attachment deleteFileAtUrl:myURL];
             } else {
                 NSLog(@"Keeping ownedURL %@, is referenced by other messages", self.ownedURL);
             }
         }        
+    } else {
+        NSLog(@"File has no ownedURL, not deleting local URL %@", self.localURL);
     }
 
     // remove from transfer queues
@@ -2520,6 +2521,35 @@
         [item.collection removeItemAtIndex:item.index];
     }
     */
+}
+
++(BOOL)deleteFileAtUrl:(NSURL*)myURL {
+    BOOL result = NO;
+    if ([myURL isFileURL]) {
+        NSError * myError = nil;
+        [[NSFileManager defaultManager] removeItemAtURL:myURL error:&myError];
+        if (myError != nil) {
+            NSLog(@"#ERROR: could not delete file at URL %@, error = %@", myURL, myError);
+        } else {
+            NSLog(@"Deleted file at URL %@", myURL);
+            result = YES;
+        }
+        NSURL * metaURL = [AppDelegate metaDataURL:myURL];
+        if (metaURL != nil) {
+            if ([[NSFileManager defaultManager] fileExistsAtPath:[metaURL path]]) {
+                NSError * myError = nil;
+                [[NSFileManager defaultManager] removeItemAtURL:metaURL error:&myError];
+                if (myError != nil) {
+                    NSLog(@"#ERROR: could not delete metadata file at URL %@, error = %@", metaURL, myError);
+                } else {
+                    NSLog(@"Deleted metadata file at URL %@", metaURL);
+                }
+            } else {
+                NSLog(@"No metadata file at URL %@", metaURL);
+            }
+        }
+    }
+    return result;
 }
 
 
@@ -2628,6 +2658,7 @@
 }
 
 
+
 + (Attachment*) makeAttachmentWithMediaType:(NSString*)mediaType
                                    mimeType:(NSString*)mimeType
                       humanReadableFileName:(NSString*)humanReadableFileName
@@ -2637,6 +2668,27 @@
                                   whenReady:(AttachmentCompletionBlock)attachmentCompleted
 {
     Attachment * newAttachment = [NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName] inManagedObjectContext: context];
+    [newAttachment initAttachmentWithMediaType:mediaType mimeType:mimeType humanReadableFileName:humanReadableFileName localURL:localURL assetURL:assetURL inContext:context whenReady:attachmentCompleted];
+    return  newAttachment;
+    
+}
+
+- (void) reinitializeInContext:(NSManagedObjectContext*)context
+                     whenReady:(AttachmentCompletionBlock)attachmentCompleted {
+    
+    [self initAttachmentWithMediaType:self.mediaType mimeType:self.mimeType humanReadableFileName:self.humanReadableFileName localURL:self.localURL assetURL:self.assetURL inContext:context whenReady:attachmentCompleted];
+    
+}
+
+- (void) initAttachmentWithMediaType:(NSString*)mediaType
+                                   mimeType:(NSString*)mimeType
+                      humanReadableFileName:(NSString*)humanReadableFileName
+                                   localURL:(NSString*)localURL
+                                   assetURL:(NSString*)assetURL
+                                  inContext:(NSManagedObjectContext*)context
+                                  whenReady:(AttachmentCompletionBlock)attachmentCompleted
+{
+    Attachment * newAttachment = self;
     
     newAttachment.mediaType = mediaType;
     newAttachment.mimeType = mimeType;
@@ -2659,7 +2711,6 @@
     } else if ([newAttachment.mediaType isEqualToString:@"data"]) {
         [newAttachment makeDataAttachment:localURL anOtherURL:assetURL withCompletion:completion];
     }
-    return newAttachment;
 }
 
 @end

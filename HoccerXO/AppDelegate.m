@@ -335,6 +335,23 @@ static NSInteger validationErrorCount = 0;
     return YES;
 }
 
++(NSURL*)metaDataURL:(NSURL*)fileUrl {
+    if ([fileUrl isFileURL]) {
+        NSString * path = [fileUrl path];
+        NSString * metaPath = [self metaDataPath:path];
+        return [NSURL fileURLWithPath:metaPath];
+    }
+    return nil;
+}
+
++(NSString*)metaDataPath:(NSString*)filePath {
+    NSString * fileName = filePath.lastPathComponent;
+    NSString * metaFileName = [NSString stringWithFormat:@"._%@",fileName];
+    NSString * path = [filePath stringByDeletingLastPathComponent];
+    NSString * result = [path stringByAppendingPathComponent:metaFileName];
+    return result;
+}
+
 -(BOOL)considerFile:(NSString*)file withEntity:(NSString*)entity inDirectoryPath:(NSString*)directoryPath {
     if ([file startsWith:@"."]) {
         return NO;
@@ -602,7 +619,23 @@ BOOL sameObjects(id obj1, id obj2) {
     return result;
 }
 
+-(void)cleanupTmpDirectory {
+    NSString * tmpDir = NSTemporaryDirectory();
+    NSError * error = nil;
+    if ([[NSFileManager defaultManager] fileExistsAtPath:tmpDir]) {
+        NSLog(@"Removing tmp directory at path %@", tmpDir);
+        [[NSFileManager defaultManager] removeItemAtPath:tmpDir error:&error];
+        if (error != nil) {
+            NSLog(@"Error removing tmp dir at %@, error=%@", tmpDir, error);
+        } else {
+            NSLog(@"Removed tmp directory at URL %@", tmpDir);
+        }
+    }
+    [[NSFileManager defaultManager] createDirectoryAtPath:tmpDir withIntermediateDirectories:YES attributes:nil error:&error];
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [self cleanupTmpDirectory];
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
 #ifdef DEBUG
     [self testFSSize];
@@ -610,7 +643,7 @@ BOOL sameObjects(id obj1, id obj2) {
     _idLocks = [NSMutableDictionary new];
     _backgroundContexts = [NSMutableDictionary new];
     _inspectionLock = [NSObject new];
-    _fileEntities = [self loadDictionary:@"fileEntities"];
+    //_fileEntities = [self loadDictionary:@"fileEntities"];
     if (_fileEntities == nil) {
         _fileEntities = [NSDictionary new];
     } else {

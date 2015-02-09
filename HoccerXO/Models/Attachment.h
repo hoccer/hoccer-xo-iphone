@@ -174,6 +174,8 @@ typedef enum AttachmentStates {
                                   inContext:(NSManagedObjectContext*)context
                                   whenReady:(AttachmentCompletionBlock)attachmentCompleted;
 
+- (void) reinitializeInContext:(NSManagedObjectContext*)context
+                     whenReady:(AttachmentCompletionBlock)attachmentCompleted;
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block;
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock) block;
@@ -192,6 +194,8 @@ typedef enum AttachmentStates {
 - (BOOL)fileUnavailable;
 - (void)protectFile;
 - (void)unprotectFile;
+
++(BOOL)deleteFileAtUrl:(NSURL*)myURL;
 
 - (Attachment *) clone;
 - (Attachment*) cloneWithCompletion:(AttachmentCompletionBlock)attachmentCompleted;

@@ -153,19 +153,42 @@ static NSString * filenameOf(Attachment * attachment) {
                 NSString * fullPath = [[inDirectory path] stringByAppendingPathComponent:file];
                 
                 if ([allFilesSet containsObject:file]) {
+                    // set new field for older databases
+                    if (attachment.entityTag == nil) {
+                        NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
+                        if (attributes) {
+                            attachment.entityTag = [AppDelegate etagFromAttributes:attributes];
+                        } else {
+                            attachment.entityTag = nil;
+                        }
+                    }
+                    if (attachment.fileModificationDate == nil) {
+                        attachment.fileModificationDate = [AppDelegate getModificationDateForPath:fullPath];
+                    }
+                    
                     if (attachment.message != nil && attachment.available) {
                         if ([AppDelegate isUserReadWriteFile:fullPath]) {
-                            [AppDelegate setPosixPermissionsReadOnlyForPath:fullPath];
-                            //[AppDelegate setPosixPermissionsReadWriteForPath:fullPath];
+                            //[AppDelegate setPosixPermissionsReadOnlyForPath:fullPath];
+                            [AppDelegate setPosixPermissionsReadWriteForPath:fullPath];
                         }
                     } else {
                         if (![AppDelegate isUserReadWriteFile:fullPath]) {
                             [AppDelegate setPosixPermissionsReadWriteForPath:fullPath];
                         }
-                    }
-                    
-                    if (attachment.fileModificationDate == nil) {
-                        attachment.fileModificationDate = [AppDelegate getModificationDateForPath:fullPath];
+                        NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
+                        if (attributes) {
+                            NSString * entityTag= [AppDelegate etagFromAttributes:attributes];
+                            if (![entityTag isEqualToString:attachment.entityTag]) {
+                                NSLog(@"Reinitializing changed attachment %@", attachment.humanReadableFileName);
+                                // attachment file changed since last seen
+                                attachment.previewImageData = nil;
+                                attachment.previewImage = nil;
+                                [attachment reinitializeInContext:context whenReady:^(Attachment * attachment, NSError * error) {
+                                    NSLog(@"Reinitialized changed attachment %@, error = %@", attachment.humanReadableFileName,error);
+                                }];
+                                
+                            }
+                        }
                     }
                     
                     if (attachmentsByFile[file] == nil) {

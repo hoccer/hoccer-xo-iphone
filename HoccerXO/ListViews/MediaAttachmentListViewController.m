@@ -356,7 +356,7 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
             
             for (Attachment *attachment in selectedAttachments) {
                 if (![AppDelegate.instance hasManagedObjectBeenDeleted:attachment] && !attachment.fileUnavailable) {
-                    [attachment protectFile];
+                    //[attachment protectFile];
                     for (Contact *contact in contacts) {
                         NSLog(@"Sending attachment %@ to %@", attachment.humanReadableFileName, contact.nickName);
                         [[[AppDelegate instance] chatBackend] sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:[attachment clone]];
@@ -464,6 +464,12 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
             if (attachment.message != nil) {
                 [[AppDelegate instance] deleteObject:attachment.message];
             } else {
+                NSURL * myURL = [NSURL URLWithString:attachment.localURL];
+                if ([myURL isFileURL]) {
+                    if ([Attachment deleteFileAtUrl:myURL]) {
+                        attachment.ownedURL = nil;
+                    }
+                }
                 [[AppDelegate instance] deleteObject:attachment];
             }
         }
