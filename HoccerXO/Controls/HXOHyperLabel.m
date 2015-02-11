@@ -67,6 +67,11 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     self.contentMode = UIViewContentModeRedraw;
 }
 
+- (void) setTintColor:(UIColor *) color {
+    [super setTintColor:color];
+    self.linkColor = color;
+}
+
 - (CGSize) intrinsicContentSize {
     CGSize size = CGSizeMake(MAX(self.preferredMaxLayoutWidth, self.bounds.size.width), 0);
     CGSize result = CTFramesetterSuggestFrameSizeWithConstraints(self.framesetter, CFRangeMake(0, 0), NULL, size, NULL);
