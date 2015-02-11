@@ -3895,8 +3895,8 @@
 				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
 				HXO_URL_SCHEME = simsme;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.simsme;
-				HXO_XFER_URL_SCHEME = hcrimport;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrimport;
+				HXO_XFER_URL_SCHEME = xferdisabled;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -4006,8 +4006,8 @@
 				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
 				HXO_URL_SCHEME = simsme;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.simsme;
-				HXO_XFER_URL_SCHEME = hcrimport;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrimport;
+				HXO_XFER_URL_SCHEME = xferdisabled;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
