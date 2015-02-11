@@ -110,21 +110,19 @@ static HXOUI * _currentTheme;
 
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
-        case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: @"#E6E7EB"];
+        case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_incoming", nil)];
         case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_success", nil)];
         case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_in_progress", nil)];
-        case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: @"#BD3935"];
+        case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_failed", nil)];
     }
 }
 
 - (UIColor*) messageTextColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
-        case HXOBubbleColorSchemeIncoming:
-            return [UIColor blackColor];
-        case HXOBubbleColorSchemeSuccess:
-        case HXOBubbleColorSchemeInProgress:
-        case HXOBubbleColorSchemeFailed:
-            return [UIColor whiteColor];
+        case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_text_color_incoming", nil)];
+        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_text_color_success", nil)];
+        case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_text_color_in_progress", nil)];
+        case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_text_color_failed", nil)];
     }
 }
 

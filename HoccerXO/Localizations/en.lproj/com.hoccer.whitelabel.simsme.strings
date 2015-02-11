@@ -6,8 +6,16 @@
 // Color Scheme
 //==============================================================================
 
-"tint_color" = "#0079FF";
-"navigation_bar_tint_color" = "#4DBFAC";
-"cell_accessory_color" = "#20B4A4";
-"message_background_color_success" = "#4DBFAC";
-"message_background_color_in_progress" = "#B8CCCA";
+"tint_color" = "#333333";
+"navigation_bar_tint_color" = "#333333";
+"cell_accessory_color" = "#333333";
+
+"message_background_color_incoming" = "#E6E7EB";
+"message_background_color_success" = "#FFCC00";
+"message_background_color_in_progress" = "#FFE680";
+"message_background_color_failed" = "#BD3935";
+
+"message_text_color_incoming" = "#333333";
+"message_text_color_success" = "#333333";
+"message_text_color_in_progress" = "#333333";
+"message_text_color_failed" = "#000000";

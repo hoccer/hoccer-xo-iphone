@@ -9,5 +9,13 @@
 "tint_color" = "#FF5A10";
 "navigation_bar_tint_color" = "#08204A";
 "cell_accessory_color" = "#C6C6C6";
+
+"message_background_color_incoming" = "#E6E7EB";
 "message_background_color_success" = "#081F49";
 "message_background_color_in_progress" = "#394D6E";
+"message_background_color_failed" = "#BD3935";
+
+"message_text_color_incoming" = "#000000";
+"message_text_color_success" = "#ffffff";
+"message_text_color_in_progress" = "#ffffff";
+"message_text_color_failed" = "#ffffff";
