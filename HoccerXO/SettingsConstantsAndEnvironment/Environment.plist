@@ -7,6 +7,7 @@
 		<string>production</string>
 		<string>development</string>
 		<string>stroeer</string>
+		<string>simsme</string>
 	</array>
 	<key>certificateFiles</key>
 	<dict>
@@ -28,6 +29,12 @@
 			<string>filecache.talk.hoccer.de</string>
 			<string>server_production</string>
 		</array>
+		<key>simsme</key>
+		<array>
+			<string>talkserver.talk.hoccer.de</string>
+			<string>filecache.talk.hoccer.de</string>
+			<string>server_production</string>
+		</array>
 	</dict>
 	<key>talkServer</key>
 	<dict>
@@ -36,6 +43,8 @@
 		<key>production</key>
 		<string>wss://talkserver.talk.hoccer.de</string>
 		<key>stroeer</key>
+		<string>wss://talkserver.talk.hoccer.de</string>
+		<key>simsme</key>
 		<string>wss://talkserver.talk.hoccer.de</string>
 	</dict>
 	<key>inviteServer</key>
@@ -46,6 +55,8 @@
 		<string>https://invite.hoccer.com</string>
 		<key>stroeer</key>
 		<string>https://stroeer.hoccer.com</string>
+		<key>simsme</key>
+		<string>https://simsme.hoccer.com</string>
 	</dict>
 </dict>
 </plist>
