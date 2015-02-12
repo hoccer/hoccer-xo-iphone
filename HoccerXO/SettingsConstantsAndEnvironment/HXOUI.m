@@ -41,6 +41,10 @@ static HXOUI * _currentTheme;
     return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"navigation_bar_tint_color", nil)];
 }
 
+- (UIColor*) tabBarSelectedTextColor {
+    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"tab_bar_selected_text_color", nil)];
+}
+
 - (UIColor*) tableSeparatorColor {
     return [UIColor colorWithHexString: @"#D"];
 }
@@ -257,6 +261,7 @@ static HXOUI * _currentTheme;
 
 - (void) setupTheming {
     [UIApplication sharedApplication].delegate.window.tintColor = [self tintColor];
+    [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: self.tabBarSelectedTextColor} forState:UIControlStateSelected];
     
     id navigationBarAppearance = [UINavigationBar appearanceWhenContainedIn: [HXOThemedNavigationController class], nil];
     [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];

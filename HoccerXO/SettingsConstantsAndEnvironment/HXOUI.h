@@ -30,6 +30,7 @@ typedef void(^HXOStringEntryCompletion)(NSString* entry);
 @property (nonatomic, readonly) UIColor * tintColor;
 @property (nonatomic, readonly) UIColor * navigationBarBackgroundColor;
 @property (nonatomic, readonly) UIColor * navigationBarTintColor;
+@property (nonatomic, readonly) UIColor * tabBarSelectedTextColor;
 @property (nonatomic, readonly) UIColor * ledColor;
 @property (nonatomic, readonly) UIColor * tableSeparatorColor;
 @property (nonatomic, readonly) UIColor * tablePlaceholderImageColor;

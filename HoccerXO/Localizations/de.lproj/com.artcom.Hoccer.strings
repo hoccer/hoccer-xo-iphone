@@ -8,6 +8,7 @@
 
 "tint_color" = "#0079FF";
 "navigation_bar_tint_color" = "#4DBFAC";
+"tab_bar_selected_text_color" = "#0079FF";
 "cell_accessory_color" = "#20B4A4";
 "table_placeholder_image_color" =  "#ACB2BF";
 
