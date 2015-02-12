@@ -6,10 +6,10 @@
 // Color Scheme
 //==============================================================================
 
-"tint_color" = "#333333";
-"navigation_bar_tint_color" = "#333333";
-"cell_accessory_color" = "#333333";
-"table_placeholder_image_color" =  "#ACB2BF";
+"tint_color" = "#FFCC00";
+"navigation_bar_tint_color" = "#FFCC00";
+"cell_accessory_color" = "#FFCC00";
+"table_placeholder_image_color" =  "#FFCC00";
 
 "message_background_color_incoming" = "#E6E7EB";
 "message_background_color_success" = "#FFCC00";
