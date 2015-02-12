@@ -67,9 +67,8 @@ NSString * kHXOLinkAttributeName = @"HXOHyperLabelLink";
     self.contentMode = UIViewContentModeRedraw;
 }
 
-- (void) setTintColor:(UIColor *) color {
-    [super setTintColor:color];
-    self.linkColor = color;
+- (void) tintColorDidChange {
+    self.linkColor = self.tintColor;
 }
 
 - (CGSize) intrinsicContentSize {

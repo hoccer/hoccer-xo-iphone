@@ -743,7 +743,6 @@ bool almostEqual(CGFloat a, CGFloat b) {
         _placeholderLabel = [[HXOHyperLabel alloc] initWithFrame: CGRectZero];
         _placeholderLabel.translatesAutoresizingMaskIntoConstraints = NO;
         _placeholderLabel.textColor = [HXOUI theme].tablePlaceholderTextColor;
-        _placeholderLabel.tintColor = [HXOUI theme].tintColor;
         _placeholderLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleCaption1];
         _placeholderLabel.textAlignment = NSTextAlignmentCenter;
         _placeholderLabel.preferredMaxLayoutWidth = 0.8 * [UIScreen mainScreen].bounds.size.width;
