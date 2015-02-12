@@ -45,6 +45,10 @@ static HXOUI * _currentTheme;
     return [UIColor colorWithHexString: @"#D"];
 }
 
+- (UIColor*) tablePlaceholderImageColor {
+    return [UIColor colorWithHexString: @"#ACB2BF"];
+}
+
 - (UIColor*) tablePlaceholderTextColor {
     return [UIColor colorWithHexString: @"#B5BAC5"];
 }

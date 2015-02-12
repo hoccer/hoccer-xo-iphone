@@ -32,6 +32,7 @@ typedef void(^HXOStringEntryCompletion)(NSString* entry);
 @property (nonatomic, readonly) UIColor * navigationBarTintColor;
 @property (nonatomic, readonly) UIColor * ledColor;
 @property (nonatomic, readonly) UIColor * tableSeparatorColor;
+@property (nonatomic, readonly) UIColor * tablePlaceholderImageColor;
 @property (nonatomic, readonly) UIColor * tablePlaceholderTextColor;
 @property (nonatomic, readonly) UIColor * cellAccessoryColor;
 @property (nonatomic, readonly) UIColor * messageFieldBackgroundColor;
