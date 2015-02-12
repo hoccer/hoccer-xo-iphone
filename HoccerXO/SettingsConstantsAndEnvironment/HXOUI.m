@@ -46,7 +46,7 @@ static HXOUI * _currentTheme;
 }
 
 - (UIColor*) tablePlaceholderImageColor {
-    return [UIColor colorWithHexString: @"#ACB2BF"];
+    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"table_placeholder_image_color", nil)];
 }
 
 - (UIColor*) tablePlaceholderTextColor {

@@ -9,6 +9,7 @@
 "tint_color" = "#333333";
 "navigation_bar_tint_color" = "#333333";
 "cell_accessory_color" = "#333333";
+"table_placeholder_image_color" =  "#ACB2BF";
 
 "message_background_color_incoming" = "#E6E7EB";
 "message_background_color_success" = "#FFCC00";
