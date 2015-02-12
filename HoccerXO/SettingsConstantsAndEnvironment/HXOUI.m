@@ -263,7 +263,7 @@ static HXOUI * _currentTheme;
     [UIApplication sharedApplication].delegate.window.tintColor = [self tintColor];
     [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: self.tabBarSelectedTextColor} forState:UIControlStateSelected];
     
-    id navigationBarAppearance = [UINavigationBar appearanceWhenContainedIn: [HXOThemedNavigationController class], nil];
+    id navigationBarAppearance = [UINavigationBar appearance];
     [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];
     [navigationBarAppearance setBarStyle:     UIBarStyleDefault];
     [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
