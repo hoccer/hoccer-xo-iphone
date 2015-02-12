@@ -41,6 +41,10 @@ static HXOUI * _currentTheme;
     return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"navigation_bar_tint_color", nil)];
 }
 
+- (UIColor*) navigationBarTextColor {
+    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"navigation_bar_text_color", nil)];
+}
+
 - (UIColor*) tabBarSelectedTextColor {
     return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"tab_bar_selected_text_color", nil)];
 }
@@ -267,7 +271,7 @@ static HXOUI * _currentTheme;
     [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];
     [navigationBarAppearance setBarStyle:     UIBarStyleDefault];
     [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
-    [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: self.navigationBarTintColor}];
+    [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: self.navigationBarTextColor}];
 
     [[LabelWithLED appearance] setLedColor: self.ledColor];
 }
