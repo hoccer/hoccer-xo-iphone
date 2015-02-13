@@ -1,6 +1,6 @@
-"about_prosa" = "HOCCme\n\nDer kostenlose Secure Instant Messenger der Deutschen Post und Hoccer.";
+"about_prosa" = "Der kostenlose Secure Instant Messenger der Deutschen Post und Media Ventures.\n\nHOCCme ist „Der Messenger“ für anonyme, einfache und sichere Datenübertragung ohne Registrierungsprozess. Weder die Angabe der Mobilnummer noch der Mailadresse ist notwendig um mit Freunden oder Gruppen zu kommunizieren. Wir legen größten Wert auf Sicherheit, Datenschutz und Privatsphäre. Dank modernster Verschlüsselungs- und Übertragungstechnologien, setzt HOCCme neue Standards in der mobilen Datenübertragung und definiert Privatsphäre im Messaging-Sektor neu. HOCCme ermöglicht einen einfachen und unbegrenzten Datenaustausch zwischen Smartphones und Tablets ohne vorherige Eingabe von vertraulichen Nutzerdaten.";
 
-"server_nav_title"              = "HOCCmeBox";
+"server_nav_title" = "HOCCmeBox";
 
 //==============================================================================
 // Color Scheme
