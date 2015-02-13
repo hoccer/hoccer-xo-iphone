@@ -82,7 +82,6 @@
     cell.aboutLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleBody];
     cell.aboutLabel.preferredMaxLayoutWidth = 320 - 2 * 24;
     cell.aboutLabel.attributedText = [[NSAttributedString alloc] initWithString:HXOLabelledLocalizedString(@"about_prosa", nil)];
-    cell.aboutLabel.textAlignment = NSTextAlignmentJustified;
 }
 
 - (CGFloat) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
