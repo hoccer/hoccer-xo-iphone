@@ -13,6 +13,7 @@
 #import "HTTPServerController.h"
 #import "tab_settings.h"
 #import "NSAttributedStringMarkdownParser.h"
+#import "HXOUI.h"
 
 @interface ServerSheetController ()
 
@@ -132,6 +133,9 @@
         BOOL can_run = self.server.canRun;
         NSString * text = NSLocalizedString(running ? @"server_running" : can_run ? @"server_stopped_can_run" : @"server_stopped_can_not_run", nil);
         NSAttributedStringMarkdownParser * p = [[NSAttributedStringMarkdownParser alloc] init];
+
+        p.textColor = [HXOUI theme].lightTextColor;
+        
         return [p attributedStringFromMarkdownString: text];
     }
     return nil;
