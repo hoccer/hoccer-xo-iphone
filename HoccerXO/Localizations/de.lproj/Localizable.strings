@@ -54,8 +54,8 @@
 "operation_failed_default_message"  = "Ein Vorgang ist fehlgeschlagen. Überprüfe deine Netzwerkverbindung und versuche es später noch einmal.";
 
 
-"http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-anleitung/";
-"http://hoccer.com/hoccer-xo-faq/"      = "http://faq.hoccer.com/de/";
+"hoccer_tutorial_url" = "http://faq.hoccer.com/de/tutorial-xo/";
+"hoccer_faq_url" = "http://faq.hoccer.com/de/";
 
 //==============================================================================
 // About
@@ -348,8 +348,8 @@
 "contact_relationship_invited"                        = "Eingeladen als Freund";
 "contact_relationship_invitedMe"                      = "Hat dich als Freund eingeladen";
 
-"contact_list_placeholder"                            = "[Lade Freunde ein](http://hoccer.com/hoccer-xo-anleitung/#freunde-einladen) sicher mit dir zu chatten.";
-"contact_list_placeholder_nearby"                     = "Warte auf Kontake [in der Nähe](http://hoccer.com/hoccer-xo-anleitung/#in-der-naehe)…";
+"contact_list_placeholder"                            = "[Lade Freunde ein](http://faq.hoccer.com/de/tutorial-xo/#freunde-einladen) sicher mit dir zu chatten.";
+"contact_list_placeholder_nearby"                     = "Warte auf Kontake [in der Nähe](http://faq.hoccer.com/de/tutorial-xo/#in-der-naehe)…";
 
 //==============================================================================
 // Credentials
@@ -582,7 +582,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "group_member_count_joined (zero)"      = "du bist allein";
 "group_member_invited_count"            = "%d eingeladen";
 
-"group_list_placeholder"                = "Lege [Gruppen](http://hoccer.com/hoccer-xo-anleitung/#gruppen) an um mit vielen Freunden gleichzeitig zu chatten.";
+"group_list_placeholder"                = "Lege [Gruppen](http://faq.hoccer.com/de/tutorial-xo/#gruppen) an um mit vielen Freunden gleichzeitig zu chatten.";
 
 "group_name_nearby_active"              = "Alle nahebei (%d)";
 "group_name_nearby_kept"                = "'Nahebei' gespeichert";
@@ -626,8 +626,8 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "key_state_mistrusted"                           = "Misstraut";
 
 "key_fingerprint_title"                          = "Id:";
-"key_fingerprint_info"                           = "Für ein Extra an Sicherheit [verifiziere die Schlüssel](http://hoccer.com/hoccer-xo-anleitung/#verifizierung) deiner Freunde. Frage sie nach ihrer Schlüssel Id und vergleiche.";
-"key_fingerprint_yours_info"                     = "Die Schlüssel Id ist der Fingerabdruck deines Schlüssels. Zeige sie Freunden, die deinen [Schlüssel verifizieren](http://hoccer.com/hoccer-xo-anleitung/#verifizierung) wollen.";
+"key_fingerprint_info"                           = "Für ein Extra an Sicherheit [verifiziere die Schlüssel](http://faq.hoccer.com/de/tutorial-xo/#verifizierung) deiner Freunde. Frage sie nach ihrer Schlüssel Id und vergleiche.";
+"key_fingerprint_yours_info"                     = "Die Schlüssel Id ist der Fingerabdruck deines Schlüssels. Zeige sie Freunden, die deinen [Schlüssel verifizieren](http://faq.hoccer.com/de/tutorial-xo/#verifizierung) wollen.";
 
 "key_length_item"                                = "Schlüssellänge:";
 "key_length_unit_format"                         = "%@ Bit";

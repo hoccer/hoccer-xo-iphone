@@ -34,9 +34,9 @@
 - (void)settingsViewController:(IASKAppSettingsViewController*)sender buttonTappedForSpecifier:(IASKSpecifier*)specifier {
     NSString * url;
     if ([specifier.key isEqualToString: @"showTutorial"]) {
-        url = @"http://hoccer.com/hoccer-xo-tutorial/";
+        url = @"hoccer_tutorial_url";
     } else if ([specifier.key isEqualToString: @"showFaq"]) {
-        url = @"http://hoccer.com/hoccer-xo-faq/";
+        url = @"hoccer_faq_url";
     }
     if (url){
         [self performSegueWithIdentifier: @"showURL" sender: url];
