@@ -3907,7 +3907,7 @@
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
 				HXO_DEFAULT_ENVIRONMENT = simsme;
 				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
-				HXO_URL_SCHEME = simsme;
+				HXO_URL_SCHEME = hcrsms;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.simsme;
 				HXO_XFER_URL_SCHEME = xferdisabled;
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
@@ -4018,7 +4018,7 @@
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
 				HXO_DEFAULT_ENVIRONMENT = simsme;
 				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
-				HXO_URL_SCHEME = simsme;
+				HXO_URL_SCHEME = hcrsms;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.simsme;
 				HXO_XFER_URL_SCHEME = xferdisabled;
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
