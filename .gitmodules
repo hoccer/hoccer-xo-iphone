@@ -37,3 +37,6 @@
 [submodule "3rdParty/markdown"]
 	path = 3rdParty/markdown
 	url = git@github.com:hoccer/markdown.git
+[submodule "3rdParty/sundown"]
+	path = 3rdParty/sundown
+	url = https://github.com/vmg/sundown.git

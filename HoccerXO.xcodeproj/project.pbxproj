@@ -63,7 +63,6 @@
 		631FE50A191947D90073E980 /* CustomKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE509191947D90073E980 /* CustomKeyViewController.m */; };
 		631FE50D19195EB10073E980 /* ModalTaskHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE50C19195EB10073E980 /* ModalTaskHUD.m */; };
 		631FE51A1919A3B60073E980 /* HXOActivityIndicatorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 631FE5191919A3B60073E980 /* HXOActivityIndicatorView.m */; };
-		6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6324C03D18BE09AE00E4BD82 /* SubViewController.m */; };
 		632502A41865FC2600543D80 /* DateSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 632502A31865FC2600543D80 /* DateSectionHeaderView.m */; };
 		632502AD1866500800543D80 /* HXOHyperLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 632502AC1866500800543D80 /* HXOHyperLabel.m */; };
 		6327EAD7171841F200AF75E1 /* ContactListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327EAD6171841F200AF75E1 /* ContactListViewController.m */; };
@@ -71,7 +70,6 @@
 		6327EB6F171D55DB00AF75E1 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327EB6E171D55DA00AF75E1 /* libcrypto.a */; };
 		6327F34618B881A6007D79E3 /* UIImage+ImageEffects.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */; };
 		6327F37418B8C390007D79E3 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6327F37318B8C390007D79E3 /* Accelerate.framework */; };
-		6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6327F37618B8D018007D79E3 /* SegmentedViewController.m */; };
 		6339CDDE18A993F600DA2729 /* libInAppSettingsKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDC318A9918500DA2729 /* libInAppSettingsKit.a */; };
 		6339CDDF18A9940D00DA2729 /* libqrencoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDCB18A991A700DA2729 /* libqrencoder.a */; };
 		6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDD518A991C200DA2729 /* libSocketRocket.a */; };
@@ -122,6 +120,11 @@
 		639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 639094BD1739828700DF889B /* GeoLocationPicker.m */; };
 		639094C01739842A00DF889B /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094BF1739842A00DF889B /* MapKit.framework */; };
 		639094C21739970200DF889B /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 639094C11739970200DF889B /* CoreLocation.framework */; };
+		63A015301A92420D00F45CE4 /* HXOMarkdownRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = 63A0152F1A92420D00F45CE4 /* HXOMarkdownRenderer.m */; };
+		63A0153B1A92437000F45CE4 /* autolink.c in Sources */ = {isa = PBXBuildFile; fileRef = 63A015321A92437000F45CE4 /* autolink.c */; };
+		63A0153C1A92437000F45CE4 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 63A015341A92437000F45CE4 /* buffer.c */; };
+		63A0153D1A92437000F45CE4 /* markdown.c in Sources */ = {isa = PBXBuildFile; fileRef = 63A015371A92437000F45CE4 /* markdown.c */; };
+		63A0153E1A92437000F45CE4 /* stack.c in Sources */ = {isa = PBXBuildFile; fileRef = 63A015391A92437000F45CE4 /* stack.c */; };
 		63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F684172C2F3100C0EC26 /* CoreVideo.framework */; };
 		63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F686172C2F6E00C0EC26 /* libiconv.dylib */; };
 		63A7F689172C328D00C0EC26 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63A7F688172C328D00C0EC26 /* libstdc++.dylib */; };
@@ -610,8 +613,6 @@
 		631FE50C19195EB10073E980 /* ModalTaskHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalTaskHUD.m; sourceTree = "<group>"; };
 		631FE5181919A3B60073E980 /* HXOActivityIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOActivityIndicatorView.h; sourceTree = "<group>"; };
 		631FE5191919A3B60073E980 /* HXOActivityIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOActivityIndicatorView.m; sourceTree = "<group>"; };
-		6324C03C18BE09AE00E4BD82 /* SubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubViewController.h; sourceTree = "<group>"; };
-		6324C03D18BE09AE00E4BD82 /* SubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubViewController.m; sourceTree = "<group>"; };
 		632502A21865FC2600543D80 /* DateSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateSectionHeaderView.h; sourceTree = "<group>"; };
 		632502A31865FC2600543D80 /* DateSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateSectionHeaderView.m; sourceTree = "<group>"; };
 		632502AB1866500800543D80 /* HXOHyperLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOHyperLabel.h; sourceTree = "<group>"; };
@@ -624,8 +625,6 @@
 		6327F34418B881A6007D79E3 /* UIImage+ImageEffects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageEffects.h"; sourceTree = "<group>"; };
 		6327F34518B881A6007D79E3 /* UIImage+ImageEffects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageEffects.m"; sourceTree = "<group>"; };
 		6327F37318B8C390007D79E3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
-		6327F37518B8D018007D79E3 /* SegmentedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentedViewController.h; sourceTree = "<group>"; };
-		6327F37618B8D018007D79E3 /* SegmentedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentedViewController.m; sourceTree = "<group>"; };
 		633AA8E118C66DCE009403CB /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
 		633AA8E218C66DCE009403CB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		633AA8E318C66DCE009403CB /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
@@ -716,6 +715,17 @@
 		639094BD1739828700DF889B /* GeoLocationPicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeoLocationPicker.m; sourceTree = "<group>"; };
 		639094BF1739842A00DF889B /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		639094C11739970200DF889B /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		63A0152E1A92420D00F45CE4 /* HXOMarkdownRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOMarkdownRenderer.h; sourceTree = "<group>"; };
+		63A0152F1A92420D00F45CE4 /* HXOMarkdownRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOMarkdownRenderer.m; sourceTree = "<group>"; };
+		63A015321A92437000F45CE4 /* autolink.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = autolink.c; path = sundown/src/autolink.c; sourceTree = "<group>"; };
+		63A015331A92437000F45CE4 /* autolink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = autolink.h; path = sundown/src/autolink.h; sourceTree = "<group>"; };
+		63A015341A92437000F45CE4 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = buffer.c; path = sundown/src/buffer.c; sourceTree = "<group>"; };
+		63A015351A92437000F45CE4 /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = buffer.h; path = sundown/src/buffer.h; sourceTree = "<group>"; };
+		63A015361A92437000F45CE4 /* html_blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = html_blocks.h; path = sundown/src/html_blocks.h; sourceTree = "<group>"; };
+		63A015371A92437000F45CE4 /* markdown.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = markdown.c; path = sundown/src/markdown.c; sourceTree = "<group>"; };
+		63A015381A92437000F45CE4 /* markdown.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = markdown.h; path = sundown/src/markdown.h; sourceTree = "<group>"; };
+		63A015391A92437000F45CE4 /* stack.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = stack.c; path = sundown/src/stack.c; sourceTree = "<group>"; };
+		63A0153A1A92437000F45CE4 /* stack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stack.h; path = sundown/src/stack.h; sourceTree = "<group>"; };
 		63A7F655172C2E3100C0EC26 /* QRCodeEncoderObjectiveCAtGithub.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QRCodeEncoderObjectiveCAtGithub.xcodeproj; path = QREncoder/QRCodeEncoderObjectiveCAtGithub.xcodeproj; sourceTree = "<group>"; };
 		63A7F684172C2F3100C0EC26 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		63A7F686172C2F6E00C0EC26 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -1403,11 +1413,9 @@
 				63C1356717160E2E00969B0B /* HXOTableViewController.m */,
 				630CAA0C18DB5DC300782507 /* HXOThemedNavigationController.h */,
 				630CAA0D18DB5DC300782507 /* HXOThemedNavigationController.m */,
-				6327F37518B8D018007D79E3 /* SegmentedViewController.h */,
-				6327F37618B8D018007D79E3 /* SegmentedViewController.m */,
-				6324C03C18BE09AE00E4BD82 /* SubViewController.h */,
-				6324C03D18BE09AE00E4BD82 /* SubViewController.m */,
 				63CB3E7618D4A86E006BB511 /* VectorArt */,
+				63A0152E1A92420D00F45CE4 /* HXOMarkdownRenderer.h */,
+				63A0152F1A92420D00F45CE4 /* HXOMarkdownRenderer.m */,
 			);
 			name = "Base Classes & Components";
 			path = BaseClassesAndComponents;
@@ -1869,6 +1877,22 @@
 			path = TDSemiModal;
 			sourceTree = "<group>";
 		};
+		63A015311A92435000F45CE4 /* sundown */ = {
+			isa = PBXGroup;
+			children = (
+				63A015321A92437000F45CE4 /* autolink.c */,
+				63A015331A92437000F45CE4 /* autolink.h */,
+				63A015341A92437000F45CE4 /* buffer.c */,
+				63A015351A92437000F45CE4 /* buffer.h */,
+				63A015361A92437000F45CE4 /* html_blocks.h */,
+				63A015371A92437000F45CE4 /* markdown.c */,
+				63A015381A92437000F45CE4 /* markdown.h */,
+				63A015391A92437000F45CE4 /* stack.c */,
+				63A0153A1A92437000F45CE4 /* stack.h */,
+			);
+			name = sundown;
+			sourceTree = "<group>";
+		};
 		63AE4541170490B50099F0CB /* Supporting Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -2068,6 +2092,7 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				63A015311A92435000F45CE4 /* sundown */,
 				6356C81A1A7FF4B900888968 /* markdown */,
 				E991E5301A0E974D00015BEE /* CocoaAsyncSocket */,
 				E9E92F2018733B15007B8042 /* CocoaHttpServer */,
@@ -3076,11 +3101,11 @@
 				63B2178D181FDFAB00C057D9 /* LabelWithLED.m in Sources */,
 				C5C359AC196D395700D835F3 /* NSString+EnumerateRanges.m in Sources */,
 				C576EC6E1934CD1500C0D254 /* AudioAttachmentSection.m in Sources */,
-				6327F37718B8D018007D79E3 /* SegmentedViewController.m in Sources */,
 				E9E92F6D18733D01007B8042 /* DDRange.m in Sources */,
 				E95A75A818D257FD0027AE3E /* fmemopen.c in Sources */,
 				6318FB641999057000D018A8 /* ALAsset+isEqual.m in Sources */,
 				C576EC661934CCE000C0D254 /* AttachmentInfo.m in Sources */,
+				63A0153C1A92437000F45CE4 /* buffer.c in Sources */,
 				C5395483195ABF66007DBD04 /* CollectionListViewController.m in Sources */,
 				C576EC421934CCB200C0D254 /* player_button_repeat_title.m in Sources */,
 				E9E92F7418733D01007B8042 /* MultipartMessageHeaderField.m in Sources */,
@@ -3135,6 +3160,7 @@
 				630CAA5518DCC8AE00782507 /* DatasheetViewController.m in Sources */,
 				630CAB8818E1E84400782507 /* DatasheetCell.m in Sources */,
 				63808A35185A27730001AC96 /* GenericAttachmentMessageCell.m in Sources */,
+				63A0153D1A92437000F45CE4 /* markdown.c in Sources */,
 				E96CB02C171457F9005F8FFA /* CCRSA.m in Sources */,
 				C5B167E619657AA0004D3A28 /* CollectionItem.m in Sources */,
 				E96CB02F1714597A005F8FFA /* NSString+StringWithData.m in Sources */,
@@ -3158,6 +3184,7 @@
 				6318FB721999057000D018A8 /* NSDateFormatter+timeIntervalFormatter.m in Sources */,
 				63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */,
 				63903ABE194276B500B7A4B4 /* PeopleMultiPickerViewController.m in Sources */,
+				63A0153B1A92437000F45CE4 /* autolink.c in Sources */,
 				C5B167D01962B982004D3A28 /* AddToCollectionListViewController.m in Sources */,
 				C576EC451934CCB200C0D254 /* player_close.m in Sources */,
 				63638F8E18EC8210008DA997 /* avatar_group.m in Sources */,
@@ -3260,6 +3287,7 @@
 				C5B167E21963ECF6004D3A28 /* MediaAttachmentDataSource.m in Sources */,
 				63BD7D951744232D00118A7F /* GroupMembership.m in Sources */,
 				E9E92F7118733D01007B8042 /* HTTPServer.m in Sources */,
+				63A015301A92420D00F45CE4 /* HXOMarkdownRenderer.m in Sources */,
 				63DEC01D19B0A720003804E8 /* UIImage+JGExtensions.m in Sources */,
 				63CED3E018F9A24F0095110B /* KeyStatusCell.m in Sources */,
 				6318FB711999057000D018A8 /* CTAssetsViewControllerTransition.m in Sources */,
@@ -3270,9 +3298,9 @@
 				6356C82F1A7FF4D900888968 /* MarkdownTokenizer.m in Sources */,
 				63808A2C185942D20001AC96 /* ImageAttachmentSection.m in Sources */,
 				63B7900618D4F581003A9125 /* paper_clip.m in Sources */,
+				63A0153E1A92437000F45CE4 /* stack.c in Sources */,
 				63B76F5018E8F7F800E014E6 /* KeySheetController.m in Sources */,
 				E9E92F7518733D01007B8042 /* HTTPAsyncFileResponse.m in Sources */,
-				6324C03E18BE09AE00E4BD82 /* SubViewController.m in Sources */,
 				E991E6CC1A0E975000015BEE /* AsyncUdpSocket.m in Sources */,
 				63756A9018F6434C003F7555 /* ContactPicker.m in Sources */,
 				63E5698C196353B0007E06BF /* HXOPluralocalization.m in Sources */,
