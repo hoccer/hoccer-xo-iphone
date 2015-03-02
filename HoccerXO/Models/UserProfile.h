@@ -49,6 +49,7 @@ enum {
 // credentials - stored in keychain
 @property (nonatomic,strong)   NSString * clientId;
 @property (nonatomic,readonly) NSString * password;
+@property (nonatomic,readonly) NSString * hexPassword;
 @property (nonatomic,readonly) NSString * salt;
 @property (nonatomic,readonly) NSNumber * credentialsDate;
 

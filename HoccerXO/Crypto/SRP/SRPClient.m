@@ -8,6 +8,8 @@
 
 #import "SRPClient.h"
 #import "BigInteger.h"
+#import "NSData+HexString.h"
+#import "NSString+StringWithData.h"
 
 @interface SRPClient ()
 {
@@ -21,8 +23,14 @@
 
 - (NSData*) generateCredentialsWithSalt: (NSData*) salt username: (NSString*) username password: (NSString*) password {
     _salt = salt;
+    NSData * checkIfHexPassword = [NSData dataWithHexadecimalString:password];
+    if (checkIfHexPassword != nil && password.length % 2 == 0) {
+        _password = [NSString stringWithData:[NSData dataWithHexadecimalString:password] usingEncoding:NSUTF8StringEncoding];
+    } else {
+        _password = password;
+    }
+
     _username = username;
-    _password = password;
     _a = [self selectPrivateValue];
     _A = [_g power: _a modulo: _N];
     return [NSData dataWithBigInteger: _A];

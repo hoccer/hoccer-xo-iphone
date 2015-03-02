@@ -28,17 +28,22 @@ unsigned char parseNibble(unichar c) {
     }
     unsigned char byte = 0;
     unsigned char nibble = 0;
-
+    
     NSUInteger size = inString.length / 2 + (inString.length % 2 ? 1 : 0);
     NSMutableData * data = [NSMutableData dataWithLength: size];
     unsigned char * out = data.mutableBytes;
-    for (NSUInteger i = 0; i < inString.length; i++) {
-        nibble = parseNibble([inString characterAtIndex:i]);
-        byte = (byte << 4) | nibble;
-        if ((i % 2 && inString.length % 2 == 0) || (i % 2 == 0 && inString.length % 2)) {
-            *out++ = byte;
-            byte = 0;
+    @try {
+        for (NSUInteger i = 0; i < inString.length; i++) {
+            nibble = parseNibble([inString characterAtIndex:i]);
+            byte = (byte << 4) | nibble;
+            if ((i % 2 && inString.length % 2 == 0) || (i % 2 == 0 && inString.length % 2)) {
+                *out++ = byte;
+                byte = 0;
+            }
         }
+    } @catch(NSException * e) {
+        return nil;
+        
     }
     if (inString.length % 2) {
         *out = byte;

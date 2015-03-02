@@ -158,6 +158,14 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return [_accountItem objectForKey: (__bridge id)(kSecValueData)];
 }
 
+- (NSString*) hexPassword {
+    NSData * checkIfHexPassword = [NSData dataWithHexadecimalString:self.password];
+    if (checkIfHexPassword != nil && self.password.length % 2 == 0) {
+        return self.password;
+    }
+    return [[self.password dataUsingEncoding:NSUTF8StringEncoding] hexadecimalString];
+}
+
 - (NSString*) salt {
     return [_saltItem objectForKey: (__bridge id)(kSecValueData)];
 }
@@ -190,12 +198,13 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 
 - (NSString*) registerClientAndComputeVerifier: (NSString*) clientId {
     [_accountItem setObject: clientId forKey: (__bridge id)(kSecAttrAccount)];
-    [_accountItem setObject: [NSString stringWithRandomCharactersOfLength: kHXOPasswordLength] forKey: (__bridge id)(kSecValueData)];
+    NSString * newPassword = [NSString stringWithRandomCharactersOfLength: kHXOPasswordLength];
+    [_accountItem setObject: [[newPassword dataUsingEncoding:NSUTF8StringEncoding] hexadecimalString] forKey: (__bridge id)(kSecValueData)];
     SRPParameters * params = [self srpParameters];
     id<SRPDigest> digest = [self srpDigest];
     NSData * salt = [SRP saltForDigest: digest];
     SRPVerifierGenerator * verifierGenerator = [[SRPVerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
-    NSData * verifier = [verifierGenerator generateVerifierWithSalt: salt username: self.clientId password: self.password];
+    NSData * verifier = [verifierGenerator generateVerifierWithSalt: salt username: self.clientId password: newPassword];
     // XXX Workaround for keychain item issue:
     // first keychain claims there is no such item. Later it complains it can not create such
     // an item because it already exists. Using a unique identifier in kSecAttrAccount helps...
@@ -213,7 +222,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
     
 -  (NSDictionary *) extractCredentials {
-    NSDictionary * credentials = @{ @"password": [self password],
+    NSDictionary * credentials = @{ @"password": [self hexPassword],
                                     @"salt" :[self salt],
                                     @"clientId" : self.clientId,
                                     @"credentialsDate" : [self.credentialsDate stringValue] };
@@ -222,6 +231,9 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 
 - (BOOL) sameCredentialsInDict:(NSDictionary*)credentials {
     NSDictionary * currentCredentials = [self extractCredentials];
+    //NSLog(@"current = %@", currentCredentials);
+    //NSLog(@"imported = %@", credentials);
+    
     return  [credentials[@"password"] isEqualToString:currentCredentials[@"password"]] &&
             [credentials[@"salt"] isEqualToString:currentCredentials[@"salt"]] &&
             [credentials[@"clientId"] isEqualToString:currentCredentials[@"clientId"]] &&
@@ -329,6 +341,13 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     if (!self.isRegistered) {
         NSLog(@"Not registered, not backing up credentials");
         return;
+    }
+    // change to hex password if not already hex
+    if (![self.password isEqualToString:self.hexPassword]) {
+        NSLog(@"Changing password to hex representation");
+        NSMutableDictionary * current = [NSMutableDictionary dictionaryWithDictionary:[self extractCredentials]];
+        current[@"password"] = self.hexPassword;
+        [self setCredentialsWithDict:current];
     }
     NSData * cryptedJsonData = [self encryptCredentialsWithPassphrase:@"Batldfh§$cx%&/()dgsGhajau"];
     if (cryptedJsonData != nil) {

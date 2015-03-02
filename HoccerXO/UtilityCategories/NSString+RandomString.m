@@ -10,7 +10,7 @@
 
 
 static const NSString * const kDefaultRandomStringCharacterSet =
-@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!§$%&/()[]{}<>#:;,.*+-_^=?\"' \t";
+@"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!§$%&/()[]{}<>#:;,.*+-_^=?\"'";
 
 
 @implementation NSString (RandomString)
