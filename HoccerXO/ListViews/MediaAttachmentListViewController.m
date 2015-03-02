@@ -162,6 +162,8 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
                                                                    target: self
                                                                    action: @selector(toggleEditMode:)];
     self.navigationItem.hidesBackButton = self.tableView.isEditing;
+    self.mediaTypeControl.enabled = ! self.tableView.isEditing;
+    self.mediaTypeControl.userInteractionEnabled = ! self.tableView.isEditing;
 
     // list of a collection
     if (self.collection) {
