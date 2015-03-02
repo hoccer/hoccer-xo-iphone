@@ -135,7 +135,9 @@
         item.type = AttachmentPickerTypeAdressBookVcard;
         [_supportedItems addObject: item];
     }
-    if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeGeoLocation]) {
+    if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeGeoLocation] &&
+        [CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied)
+    {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"attachment_src_map_btn_title", nil);
         item.type = AttachmentPickerTypeGeoLocation;
