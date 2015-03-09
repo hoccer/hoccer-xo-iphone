@@ -174,6 +174,8 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) updatePresenceWithHandler:(GenericResultHandler)handler;
 
 - (void) updateKeyWithHandler:(GenericResultHandler) handler;
+- (void)deleteAccountForReason:(NSString *)reason  handler:(GenericResultHandler)handler;
+
 
 - (void) deleteInDatabaseAllMembersAndContactsofGroup:(Group*) group inContext:(NSManagedObjectContext*) context;
 - (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force inContext:(NSManagedObjectContext*) context;

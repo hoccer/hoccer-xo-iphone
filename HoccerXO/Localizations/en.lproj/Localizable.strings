@@ -446,6 +446,17 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "credentials_verifier_changed_message"         = "Imported login credentials have been successfully transfered to this app. You can no longer use them in the app or device where they originated. You can however transfer them from this app using functions in Profile→Edit.";
 
 //==============================================================================
+// Account
+//==============================================================================
+"account_delete_btn_title" = "Delete Account on Server";
+"account_delete_success_title"      = "Account Deleted";
+"account_delete_success_message"      = "Your account has successfully been deleted on the server. You can create a new account if you delete your login crendentials.";
+
+"account_delete_failed_title"       = "Account Deletion Failed";
+"account_delete_failed_message"     = "The Account could not be deleted. You are probably not connected to the server.";
+"account_delete_safety_question"    = "Do you really want to delete your Account? All your contacts, group memberships and your account will be gone forever. The data already on your phone will not be affected.";
+
+//==============================================================================
 // Archive
 //==============================================================================
 "archive_all_btn_title"                         = "Create Archive";

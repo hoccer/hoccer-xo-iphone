@@ -19,5 +19,7 @@
 @property (nonatomic, readonly) DatasheetItem * fetchArchiveItem;
 @property (nonatomic, readonly) DatasheetItem * archiveAllItem;
 @property (nonatomic, readonly) DatasheetItem * archiveImportItem;
+@property (nonatomic, readonly) DatasheetItem * deleteAccountItem;
+@property (nonatomic, readonly) DatasheetSection * destructiveSection;
 
 @end

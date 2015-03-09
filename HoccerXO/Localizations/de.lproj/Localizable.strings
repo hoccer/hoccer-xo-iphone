@@ -445,6 +445,17 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "credentials_verifier_changed_message"         = "Die importierten Login-Daten wurden erfolgreich in diese App übernommen. Sie können nicht mehr länger in der App oder auf dem Gerät genutzt werden, von wo sie stammen.. Sie können aber jederzeit über Funktionen in Profil→Bearbeiten auf andere Hoccer Apps übertragen werden.";
 
 //==============================================================================
+// Account
+//==============================================================================
+"account_delete_btn_title"          = "Nutzerkonto auf Server löschen";
+"account_delete_success_title"      = "Nutzerkonto gelöscht";
+"account_delete_success_message"    = "Dein Nutzerkonto auf dem Server wurde gelöscht. Du kannst ein neues Konto anlegen, wenn du die Zugangsdaten löscht.";
+
+"account_delete_failed_title"       = "Nutzerkonto löschen fehlgeschlagen";
+"account_delete_failed_message"     = "Dein Nutzerkonto konnte nicht gelöscht werden. Du bist vermutlich nicht mit dem Server verbunden.";
+"account_delete_safety_question"    = "Willst du wirklich dein Nutzerkonto löschen? All deine Kontakte, Gruppenmitgliedschaften und dieser Zugang werden unwideruflich gelöscht. Die Daten auf deinem Telefon werden nicht gelöscht.";
+
+//==============================================================================
 // Archive
 //==============================================================================
 "archive_all_btn_title"                         = "Archiv anlegen";

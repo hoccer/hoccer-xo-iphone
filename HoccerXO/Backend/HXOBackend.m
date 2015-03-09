@@ -1001,6 +1001,7 @@ static NSTimer * _stateNotificationDelayTimer;
          [errorMessage isEqualToString:@"Authentication failed"] ||
          [errorMessage isEqualToString:@"Verification failed"] ||
          [errorMessage isEqualToString:@"Bad salt"] ||
+         [errorMessage isEqualToString:@"Client deleted"] ||
          [errorMessage isEqualToString:@"Not registered"] ))
     {
         // check if our credentials were refused
@@ -4798,6 +4799,17 @@ static NSTimer * _stateNotificationDelayTimer;
         } else {
             NSLog(@"SRP Phase 2 failed: %@", responseOrError);
             handler(nil, responseOrError);
+        }
+    }];
+}
+
+- (void)deleteAccountForReason:(NSString *)reason  handler:(GenericResultHandler)handler{
+    [_serverConnection invoke: @"deleteAccount" withParams: @[reason] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            handler(YES);
+        } else {
+            NSLog(@"deleteAccount failed: %@", responseOrError);
+            handler(NO);
         }
     }];
 }

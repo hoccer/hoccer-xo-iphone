@@ -34,7 +34,9 @@
 
 @synthesize archiveAllItem = _archiveAllItem;
 @synthesize archiveImportItem = _archiveImportItem;
+@synthesize deleteAccountItem = _deleteAccountItem;
 
+@synthesize destructiveSection = _destructiveSection;
 
 - (void) commonInit {
     [super commonInit];
@@ -441,6 +443,48 @@
     [sheet showInView: self.delegate.view];
 }
 
+#pragma mark - Delete Account
+
+- (DatasheetItem*) deleteAccountItem {
+    if ( ! _deleteAccountItem) {
+        _deleteAccountItem = [self itemWithIdentifier: @"account_delete_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _deleteAccountItem.visibilityMask = DatasheetModeEdit;
+        _deleteAccountItem.target = self;
+        _deleteAccountItem.action = @selector(deleteAccountPressed:);
+        _deleteAccountItem.titleTextColor = [HXOUI theme].destructiveTextColor;
+    }
+    return _deleteAccountItem;
+}
+
+- (DatasheetSection*) destructiveSection {
+    if ( ! _destructiveSection) {
+        _destructiveSection = [DatasheetSection datasheetSectionWithIdentifier: @"destructive_section"];
+        
+        _destructiveSection.items = @[self.destructiveButton, self.deleteAccountItem];
+    }
+    return _destructiveSection;
+}
+
+- (void) deleteAccountPressed: (UIViewController*) sender {
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
+        if (buttonIndex == actionSheet.destructiveButtonIndex) {
+            [HXOBackend.instance  deleteAccountForReason:@"user request" handler:^(BOOL ok) {
+                if (ok) {
+                    [AppDelegate.instance showGenericAlertWithTitle:@"account_delete_success_title" andMessage:@"account_delete_success_message" withOKBlock:nil];
+                } else {
+                    [AppDelegate.instance showGenericAlertWithTitle:@"account_delete_failed_title" andMessage:@"account_delete_failed_message" withOKBlock:nil];
+                }
+            }];
+        }
+    };
+    
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"account_delete_safety_question", nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: NSLocalizedString(@"delete", nil)
+                                      otherButtonTitles: nil];
+    [sheet showInView: self.delegate.view];
+}
 
 
 #pragma mark - Delete Credentials
