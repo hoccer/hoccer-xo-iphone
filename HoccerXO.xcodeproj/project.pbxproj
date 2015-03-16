@@ -90,6 +90,7 @@
 		636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D4006171072CD00304EDF /* HXOUserDefaults.m */; };
 		636D40091710770A00304EDF /* HXOUserDefaultsDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */; };
 		636D400B171081AB00304EDF /* Environment.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D400A171081AB00304EDF /* Environment.plist */; };
+		6370DFAF1AB71AF40071E5CD /* PasscodeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6370DFAE1AB71AF40071E5CD /* PasscodeViewController.m */; };
 		63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */; };
 		63716BBD185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63716BBC185CCEE60094987D /* GenericAttachmentWithTextMessageCell.m */; };
 		637207BC19D2FD8E002FAF03 /* CLLocationManager+AuthHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 637207BB19D2FD8E002FAF03 /* CLLocationManager+AuthHelper.m */; };
@@ -660,6 +661,8 @@
 		636D4006171072CD00304EDF /* HXOUserDefaults.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOUserDefaults.m; sourceTree = "<group>"; };
 		636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = HXOUserDefaultsDefaults.plist; sourceTree = "<group>"; };
 		636D400A171081AB00304EDF /* Environment.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Environment.plist; sourceTree = "<group>"; };
+		6370DFAD1AB71AF40071E5CD /* PasscodeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PasscodeViewController.h; sourceTree = "<group>"; };
+		6370DFAE1AB71AF40071E5CD /* PasscodeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PasscodeViewController.m; sourceTree = "<group>"; };
 		63716BB0185CC8C90094987D /* ImageAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
 		63716BB1185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageAttachmentWithTextMessageCell.m; sourceTree = "<group>"; };
 		63716BBB185CCEE60094987D /* GenericAttachmentWithTextMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GenericAttachmentWithTextMessageCell.h; sourceTree = "<group>"; };
@@ -1882,6 +1885,8 @@
 				63CA315418D272E70069A0C2 /* InvitationCodeViewController.mm */,
 				6357A1771A03889400E87A96 /* InviteController.h */,
 				6357A1781A03889400E87A96 /* InviteController.m */,
+				6370DFAD1AB71AF40071E5CD /* PasscodeViewController.h */,
+				6370DFAE1AB71AF40071E5CD /* PasscodeViewController.m */,
 				E9B7BAB7172EA15E00212420 /* RecordViewController.h */,
 				E9B7BAB8172EA15E00212420 /* RecordViewController.m */,
 				C576EBD31934CC8400C0D254 /* SeekSlider.h */,
@@ -3295,6 +3300,7 @@
 				63CED3E318F9D86E0095110B /* SetupViewControllers.m in Sources */,
 				6318FB6C1999057000D018A8 /* CTAssetsPickerConstants.m in Sources */,
 				E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */,
+				6370DFAF1AB71AF40071E5CD /* PasscodeViewController.m in Sources */,
 				E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */,
 				63FE105418EFA726008630DE /* AttachmentButton.m in Sources */,
 				630CAA0E18DB5DC300782507 /* HXOThemedNavigationController.m in Sources */,

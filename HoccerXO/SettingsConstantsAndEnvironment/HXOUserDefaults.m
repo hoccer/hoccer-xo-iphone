@@ -56,6 +56,8 @@ NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
 
 NSString * const kHXOMPMediaAccess = @"mpMediaAccess";
 
+NSString * const kHXOPasscodeMode = @"passcodeMode";
+
 
 @implementation HXOUserDefaults
 

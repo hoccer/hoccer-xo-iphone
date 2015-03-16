@@ -195,5 +195,6 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 +(NSString*)metaDataPath:(NSString*)filePath;
 
 +(NSString*)appEntityId;
+- (UIImage*) appIcon;
 
 @end

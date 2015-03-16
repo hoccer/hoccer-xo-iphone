@@ -30,6 +30,7 @@
 #import "HXOLocalization.h"
 #import "MediaAttachmentListViewController.h"
 #import "NSString+Regexp.h"
+#import "PasscodeViewController.h"
 
 #import "Delivery.h" //DEBUG
 
@@ -51,6 +52,7 @@
 #import <CoreData/NSMappingModel.h>
 
 #import <AVFoundation/AVFoundation.h>
+#import <LocalAuthentication/LocalAuthentication.h>
 
 #import <sys/utsname.h>
 
@@ -108,6 +110,7 @@ static NSInteger validationErrorCount = 0;
 @property (nonatomic, strong) UIView * interactionView;
 @property BOOL interactionSending;
 @property BOOL interactionRemoveFileFlag;
+@property (nonatomic, readonly) BOOL isPasscodeRequired;
 
 @end
 
@@ -900,9 +903,10 @@ BOOL sameObjects(id obj1, id obj2) {
     [self setLastActiveDate];
 }
 
-- (void)applicationDidBecomeActive:(UIApplication *)application
-{
-    // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    if (self.isPasscodeRequired) {
+        [self showPasscodeViewController: nil];
+    }
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -3680,6 +3684,87 @@ enum {
     }
 }
 
+#pragma mark - Passcode Handling
+
+- (BOOL) isPasscodeRequired {
+    NSString * passcodeMode = [PasscodeViewController passcodeMode];
+    BOOL isEnabled = [passcodeMode isEqualToString: @"simple"] ||
+                     [passcodeMode isEqualToString: @"standard"] ||
+                     [passcodeMode isEqualToString: @"touchid"];
+    BOOL isExpired = NO;
+    return isEnabled && isExpired;
+}
+
+- (void) showPasscodeViewController: (id) sender {
+    // XXX causes a warning: Unbalanced calls to begin/end appearance transitions for <UITabBarController>
+    // TODO: find out why...
+    if ([[PasscodeViewController passcodeMode] isEqualToString: @"touchid"]) {
+        [self authenticateUsingTouchId];
+    } else {
+        [self.window.rootViewController performSegueWithIdentifier: @"showPasscode" sender: sender];
+    }
+}
+
+- (void) authenticateUsingTouchId {
+    LAContext *context = [[LAContext alloc] init];
+
+    NSError *error = nil;
+    if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
+        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
+                localizedReason:@"Are you the device owner?"
+                          reply:^(BOOL success, NSError *error) {
+
+                              if (error) {
+                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                  message:@"There was a problem verifying your identity."
+                                                                                 delegate:nil
+                                                                        cancelButtonTitle:@"Ok"
+                                                                        otherButtonTitles:nil];
+                                  [alert show];
+                                  return;
+                              }
+
+                              if (success) {
+                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success"
+                                                                                  message:@"You are the device owner!"
+                                                                                 delegate:nil
+                                                                        cancelButtonTitle:@"Ok"
+                                                                        otherButtonTitles:nil];
+                                  [alert show];
+
+                              } else {
+                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                                  message:@"You are not the device owner."
+                                                                                 delegate:nil
+                                                                        cancelButtonTitle:@"Ok"
+                                                                        otherButtonTitles:nil];
+                                  [alert show];
+                              }
+                              
+                          }];
+        
+    } else {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                        message:@"Your device cannot authenticate using TouchID."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Ok"
+                                              otherButtonTitles:nil];
+        [alert show];
+        
+    }
+}
+
+- (UIImage*) appIcon {
+    NSArray * names = [[NSBundle mainBundle] infoDictionary][@"CFBundleIcons"][@"CFBundlePrimaryIcon"][@"CFBundleIconFiles"];
+    UIImage * best;
+    for (NSString * name in names) {
+        UIImage * icon = [UIImage imageNamed: name];
+        best = icon.size.width > best.size.width ? icon : best;
+    }
+    return best;
+}
+
 @end
 
 #ifdef DEBUG_RESPONDER
@@ -3714,7 +3799,5 @@ enum {
     [self MYHijack_touchesBegan:touches withEvent:event]; // Calls the original version of this method
 }
 @end
+
 #endif
-
-
-
