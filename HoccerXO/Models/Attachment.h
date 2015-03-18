@@ -26,6 +26,7 @@ typedef void(^DictLoaderBlock)(NSDictionary* theDict,NSError* theError);
 typedef void(^MACSetterBlock)(NSData* theMAC,NSError* theError);
 typedef void(^OkBlock)();
 typedef void (^AttachmentCompletionBlock)(Attachment *, NSError*);
+typedef void (^StringCompletionBlock)(NSString * string);
 
 typedef void(^UploadProgessBlock)(NSUInteger bytesWritten, NSUInteger totalBytesWritten, NSUInteger totalBytesExpectedToWrite);
 typedef void(^DownloadProgessBlock)(NSUInteger bytesRead, NSUInteger totalBytesRead, NSUInteger totalBytesExpectedToRead);
@@ -95,7 +96,7 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSDate   * creationDate;           // date when this record was created
 // new properties with Model Version 47 not reliably available yet on old databse
 @property (nonatomic, strong) NSString * fileStatus;             // indicates the status of the referenced file, currently only "DOES_NOT_EXIST"
-@property (nonatomic)         NSNumber * orderNumber;            // number of ciphertext bytes
+//@property (nonatomic)         NSNumber * orderNumber;            // number of ciphertext bytes
 @property (nonatomic, strong) NSDate   * fileModificationDate;   // lastModifiedDate of attached file
 
 // virtual properties

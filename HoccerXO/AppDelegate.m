@@ -663,8 +663,8 @@ BOOL sameObjects(id obj1, id obj2) {
     //[[HXOUserDefaults standardUserDefaults] setValue: @"wss://talkserver.talk.hoccer.de:8443/" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"https://filecache.talk.hoccer.de:8444/" forKey: kHXOForceFilecacheURL];
 
-    [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.146:8080/" forKey: kHXODebugServerURL];
-    [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.146:8081/" forKey: kHXOForceFilecacheURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"ws://192.168.2.25:8080/" forKey: kHXODebugServerURL];
+    [[HXOUserDefaults standardUserDefaults] setValue: @"http://192.168.2.25:8081/" forKey: kHXOForceFilecacheURL];
     
     //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXODebugServerURL];
     //[[HXOUserDefaults standardUserDefaults] setValue: @"" forKey: kHXOForceFilecacheURL];
@@ -1327,26 +1327,26 @@ BOOL sameObjects(id obj1, id obj2) {
             
             [NSThread currentThread].threadDictionary[@"hxoMOContext"] = temporaryContext;
             
-            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Starting backgroundblock of ctx %@", temporaryContext);
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Starting backgroundblock of ctx %@ lockid %@", temporaryContext, lockId);
             
             backgroundBlock(temporaryContext);
             
-            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished backgroundblock of ctx %@, pushing to parent", temporaryContext);
+            if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished backgroundblock of ctx %@, pushing to parent lockid %@", temporaryContext, lockId);
             
             // push to parent
             if ([temporaryContext hasChanges]) {
                 [self saveContext:temporaryContext];
                 
-                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished saving to parent of ctx %@, pushing done", temporaryContext);
+                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Finished saving to parent of ctx %@, pushing done lockid %@", temporaryContext, lockId);
                 
                 // save parent to disk
                 [mainMOC performBlockAndWait:^{
-                    if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes of ctx %@,", temporaryContext);
+                    if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes of ctx %@, lockid %@", temporaryContext, lockId);
                     [self saveDatabaseNow];
-                    if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes done of ctx %@,", temporaryContext);
+                    if (TRACE_BACKGROUND_PROCESSING) NSLog(@"Saving backgroundblock changes done of ctx %@, lockid %@", temporaryContext, lockId);
                 }];
             } else {
-                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"No uncommited changes for backgroundblock of ctx %@,", temporaryContext);
+                if (TRACE_BACKGROUND_PROCESSING) NSLog(@"No uncommited changes for backgroundblock of ctx %@,  lockid %@", temporaryContext, lockId);
             }
             [[NSThread currentThread].threadDictionary removeObjectForKey:@"hxoMOContext"];
         }];

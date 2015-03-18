@@ -120,7 +120,7 @@
 @dynamic creationDate;           // date when this record was created
 
 @dynamic fileStatus;
-@dynamic orderNumber;
+//@dynamic orderNumber;
 
 @dynamic fileModificationDate;
 
