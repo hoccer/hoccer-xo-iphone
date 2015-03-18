@@ -23,6 +23,11 @@
 @property (nonatomic, readonly) DatasheetItem       * passwordItem;
 @property (nonatomic, readonly) DatasheetItem       * addressItem;
 
+@property (nonatomic, readonly) DatasheetSection    * connectionTutorialSection;
+@property (nonatomic, readonly) DatasheetItem       * macTutorial;
+@property (nonatomic, readonly) DatasheetItem       * winXpTutorial;
+@property (nonatomic, readonly) DatasheetItem       * win7Tutorial;
+
 @end
 
 @implementation ServerSheetController
@@ -31,6 +36,10 @@
 @synthesize serverSwitch  = _serverSwitch;
 @synthesize passwordItem  = _passwordItem;
 @synthesize addressItem   = _addressItem;
+@synthesize connectionTutorialSection = _connectionTutorialSection;
+@synthesize macTutorial = _macTutorial;
+@synthesize winXpTutorial = _winXpTutorial;
+@synthesize win7Tutorial = _win7Tutorial;
 
 - (HTTPServerController*) server {
     return self.inspectedObject;
@@ -67,13 +76,13 @@
 }
 
 - (NSArray*) buildSections {
-    return @[self.serverSection];
+    return @[self.serverSection, self.connectionTutorialSection];
 }
 
 - (BOOL) isCancelable { return NO; }
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    if ([item isEqual: self.addressItem]) {
+    if ([item isEqual: self.addressItem] || [item isEqual: self.macTutorial] || [item isEqual: self.win7Tutorial] || [item isEqual: self.winXpTutorial]) {
         return self.server.canRun && self.server.isRunning;
     }
     return [super isItemVisible: item];
@@ -136,7 +145,7 @@
         NSString * text;
 
         if (running) {
-            text = HXOLocalizedString(@"server_running", nil, boxName, boxName, boxName, boxName, appName, appName, boxName);
+            text = @""; //HXOLocalizedString(@"server_running", nil, boxName, boxName, boxName, boxName, appName, appName, boxName);
         } else if (can_run) {
             text = HXOLocalizedString(@"server_stopped_can_run", nil, boxName, boxName, appName);
         } else {
@@ -147,6 +156,8 @@
     }
     return nil;
 }
+
+#pragma mark - Server Section
 
 - (DatasheetSection*) serverSection {
     if ( ! _serverSection) {
@@ -183,5 +194,41 @@
     }
     return _addressItem;
 }
+
+#pragma mark - Server Section
+
+- (DatasheetSection*) connectionTutorialSection {
+    if ( ! _connectionTutorialSection) {
+        _connectionTutorialSection = [DatasheetSection datasheetSectionWithIdentifier: @"server_tutorial_section"];
+        _connectionTutorialSection.items = @[self.macTutorial, self.win7Tutorial, self.winXpTutorial];
+        _connectionTutorialSection.title = [[NSAttributedString alloc] initWithString: HXOLocalizedString(@"server_tutorial_section_title", nil) attributes: nil];
+    }
+    return _connectionTutorialSection;
+}
+
+- (DatasheetItem*) macTutorial {
+    if ( ! _macTutorial) {
+        _macTutorial = [self itemWithIdentifier: @"server_tutorial_title_mac" cellIdentifier: @"DatasheetActionCell"];
+        _macTutorial.accessoryStyle = DatasheetAccessoryDisclosure;
+    }
+    return _macTutorial;
+}
+
+- (DatasheetItem*) win7Tutorial {
+    if ( ! _win7Tutorial) {
+        _win7Tutorial = [self itemWithIdentifier: @"server_tutorial_title_win7" cellIdentifier: @"DatasheetActionCell"];
+        _win7Tutorial.accessoryStyle = DatasheetAccessoryDisclosure;
+    }
+    return _win7Tutorial;
+}
+
+- (DatasheetItem*) winXpTutorial {
+    if ( ! _winXpTutorial) {
+        _winXpTutorial = [self itemWithIdentifier: @"server_tutorial_title_winxp" cellIdentifier: @"DatasheetActionCell"];
+        _winXpTutorial.accessoryStyle = DatasheetAccessoryDisclosure;
+    }
+    return _winXpTutorial;
+}
+
 
 @end

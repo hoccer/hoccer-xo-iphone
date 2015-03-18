@@ -725,6 +725,11 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "server_address_title"          = "Address:";
 "server_password_title"         = "Password:";
 
+"server_tutorial_section_title" = "Connect using";
+"server_tutorial_title_mac"     = "Mac OS";
+"server_tutorial_title_win7"    = "Windows 7";
+"server_tutorial_title_winxp"   = "Windows XP";
+
 //==============================================================================
 // Settings
 //==============================================================================
