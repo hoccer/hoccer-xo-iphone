@@ -718,12 +718,17 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 "server_running"                = "Perform the following steps to connect your computer with the %@ on your devices:\n\n1. Open the \"connect with server\" dialogue on your computer to connect to the %@:\n\nOSX: |Finder|Go|Connect to Server| or cmd-K.\n\nWindows XP:|My Network Places|Add Network Place|\n\nWindows 7:|Computer|Right Click in Window|Add a Network Location|\n\nWindows 8:|Desktop|Computer|Add a Network Location|\n\n2. Enter the http:// server address above and hit \"connect\".\n\n3. Choose a user name and insert above-named password.\n\n4. A new Window will open, and after a while the %@ files will appear. \n\n5. You can copy files from and to this window like in any other drive.  Files copied to the %@ will appear in %@ in the Media tab section. \n\You must keep %@ running in the foreground to use the %@.";
 
-"server_stopped_can_run"        = "Enable the %@ to start a WebDAV-Server on this device. You can then connect to the %@ from a computer in the local network to copy media items between %@ and your computer.\n\nFor security reason do not start the server when connected to an untrusted public Wifi-network. \n\nYou can change the server password by touching it.";
+"server_stopped_can_run"        = "Enable the %@ to start a WebDAV-Server on this device. You can then connect to the %@ from a computer in the local network to copy media items between %@ and your computer.\n\nFor security reason do not start the server when connected to an untrusted public Wifi-network.";
 
 "server_stopped_can_not_run"    = "You must be connected via WiFi in order to start the WebDAV-Server for the %@ on this device, but you are not.\n\nWith the server you can connect to the %@ App from a computer in the local network and copy media items between your device and your computer.\n\nFor security reasons do not start the server when connected to an untrusted public Wifi-network.";
 
 "server_address_title"          = "Address:";
 "server_password_title"         = "Password:";
+
+"server_tutorial_section_title" = "Connect using";
+"server_tutorial_title_mac"     = "Mac OS";
+"server_tutorial_title_win7"    = "Windows 7";
+"server_tutorial_title_winxp"   = "Windows XP";
 
 //==============================================================================
 // Settings

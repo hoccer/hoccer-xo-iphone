@@ -12,6 +12,7 @@
 #import "HXOHyperLabel.h"
 #import "HXOLocalization.h"
 #import "HXOUI.h"
+#import "AppDelegate.h"
 
 #ifdef DEBUG
 # define kReleaseBuild NO 
@@ -70,7 +71,7 @@
 }
 
 - (void) configureCell: (AboutCell*) cell {
-    cell.iconView.image = [self appIcon];
+    cell.iconView.image = [(AppDelegate*)[UIApplication sharedApplication].delegate appIcon];
     cell.iconView.backgroundColor = [UIColor clearColor];
     cell.iconView.layer.cornerRadius = 1.5 * kHXOGridSpacing;
     cell.iconView.layer.masksToBounds = YES;
@@ -88,16 +89,6 @@
     [self configureCell: self.sizingCell];
     CGSize size = [self.sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
     return ceilf(size.height) + 1;
-}
-
-- (UIImage*) appIcon {
-    NSArray * names = [[NSBundle mainBundle] infoDictionary][@"CFBundleIcons"][@"CFBundlePrimaryIcon"][@"CFBundleIconFiles"];
-    UIImage * best;
-    for (NSString * name in names) {
-        UIImage * icon = [UIImage imageNamed: name];
-        best = icon.size.width > best.size.width ? icon : best;
-    }
-    return best;
 }
 
 @end
