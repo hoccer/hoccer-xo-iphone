@@ -716,7 +716,6 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 // Server
 //==============================================================================
-"server_running"                = "Perform the following steps to connect your computer with the %@ on your devices:\n\n1. Open the \"connect with server\" dialogue on your computer to connect to the %@:\n\nOSX: |Finder|Go|Connect to Server| or cmd-K.\n\nWindows XP:|My Network Places|Add Network Place|\n\nWindows 7:|Computer|Right Click in Window|Add a Network Location|\n\nWindows 8:|Desktop|Computer|Add a Network Location|\n\n2. Enter the http:// server address above and hit \"connect\".\n\n3. Choose a user name and insert above-named password.\n\n4. A new Window will open, and after a while the %@ files will appear. \n\n5. You can copy files from and to this window like in any other drive.  Files copied to the %@ will appear in %@ in the Media tab section. \n\You must keep %@ running in the foreground to use the %@.";
 
 "server_stopped_can_run"        = "Enable the %@ to start a WebDAV-Server on this device. You can then connect to the %@ from a computer in the local network to copy media items between %@ and your computer.\n\nFor security reason do not start the server when connected to an untrusted public Wifi-network.";
 
@@ -736,7 +735,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 // password: %3$@
 // URL     : %4$@
 
-"server_tutorial_mac" = "1. In Finder menu select |Go|Connect to Server| or cmd-K.\n\n2. Enter the address: \"%4$@\" and hit \"connect\".\n\n3. Choose a user name and insert the password \"%3$@\".\n\n4. A new Window will open, and after a while the %1$@ files will appear. \n\n5. You can copy files from and to this window like in any other drive.  Files copied to the %2$@ will appear in %1$@ in the Media tab section. \n\You must keep %1$@ running in the foreground to use the %2$@.";
+"server_tutorial_mac" = "\t1.\tIn Finder menu select |Go|Connect to Server| or cmd-K.\n\n\t2.\tEnter the address: \"%4$@\" and hit \"connect\".\n\n\t3.\tChoose a user name and insert the password \"%3$@\".\n\n\t4.\tA new Window will open, and after a while the %1$@ files will appear. \n\n\t5.\tYou can copy files from and to this window like in any other drive.  Files copied to the %2$@ will appear in %1$@ in the Media tab section. \n\nYou must keep %1$@ running in the foreground to use the %2$@.";
 
 "server_tutorial_win7" = "1. Do the WINDOWS THING\n\n2. Enter the address: \"%4$@\" and hit \"connect\".\n\n3. Choose a user name and insert the password \"%3$@\".\n\n4. A new Window will open, and after a while the %1$@ files will appear. \n\n5. You can copy files from and to this window like in any other drive.  Files copied to the %2$@ will appear in %1$@ in the Media tab section. \n\You must keep %1$@ running in the foreground to use the %2$@.";
 

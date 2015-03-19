@@ -14,10 +14,15 @@
 
 @implementation TutorialViewController
 
+- (void) viewDidLoad {
+    [super viewDidLoad];
+    self.textView.alwaysBounceVertical = YES;
+}
+
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
 
-    self.textView.text = self.text;
+    self.textView.attributedText = self.text;
 }
 
 @end

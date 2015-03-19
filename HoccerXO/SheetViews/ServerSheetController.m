@@ -250,24 +250,58 @@
     TutorialViewController * tutorial = (TutorialViewController*) segue.destinationViewController;
     NSString * tutorialKey;
     if ([item isEqual: self.macTutorial]) {
-        tutorialKey = @"server_tutorial_mac";
+        tutorialKey = @"webdav_mac";
     } else if ([item isEqual: self.win8Tutorial]) {
-        tutorialKey = @"server_tutorial_win8";
+        tutorialKey = @"webdav_win8";
     } else if ([item isEqual: self.win7Tutorial]) {
-        tutorialKey = @"server_tutorial_win7";
+        tutorialKey = @"webdav_win7";
     } else if ([item isEqual: self.winXpTutorial]) {
-        tutorialKey = @"server_tutorial_winxp";
+        tutorialKey = @"webdav_winxp";
     } else {
         NSLog(@"ERROR: unknown webdav tutorial item");
     }
-    /* TODO: string interpolation :-/
-     NSURL *rtfPath = [[NSBundle mainBundle] URLForResource: @"webdav_mac" withExtension:@"rtf"];
-     NSAttributedString * text = [[NSAttributedString alloc]   initWithFileURL: rtfPath options: @{ NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} documentAttributes: nil error: nil];
-     */
+
+    tutorial.text = [self tutorialForOS: tutorialKey];
+}
+
+- (NSAttributedString*) tutorialForOS: (NSString*) name {
+    NSURL *rtfPath = [[NSBundle mainBundle] URLForResource: name withExtension:@"rtf"];
+    if ( ! rtfPath) {
+        NSLog(@"ERROR: webdav tutorial not found: %@", name);
+        return nil;
+    }
+    NSMutableAttributedString * text = [[NSMutableAttributedString alloc]   initWithFileURL: rtfPath options: @{ NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} documentAttributes: nil error: nil];
     NSString * boxName = HXOLabelledLocalizedString(@"server_nav_title", nil);
     NSString * appName = HXOAppName();
 
-    tutorial.text = HXOLocalizedString(tutorialKey, nil, appName, boxName, self.server.password, self.server.url);
-}
+    NSDictionary * userInfo = @{ @"APPNAME" : appName,
+                                 @"BOXNAME" : boxName,
+                                 @"URL"     : self.server.url,
+                                 @"PASSWORD": self.server.password
+                                 };
 
+    NSError * error;
+    NSRegularExpression * regex = [[NSRegularExpression alloc] initWithPattern: @"\\$\\{[^\\}]+\\}" options:0 error:&error];
+    NSString * rawString = text.string;
+
+    if (error) {
+        NSLog(@"Regex error: %@", error);
+        return nil;
+    }
+
+    NSMutableArray * references = [NSMutableArray array];
+    [regex enumerateMatchesInString: rawString options: 0 range: NSMakeRange(0, rawString.length) usingBlock:^(NSTextCheckingResult *result, NSMatchingFlags flags, BOOL *stop) {
+        [references addObject: [NSValue valueWithRange: result.range]];
+    }];
+
+    for (NSValue * value in [references reverseObjectEnumerator]) {
+        NSRange referenceRange = [value rangeValue];
+        NSRange symbolRange = referenceRange;
+        symbolRange.location += 2;
+        symbolRange.length -= 3;
+        NSString * symbol = [rawString substringWithRange: symbolRange];
+        [text replaceCharactersInRange: referenceRange withString: userInfo[symbol]];
+    }
+    return text;
+}
 @end

@@ -11,6 +11,6 @@
 @interface TutorialViewController : UIViewController
 
 @property (nonatomic, strong) IBOutlet UITextView * textView;
-@property (nonatomic, strong) NSString * text;
+@property (nonatomic, strong) NSAttributedString * text;
 
 @end
