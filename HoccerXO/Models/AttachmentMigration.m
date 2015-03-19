@@ -38,6 +38,11 @@
     NSString * fullPath = [[inDirectory path] stringByAppendingPathComponent:file];
     NSURL * fullURL = [NSURL fileURLWithPath:fullPath];
     
+    if ([AppDelegate isBusyFile:fullPath]) {
+        NSLog(@"Ignoring busy file : %@",file);
+        return;
+    }
+    
     NSDictionary * attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
     if (attributes != nil && [attributes objectForKey:NSFileSize] != nil) {
         BOOL isDirectory = [[attributes fileType] isEqualToString:NSFileTypeDirectory];
@@ -199,14 +204,18 @@ static NSString * filenameOf(Attachment * attachment) {
                 }
                 
                 if (attachment.message != nil && attachment.available) {
+                    /*
                     if ([AppDelegate isUserReadWriteFile:fullPath]) {
                         //[AppDelegate setPosixPermissionsReadOnlyForPath:fullPath];
                         [AppDelegate setPosixPermissionsReadWriteForPath:fullPath];
                     }
+                     */
                 } else {
+                    /*
                     if (![AppDelegate isUserReadWriteFile:fullPath]) {
                         [AppDelegate setPosixPermissionsReadWriteForPath:fullPath];
                     }
+                     */
                     NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfItemAtPath:fullPath error:NULL];
                     if (attributes) {
                         NSString * entityTag= [AppDelegate etagFromAttributes:attributes];
@@ -234,7 +243,7 @@ static NSString * filenameOf(Attachment * attachment) {
             } else {
                 // attachment without file
                 if ((attachment.message == nil && isOldAttachment(attachment)) || (attachment.message != nil && qualifiesForDeletion(attachment))) {
-                    NSLog(@"adding broken attachment for deletion: %@", attachment);
+                    NSLog(@"adding broken attachment for deletion: %@", attachment.contentURL);
                     [brokenAttachments addObject:attachment];
                 } else {
                     attachment.fileStatus = @"DOES_NOT_EXIST";
@@ -280,9 +289,10 @@ static NSString * filenameOf(Attachment * attachment) {
         }
         if (fileDuplicate || urlDuplicate || macDuplicate) {
             if (![attachment.duplicate isEqualToString:@"DUPLICATE"]) {
+                NSString * was = attachment.duplicate;
                 attachment.duplicate = @"DUPLICATE";
                 // we remember duplicates in the dictionary
-                NSLog(@"marked duplicate attachment for file: %@", [attachmentURL lastPathComponent]);
+                NSLog(@"marked duplicate attachment for file: %@ (was %@) %@ %@ %@", [attachmentURL lastPathComponent], was, fileDuplicate?@"fileDuplicate":@"", urlDuplicate?@"urlDuplicate":@"", macDuplicate?@"macDuplicate":@"");
             } else {
                 if (DEBUG_DUPLICATES) NSLog(@"found duplicate attachment for file: %@", [attachmentURL lastPathComponent]);
             }
@@ -321,11 +331,12 @@ static NSString * filenameOf(Attachment * attachment) {
                                                                                    [AppDelegate.instance deleteObject:attachment inContext:context];
 #endif
                                                                                }
+                                                                               [AppDelegate.instance saveDatabase];
                                                                            }];
     }
 
 }
-
+/*
 + (void) adoptOrphanedFilesAsync:(NSArray*)newFiles changedFiles:(NSArray*)changedFiles deletedFiles:(NSArray*)deletedFiles withRemovingAttachmentsNotInFiles:(NSArray*)allFiles inDirectory:(NSURL*)inDirectory {
     AppDelegate *delegate = [AppDelegate instance];
     
@@ -368,6 +379,7 @@ static NSString * filenameOf(Attachment * attachment) {
     }];
     
 }
+*/
 
 + (void) adoptOrphanedFiles:(NSArray*)newFiles changedFiles:(NSArray*)changedFiles deletedFiles:(NSArray*)deletedFiles withRemovingAttachmentsNotInFiles:(NSArray*)allFiles inDirectory:(NSURL*)inDirectory {
     AppDelegate *delegate = [AppDelegate instance];
@@ -384,13 +396,19 @@ static NSString * filenameOf(Attachment * attachment) {
         //NSArray *sortDescriptors = @[sortDescriptor];
         
         //[fetchRequest setSortDescriptors:sortDescriptors];
-        fetchRequest.fetchLimit = 200;
         
         NSMutableArray * attachments = [NSMutableArray new];
         NSArray *someAttachments = nil;
         BOOL done = NO;
         
+        NSDate * startCount = [NSDate new];
+        NSUInteger totalCount = [context countForFetchRequest:fetchRequest error:&myError];
+        NSDate * stopCount = [NSDate new];
+        if (DEBUG_TIMING) NSLog(@"Counting all %lu attachments took %0.3f secs",(unsigned long)totalCount, [stopCount timeIntervalSinceDate:startCount]);
+        fetchRequest.fetchLimit = 200;
+
         NSDate * loopStart = [NSDate new];
+        
 
         do {
             if (DEBUG_QUERY) NSLog(@"Executing fetch request for %lu attachments from pos %lu", (unsigned long)fetchRequest.fetchLimit, (unsigned long)fetchRequest.fetchOffset);
@@ -410,6 +428,16 @@ static NSString * filenameOf(Attachment * attachment) {
             if (DEBUG_QUERY) NSLog(@"fetchLimit %lu got %lu",(unsigned long)fetchRequest.fetchLimit, (unsigned long)someAttachments.count);
             done = done || (fetchRequest.fetchLimit > someAttachments.count);
             if (DEBUG_QUERY) NSLog(@"done = %d",done);
+            
+            if (fetchRequest.fetchOffset > totalCount + fetchRequest.fetchLimit * 2) {
+                NSLog(@"fetching too much slices, starting over");
+                [context reset];
+                attachments = [NSMutableArray new];
+                fetchRequest.fetchOffset = 0;
+                fetchRequest.fetchLimit = -1;
+                totalCount = [context countForFetchRequest:fetchRequest error:&myError];
+                fetchRequest.fetchLimit = 200;
+            }
 
         } while (!done);
         

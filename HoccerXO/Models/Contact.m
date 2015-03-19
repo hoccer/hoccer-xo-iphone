@@ -19,6 +19,8 @@
 
 // const float kTimeSectionInterval = 2 * 60;
 
+#define TRACE_CONTACT_FAULTING  NO
+
 @implementation Contact
 
 @dynamic type;
@@ -376,6 +378,10 @@ NSString * const kPresenceStateTyping = @"typing";
         // NSLog(@"Contact:prepareForDeletion type=%@ nick=%@ id = %@", [self class], self.nickName, self.clientId);
         self.deletedObject = YES;
     }
+}
+
+- (void) willTurnIntoFault {
+    if (TRACE_CONTACT_FAULTING) NSLog(@"contact will turn into fault: %@", self.nickName);
 }
 
 -(void)dealloc {

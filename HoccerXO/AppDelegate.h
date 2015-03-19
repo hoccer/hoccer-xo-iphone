@@ -129,6 +129,10 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 -(void) setupDocumentDirectoryMonitoring;
 -(void) cancelDocumentDirectoryMonitoring;
 
+-(void)cachePreviewImage:(UIImage*)image withName:(NSString*)name;
+-(UIImage*)getCachedPreviewImagWithName:(NSString*)name;
+
+
 
 + (UIViewController*) getTopMostViewController;
 - (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller removeFile:(BOOL) removeFileFlag;

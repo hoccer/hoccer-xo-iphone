@@ -48,8 +48,10 @@
 #define TRANSFER_TRACE ([[self verbosityLevel]isEqualToString:@"moretrace"])
 #define CONNECTION_TRACE ([[self verbosityLevel]isEqualToString:@"trace"] || TRANSFER_TRACE)
 
-#define CONNECTION_DELEGATE_DEBUG NO
-#define URL_TRANSLATION_DEBUG NO
+#define CONNECTION_DELEGATE_DEBUG   NO
+#define URL_TRANSLATION_DEBUG       NO
+
+#define TRACE_ATTACHMENT_FAULTING   NO
 
 //#define LET_UPLOAD_FAIL
 //#define LET_DOWNLOAD_FAIL
@@ -137,7 +139,8 @@
 @synthesize transferError = _transferError;
 @synthesize transferHttpStatusCode;
 @synthesize chatBackend = _chatBackend;
-@synthesize previewImage = _previewImage;
+//@synthesize previewImage = _previewImage;
+@dynamic previewImage;
 @synthesize uiDelegate;
 @synthesize decryptionEngine;
 @synthesize encryptionEngine;
@@ -275,6 +278,20 @@
     return kAttachmentWantsTransfer;
 }
 
+-(UIImage*)previewImage {
+    if (self.contentURL.lastPathComponent != nil) {
+        return [AppDelegate.instance getCachedPreviewImagWithName:self.contentURL.lastPathComponent];
+    } else {
+        return nil;
+    }
+}
+
+-(void)setPreviewImage:(UIImage *)previewImage {
+    if (self.contentURL.lastPathComponent != nil) {
+        [AppDelegate.instance cachePreviewImage:previewImage withName:self.contentURL.lastPathComponent];
+    }
+}
+
 - (BOOL) outgoing {
     return self.message.isOutgoing;
 }
@@ -389,7 +406,7 @@
     }
     return NO;
 }
-
+/*
 - (void)protectFile {
     if (self.localURL != nil && self.available) {
         NSString * fullPath = [[NSURL URLWithString: self.localURL] path];
@@ -407,7 +424,7 @@
         }
     }
 }
-
+*/
 - (void) useURLs:(NSString *)theURL anOtherURL:(NSString *)theOtherURL {
     NSURL * url = [NSURL URLWithString: theURL];
     if (theURL != nil) {
@@ -2469,10 +2486,17 @@
     self.attachmentJsonString = [self.message decryptString:theB64String];
 }
 
+- (void) willTurnIntoFault {
+    self.previewImage = nil; // purge from image cache
+    if (TRACE_ATTACHMENT_FAULTING) NSLog(@"attachment will turn into fault: %@", self.humanReadableFileName);
+}
 
 - (void) prepareForDeletion {
     NSLog(@"Attachment: prepareForDeletion: contentURL %@", self.contentURL);
     [super prepareForDeletion];
+    
+    self.previewImage = nil; // purge from image cache
+    
     // cancel a potential open transferconnection
     if (self.transferConnection != nil) {
         [self.transferConnection cancel];
