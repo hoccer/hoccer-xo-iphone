@@ -13,6 +13,7 @@
 #import "HXOUserDefaults.h"
 #import "HTTPServerController.h"
 #import "tab_settings.h"
+#import "TutorialViewController.h"
 
 @interface ServerSheetController ()
 
@@ -27,6 +28,7 @@
 @property (nonatomic, readonly) DatasheetItem       * macTutorial;
 @property (nonatomic, readonly) DatasheetItem       * winXpTutorial;
 @property (nonatomic, readonly) DatasheetItem       * win7Tutorial;
+@property (nonatomic, readonly) DatasheetItem       * win8Tutorial;
 
 @end
 
@@ -40,6 +42,7 @@
 @synthesize macTutorial = _macTutorial;
 @synthesize winXpTutorial = _winXpTutorial;
 @synthesize win7Tutorial = _win7Tutorial;
+@synthesize win8Tutorial = _win8Tutorial;
 
 - (HTTPServerController*) server {
     return self.inspectedObject;
@@ -82,7 +85,7 @@
 - (BOOL) isCancelable { return NO; }
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    if ([item isEqual: self.addressItem] || [item isEqual: self.macTutorial] || [item isEqual: self.win7Tutorial] || [item isEqual: self.winXpTutorial]) {
+    if ([item isEqual: self.addressItem] || [item isEqual: self.macTutorial] || [item isEqual: self.win7Tutorial] || [item isEqual: self.winXpTutorial] || [item isEqual: self.win8Tutorial]) {
         return self.server.canRun && self.server.isRunning;
     }
     return [super isItemVisible: item];
@@ -200,7 +203,7 @@
 - (DatasheetSection*) connectionTutorialSection {
     if ( ! _connectionTutorialSection) {
         _connectionTutorialSection = [DatasheetSection datasheetSectionWithIdentifier: @"server_tutorial_section"];
-        _connectionTutorialSection.items = @[self.macTutorial, self.win7Tutorial, self.winXpTutorial];
+        _connectionTutorialSection.items = @[self.macTutorial, self.win8Tutorial, self.win7Tutorial, self.winXpTutorial];
         _connectionTutorialSection.title = [[NSAttributedString alloc] initWithString: HXOLocalizedString(@"server_tutorial_section_title", nil) attributes: nil];
     }
     return _connectionTutorialSection;
@@ -210,6 +213,7 @@
     if ( ! _macTutorial) {
         _macTutorial = [self itemWithIdentifier: @"server_tutorial_title_mac" cellIdentifier: @"DatasheetActionCell"];
         _macTutorial.accessoryStyle = DatasheetAccessoryDisclosure;
+        _macTutorial.segueIdentifier = @"showTutorial";
     }
     return _macTutorial;
 }
@@ -218,17 +222,52 @@
     if ( ! _win7Tutorial) {
         _win7Tutorial = [self itemWithIdentifier: @"server_tutorial_title_win7" cellIdentifier: @"DatasheetActionCell"];
         _win7Tutorial.accessoryStyle = DatasheetAccessoryDisclosure;
+        _win7Tutorial.segueIdentifier = @"showTutorial";
     }
     return _win7Tutorial;
 }
+
+- (DatasheetItem*) win8Tutorial {
+    if ( ! _win8Tutorial) {
+        _win8Tutorial = [self itemWithIdentifier: @"server_tutorial_title_win8" cellIdentifier: @"DatasheetActionCell"];
+        _win8Tutorial.accessoryStyle = DatasheetAccessoryDisclosure;
+        _win8Tutorial.segueIdentifier = @"showTutorial";
+    }
+    return _win8Tutorial;
+}
+
 
 - (DatasheetItem*) winXpTutorial {
     if ( ! _winXpTutorial) {
         _winXpTutorial = [self itemWithIdentifier: @"server_tutorial_title_winxp" cellIdentifier: @"DatasheetActionCell"];
         _winXpTutorial.accessoryStyle = DatasheetAccessoryDisclosure;
+        _winXpTutorial.segueIdentifier = @"showTutorial";
     }
     return _winXpTutorial;
 }
 
+- (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
+    TutorialViewController * tutorial = (TutorialViewController*) segue.destinationViewController;
+    NSString * tutorialKey;
+    if ([item isEqual: self.macTutorial]) {
+        tutorialKey = @"server_tutorial_mac";
+    } else if ([item isEqual: self.win8Tutorial]) {
+        tutorialKey = @"server_tutorial_win8";
+    } else if ([item isEqual: self.win7Tutorial]) {
+        tutorialKey = @"server_tutorial_win7";
+    } else if ([item isEqual: self.winXpTutorial]) {
+        tutorialKey = @"server_tutorial_winxp";
+    } else {
+        NSLog(@"ERROR: unknown webdav tutorial item");
+    }
+    /* TODO: string interpolation :-/
+     NSURL *rtfPath = [[NSBundle mainBundle] URLForResource: @"webdav_mac" withExtension:@"rtf"];
+     NSAttributedString * text = [[NSAttributedString alloc]   initWithFileURL: rtfPath options: @{ NSDocumentTypeDocumentAttribute: NSRTFTextDocumentType} documentAttributes: nil error: nil];
+     */
+    NSString * boxName = HXOLabelledLocalizedString(@"server_nav_title", nil);
+    NSString * appName = HXOAppName();
+
+    tutorial.text = HXOLocalizedString(tutorialKey, nil, appName, boxName, self.server.password, self.server.url);
+}
 
 @end
