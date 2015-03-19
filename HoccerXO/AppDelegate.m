@@ -71,6 +71,7 @@
 #define TRACE_CONTACT_SAVES         NO
 #define TRACE_FILE_SEARCH           NO
 #define TRACE_DOCDIR_CHANGES        NO
+#define TRACE_IMAGE_CACHING         NO
 
 
 NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
@@ -103,6 +104,12 @@ static NSInteger validationErrorCount = 0;
     unsigned long _cancelDirectoryHandlingScheduledId;
     
     NSDictionary *_fileEntities;
+    
+    NSMutableDictionary * _previewImageCache;
+    
+    NSURL * _applicationDocumentDirectory;
+    NSURL * _applicationTemporaryDocumentDirectory;
+    NSURL * _applicationLibraryDirectory;
 }
 
 @property (nonatomic, strong) ModalTaskHUD * hud;
@@ -121,12 +128,37 @@ static NSInteger validationErrorCount = 0;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize inNearbyMode = _inNearbyMode;
 
+
 #ifdef WITH_WEBSERVER
 @synthesize httpServer = _httpServer;
 #endif
 
 @synthesize rpcObjectModel = _rpcObjectModel;
 @synthesize userAgent;
+
+-(NSMutableDictionary*)previewImageCache {
+    if (_previewImageCache == nil) {
+        _previewImageCache = [NSMutableDictionary new];
+    }
+    return _previewImageCache;
+}
+
+-(void)cachePreviewImage:(UIImage*)image withName:(NSString*)name {
+    if (image != nil) {
+        if (TRACE_IMAGE_CACHING) NSLog(@"caching image for %@", name);
+        self.previewImageCache[name] = image;
+    } else {
+        if ([[self previewImageCache] objectForKey:name] != nil) {
+            if (TRACE_IMAGE_CACHING) NSLog(@"purging image for %@", name);
+            [[self previewImageCache] removeObjectForKey:name];
+        }
+    }
+}
+
+-(UIImage*)getCachedPreviewImagWithName:(NSString*)name {
+    return [[self previewImageCache] objectForKey:name];
+}
+
 
 // a string that changes when the app version, the device, the OS-Version or system language changes
 // used to invalidate caches that may depend on these values
@@ -324,16 +356,22 @@ static NSInteger validationErrorCount = 0;
 + (BOOL)isBusyFileAtURL:(NSURL*)myFile {
     return [self isBusyFile:[myFile path]];
 }
+
 + (BOOL)isBusyFile:(NSString*)myFilePath {
+    /*
     if (![[NSFileManager defaultManager] fileExistsAtPath:myFilePath]) {
         return NO;
     }
+     */
     int result;
     result = open([myFilePath UTF8String], O_RDONLY | O_NONBLOCK | O_EXLOCK);
     if (result != -1) {
         //The file is not busy
         close(result);
         return NO;
+    }
+    if (errno == ENOENT) {
+        return NO; // file does not exist
     }
     return YES;
 }
@@ -365,11 +403,13 @@ static NSInteger validationErrorCount = 0;
     if ([entity endsWith:@"-0"]) {
         return NO;
     }
+    /*
     NSString * fullPath = [directoryPath stringByAppendingPathComponent: file];
     if ([AppDelegate isBusyFile:fullPath]) {
         NSLog(@"File is busy:%@", file);
         return NO;
     }
+     */
     return YES;
 }
 
@@ -907,6 +947,17 @@ BOOL sameObjects(id obj1, id obj2) {
     if (self.isPasscodeRequired) {
         [self showPasscodeViewController: nil];
     }
+}
+
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
+    NSLog(@"applicationDidReceiveMemoryWarning");
+    NSLog(@"applicationDidReceiveMemoryWarning: purging image cache");
+    _previewImageCache = nil;
+    NSLog(@"applicationDidReceiveMemoryWarning: saving main context");
+    [self saveDatabaseNow];
+    NSLog(@"applicationDidReceiveMemoryWarning: resetting main context");
+    [self.mainObjectContext reset];
+    NSLog(@"applicationDidReceiveMemoryWarning: done freeing memory");
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -1904,10 +1955,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 
 // Returns the URL to the application's Documents directory.
 - (NSURL *)applicationDocumentsDirectory {
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    if (_applicationDocumentDirectory == nil) {
+        _applicationDocumentDirectory = [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    }
+    return _applicationDocumentDirectory;
 }
 
 - (NSURL *)applicationTemporaryDocumentsDirectory {
+    if (_applicationTemporaryDocumentDirectory == nil) {
     NSURL * tmpdir = [self.applicationDocumentsDirectory URLByAppendingPathComponent:@"temporary" isDirectory:YES];
     BOOL create = NO;
     BOOL isDirectory = NO;
@@ -1934,11 +1989,16 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             return nil;
         }
     }
-    return tmpdir;
+        _applicationTemporaryDocumentDirectory = tmpdir;
+    }
+    return _applicationTemporaryDocumentDirectory;
 }
 
 - (NSURL *) applicationLibraryDirectory {
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask] lastObject];
+    if (_applicationLibraryDirectory == nil) {
+        _applicationLibraryDirectory = [[[NSFileManager defaultManager] URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask] lastObject];
+    }
+    return _applicationLibraryDirectory;
 }
 
 #pragma mark - Application's user Agent string for http request

@@ -193,8 +193,8 @@ typedef enum AttachmentStates {
 - (void) determinePlayability;
 
 - (BOOL)fileUnavailable;
-- (void)protectFile;
-- (void)unprotectFile;
+//- (void)protectFile;
+//- (void)unprotectFile;
 
 +(BOOL)deleteFileAtUrl:(NSURL*)myURL;
 
