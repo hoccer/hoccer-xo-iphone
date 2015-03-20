@@ -20,7 +20,7 @@
 #import "UserProfile.h"
 #import "UIAlertView+BlockExtensions.h"
 #import "ZipArchive.h"
-#import "TestFlight.h"
+//#import "TestFlight.h"
 #import "HXOUI.h"
 #import "ChatViewController.h"
 #import "ModalTaskHUD.h"
@@ -716,10 +716,10 @@ BOOL sameObjects(id obj1, id obj2) {
 #endif
     
     if ([[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOReportCrashes] boolValue]) {
-        NSLog(@"TestFlight launching with token %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HXOTestFlightToken"]);
-        [TestFlight takeOff: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HXOTestFlightToken"]];
+        //NSLog(@"TestFlight launching with token %@", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HXOTestFlightToken"]);
+        //[TestFlight takeOff: [[NSBundle mainBundle] objectForInfoDictionaryKey:@"HXOTestFlightToken"]];
     } else {
-        NSLog(@"TestFlight crash reporting is disabled");
+        //NSLog(@"TestFlight crash reporting is disabled");
     }
     
     if (!UserProfile.sharedProfile.hasKeyPair) {

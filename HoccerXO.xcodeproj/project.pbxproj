@@ -76,7 +76,6 @@
 		6339CDE018A9942700DA2729 /* libSocketRocket.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDD518A991C200DA2729 /* libSocketRocket.a */; };
 		6339CDE118A9943900DA2729 /* libZipArchive-ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6339CDB718A9911800DA2729 /* libZipArchive-ios.a */; };
 		633AA86918C4DCF6009403CB /* (null) in Frameworks */ = {isa = PBXBuildFile; };
-		633AA8E718C66DCE009403CB /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 633AA8E118C66DCE009403CB /* libTestFlight.a */; };
 		634010F6191AAA44007A2C67 /* avatar_location.m in Sources */ = {isa = PBXBuildFile; fileRef = 634010F5191AAA44007A2C67 /* avatar_location.m */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */; };
@@ -634,12 +633,6 @@
 		6327F37318B8C390007D79E3 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		6327F37518B8D018007D79E3 /* SegmentedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SegmentedViewController.h; sourceTree = "<group>"; };
 		6327F37618B8D018007D79E3 /* SegmentedViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SegmentedViewController.m; sourceTree = "<group>"; };
-		633AA8E118C66DCE009403CB /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
-		633AA8E218C66DCE009403CB /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		633AA8E318C66DCE009403CB /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
-		633AA8E418C66DCE009403CB /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
-		633AA8E518C66DCE009403CB /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
-		633AA8E618C66DCE009403CB /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
 		634010F4191AAA44007A2C67 /* avatar_location.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avatar_location.h; sourceTree = "<group>"; };
 		634010F5191AAA44007A2C67 /* avatar_location.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = avatar_location.m; sourceTree = "<group>"; };
 		63401105191AAAA3007A2C67 /* avatar_location.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = avatar_location.pcvd; sourceTree = "<group>"; };
@@ -1343,7 +1336,6 @@
 				63A7F689172C328D00C0EC26 /* libstdc++.dylib in Frameworks */,
 				63A7F687172C2F6E00C0EC26 /* libiconv.dylib in Frameworks */,
 				63A7F685172C2F3100C0EC26 /* CoreVideo.framework in Frameworks */,
-				633AA8E718C66DCE009403CB /* libTestFlight.a in Frameworks */,
 				E99886E617282C140089A510 /* AudioToolbox.framework in Frameworks */,
 				E99886CE1725CE0F0089A510 /* AddressBook.framework in Frameworks */,
 				E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */,
@@ -1660,19 +1652,6 @@
 				631FE50C19195EB10073E980 /* ModalTaskHUD.m */,
 			);
 			path = Controls;
-			sourceTree = "<group>";
-		};
-		633AA86218C4DCF6009403CB /* TestFlightSDK-3.0.0 */ = {
-			isa = PBXGroup;
-			children = (
-				633AA8E118C66DCE009403CB /* libTestFlight.a */,
-				633AA8E218C66DCE009403CB /* README.md */,
-				633AA8E318C66DCE009403CB /* release_notes.md */,
-				633AA8E418C66DCE009403CB /* TestFlight.h */,
-				633AA8E518C66DCE009403CB /* TestFlight+AsyncLogging.h */,
-				633AA8E618C66DCE009403CB /* TestFlight+ManualSessions.h */,
-			);
-			path = "TestFlightSDK-3.0.0";
 			sourceTree = "<group>";
 		};
 		634B47071796EA51001C1C0D /* AttachmentTypeIcons */ = {
@@ -2107,7 +2086,6 @@
 				E9D114A31736E43E00737EF7 /* RNCachingURLProtocol */,
 				63C413A216E8FA0C004E1F6D /* SocketRocket.xcodeproj */,
 				639094AD1739380E00DF889B /* TDSemiModal */,
-				633AA86218C4DCF6009403CB /* TestFlightSDK-3.0.0 */,
 				E9D67C49175C22DC007FE4AA /* UIAlertViewExtentsions */,
 				E92FAEC518708EF300D72D79 /* ZipArchive.xcodeproj */,
 			);
@@ -3548,7 +3526,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3574,7 +3552,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -3610,10 +3588,7 @@
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrexport;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -3655,10 +3630,7 @@
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrexport;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -3693,7 +3665,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -3729,10 +3701,7 @@
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -3807,7 +3776,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3841,10 +3810,7 @@
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -3923,7 +3889,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3957,10 +3923,7 @@
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrimport;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4032,7 +3995,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -4068,10 +4031,7 @@
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrimport;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4147,7 +4107,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4181,10 +4141,7 @@
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -4256,7 +4213,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
@@ -4292,10 +4249,7 @@
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(SRCROOT)/3rdParty/TestFlightSDK-3.0.0",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_LDFLAGS = (
 					"-ObjC",

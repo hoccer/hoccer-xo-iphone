@@ -928,6 +928,9 @@ nil
             myImage = [UIImage imageWithCGImage: rep.fullResolutionImage scale: rep.scale orientation: (UIImageOrientation)rep.orientation];
         } else {
             CGImageRef fullResImage = [rep fullResolutionImage];
+// the following code needs some 64-bit library that is not there and will not link with armv7 builds
+// TODO: check if we can fix this somehow so we can still run this on older devices, for now we lose image editing on them
+#if 0
             NSString *adjustment = rep.metadata[@"AdjustmentXMP"];
             if (adjustment) {
                 NSData *xmpData = [adjustment dataUsingEncoding:NSUTF8StringEncoding];
@@ -946,6 +949,7 @@ nil
                     fullResImage = [context createCGImage:image fromRect:[image extent]];
                 }
             }
+#endif
             myImage = [UIImage imageWithCGImage:fullResImage
                                                   scale: rep.scale
                                             orientation:(UIImageOrientation)rep.orientation];
