@@ -56,6 +56,9 @@ enum {
 @property (nonatomic,readonly) BOOL       isAuthenticated;
 @property (nonatomic,readonly) BOOL       isRegistered;
 
+@property (nonatomic,readonly) BOOL       hasActiveAccount;
+@property                      BOOL       accountJustDeleted;
+
 - (void) loadProfile;
 - (void) saveProfile;
 
@@ -76,6 +79,7 @@ enum {
 - (BOOL)foundCredentialsBackup;
 - (void)backupCredentials;
 - (void)backupCredentialsWithId:(NSString*)myId;
+- (void)deleteCredentialsBackup;
 - (int)restoreCredentialsWithForce:(BOOL)force;
 - (int)restoreCredentialsWithId:(NSString*)myId withForce:(BOOL)force;
 - (void)removeCredentialsBackupWithId:(NSString*)myId;

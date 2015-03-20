@@ -50,6 +50,8 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 @synthesize deletedObject;
 @dynamic avatarImage;
 @dynamic keyLength;
+@dynamic hasActiveAccount;
+@synthesize accountJustDeleted;
 
 - (id) init {
     self = [super init];
@@ -333,6 +335,13 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return [self credentialsBackup] != nil;
 }
 
+- (BOOL) hasActiveAccount {
+    BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
+    BOOL active = (!isFirstRun && self.isRegistered && HXOBackend.instance.isReady && !self.accountJustDeleted);
+    NSLog(@"hasActiveAccount:%d", active);
+    return active;
+}
+
 -(void)backupCredentials {
     [self backupCredentialsWithId: @""];
 }
@@ -356,6 +365,13 @@ const NSUInteger kHXODefaultKeySize    = 2048;
         NSLog(@"backed up credentials");
     }
 }
+
+-(void)deleteCredentialsBackup {
+    [[HXOUserDefaults standardUserDefaults] removeObjectForKey:[self credentialsSettingWithId:@""]];
+    [[HXOUserDefaults standardUserDefaults] synchronize];
+    NSLog(@"deleted credentials backup ");
+}
+
 
 -(NSDictionary*)restoredCredentialsWithId:(NSString*)myId {
     NSDictionary * credentials = [self decryptedCredentials:[self credentialsBackupWithId:myId] withPassphrase:@"Batldfh§$cx%&/()dgsGhajau"];
@@ -390,8 +406,8 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 -(void)verfierChangeDone {
     [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:@"changeVerifier"]];
     [[HXOUserDefaults standardUserDefaults] synchronize];
-    [AppDelegate.instance showGenericAlertWithTitle:NSLocalizedString(@"credentials_verifier_changed_title", nil)
-                                         andMessage:NSLocalizedString(@"credentials_verifier_changed_message", nil)
+    [AppDelegate.instance showGenericAlertWithTitle:@"credentials_verifier_changed_title"
+                                         andMessage:@"credentials_verifier_changed_message"
                                         withOKBlock:nil];
 }
 
@@ -666,7 +682,8 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     [_credentialsDateItem resetKeychainItem];
     [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
     [[HXOUserDefaults standardUserDefaults] synchronize];
-    NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
+    [self deleteCredentialsBackup];
+    //NSLog(@"%@:%d", [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone], [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]]);
 }
 
 - (BOOL) hasPublicKey {

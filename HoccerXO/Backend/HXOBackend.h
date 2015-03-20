@@ -77,6 +77,8 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 @property (readonly, nonatomic) NSArray * certificates;
 
 @property BOOL firstConnectionAfterCrashOrUpdate;
+@property (readonly) BOOL isReady;
+
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 

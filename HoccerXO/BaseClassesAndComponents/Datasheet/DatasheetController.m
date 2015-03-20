@@ -365,6 +365,8 @@ typedef BOOL(^DatasheetSectionVisitorBlock)(DatasheetSection * section, BOOL don
             [stack addObject: item];
             //if (DEBUG_VALUE_UPDATING) NSLog(@"adding item: type: %@ id: %@ value: %@", item.class, item.identifier, item.currentValue);
             if (DEBUG_VALUE_UPDATING) NSLog(@"adding item: type: %@ id: %@", item.class, item.identifier);
+        } else {
+            if (DEBUG_VALUE_UPDATING) NSLog(@"not adding invisible item: type: %@ id: %@", item.class, item.identifier);
         }
         return NO;
     } sectionBlock:^BOOL(DatasheetSection *section, BOOL doneWithSection) {

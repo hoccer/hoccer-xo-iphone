@@ -154,6 +154,8 @@ static NSTimer * _stateNotificationDelayTimer;
 
 @implementation HXOBackend
 
+@dynamic isReady;
+
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate {
     self = [super init];
     if (self != nil) {
@@ -279,6 +281,10 @@ static NSTimer * _stateNotificationDelayTimer;
         if (TRACE_INSERT_LOCKING) NSLog(@"handing out new insertionlock %@",lock);
         return lock;
     }
+}
+
+-(BOOL)isReady {
+    return _state == kBackendReady;
 }
 
 -(void)sendEnvironmentDestroyWithType:(NSString*)type {

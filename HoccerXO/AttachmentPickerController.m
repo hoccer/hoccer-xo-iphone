@@ -314,7 +314,7 @@
                 });
             } else {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [AppDelegate.instance showGenericAlertWithTitle:NSLocalizedString(@"permission_denied_title", nil)
+                    [AppDelegate.instance showGenericAlertWithTitle:@"permission_denied_title"
                                                          andMessage:HXOLocalizedString(@"permission_denied_camera_attachment", nil, HXOAppName())
                                                         withOKBlock:^{}];
                 });

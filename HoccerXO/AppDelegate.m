@@ -3309,8 +3309,8 @@ enum {
 }
 
 - (void) showGenericAlertWithTitle:(NSString *)title andMessage:(NSString *)message withOKBlock:(ContinueBlock)okBlock {
-     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
-                                                     message:message
+     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(title,nil)
+                                                     message:NSLocalizedString(message,nil)
                                              completionBlock:^(NSUInteger buttonIndex, UIAlertView* alertView) { if (okBlock) okBlock(); }
                                            cancelButtonTitle:NSLocalizedString(@"ok",nil)
                                            otherButtonTitles:nil];
@@ -3390,7 +3390,8 @@ enum {
         NSString * message_tag;
         switch (buttonIndex) {
             case 0:
-                {
+            {
+                if (![info isEqualToString:@"Client deleted"]) {
                     title_tag = @"credentials_and_database_not_deleted_title";
                     message_tag = @"credentials_and_database_not_deleted_message";
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(title_tag,nil)
@@ -3400,7 +3401,8 @@ enum {
                                                           otherButtonTitles:nil];
                     [alert show];
                 }
-                break;
+            }
+            break;
             case 1:
             {
                 title_tag = @"credentials_and_database_really_delete_title";
@@ -3419,6 +3421,8 @@ enum {
     NSString * message = nil;
     if ([info isEqualToString:@"Verification failed"]) {
         message = [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_changed_delete_question", nil),info];
+    } else if ([info isEqualToString:@"Client deleted"]) {
+        message = [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_account_deleted_question", nil),info];
     } else {
         message = [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_delete_question", nil),info];
     }

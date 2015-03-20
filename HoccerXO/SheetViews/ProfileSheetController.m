@@ -115,6 +115,8 @@
         return self.userProfile.foundCredentialsFile && [super isItemVisible: item];
     } else if ([item isEqual: self.fetchCredentialsItem]) {
         return self.userProfile.foundCredentialsProviderApp && [super isItemVisible: item];
+    } else if ([item isEqual: self.deleteAccountItem]) {
+        return self.userProfile.hasActiveAccount && [super isItemVisible: item];
     }
     return [super isItemVisible: item];
 }
@@ -470,7 +472,11 @@
         if (buttonIndex == actionSheet.destructiveButtonIndex) {
             [HXOBackend.instance  deleteAccountForReason:@"user request" handler:^(BOOL ok) {
                 if (ok) {
+                    /*
                     [AppDelegate.instance showGenericAlertWithTitle:@"account_delete_success_title" andMessage:@"account_delete_success_message" withOKBlock:nil];
+                     */
+                    [UserProfile sharedProfile].accountJustDeleted = YES;
+                    [self updateCurrentItems];
                 } else {
                     [AppDelegate.instance showGenericAlertWithTitle:@"account_delete_failed_title" andMessage:@"account_delete_failed_message" withOKBlock:nil];
                 }

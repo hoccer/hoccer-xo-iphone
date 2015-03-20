@@ -412,6 +412,8 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 
 "credentials_invalid_changed_delete_question"  = "The server has refused your login credentials ('%@'). This happened probably because they are in use on another device or app. It might also indicate tampering. You can transfer credentials under 'Profile→Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
+"credentials_invalid_account_deleted_question"  = "Your account has been deleted. ('%@') Do you want to delete your chat data on the device and start a fresh account?";
+
 "credentials_and_database_really_delete_title" = "Really delete Credentials and Database?";
 "credentials_database_delete_btn_title"        = "Delete All";
 
