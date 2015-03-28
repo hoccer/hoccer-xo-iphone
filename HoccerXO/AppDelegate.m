@@ -1963,32 +1963,46 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 
 - (NSURL *)applicationTemporaryDocumentsDirectory {
     if (_applicationTemporaryDocumentDirectory == nil) {
-    NSURL * tmpdir = [self.applicationDocumentsDirectory URLByAppendingPathComponent:@"temporary" isDirectory:YES];
-    BOOL create = NO;
-    BOOL isDirectory = NO;
-    if (![[NSFileManager defaultManager] fileExistsAtPath:[tmpdir path] isDirectory:&isDirectory]) {
-        create = YES;
-    } else {
-        if (!isDirectory) {
+        NSURL * tmpdirOld = [self.applicationDocumentsDirectory URLByAppendingPathComponent:@"temporary" isDirectory:YES];
+        NSURL * tmpdir = [self.applicationDocumentsDirectory URLByAppendingPathComponent:@".temporary" isDirectory:YES];
+        
+        BOOL isDirectory = NO;
+        BOOL create = NO;
+        NSError * error = nil;
+
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[tmpdirOld path] isDirectory:&isDirectory]) {
+            if (isDirectory) {
+                [[NSFileManager defaultManager] moveItemAtURL:tmpdirOld toURL:tmpdir error:&error];
+                if (error != nil) {
+                    NSLog(@"#ERROR: item at %@ can't be moved to %@", tmpdirOld, tmpdir);
+                    return nil;
+                }
+            }
+        }
+        
+        if (![[NSFileManager defaultManager] fileExistsAtPath:[tmpdir path] isDirectory:&isDirectory]) {
+            create = YES;
+        } else {
+            if (!isDirectory) {
+                NSError * error = nil;
+                [[NSFileManager defaultManager] removeItemAtURL:tmpdir error:&error];
+                if (error != nil) {
+                    NSLog(@"#ERROR: item at %@ is not a directory and can't be removed", tmpdir);
+                    return nil;
+                }
+                create = YES;
+            }
+        }
+        if (create) {
             NSError * error = nil;
-            [[NSFileManager defaultManager] removeItemAtURL:tmpdir error:&error];
+            NSLog(@"Creating directory for temporary file at %@", tmpdir);
+            
+            [[NSFileManager defaultManager] createDirectoryAtURL:tmpdir withIntermediateDirectories:NO attributes:@{NSFilePosixPermissions: @(0755)} error:&error];
             if (error != nil) {
-                NSLog(@"#ERROR: item at %@ is not a directory and can't be removed", tmpdir);
+                NSLog(@"#ERROR: temporary directory at %@ can not be created", tmpdir);
                 return nil;
             }
-            create = YES;
         }
-    }
-    if (create) {
-        NSError * error = nil;
-        NSLog(@"Creating directory for temporary file at %@", tmpdir);
-        
-        [[NSFileManager defaultManager] createDirectoryAtURL:tmpdir withIntermediateDirectories:NO attributes:@{NSFilePosixPermissions: @(0755)} error:&error];
-        if (error != nil) {
-            NSLog(@"#ERROR: temporary directory at %@ can not be created", tmpdir);
-            return nil;
-        }
-    }
         _applicationTemporaryDocumentDirectory = tmpdir;
     }
     return _applicationTemporaryDocumentDirectory;
@@ -2637,6 +2651,21 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return resultArray;
 }
 
++ (NSDate*)modificationDateFromEtag:(NSString*)etag {
+    NSRange startRange = [etag rangeOfString:@":M"];
+    NSRange endRange = [etag rangeOfString:@"M:"];
+    if (startRange.location != NSNotFound && endRange.location != NSNotFound) {
+        NSRange modificationDateRange = NSMakeRange(startRange.location+startRange.length, endRange.location - startRange.location);
+        NSString * timeString = [etag substringWithRange:modificationDateRange];
+        if (timeString.length > 0) {
+            unsigned long long time = [timeString longLongValue];
+            NSDate * date = [NSDate dateWithTimeIntervalSince1970:time];
+            return date;
+        }
+    }
+    return nil;
+}
+
 + (NSString *)etagFromAttributes:(NSDictionary*) attributes {
     
     if ([attributes objectForKey:NSFileModificationDate] &&
@@ -2652,9 +2681,9 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         NSString * etag;
         if ([attributes objectForKey:NSFileSize]) {
             fileSize= [attributes fileSize];
-            etag = [NSString stringWithFormat:@"ev2-%#o-%lu-%qu-%qu-%qu",(short)permissions,fileSystemNumber, lastMod, created, fileSize];
+            etag = [NSString stringWithFormat:@"ev2:M%quM:P%#oP:F%luF:C%quC:S%quS",lastMod,(short)permissions,fileSystemNumber, created, fileSize];
         } else {
-            etag = [NSString stringWithFormat:@"ev2-%#o-%lu-%qu-%qu-d",(short)permissions,fileSystemNumber, lastMod, created];
+            etag = [NSString stringWithFormat:@"ev2:M%quM:P%#oP:F%luF:C%quC:d",lastMod,(short)permissions,fileSystemNumber, created];
         }
         // NSLog(@"return etag %@", etag);
         return etag;
