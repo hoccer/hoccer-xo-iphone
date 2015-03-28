@@ -107,6 +107,7 @@ static NSInteger validationErrorCount = 0;
     
     NSMutableDictionary * _previewImageCache;
     
+    NSURL * _applicationDirectory;
     NSURL * _applicationDocumentDirectory;
     NSURL * _applicationTemporaryDocumentDirectory;
     NSURL * _applicationLibraryDirectory;
@@ -1952,6 +1953,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 }
 
 #pragma mark - Application's Documents directory
+
+// Returns the URL to the application's Documents directory.
+- (NSURL *)applicationDirectory {
+    if (_applicationDirectory == nil) {
+        _applicationDirectory = [[[NSFileManager defaultManager] URLsForDirectory:NSApplicationDirectory inDomains:NSUserDomainMask] lastObject];
+    }
+    return _applicationDirectory;
+}
 
 // Returns the URL to the application's Documents directory.
 - (NSURL *)applicationDocumentsDirectory {

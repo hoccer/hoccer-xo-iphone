@@ -197,6 +197,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 +(NSURL*)metaDataURL:(NSURL*)fileUrl;
 +(NSString*)metaDataPath:(NSString*)filePath;
++(NSDate*)modificationDateFromEtag:(NSString*)etag;
 
 +(NSString*)appEntityId;
 - (UIImage*) appIcon;
