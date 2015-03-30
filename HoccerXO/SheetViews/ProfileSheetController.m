@@ -89,7 +89,7 @@
         _contactCountItem = [self itemWithIdentifier: @"profile_contact_count" cellIdentifier: @"DatasheetKeyValueCell"];
         _contactCountItem.valuePath = @"contactCount";
         _contactCountItem.accessoryStyle = DatasheetAccessoryDisclosure;
-        _contactCountItem.segueIdentifier = @"ShowContacts";
+        //_contactCountItem.segueIdentifier = @"ShowContacts";
     }
     return _contactCountItem;
 }
@@ -99,7 +99,7 @@
         _groupCountItem = [self itemWithIdentifier: @"profile_group_count" cellIdentifier: @"DatasheetKeyValueCell"];
         _groupCountItem.valuePath = @"groupCount";
         _groupCountItem.accessoryStyle = DatasheetAccessoryDisclosure;
-        _groupCountItem.segueIdentifier = @"ShowGroups";
+        //_groupCountItem.segueIdentifier = @"ShowGroups";
     }
     return _groupCountItem;
 }
