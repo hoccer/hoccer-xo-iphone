@@ -3492,7 +3492,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = Starmeo;
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "04f304ae-0a2f-41e7-8dfa-70966e070287";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
