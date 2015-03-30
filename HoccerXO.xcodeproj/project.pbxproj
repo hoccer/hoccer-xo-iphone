@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1FA4DE52195D9B400008C9DD /* MediaAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBDB1934CC9E00C0D254 /* MediaAttachmentListViewController.m */; };
+		1FE9FA581AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */; };
 		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
 		6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97318DA870400B2D04F /* BigNumUtilities.m */; };
 		6302A98818DA870400B2D04F /* Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97518DA870400B2D04F /* Digest.m */; };
@@ -514,6 +515,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1FE9FA571AC9822F00DBE7E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.hoccer.whitelabel.starmeo.strings; sourceTree = "<group>"; };
+		1FE9FA591AC9823C00DBE7E3 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.starmeo.strings; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
 		6302A97118DA870400B2D04F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
 		6302A97218DA870400B2D04F /* BigNumUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumUtilities.h; sourceTree = "<group>"; };
@@ -1915,6 +1918,7 @@
 		63AE45571705EE030099F0CB /* Localizations */ = {
 			isa = PBXGroup;
 			children = (
+				1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */,
 				63AE455B1705EE820099F0CB /* Localizable.strings */,
 				63AE45581705EE770099F0CB /* InfoPlist.strings */,
 				C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */,
@@ -2938,6 +2942,7 @@
 				63DEC02019B0A720003804E8 /* AlbumArtPlaceholderLarge.png in Resources */,
 				63DEC02C19B0A720003804E8 /* JGAlbumViewController.xib in Resources */,
 				63D670EF193634C700CBF1C3 /* placeholder-nearby@2x.png in Resources */,
+				1FE9FA581AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings in Resources */,
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
 				631070EB1730106900D3936F /* new_message.aif in Resources */,
 				63DEC02419B0A720003804E8 /* Artists.png in Resources */,
@@ -3325,6 +3330,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1FE9FA571AC9822F00DBE7E3 /* en */,
+				1FE9FA591AC9823C00DBE7E3 /* de */,
+			);
+			name = com.hoccer.whitelabel.starmeo.strings;
+			sourceTree = "<group>";
+		};
 		6302A9BA18DA8A9500B2D04F /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3446,8 +3460,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Starmeo";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Starmeo";
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -3459,7 +3473,7 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = com.artcom.Hoccer;
+				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = hcr;
@@ -3477,7 +3491,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = Hoccer;
+				PRODUCT_NAME = Starmeo;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3557,8 +3571,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Starmeo";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Starmeo";
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
@@ -3570,7 +3584,7 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = com.artcom.Hoccer;
+				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = hcr;
@@ -3588,7 +3602,7 @@
 					"-ObjC",
 					"-all_load",
 				);
-				PRODUCT_NAME = Hoccer;
+				PRODUCT_NAME = Starmeo;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
