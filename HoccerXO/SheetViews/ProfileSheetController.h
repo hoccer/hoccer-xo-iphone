@@ -10,6 +10,9 @@
 
 @interface ProfileSheetController : ContactSheetBase
 
+@property (nonatomic, readonly) DatasheetItem * contactCountItem;
+@property (nonatomic, readonly) DatasheetItem * groupCountItem;
+
 @property (nonatomic, readonly) DatasheetItem * exportCredentialsItem;
 @property (nonatomic, readonly) DatasheetItem * importCredentialsItem;
 @property (nonatomic, readonly) DatasheetItem * deleteCredentialsFileItem;

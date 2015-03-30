@@ -798,4 +798,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return success;
 }
 
+- (NSNumber*) contactCount { return @(23); }
+- (NSNumber*) groupCount { return @(42); }
+
 @end

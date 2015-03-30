@@ -23,6 +23,9 @@
 
 @implementation ProfileSheetController
 
+@synthesize contactCountItem = _contactCountItem;
+@synthesize groupCountItem = _groupCountItem;
+
 @synthesize credentialsSection = _credentialsSection;
 @synthesize exportCredentialsItem = _exportCredentialsItem;
 @synthesize transferCredentialsItem = _transferCredentialsItem;
@@ -77,8 +80,28 @@
 
 - (DatasheetSection*) commonSection {
     DatasheetSection * section = [super commonSection];
-    section.items = @[self.nicknameItem, self.keyItem];
+    section.items = @[self.nicknameItem, self.contactCountItem, self.groupCountItem, self.keyItem];
     return section;
+}
+
+- (DatasheetItem*) contactCountItem {
+    if (!_contactCountItem) {
+        _contactCountItem = [self itemWithIdentifier: @"profile_contact_count" cellIdentifier: @"DatasheetKeyValueCell"];
+        _contactCountItem.valuePath = @"contactCount";
+        _contactCountItem.accessoryStyle = DatasheetAccessoryDisclosure;
+        _contactCountItem.segueIdentifier = @"ShowContacts";
+    }
+    return _contactCountItem;
+}
+
+- (DatasheetItem*) groupCountItem {
+    if (!_groupCountItem) {
+        _groupCountItem = [self itemWithIdentifier: @"profile_group_count" cellIdentifier: @"DatasheetKeyValueCell"];
+        _groupCountItem.valuePath = @"groupCount";
+        _groupCountItem.accessoryStyle = DatasheetAccessoryDisclosure;
+        _groupCountItem.segueIdentifier = @"ShowGroups";
+    }
+    return _groupCountItem;
 }
 
 - (DatasheetSection*) credentialsSection {

@@ -720,6 +720,8 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 
 "profile_key_btn_title"                  = "Dein Schlüssel";
 
+"profile_contact_count"                  = "Kontakte";
+"profile_group_count"                    = "Gruppen";
 
 //==============================================================================
 // Recorder

@@ -708,6 +708,9 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 
 "profile_key_btn_title"                  = "Your Key";
 
+"profile_contact_count"                  = "Contacts";
+"profile_group_count"                    = "Groups";
+
 //==============================================================================
 // Recorder
 //==============================================================================
