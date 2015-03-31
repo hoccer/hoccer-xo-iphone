@@ -3474,12 +3474,12 @@
 					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
-				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_DEFAULT_ENVIRONMENT = starmeo;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
-				HXO_URL_SCHEME = hcr;
-				HXO_URL_SCHEME_ID = com.hoccer.hoccer;
-				HXO_XFER_URL_SCHEME = hcrimport;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrimport;
+				HXO_URL_SCHEME = starmeo;
+				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.starmeo;
+				HXO_XFER_URL_SCHEME = xferdisabled;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
@@ -3585,12 +3585,12 @@
 					"${SDK_DIR}/usr/include/libxml2",
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
-				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_DEFAULT_ENVIRONMENT = starmeo;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
-				HXO_URL_SCHEME = hcr;
-				HXO_URL_SCHEME_ID = com.hoccer.hoccer;
-				HXO_XFER_URL_SCHEME = hcrimport;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrimport;
+				HXO_URL_SCHEME = starmeo;
+				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.starmeo;
+				HXO_XFER_URL_SCHEME = xferdisabled;
+				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
 				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
