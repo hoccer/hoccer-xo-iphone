@@ -19,6 +19,8 @@
 #import "SRPClient.h"
 #import "SRPVerifierGenerator.h"
 #import "CCRSA.h"
+#import "Contact.h"
+#import "AppDelegate.h"
 
 static UserProfile * profileInstance;
 
@@ -798,7 +800,28 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return success;
 }
 
-- (NSNumber*) contactCount { return @(23); }
-- (NSNumber*) groupCount { return @(42); }
+#pragma mark - Friend and Group Count
+
+- (NSNumber*) contactCount {
+    return [self countForFetchRequestWithName: @"Friends" vars: nil];
+}
+
+- (NSNumber*) groupCount {
+    return [self countForFetchRequestWithName: @"Groups" vars: nil];
+}
+
+- (NSNumber*) countForFetchRequestWithName: (NSString*) fetchRequestName vars: (NSDictionary*) vars{
+    AppDelegate * delegate = (AppDelegate*)[UIApplication sharedApplication].delegate;
+
+
+    NSFetchRequest *request = [delegate.managedObjectModel fetchRequestFromTemplateWithName: fetchRequestName substitutionVariables: vars ? vars : @{}];
+
+    NSError *error;
+    NSUInteger count = [delegate.currentObjectContext countForFetchRequest: request error: &error];
+    if(count == NSNotFound) {
+        NSLog(@"ERROR while counting %@: %@", fetchRequestName, error);
+    }
+    return @(count);
+}
 
 @end
