@@ -88,6 +88,8 @@ CGPoint _correctContentOffset;
 
     self.tabBarItem.image = [[[tab_contacts alloc] init] image];
     self.tabBarItem.title = NSLocalizedString(@"contact_list_nav_title", nil);
+
+    [self setupTitle];
 }
 
 #ifdef SEARCHBAR_SCROLLING_IN_HACK
@@ -285,7 +287,6 @@ CGPoint _correctContentOffset;
     [self.tableView addObserver:self forKeyPath:@"contentSize" options:(NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld) context:NULL];
 #endif
     
-    [self setupTitle];
 
     if ( ! self.searchBar) {
         //self.searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0,0,self.view.bounds.size.width, kMagicSearchBarHeight)];

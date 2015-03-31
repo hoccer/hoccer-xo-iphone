@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 #import "HXOUI.h"
 #import "ModalTaskHUD.h"
+#import "ContactListViewController.h"
 #import "tab_profile.h"
 
 @interface ProfileSheetController ()
@@ -89,7 +90,7 @@
         _contactCountItem = [self itemWithIdentifier: @"profile_contact_count" cellIdentifier: @"DatasheetKeyValueCell"];
         _contactCountItem.valuePath = @"contactCount";
         _contactCountItem.accessoryStyle = DatasheetAccessoryDisclosure;
-        //_contactCountItem.segueIdentifier = @"ShowContacts";
+        _contactCountItem.segueIdentifier = @"ShowContacts";
     }
     return _contactCountItem;
 }
@@ -99,7 +100,7 @@
         _groupCountItem = [self itemWithIdentifier: @"profile_group_count" cellIdentifier: @"DatasheetKeyValueCell"];
         _groupCountItem.valuePath = @"groupCount";
         _groupCountItem.accessoryStyle = DatasheetAccessoryDisclosure;
-        //_groupCountItem.segueIdentifier = @"ShowGroups";
+        _groupCountItem.segueIdentifier = @"ShowContacts";
     }
     return _groupCountItem;
 }
@@ -566,4 +567,16 @@
     [sheet showInView: self.delegate.view];
 }
 
+- (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
+    if ([segue.identifier isEqualToString: @"ShowContacts"]) {
+        ContactListViewController * contactList = (ContactListViewController*)segue.destinationViewController;
+        if ([item isEqual: self.contactCountItem]) {
+            contactList.groupContactsToggle.selectedSegmentIndex = 0;
+        } else if ([item isEqual: self.groupCountItem]) {
+            contactList.groupContactsToggle.selectedSegmentIndex = 1;
+        } else {
+            NSLog(@"Kaputt: Unhandled segue item");
+        }
+    }
+}
 @end

@@ -101,6 +101,7 @@
                         <outlet property="dataSheetController" destination="sp7-2I-Vr9" id="QLQ-vd-pPy"/>
                         <segue destination="5Ky-Yp-WG8" kind="push" identifier="showKey" id="3XQ-ea-QwO"/>
                         <segue destination="jBj-li-dGc" kind="push" identifier="showAvatar" id="KXG-tu-Cv6"/>
+                        <segue destination="Aez-fu-qAl" kind="push" identifier="ShowContacts" id="FuA-82-8A3"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdN-gv-zxy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1170,13 +1171,14 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="57k-z7-2Ln"/>
-        <segue reference="4Tx-uH-B8w"/>
-        <segue reference="UJI-wH-YH7"/>
-        <segue reference="yj0-Vd-HPq"/>
         <segue reference="8jZ-4R-eDF"/>
         <segue reference="Jku-Va-0fi"/>
+        <segue reference="FuA-82-8A3"/>
         <segue reference="3XQ-ea-QwO"/>
         <segue reference="KXG-tu-Cv6"/>
+        <segue reference="yj0-Vd-HPq"/>
+        <segue reference="4Tx-uH-B8w"/>
+        <segue reference="UJI-wH-YH7"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>
