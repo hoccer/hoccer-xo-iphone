@@ -158,29 +158,51 @@
 }
 
 - (void) archiveAllPressed: (id) sender {
-    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
-        if (buttonIndex == actionSheet.destructiveButtonIndex) {
-            NSURL* archiveURL = [[AppDelegate.instance applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
-            [AppDelegate.instance makeArchive:archiveURL withHandler:^(NSURL* url) {
-                if (url == nil) {
-                    [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"archive_failed_message",nil)
-                                                         withTitle:NSLocalizedString(@"archive_failed_title",nil)
-                                                       withOKBlock:^{
-                                                       }];
-                } else {
-                    [HXOUI showErrorAlertWithMessageAsync: @"archive_ok_alert_message" withTitle:@"archive_ok_alert_title"];
-                }
-            }];
-            
-        }
-    };
     
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_safety_question", nil)
-                                        completionBlock: completion
-                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
-                                 destructiveButtonTitle: NSLocalizedString(@"archive", nil)
-                                      otherButtonTitles: nil];
-    [sheet showInView: self.delegate.view];
+    
+    long long requiredSpace = [AppDelegate estimatedDocumentArchiveSize] * 1.1;
+    long long freeSpace = [AppDelegate freeDiskSpace] + [AppDelegate archiveFileSize];
+    
+    NSLog(@"archiveAllPressed: required %@, free %@",[AppDelegate memoryFormatter:requiredSpace],[AppDelegate memoryFormatter:freeSpace]);
+    
+    if (requiredSpace > freeSpace) {
+        HXOAlertViewCompletionBlock completion2 = ^(NSUInteger buttonIndex, UIAlertView * alertView) {};
+        NSString * archiveNotEnoughSpaceMessage = [NSString stringWithFormat:NSLocalizedString(@"archive_export_not_enough_space %@ %@", nil),
+                                                   [AppDelegate memoryFormatter:requiredSpace],
+                                                   [AppDelegate memoryFormatter:freeSpace]];
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"archive_export_not_enough_space_title",nil)
+                                                         message: archiveNotEnoughSpaceMessage
+                                                 completionBlock: completion2
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
+        
+    } else {
+        
+        HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * actionSheet) {
+            if (buttonIndex == actionSheet.destructiveButtonIndex) {
+                NSURL* archiveURL = [[AppDelegate.instance applicationDocumentsDirectory] URLByAppendingPathComponent: kHXODefaultArchiveName];
+                [AppDelegate.instance makeArchive:archiveURL withHandler:^(NSURL* url) {
+                    if (url == nil) {
+                        [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"archive_failed_message",nil)
+                                                             withTitle:NSLocalizedString(@"archive_failed_title",nil)
+                                                           withOKBlock:^{
+                                                           }];
+                    } else {
+                        [HXOUI showErrorAlertWithMessageAsync: @"archive_ok_alert_message" withTitle:@"archive_ok_alert_title"];
+                    }
+                }];
+                
+            }
+        };
+        
+        UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"archive_safety_question", nil)
+                                            completionBlock: completion
+                                          cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                     destructiveButtonTitle: NSLocalizedString(@"archive", nil)
+                                          otherButtonTitles: nil];
+        [sheet showInView: self.delegate.view];
+    }
 }
 
 #pragma mark - Import & install Archive

@@ -494,6 +494,9 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "archive_transfer_not_enough_space %@ %@"       = "The data transfer requires %@ of free space on your device, but you have only %@. You can delete some large media attachments in your chats to lower the space requirements or make more free space by temporarily removing media items from other apps.";
 "archive_transfer_not_enough_space_title"       = "Not Enough Space";
 
+"archive_export_not_enough_space %@ %@"       = "The archive export requires %@ of free space on your device, but you have only %@. You can delete some large media attachments in your chats to lower the space requirements or make more free space by temporarily removing media items from other apps.";
+"archive_export_not_enough_space_title"       = "Not Enough Space";
+
 
 //==============================================================================
 // Database
