@@ -3457,15 +3457,19 @@ enum {
     };
     
     NSString * message = nil;
+    NSString * title = nil;
     if ([info isEqualToString:@"Verification failed"]) {
         message = [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_changed_delete_question", nil),info];
+        title = NSLocalizedString(@"credentials_invalid_title", nil);
     } else if ([info isEqualToString:@"Client deleted"]) {
         message = [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_account_deleted_question", nil),info];
+        title = NSLocalizedString(@"credentials_deleted_title", nil);
     } else {
         message = [NSString stringWithFormat:NSLocalizedString(@"credentials_invalid_delete_question", nil),info];
+        title = NSLocalizedString(@"credentials_invalid_title", nil);
     }
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"credentials_invalid_title", nil)
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle: title
                                                     message: message
                                             completionBlock: completionBlock
                                           cancelButtonTitle:NSLocalizedString(@"no",nil)
