@@ -113,9 +113,10 @@
                                       self.importCredentialsItem,
                                       self.deleteCredentialsFileItem
                                       
-#ifndef HOCCER_CLASSIC
+#ifdef HOCCER_XO
                                       , self.transferCredentialsItem
-#else
+#endif
+#ifdef HOCCER_CLASSIC
                                       , self.fetchCredentialsItem
                                       , self.fetchArchiveItem
 #endif
