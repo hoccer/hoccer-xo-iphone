@@ -14,12 +14,20 @@
 #import "DDTTYLogger.h"
 #import "AppDelegate.h"
 
+#import "GCDWebUploader.h"
+#import "GCDWebServer.h"
+
+#import "GCDWebServerPrivate.h"
+
 @interface HTTPServerController ()
 
 @property (nonatomic,assign) BOOL         isRunning;
 @property (nonatomic,assign) BOOL         canRun;
+#ifdef USE_OLD_SERVER
 @property (nonatomic,strong) HTTPServer * server;
-
+#else
+@property (nonatomic,strong) GCDWebUploader* webUploader;
+#endif
 @property (nonatomic,strong) id           connectionObserver;
 
 @end
@@ -35,7 +43,7 @@
         }
 
         [DDLog addLogger: [DDTTYLogger sharedInstance]];
-
+#ifdef USE_OLD_SERVER
         self.server = [[HTTPServer alloc] init];
 
         [self.server setConnectionClass: [MyDAVConnection class]];
@@ -48,6 +56,15 @@
                       forKeyPath: @"isRunning"
                          options: NSKeyValueObservingOptionNew
                          context: NULL];
+#else
+        self.webUploader = [[GCDWebUploader alloc] initWithUploadDirectory:documentRoot];
+        
+        [self.webUploader addObserver: self
+                           forKeyPath: @"isRunning"
+                              options: NSKeyValueObservingOptionNew
+                              context: NULL];
+        [GCDWebServer setLogLevel:kGCDWebServerLoggingLevel_Info];
+#endif
 
         void(^reachablityBlock)(NSNotification*) = ^(NSNotification* note) {
             NSString * ip = self.address;
@@ -65,26 +82,38 @@
                                                                                     object:nil
                                                                                      queue:[NSOperationQueue mainQueue]
                                                                                 usingBlock:reachablityBlock];
-
     }
     return self;
 }
 
 - (void) dealloc {
+#ifdef USE_OLD_SERVER
     [self.server removeObserver: self forKeyPath: @"isRunning"];
+#else
+    [self.webUploader removeObserver: self forKeyPath: @"isRunning"];
+#endif
     [[NSNotificationCenter defaultCenter] removeObserver: self.connectionObserver];
 }
 
 - (void) observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+#ifdef USE_OLD_SERVER
     if ([object isEqual: self.server] && [keyPath isEqualToString: NSStringFromSelector(@selector(isRunning))]) {
+#else
+    if ([object isEqual: self.webUploader] && [keyPath isEqualToString: NSStringFromSelector(@selector(isRunning))]) {
+#endif
         BOOL running = [change[NSKeyValueChangeNewKey] boolValue];
         self.isRunning = running;
     }
 }
 - (void) start {
     NSError *error;
+#ifdef USE_OLD_SERVER
     if([self.server start:&error]) {
         NSLog(@"Started HTTP Server on port %hu", [self.server listeningPort]);
+#else
+    if([self.webUploader startWithPort:8899 bonjourName:@"uploader"]) {
+        NSLog(@"Started HTTP Webupload Server on port %lu", (unsigned long)self.webUploader.port);
+#endif
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     } else {
         NSLog(@"Error starting HTTP Server: %@", error);
@@ -92,18 +121,33 @@
 }
 
 - (void) stop {
+#ifdef USE_OLD_SERVER
     if (self.server) {
         [self.server stop];
         [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
     }
+#else
+    if (self.webUploader) {
+        [self.webUploader stop];
+        [[UIApplication sharedApplication] setIdleTimerDisabled:NO];
+    }
+#endif
 }
 
 - (NSString*) publishedName {
+#ifdef USE_OLD_SERVER
     return self.server.publishedName;
+#else
+    return self.webUploader.bonjourName;
+#endif
 }
 
 -(BOOL) isRunning {
+#ifdef USE_OLD_SERVER
     return self.server.isRunning;
+#else
+    return self.webUploader.isRunning;
+#endif
 }
 
 - (NSString*) password {
@@ -111,7 +155,11 @@
 }
 
 - (int) port {
+#ifdef USE_OLD_SERVER
     return self.server.listeningPort;
+#else
+    return (int)self.webUploader.port;
+#endif
 }
 
 #if TARGET_IPHONE_SIMULATOR

@@ -374,6 +374,22 @@
 		E9AF28A21927CBFF00E29A03 /* NSData+DictCompression.mm in Sources */ = {isa = PBXBuildFile; fileRef = E9AF28A11927CBFF00E29A03 /* NSData+DictCompression.mm */; };
 		E9B7BAB6172D5E4E00212420 /* RPCObjectsModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9B7BAB4172D5E4D00212420 /* RPCObjectsModel.xcdatamodeld */; };
 		E9B7BAB9172EA15E00212420 /* RecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E9B7BAB8172EA15E00212420 /* RecordViewController.m */; };
+		E9BFAAD81ACC5E67004DC0D9 /* GCDWebDAVServer.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA7761ACC5E64004DC0D9 /* GCDWebDAVServer.m */; };
+		E9BFAAD91ACC5E67004DC0D9 /* GCDWebServer.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA77A1ACC5E64004DC0D9 /* GCDWebServer.m */; };
+		E9BFAADA1ACC5E67004DC0D9 /* GCDWebServerConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA77C1ACC5E64004DC0D9 /* GCDWebServerConnection.m */; };
+		E9BFAADB1ACC5E67004DC0D9 /* GCDWebServerFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA77E1ACC5E64004DC0D9 /* GCDWebServerFunctions.m */; };
+		E9BFAADC1ACC5E67004DC0D9 /* GCDWebServerRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA7821ACC5E64004DC0D9 /* GCDWebServerRequest.m */; };
+		E9BFAADD1ACC5E67004DC0D9 /* GCDWebServerResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA7841ACC5E64004DC0D9 /* GCDWebServerResponse.m */; };
+		E9BFAADE1ACC5E67004DC0D9 /* GCDWebServerDataRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA7871ACC5E64004DC0D9 /* GCDWebServerDataRequest.m */; };
+		E9BFAADF1ACC5E67004DC0D9 /* GCDWebServerFileRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA7891ACC5E64004DC0D9 /* GCDWebServerFileRequest.m */; };
+		E9BFAAE01ACC5E67004DC0D9 /* GCDWebServerMultiPartFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA78B1ACC5E64004DC0D9 /* GCDWebServerMultiPartFormRequest.m */; };
+		E9BFAAE11ACC5E67004DC0D9 /* GCDWebServerURLEncodedFormRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA78D1ACC5E64004DC0D9 /* GCDWebServerURLEncodedFormRequest.m */; };
+		E9BFAAE21ACC5E67004DC0D9 /* GCDWebServerDataResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA7901ACC5E64004DC0D9 /* GCDWebServerDataResponse.m */; };
+		E9BFAAE31ACC5E67004DC0D9 /* GCDWebServerErrorResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA7921ACC5E64004DC0D9 /* GCDWebServerErrorResponse.m */; };
+		E9BFAAE41ACC5E67004DC0D9 /* GCDWebServerFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA7941ACC5E64004DC0D9 /* GCDWebServerFileResponse.m */; };
+		E9BFAAE51ACC5E67004DC0D9 /* GCDWebServerStreamedResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA7961ACC5E64004DC0D9 /* GCDWebServerStreamedResponse.m */; };
+		E9BFAAE71ACC5E67004DC0D9 /* GCDWebUploader.bundle in Resources */ = {isa = PBXBuildFile; fileRef = E9BFA79C1ACC5E64004DC0D9 /* GCDWebUploader.bundle */; };
+		E9BFAAE81ACC5E67004DC0D9 /* GCDWebUploader.m in Sources */ = {isa = PBXBuildFile; fileRef = E9BFA79E1ACC5E64004DC0D9 /* GCDWebUploader.m */; };
 		E9BFF00E170E0143001CB203 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9BFF00D170E0143001CB203 /* MediaPlayer.framework */; };
 		E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */ = {isa = PBXBuildFile; fileRef = E9D1145A1732CFE800737EF7 /* VcardPreview.xib */; };
 		E9D1145E1732E74000737EF7 /* Vcard.m in Sources */ = {isa = PBXBuildFile; fileRef = E9D1145D1732E74000737EF7 /* Vcard.m */; };
@@ -1221,6 +1237,39 @@
 		E9B7BAB8172EA15E00212420 /* RecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecordViewController.m; sourceTree = "<group>"; };
 		E9BE25111A3345B3003CC91B /* Hoccer 49.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Hoccer 49.xcdatamodel"; sourceTree = "<group>"; };
 		E9BEBCA01A4321DF003682DE /* Hoccer 50.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Hoccer 50.xcdatamodel"; sourceTree = "<group>"; };
+		E9BFA7751ACC5E64004DC0D9 /* GCDWebDAVServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebDAVServer.h; sourceTree = "<group>"; };
+		E9BFA7761ACC5E64004DC0D9 /* GCDWebDAVServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebDAVServer.m; sourceTree = "<group>"; };
+		E9BFA7791ACC5E64004DC0D9 /* GCDWebServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServer.h; sourceTree = "<group>"; };
+		E9BFA77A1ACC5E64004DC0D9 /* GCDWebServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServer.m; sourceTree = "<group>"; };
+		E9BFA77B1ACC5E64004DC0D9 /* GCDWebServerConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerConnection.h; sourceTree = "<group>"; };
+		E9BFA77C1ACC5E64004DC0D9 /* GCDWebServerConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerConnection.m; sourceTree = "<group>"; };
+		E9BFA77D1ACC5E64004DC0D9 /* GCDWebServerFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFunctions.h; sourceTree = "<group>"; };
+		E9BFA77E1ACC5E64004DC0D9 /* GCDWebServerFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFunctions.m; sourceTree = "<group>"; };
+		E9BFA77F1ACC5E64004DC0D9 /* GCDWebServerHTTPStatusCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerHTTPStatusCodes.h; sourceTree = "<group>"; };
+		E9BFA7801ACC5E64004DC0D9 /* GCDWebServerPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerPrivate.h; sourceTree = "<group>"; };
+		E9BFA7811ACC5E64004DC0D9 /* GCDWebServerRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerRequest.h; sourceTree = "<group>"; };
+		E9BFA7821ACC5E64004DC0D9 /* GCDWebServerRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerRequest.m; sourceTree = "<group>"; };
+		E9BFA7831ACC5E64004DC0D9 /* GCDWebServerResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerResponse.h; sourceTree = "<group>"; };
+		E9BFA7841ACC5E64004DC0D9 /* GCDWebServerResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerResponse.m; sourceTree = "<group>"; };
+		E9BFA7861ACC5E64004DC0D9 /* GCDWebServerDataRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerDataRequest.h; sourceTree = "<group>"; };
+		E9BFA7871ACC5E64004DC0D9 /* GCDWebServerDataRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataRequest.m; sourceTree = "<group>"; };
+		E9BFA7881ACC5E64004DC0D9 /* GCDWebServerFileRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFileRequest.h; sourceTree = "<group>"; };
+		E9BFA7891ACC5E64004DC0D9 /* GCDWebServerFileRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileRequest.m; sourceTree = "<group>"; };
+		E9BFA78A1ACC5E64004DC0D9 /* GCDWebServerMultiPartFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerMultiPartFormRequest.h; sourceTree = "<group>"; };
+		E9BFA78B1ACC5E64004DC0D9 /* GCDWebServerMultiPartFormRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerMultiPartFormRequest.m; sourceTree = "<group>"; };
+		E9BFA78C1ACC5E64004DC0D9 /* GCDWebServerURLEncodedFormRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerURLEncodedFormRequest.h; sourceTree = "<group>"; };
+		E9BFA78D1ACC5E64004DC0D9 /* GCDWebServerURLEncodedFormRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerURLEncodedFormRequest.m; sourceTree = "<group>"; };
+		E9BFA78F1ACC5E64004DC0D9 /* GCDWebServerDataResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerDataResponse.h; sourceTree = "<group>"; };
+		E9BFA7901ACC5E64004DC0D9 /* GCDWebServerDataResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerDataResponse.m; sourceTree = "<group>"; };
+		E9BFA7911ACC5E64004DC0D9 /* GCDWebServerErrorResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerErrorResponse.h; sourceTree = "<group>"; };
+		E9BFA7921ACC5E64004DC0D9 /* GCDWebServerErrorResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerErrorResponse.m; sourceTree = "<group>"; };
+		E9BFA7931ACC5E64004DC0D9 /* GCDWebServerFileResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerFileResponse.h; sourceTree = "<group>"; };
+		E9BFA7941ACC5E64004DC0D9 /* GCDWebServerFileResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerFileResponse.m; sourceTree = "<group>"; };
+		E9BFA7951ACC5E64004DC0D9 /* GCDWebServerStreamedResponse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebServerStreamedResponse.h; sourceTree = "<group>"; };
+		E9BFA7961ACC5E64004DC0D9 /* GCDWebServerStreamedResponse.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebServerStreamedResponse.m; sourceTree = "<group>"; };
+		E9BFA79C1ACC5E64004DC0D9 /* GCDWebUploader.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = GCDWebUploader.bundle; sourceTree = "<group>"; };
+		E9BFA79D1ACC5E64004DC0D9 /* GCDWebUploader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCDWebUploader.h; sourceTree = "<group>"; };
+		E9BFA79E1ACC5E64004DC0D9 /* GCDWebUploader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCDWebUploader.m; sourceTree = "<group>"; };
 		E9BFF00D170E0143001CB203 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		E9D1145A1732CFE800737EF7 /* VcardPreview.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = VcardPreview.xib; sourceTree = "<group>"; };
 		E9D1145C1732E73F00737EF7 /* Vcard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vcard.h; sourceTree = "<group>"; };
@@ -2074,6 +2123,7 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				E9BFA7711ACC5E64004DC0D9 /* GCDWebServer */,
 				E991E5301A0E974D00015BEE /* CocoaAsyncSocket */,
 				E9E92F2018733B15007B8042 /* CocoaHttpServer */,
 				6318FB401999057000D018A8 /* CTAssetsPickerController */,
@@ -2539,6 +2589,94 @@
 			path = ChatbarAttachments;
 			sourceTree = "<group>";
 		};
+		E9BFA7711ACC5E64004DC0D9 /* GCDWebServer */ = {
+			isa = PBXGroup;
+			children = (
+				E9BFA7741ACC5E64004DC0D9 /* GCDWebDAVServer */,
+				E9BFA7771ACC5E64004DC0D9 /* GCDWebServer */,
+				E9BFA79B1ACC5E64004DC0D9 /* GCDWebUploader */,
+			);
+			path = GCDWebServer;
+			sourceTree = "<group>";
+		};
+		E9BFA7741ACC5E64004DC0D9 /* GCDWebDAVServer */ = {
+			isa = PBXGroup;
+			children = (
+				E9BFA7751ACC5E64004DC0D9 /* GCDWebDAVServer.h */,
+				E9BFA7761ACC5E64004DC0D9 /* GCDWebDAVServer.m */,
+			);
+			path = GCDWebDAVServer;
+			sourceTree = "<group>";
+		};
+		E9BFA7771ACC5E64004DC0D9 /* GCDWebServer */ = {
+			isa = PBXGroup;
+			children = (
+				E9BFA7781ACC5E64004DC0D9 /* Core */,
+				E9BFA7851ACC5E64004DC0D9 /* Requests */,
+				E9BFA78E1ACC5E64004DC0D9 /* Responses */,
+			);
+			path = GCDWebServer;
+			sourceTree = "<group>";
+		};
+		E9BFA7781ACC5E64004DC0D9 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				E9BFA7791ACC5E64004DC0D9 /* GCDWebServer.h */,
+				E9BFA77A1ACC5E64004DC0D9 /* GCDWebServer.m */,
+				E9BFA77B1ACC5E64004DC0D9 /* GCDWebServerConnection.h */,
+				E9BFA77C1ACC5E64004DC0D9 /* GCDWebServerConnection.m */,
+				E9BFA77D1ACC5E64004DC0D9 /* GCDWebServerFunctions.h */,
+				E9BFA77E1ACC5E64004DC0D9 /* GCDWebServerFunctions.m */,
+				E9BFA77F1ACC5E64004DC0D9 /* GCDWebServerHTTPStatusCodes.h */,
+				E9BFA7801ACC5E64004DC0D9 /* GCDWebServerPrivate.h */,
+				E9BFA7811ACC5E64004DC0D9 /* GCDWebServerRequest.h */,
+				E9BFA7821ACC5E64004DC0D9 /* GCDWebServerRequest.m */,
+				E9BFA7831ACC5E64004DC0D9 /* GCDWebServerResponse.h */,
+				E9BFA7841ACC5E64004DC0D9 /* GCDWebServerResponse.m */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
+		E9BFA7851ACC5E64004DC0D9 /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+				E9BFA7861ACC5E64004DC0D9 /* GCDWebServerDataRequest.h */,
+				E9BFA7871ACC5E64004DC0D9 /* GCDWebServerDataRequest.m */,
+				E9BFA7881ACC5E64004DC0D9 /* GCDWebServerFileRequest.h */,
+				E9BFA7891ACC5E64004DC0D9 /* GCDWebServerFileRequest.m */,
+				E9BFA78A1ACC5E64004DC0D9 /* GCDWebServerMultiPartFormRequest.h */,
+				E9BFA78B1ACC5E64004DC0D9 /* GCDWebServerMultiPartFormRequest.m */,
+				E9BFA78C1ACC5E64004DC0D9 /* GCDWebServerURLEncodedFormRequest.h */,
+				E9BFA78D1ACC5E64004DC0D9 /* GCDWebServerURLEncodedFormRequest.m */,
+			);
+			path = Requests;
+			sourceTree = "<group>";
+		};
+		E9BFA78E1ACC5E64004DC0D9 /* Responses */ = {
+			isa = PBXGroup;
+			children = (
+				E9BFA78F1ACC5E64004DC0D9 /* GCDWebServerDataResponse.h */,
+				E9BFA7901ACC5E64004DC0D9 /* GCDWebServerDataResponse.m */,
+				E9BFA7911ACC5E64004DC0D9 /* GCDWebServerErrorResponse.h */,
+				E9BFA7921ACC5E64004DC0D9 /* GCDWebServerErrorResponse.m */,
+				E9BFA7931ACC5E64004DC0D9 /* GCDWebServerFileResponse.h */,
+				E9BFA7941ACC5E64004DC0D9 /* GCDWebServerFileResponse.m */,
+				E9BFA7951ACC5E64004DC0D9 /* GCDWebServerStreamedResponse.h */,
+				E9BFA7961ACC5E64004DC0D9 /* GCDWebServerStreamedResponse.m */,
+			);
+			path = Responses;
+			sourceTree = "<group>";
+		};
+		E9BFA79B1ACC5E64004DC0D9 /* GCDWebUploader */ = {
+			isa = PBXGroup;
+			children = (
+				E9BFA79C1ACC5E64004DC0D9 /* GCDWebUploader.bundle */,
+				E9BFA79D1ACC5E64004DC0D9 /* GCDWebUploader.h */,
+				E9BFA79E1ACC5E64004DC0D9 /* GCDWebUploader.m */,
+			);
+			path = GCDWebUploader;
+			sourceTree = "<group>";
+		};
 		E9D1147A1736702E00737EF7 /* GCNetworkRequest */ = {
 			isa = PBXGroup;
 			children = (
@@ -2907,6 +3045,7 @@
 				6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */,
 				63AE455D1705EE820099F0CB /* Localizable.strings in Resources */,
 				C576EC621934CCB200C0D254 /* slider-thumb@2x.png in Resources */,
+				E9BFAAE71ACC5E67004DC0D9 /* GCDWebUploader.bundle in Resources */,
 				63DEC02919B0A720003804E8 /* Songs@2x.png in Resources */,
 				C576EC2B1934CCB200C0D254 /* button-play@2x.png in Resources */,
 				63B1C9DF1843E4FD00B75CD8 /* cnt-location.png in Resources */,
@@ -3053,6 +3192,7 @@
 				6302A98A18DA870400B2D04F /* SRP.m in Sources */,
 				63AEE2E616CA4D0200522F92 /* main.m in Sources */,
 				63848A9518F473AC00C253A4 /* SmallContactCell.m in Sources */,
+				E9BFAAD91ACC5E67004DC0D9 /* GCDWebServer.m in Sources */,
 				E991E6EF1A0E975000015BEE /* DDMultiFormatter.m in Sources */,
 				63AEE2EA16CA4D0200522F92 /* AppDelegate.m in Sources */,
 				63AEE2FC16CA4D0300522F92 /* ConversationViewController.m in Sources */,
@@ -3062,6 +3202,7 @@
 				E991E6ED1A0E975000015BEE /* DDContextFilterLogFormatter.m in Sources */,
 				63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */,
 				6318FB651999057000D018A8 /* ALAssetsGroup+isEqual.m in Sources */,
+				E9BFAADE1ACC5E67004DC0D9 /* GCDWebServerDataRequest.m in Sources */,
 				E9AF289F1927BDAA00E29A03 /* NSData+GZIP.m in Sources */,
 				C576EC3F1934CCB200C0D254 /* player_button_prev.m in Sources */,
 				63DEC01A19B0A720003804E8 /* MPMediaItem+JGExtensions.m in Sources */,
@@ -3070,6 +3211,7 @@
 				E991E6E91A0E975000015BEE /* DDASLLogger.m in Sources */,
 				E9AF28A21927CBFF00E29A03 /* NSData+DictCompression.mm in Sources */,
 				630CAB8518E1E31600782507 /* DatasheetActionCell.m in Sources */,
+				E9BFAADA1ACC5E67004DC0D9 /* GCDWebServerConnection.m in Sources */,
 				63540AAE16E671710087D24E /* NonFloatingSectionHeaderTableView.m in Sources */,
 				63B7900318D4E546003A9125 /* tab_settings.m in Sources */,
 				63C413BC16E94735004E1F6D /* ConversationCell.m in Sources */,
@@ -3133,6 +3275,8 @@
 				63DEC01719B0A720003804E8 /* JGMediaPickerController.m in Sources */,
 				C576EC6F1934CD1500C0D254 /* AudioAttachmentWithTextMessageCell.m in Sources */,
 				636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */,
+				E9BFAADB1ACC5E67004DC0D9 /* GCDWebServerFunctions.m in Sources */,
+				E9BFAAE51ACC5E67004DC0D9 /* GCDWebServerStreamedResponse.m in Sources */,
 				63E091CD1A77B58B0029DAE2 /* DatasheetSwitchCell.m in Sources */,
 				636492D71711E97900E35514 /* AvatarView.m in Sources */,
 				63E9B00118F314AB00EFF829 /* disclosure_arrow.m in Sources */,
@@ -3144,6 +3288,7 @@
 				E96CB029171457F9005F8FFA /* Crypto.m in Sources */,
 				6318FB671999057000D018A8 /* CTAssetScrollView.m in Sources */,
 				E96CB02A171457F9005F8FFA /* NSData+CommonCrypto.m in Sources */,
+				E9BFAAE01ACC5E67004DC0D9 /* GCDWebServerMultiPartFormRequest.m in Sources */,
 				C576EBDC1934CC9E00C0D254 /* MediaAttachmentCell.m in Sources */,
 				630CAA5518DCC8AE00782507 /* DatasheetViewController.m in Sources */,
 				630CAB8818E1E84400782507 /* DatasheetCell.m in Sources */,
@@ -3162,6 +3307,7 @@
 				63DC015B17147B1700609513 /* HXOTableViewCell.m in Sources */,
 				6318FB701999057000D018A8 /* CTAssetsViewController.m in Sources */,
 				63DEC01819B0A720003804E8 /* JGMediaQueryTableViewCell.m in Sources */,
+				E9BFAAE81ACC5E67004DC0D9 /* GCDWebUploader.m in Sources */,
 				632502AD1866500800543D80 /* HXOHyperLabel.m in Sources */,
 				63808A32185A25B10001AC96 /* GenericAttachmentSection.m in Sources */,
 				63DEC01C19B0A720003804E8 /* MPMediaPlaylist+JGExtensions.m in Sources */,
@@ -3195,10 +3341,12 @@
 				6318FB631999057000D018A8 /* ALAsset+assetType.m in Sources */,
 				63DEC01619B0A720003804E8 /* JGAlbumViewController.m in Sources */,
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
+				E9BFAAE11ACC5E67004DC0D9 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				E9DBE3E31865C0A000880252 /* CryptoJSON.m in Sources */,
 				C576EBCE1934CC6100C0D254 /* UIImage+Tint.m in Sources */,
 				63716BB2185CC8C90094987D /* ImageAttachmentWithTextMessageCell.m in Sources */,
 				E9E92F7018733D01007B8042 /* HTTPMessage.m in Sources */,
+				E9BFAAE31ACC5E67004DC0D9 /* GCDWebServerErrorResponse.m in Sources */,
 				63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */,
 				C576EC3E1934CCB200C0D254 /* player_button_play.m in Sources */,
 				C576EC481934CCB200C0D254 /* player_icon_now_playing.m in Sources */,
@@ -3207,6 +3355,7 @@
 				C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */,
 				E9E92F6C18733D01007B8042 /* DDNumber.m in Sources */,
 				E99886C51725CB3F0089A510 /* ABPersonCreator.m in Sources */,
+				E9BFAADF1ACC5E67004DC0D9 /* GCDWebServerFileRequest.m in Sources */,
 				63E091DE1A77B7BA0029DAE2 /* ServerSheetController.m in Sources */,
 				E99886C61725CB3F0089A510 /* ABPersonVCardCreator.m in Sources */,
 				63B76F6418E9EA3300E014E6 /* ContactSheetController.m in Sources */,
@@ -3214,6 +3363,7 @@
 				E99886C81725CB3F0089A510 /* VcardParser.m in Sources */,
 				E99886C91725CB3F0089A510 /* VcardWriter.m in Sources */,
 				E991E5001A0D11F300015BEE /* DAVResponse.m in Sources */,
+				E9BFAAD81ACC5E67004DC0D9 /* GCDWebDAVServer.m in Sources */,
 				E99886CC1725CBCF0089A510 /* NSString+Regexp.m in Sources */,
 				C576EBD61934CC8400C0D254 /* AudioPlayerViewController.m in Sources */,
 				E99886DE1728135C0089A510 /* SoundEffectPlayer.m in Sources */,
@@ -3250,12 +3400,14 @@
 				C55E0A2319658787009A7238 /* MediaBrowserDataSource.m in Sources */,
 				E9D114A61736E43E00737EF7 /* RNCachingURLProtocol.m in Sources */,
 				634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */,
+				E9BFAAE21ACC5E67004DC0D9 /* GCDWebServerDataResponse.m in Sources */,
 				6318FB6F1999057000D018A8 /* CTAssetsViewCell.m in Sources */,
 				E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */,
 				C576EBB61934CC3B00C0D254 /* HXOAudioPlaybackButtonController.m in Sources */,
 				631083581A793EC8009D75FB /* HTTPServerController.m in Sources */,
 				E9E92F6E18733D01007B8042 /* HTTPAuthenticationRequest.m in Sources */,
 				E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */,
+				E9BFAADD1ACC5E67004DC0D9 /* GCDWebServerResponse.m in Sources */,
 				63DEC01B19B0A720003804E8 /* MPMediaItemCollection+JGExtensions.m in Sources */,
 				6302A98818DA870400B2D04F /* Digest.m in Sources */,
 				C51B1148194858EC00FBCD2B /* NSArray+RemoveObject.m in Sources */,
@@ -3288,12 +3440,14 @@
 				63756A9018F6434C003F7555 /* ContactPicker.m in Sources */,
 				63E5698C196353B0007E06BF /* HXOPluralocalization.m in Sources */,
 				E9E92F7B18733D01007B8042 /* WebSocket.m in Sources */,
+				E9BFAAE41ACC5E67004DC0D9 /* GCDWebServerFileResponse.m in Sources */,
 				630CAB7818E0F6C400782507 /* ContactSheetBase.m in Sources */,
 				C5C35A03196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m in Sources */,
 				E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */,
 				E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */,
 				E9E92F6F18733D01007B8042 /* HTTPConnection.m in Sources */,
 				6318FB621999057000D018A8 /* ALAsset+accessibilityLabel.m in Sources */,
+				E9BFAADC1ACC5E67004DC0D9 /* GCDWebServerRequest.m in Sources */,
 				E9E14D4C19D0A22000A71DAF /* NSData+NSInputStream.m in Sources */,
 				6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */,
 				E9E92F7A18733D01007B8042 /* HTTPRedirectResponse.m in Sources */,
@@ -3598,7 +3752,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3640,7 +3794,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3711,7 +3865,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3820,7 +3974,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
@@ -3933,7 +4087,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4041,7 +4195,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4151,7 +4305,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
@@ -4259,7 +4413,7 @@
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
+				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};

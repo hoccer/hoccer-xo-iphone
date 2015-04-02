@@ -34,3 +34,6 @@
 [submodule "3rdParty/CocoaAsyncSocket"]
 	path = 3rdParty/CocoaAsyncSocket
 	url = git@github.com:hoccer/CocoaAsyncSocket.git
+[submodule "3rdParty/GCDWebServer"]
+	path = 3rdParty/GCDWebServer
+	url = git@github.com:hoccer/GCDWebServer.git
