@@ -1,0 +1,24 @@
+"about_prosa" = "The free Secure Instant Messenger by Deutsche Post — for confidential communication using your smartphone — on both Android and iOS.\n\nSIMSme is the new Secure Instant Messenger by Deutsche Post AG. With more than 500 years of experience with the transmission of messages, Deutsche Post is the perfect partner when it comes to reliable and secure communication.";
+
+"server_nav_title" = "SIMSmeBox";
+
+//==============================================================================
+// Color Scheme
+//==============================================================================
+
+"tint_color" = "#FFCC00";
+"navigation_bar_tint_color" = "#FFCC00";
+"navigation_bar_text_color" = "#333333";
+"tab_bar_selected_text_color" = "#333333";
+"cell_accessory_color" = "#FFCC00";
+"table_placeholder_image_color" =  "#FFCC00";
+
+"message_background_color_incoming" = "#E6E7EB";
+"message_background_color_success" = "#FFCC00";
+"message_background_color_in_progress" = "#FFE680";
+"message_background_color_failed" = "#BD3935";
+
+"message_text_color_incoming" = "#333333";
+"message_text_color_success" = "#333333";
+"message_text_color_in_progress" = "#333333";
+"message_text_color_failed" = "#000000";

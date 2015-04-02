@@ -176,7 +176,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     self.titleLabel = [[LabelWithLED alloc] init];
     self.navigationItem.titleView = self.titleLabel;
-    self.titleLabel.textColor = [[HXOUI theme] navigationBarTintColor];
+    self.titleLabel.textColor = [[HXOUI theme] navigationBarTextColor];
     self.titleLabel.textAlignment = NSTextAlignmentCenter;
     // XXX do this in a more general way...
     self.titleLabel.font = [UIFont preferredFontForTextStyle: UIFontTextStyleHeadline];

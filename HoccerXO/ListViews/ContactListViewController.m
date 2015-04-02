@@ -24,6 +24,7 @@
 #import "WebViewController.h"
 #import "tab_contacts.h"
 #import "InviteController.h"
+#import "UIImage+Tint.h"
 
 #define HIDE_SEPARATORS
 #define FETCHED_RESULTS_DEBUG NO
@@ -756,7 +757,8 @@ bool almostEqual(CGFloat a, CGFloat b) {
     BOOL hadTableHeader = self.tableView.tableHeaderView != nil;
     
     self.placeholderLabel.attributedText = [self placeholderText];
-    [self.placeholderImageButton setImage: [self placeholderImage] forState: UIControlStateNormal];
+    UIImage* placeholderImage = [[self placeholderImage] tintWithColor:[HXOUI theme].tablePlaceholderImageColor];
+    [self.placeholderImageButton setImage: placeholderImage forState: UIControlStateNormal];
     [_placeholderImageButton removeTarget: self action: NULL forControlEvents: UIControlEventTouchUpInside];
     if ([self placeholderAction]) {
         [_placeholderImageButton addTarget: self action: [self placeholderAction] forControlEvents: UIControlEventTouchUpInside];

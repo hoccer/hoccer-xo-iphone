@@ -55,8 +55,8 @@
 "operation_failed_default_message"  = "The operation has failed. Check you network connection and try again later";
 
 
-"http://hoccer.com/hoccer-xo-tutorial/" = "http://hoccer.com/hoccer-xo-tutorial/";
-"http://hoccer.com/hoccer-xo-faq/"      = "http://faq.hoccer.com/";
+"hoccer_tutorial_url" = "http://faq.hoccer.com/tutorial-xo/";
+"hoccer_faq_url" = "http://faq.hoccer.com/";
 
 //==============================================================================
 // About
@@ -348,8 +348,8 @@
 "contact_relationship_invited"                  = "Invited as Friend";
 "contact_relationship_invitedMe"                = "Invited you as Friend";
 
-"contact_list_placeholder"                      = "[Invite friends](http://hoccer.com/hoccer-xo-tutorial/#invite) to chat with.";
-"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://hoccer.com/hoccer-xo-tutorial/#nearby)…";
+"contact_list_placeholder"                      = "[Invite friends](http://faq.hoccer.com/tutorial-xo/#invite) to chat with.";
+"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://faq.hoccer.com/tutorial-xo/#nearby)…";
 
 
 //==============================================================================
@@ -589,7 +589,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "group_member_count_joined (zero)"      = "you are alone";
 "group_member_invited_count"            = "%d invited";
 
-"group_list_placeholder"                = "Create [groups](http://hoccer.com/hoccer-xo-tutorial/#groups) to chat with many friends at once.";
+"group_list_placeholder"                = "Create [groups](http://faq.hoccer.com/tutorial-xo/#groups) to chat with many friends at once.";
 
 "group_name_nearby_active"              = "All Nearby (%d)";
 "group_name_nearby_kept"                = "Stored Nearby Group";
@@ -633,8 +633,8 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "key_state_mistrusted"                           = "Mistrusted";
 
 "key_fingerprint_title"                          = "Id:";
-"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://hoccer.com/hoccer-xo-tutorial/#verify) of your friends. Ask them for their key ids and compare.";
-"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://hoccer.com/hoccer-xo-tutorial/#verify).";
+"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://faq.hoccer.com/tutorial-xo/#verify) of your friends. Ask them for their key ids and compare.";
+"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://faq.hoccer.com/tutorial-xo/#verify).";
 "key_length_item"                                = "Key Length:";
 "key_length_unit_format"                         = "%@ bit";
 

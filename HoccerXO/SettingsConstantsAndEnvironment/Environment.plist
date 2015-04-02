@@ -7,6 +7,9 @@
 		<string>production</string>
 		<string>development</string>
 		<string>stroeer</string>
+		<string>simsme</string>
+		<string>hoccme</string>
+		<string>starmeo</string>
 	</array>
 	<key>certificateFiles</key>
 	<dict>
@@ -28,6 +31,24 @@
 			<string>filecache.talk.hoccer.de</string>
 			<string>server_production</string>
 		</array>
+		<key>simsme</key>
+		<array>
+			<string>talkserver.talk.hoccer.de</string>
+			<string>filecache.talk.hoccer.de</string>
+			<string>server_production</string>
+		</array>
+		<key>hoccme</key>
+		<array>
+			<string>talkserver.talk.hoccer.de</string>
+			<string>filecache.talk.hoccer.de</string>
+			<string>server_production</string>
+		</array>
+		<key>starmeo</key>
+		<array>
+			<string>talkserver.talk.hoccer.de</string>
+			<string>filecache.talk.hoccer.de</string>
+			<string>server_production</string>
+		</array>
 	</dict>
 	<key>talkServer</key>
 	<dict>
@@ -36,6 +57,12 @@
 		<key>production</key>
 		<string>wss://talkserver.talk.hoccer.de</string>
 		<key>stroeer</key>
+		<string>wss://talkserver.talk.hoccer.de</string>
+		<key>simsme</key>
+		<string>wss://talkserver.talk.hoccer.de</string>
+		<key>hoccme</key>
+		<string>wss://talkserver.talk.hoccer.de</string>
+		<key>starmeo</key>
 		<string>wss://talkserver.talk.hoccer.de</string>
 	</dict>
 	<key>inviteServer</key>
@@ -46,6 +73,12 @@
 		<string>https://invite.hoccer.com</string>
 		<key>stroeer</key>
 		<string>https://stroeer.hoccer.com</string>
+		<key>simsme</key>
+		<string>https://simsme.hoccer.com</string>
+		<key>hoccme</key>
+		<string>https://hoccme.hoccer.com</string>
+		<key>starmeo</key>
+		<string>https://starmeo.hoccer.com</string>
 	</dict>
 </dict>
 </plist>

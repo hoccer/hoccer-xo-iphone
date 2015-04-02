@@ -41,8 +41,20 @@ static HXOUI * _currentTheme;
     return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"navigation_bar_tint_color", nil)];
 }
 
+- (UIColor*) navigationBarTextColor {
+    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"navigation_bar_text_color", nil)];
+}
+
+- (UIColor*) tabBarSelectedTextColor {
+    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"tab_bar_selected_text_color", nil)];
+}
+
 - (UIColor*) tableSeparatorColor {
     return [UIColor colorWithHexString: @"#D"];
+}
+
+- (UIColor*) tablePlaceholderImageColor {
+    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"table_placeholder_image_color", nil)];
 }
 
 - (UIColor*) tablePlaceholderTextColor {
@@ -110,21 +122,19 @@ static HXOUI * _currentTheme;
 
 - (UIColor*) messageBackgroundColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
-        case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: @"#E6E7EB"];
+        case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_incoming", nil)];
         case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_success", nil)];
         case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_in_progress", nil)];
-        case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: @"#BD3935"];
+        case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_background_color_failed", nil)];
     }
 }
 
 - (UIColor*) messageTextColorForScheme: (HXOBubbleColorScheme) scheme {
     switch (scheme) {
-        case HXOBubbleColorSchemeIncoming:
-            return [UIColor blackColor];
-        case HXOBubbleColorSchemeSuccess:
-        case HXOBubbleColorSchemeInProgress:
-        case HXOBubbleColorSchemeFailed:
-            return [UIColor whiteColor];
+        case HXOBubbleColorSchemeIncoming:   return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_text_color_incoming", nil)];
+        case HXOBubbleColorSchemeSuccess:    return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_text_color_success", nil)];
+        case HXOBubbleColorSchemeInProgress: return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_text_color_in_progress", nil)];
+        case HXOBubbleColorSchemeFailed:     return [UIColor colorWithHexString: HXOLabelledLocalizedString(@"message_text_color_failed", nil)];
     }
 }
 
@@ -255,12 +265,13 @@ static HXOUI * _currentTheme;
 
 - (void) setupTheming {
     [UIApplication sharedApplication].delegate.window.tintColor = [self tintColor];
+    [[UITabBarItem appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: self.tabBarSelectedTextColor} forState:UIControlStateSelected];
     
-    id navigationBarAppearance = [UINavigationBar appearanceWhenContainedIn: [HXOThemedNavigationController class], nil];
+    id navigationBarAppearance = [UINavigationBar appearance];
     [navigationBarAppearance setBarTintColor: self.navigationBarBackgroundColor];
     [navigationBarAppearance setBarStyle:     UIBarStyleDefault];
     [navigationBarAppearance setTintColor:    self.navigationBarTintColor];
-    [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: self.navigationBarTintColor}];
+    [navigationBarAppearance setTitleTextAttributes: @{NSForegroundColorAttributeName: self.navigationBarTextColor}];
 
     [[LabelWithLED appearance] setLedColor: self.ledColor];
 }
