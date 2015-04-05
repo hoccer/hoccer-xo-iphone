@@ -122,7 +122,7 @@
     [options setObject:@"Hoccer File Browser" forKey:GCDWebServerOption_BonjourName];
     NSString * authenticationUser = @"hoccer";
     NSString * authenticationPassword = self.password;
-    NSString * authenticationRealm = @"Hoccer";
+    NSString * authenticationRealm = @"Authenticate user hoccer";
     [options setValue:authenticationRealm forKey:GCDWebServerOption_AuthenticationRealm];
     [options setObject:@{authenticationUser: authenticationPassword} forKey:GCDWebServerOption_AuthenticationAccounts];
     [options setObject:GCDWebServerAuthenticationMethod_DigestAccess forKey:GCDWebServerOption_AuthenticationMethod];
