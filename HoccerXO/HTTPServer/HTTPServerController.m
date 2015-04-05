@@ -110,14 +110,30 @@
 #ifdef USE_OLD_SERVER
     if([self.server start:&error]) {
         NSLog(@"Started HTTP Server on port %hu", [self.server listeningPort]);
-#else
-    if([self.webUploader startWithPort:8899 bonjourName:@"uploader"]) {
-        NSLog(@"Started HTTP Webupload Server on port %lu", (unsigned long)self.webUploader.port);
-#endif
         [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
     } else {
         NSLog(@"Error starting HTTP Server: %@", error);
     }
+#else
+    NSMutableDictionary* options = [NSMutableDictionary dictionary];
+    [options setObject:@8899 forKey:GCDWebServerOption_Port];
+    BOOL bindToLocalhost = NO;
+    [options setObject:@(bindToLocalhost) forKey:GCDWebServerOption_BindToLocalhost];
+    [options setObject:@"Hoccer File Browser" forKey:GCDWebServerOption_BonjourName];
+    NSString * authenticationUser = @"hoccer";
+    NSString * authenticationPassword = self.password;
+    NSString * authenticationRealm = @"Hoccer";
+    [options setValue:authenticationRealm forKey:GCDWebServerOption_AuthenticationRealm];
+    [options setObject:@{authenticationUser: authenticationPassword} forKey:GCDWebServerOption_AuthenticationAccounts];
+    [options setObject:GCDWebServerAuthenticationMethod_DigestAccess forKey:GCDWebServerOption_AuthenticationMethod];
+    if ([self.webUploader startWithOptions:options error:NULL]) {
+        NSLog(@"Started HTTP Webupload Server on port %lu", (unsigned long)self.webUploader.port);
+        [[UIApplication sharedApplication] setIdleTimerDisabled:YES];
+    } else {
+        NSLog(@"Error starting HTTP Server: %@", error);
+    }
+    //if([self.webUploader startWithPort:8899 bonjourName:@"uploader"]) {}
+#endif
 }
 
 - (void) stop {
