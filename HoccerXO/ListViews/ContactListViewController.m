@@ -567,7 +567,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
 - (void) addPredicates: (NSMutableArray*) predicates {
     if (FETCHED_RESULTS_DEBUG) NSLog(@"ContactListController:addPredicates %@", predicates);
     if ([self.entityName isEqualToString: @"Contact"]) {
-        [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept' OR relationshipState == 'groupfriend' OR relationshipState == 'invited' OR relationshipState == 'invitedMe' OR isNearbyTag== 'YES')", [self entityName]]];
+        [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept' OR relationshipState == 'groupfriend' OR relationshipState == 'invited' OR relationshipState == 'invitedMe')", [self entityName]]];
     } /* else {
        [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@", [self entityName]]];
     } */

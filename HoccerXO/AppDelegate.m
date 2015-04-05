@@ -127,7 +127,7 @@ static NSInteger validationErrorCount = 0;
 @synthesize mainObjectContext = _mainObjectContext;
 @synthesize managedObjectModel = _managedObjectModel;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
-@synthesize inNearbyMode = _inNearbyMode;
+@synthesize environmentMode = _environmentMode;
 
 
 #ifdef WITH_WEBSERVER
@@ -931,9 +931,10 @@ BOOL sameObjects(id obj1, id obj2) {
     [self.chatBackend changePresenceToNotTyping]; // not typing anymore ... yep, pretty sure...
     [self saveDatabaseNow];
     [self setLastActiveDate];
-    if (self.inNearbyMode) {
-        [self suspendNearbyMode]; // for resuming nearby mode, the Conversations- or ChatView are responsible; the must do it after login
+    if (self.environmentMode != ACTIVATION_MODE_NONE) {
+        [self suspendEnvironmentMode]; // for resuming nearby or worldwide mode, the Conversations- or ChatView are responsible; the must do it after login
     }
+    
     [self updateUnreadMessageCountAndStop];
 }
 
@@ -968,27 +969,23 @@ BOOL sameObjects(id obj1, id obj2) {
     [self setLastDeactivationDate];
 }
 
-#pragma mark - Nearby
+#pragma mark - Nearby / Worldwide
 
--(void)configureForNearbyMode:(BOOL)modeNearby {
-    if (TRACE_NEARBY_ACTIVATION) NSLog(@"AppDelegate:configureForNearbyMode= %d", modeNearby);
-    [HXOEnvironment.sharedInstance setActivation:modeNearby];
-    if (modeNearby) {
-        [GesturesInterpreter.instance start];
-    } else {
+-(void)configureForMode:(EnvironmentActivationMode)mode {
+    if (TRACE_NEARBY_ACTIVATION) NSLog(@"configureForMode= %d", mode);
+    [HXOEnvironment.sharedInstance setActivation:mode];
+    if (mode == ACTIVATION_MODE_NONE) {
         [GesturesInterpreter.instance stop];
+    } else if (mode == ACTIVATION_MODE_NEARBY) {
+        [GesturesInterpreter.instance start];
     }
-    _inNearbyMode = modeNearby;
+    _environmentMode = mode;
 }
 
--(void)suspendNearbyMode {
-    NSLog(@"suspendNearbyMode");
+-(void)suspendEnvironmentMode {
+    NSLog(@"suspendEnvironmentMode");
     [HXOEnvironment.sharedInstance deactivateLocation];
     [GesturesInterpreter.instance stop];
-}
-
--(BOOL)inNearbyMode {
-    return _inNearbyMode;
 }
 
 #pragma mark - Core Data stack

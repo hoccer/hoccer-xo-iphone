@@ -10,6 +10,7 @@
 #import <CoreData/CoreData.h>
 #import "ContactListViewController.h"
 #import "ContactCell.h"
+#import "HXOEnvironment.h"
 
 @class ChatViewController;
 
@@ -21,6 +22,6 @@
 //@property (readonly, nonatomic) NSFetchedResultsController * fetchedResultsController;
 //@property (readonly, nonatomic) NSManagedObjectContext *     managedObjectContext;
 
-@property (readonly) BOOL inNearbyMode;
+@property (readonly) EnvironmentActivationMode environmentMode;
 
 @end

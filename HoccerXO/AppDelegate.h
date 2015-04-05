@@ -11,6 +11,7 @@
 #import <AddressBookUI/AddressBookUI.h>
 #import <MessageUI/MessageUI.h>
 
+#import "HXOEnvironment.h"
 #import "HXOBackend.h"
 #import "GCNetworkReachability.h"
 
@@ -66,8 +67,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 @property (nonatomic, strong) NSString * openedFileMediaType;
 @property (nonatomic, strong) NSString * openedFileMimeType;
 
-@property (readonly) BOOL inNearbyMode;
-
+@property (readonly) EnvironmentActivationMode environmentMode;
 
 @property (nonatomic,readonly) ABPeoplePickerNavigationController * peoplePicker;
 
@@ -112,8 +112,8 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 - (void) showOperationFailedAlert:(NSString *)message withTitle:(NSString *) title withOKBlock:(ContinueBlock)okBlock;
 - (void) showGenericAlertWithTitle:(NSString *)title andMessage:(NSString *)message withOKBlock:(ContinueBlock)okBlock;
 
--(void)configureForNearbyMode:(BOOL)modeNearby;
--(BOOL)inNearbyMode;
+-(void)configureForMode:(EnvironmentActivationMode)environmentMode;
+-(EnvironmentActivationMode)environmentMode;
 
 -(void)beginInspecting:(id)inspectedObject withInspector:(id)inspector;
 -(void)endInspecting:(id)inspectedObject withInspector:(id)inspector;
@@ -131,8 +131,6 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 -(void)cachePreviewImage:(UIImage*)image withName:(NSString*)name;
 -(UIImage*)getCachedPreviewImagWithName:(NSString*)name;
-
-
 
 + (UIViewController*) getTopMostViewController;
 - (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller removeFile:(BOOL) removeFileFlag;

@@ -375,10 +375,12 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
     
     NSPredicate *contactPredicate = [NSPredicate predicateWithFormat:@"type == %@ AND relationshipState == 'friend'", [Contact entityName]];
     NSPredicate *nearbyContactPredicate = [NSPredicate predicateWithFormat:@"type == %@ AND SUBQUERY(groupMemberships, $member, $member.group.groupType == %@ AND $member.group.groupState == %@).@count > 0", [Contact entityName], kGroupTypeNearby, kGroupStateExists];
+    NSPredicate *worldwideContactPredicate = [NSPredicate predicateWithFormat:@"type == %@ AND SUBQUERY(groupMemberships, $member, $member.group.groupType == %@ AND $member.group.groupState == %@).@count > 0", [Contact entityName], kGroupTypeWorldwide, kGroupStateExists];
     NSPredicate *groupAndNearbyGroupPredicate = [NSPredicate predicateWithFormat:@"type == %@ AND myGroupMembership.state == 'joined'", [Group entityName]];
 
     NSPredicate *predicate = [NSCompoundPredicate orPredicateWithSubpredicates:@[ contactPredicate,
                                                                                   nearbyContactPredicate,
+                                                                                  worldwideContactPredicate,
                                                                                   groupAndNearbyGroupPredicate ]];
 
     id picker = [ContactPicker contactPickerWithTitle:NSLocalizedString(@"contact_list_nav_title", nil)

@@ -342,7 +342,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                           queue:[NSOperationQueue mainQueue]
                                      usingBlock:^(NSNotification *note) {
                                          if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: loginSucceeded");
-                                         [AppDelegate.instance configureForNearbyMode:self.partner.isNearby];
+                                         if (self.partner.isNearby) {
+                                             [AppDelegate.instance configureForMode:ACTIVATION_MODE_NEARBY];
+                                         } else if (self.partner.isWorldwide) {
+                                             [AppDelegate.instance configureForMode:ACTIVATION_MODE_WORLDWIDE];
+                                         } else {
+                                             [AppDelegate.instance configureForMode:ACTIVATION_MODE_NONE];
+                                         }
                                      }];
 }
 
@@ -729,6 +735,8 @@ nil
             } else {
                 if (group.isNearby) {
                     messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_group_you_are_alone_message", nil)];
+                } else if (group.isWorldwide) {
+                    messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_worldwide_group_you_are_alone_message", nil)];
                 } else {
                     messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_group_you_are_alone_message", nil)];
                 }
@@ -756,9 +764,11 @@ nil
         NSString * messageText = nil;
         if (self.partner.isBlocked) {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];
-        } else if (self.partner.isNearby) {
-            if (!self.partner.isPresent) {
+        } else if (self.partner.isNearby || self.partner.isWorldwide) {
+            if (!self.partner.isPresent && self.partner.isNearby) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_contact_offline", nil)];
+            } else if (!self.partner.isPresent && self.partner.isWorldwide) {
+                messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_worldwide_contact_offline", nil)];
             }
         } else {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_relationship_removed_message", nil)];
@@ -2110,7 +2120,7 @@ nil
     } else if ([keyPath isEqualToString: @"members"]) {
         if (self.partner.isGroup) {
             [self checkActionButtonVisible];
-            if (self.partner.isNearby) {
+            if (self.partner.isNearby || self.partner.isWorldwide) {
                 [self configureTitle];
             }
         }

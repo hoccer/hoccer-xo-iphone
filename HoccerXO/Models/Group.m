@@ -23,6 +23,7 @@ NSString * const kGroupStateInternalKept        = @"kept";
 
 NSString * const kGroupTypeUser     = @"user";
 NSString * const kGroupTypeNearby   = @"nearby";
+NSString * const kGroupTypeWorldwide   = @"worldwide";
 
 
 @implementation Group
@@ -294,6 +295,10 @@ NSString * const kGroupTypeNearby   = @"nearby";
 
 - (BOOL)isNearbyGroup{
     return [kGroupTypeNearby isEqualToString: self.groupType];
+}
+
+- (BOOL)isWorldwideGroup{
+    return [kGroupTypeWorldwide isEqualToString: self.groupType];
 }
 
 //public class TalkGroup {

@@ -340,7 +340,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 - (BOOL) hasActiveAccount {
     BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
     BOOL active = (!isFirstRun && self.isRegistered && HXOBackend.instance.isReady && !self.accountJustDeleted);
-    NSLog(@"hasActiveAccount:%d", active);
+    //NSLog(@"hasActiveAccount:%d", active);
     return active;
 }
 

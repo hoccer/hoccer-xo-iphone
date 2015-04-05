@@ -19,6 +19,7 @@ FOUNDATION_EXPORT NSString * const kGroupMembershipStateGroupRemoved;
 FOUNDATION_EXPORT NSString * const kGroupMembershipRoleAdmin;
 FOUNDATION_EXPORT NSString * const kGroupMembershipRoleMember;
 FOUNDATION_EXPORT NSString * const kGroupMembershipRoleNearbyMember;
+FOUNDATION_EXPORT NSString * const kGroupMembershipRoleWorldwideMember;
 
 
 @interface GroupMembership : HXOModel
@@ -66,6 +67,7 @@ FOUNDATION_EXPORT NSString * const kGroupMembershipRoleNearbyMember;
 - (BOOL)isGroupRemoved;
 - (BOOL)isMember;
 - (BOOL)isNearbyMember;
+- (BOOL)isWorldwideMember;
 - (BOOL)isAdmin;
 - (BOOL)hasActiveRole;
 
