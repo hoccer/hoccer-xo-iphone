@@ -169,6 +169,7 @@
 		63B7900618D4F581003A9125 /* paper_clip.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B7900518D4F581003A9125 /* paper_clip.m */; };
 		63BD7D8E174422D500118A7F /* Group.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D8D174422D500118A7F /* Group.m */; };
 		63BD7D951744232D00118A7F /* GroupMembership.m in Sources */ = {isa = PBXBuildFile; fileRef = 63BD7D941744232D00118A7F /* GroupMembership.m */; };
+		63C0F82A1AD5A9FB00709B0C /* webinterface.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 63C0F82C1AD5A9FB00709B0C /* webinterface.rtf */; };
 		63C1356817160E2E00969B0B /* HXOTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356717160E2E00969B0B /* HXOTableViewController.m */; };
 		63C1356D1716A4AB00969B0B /* Invite.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1356C1716A4AB00969B0B /* Invite.m */; };
 		63C178C318BF57A600F29BC4 /* UIColor+HSBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C178C218BF57A600F29BC4 /* UIColor+HSBUtilities.m */; };
@@ -812,6 +813,8 @@
 		63BD7D8D174422D500118A7F /* Group.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Group.m; sourceTree = "<group>"; };
 		63BD7D931744232D00118A7F /* GroupMembership.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GroupMembership.h; sourceTree = "<group>"; };
 		63BD7D941744232D00118A7F /* GroupMembership.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GroupMembership.m; sourceTree = "<group>"; };
+		63C0F82B1AD5A9FB00709B0C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/webinterface.rtf; sourceTree = "<group>"; };
+		63C0F82D1AD5AA0100709B0C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = de; path = de.lproj/webinterface.rtf; sourceTree = "<group>"; };
 		63C1356617160E2E00969B0B /* HXOTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOTableViewController.h; sourceTree = "<group>"; };
 		63C1356717160E2E00969B0B /* HXOTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOTableViewController.m; sourceTree = "<group>"; };
 		63C1356B1716A4AB00969B0B /* Invite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Invite.h; sourceTree = "<group>"; };
@@ -1971,19 +1974,20 @@
 		63AE45571705EE030099F0CB /* Localizations */ = {
 			isa = PBXGroup;
 			children = (
-				1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */,
-				63AE455B1705EE820099F0CB /* Localizable.strings */,
-				63AE45581705EE770099F0CB /* InfoPlist.strings */,
 				C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */,
-				C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */,
 				C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */,
 				C5EB3CE01A82658900E236F6 /* com.hoccer.Hoccer-XO.strings */,
-				635127B21ABB65FD00FA0C2B /* webdav_mac.rtf */,
-				635127B81ABB6FFD00FA0C2B /* webdav_win8.rtf */,
-				635127BE1ABB706D00FA0C2B /* webdav_win7.rtf */,
-				635127C71ABB70F100FA0C2B /* webdav_winxp.rtf */,
-				C5E8E3CD1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings */,
 				C5E8E4171A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings */,
+				C5E8E3CD1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings */,
+				1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */,
+				C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */,
+				63AE45581705EE770099F0CB /* InfoPlist.strings */,
+				63AE455B1705EE820099F0CB /* Localizable.strings */,
+				635127B21ABB65FD00FA0C2B /* webdav_mac.rtf */,
+				635127BE1ABB706D00FA0C2B /* webdav_win7.rtf */,
+				635127B81ABB6FFD00FA0C2B /* webdav_win8.rtf */,
+				635127C71ABB70F100FA0C2B /* webdav_winxp.rtf */,
+				63C0F82C1AD5A9FB00709B0C /* webinterface.rtf */,
 			);
 			path = Localizations;
 			sourceTree = "<group>";
@@ -3039,6 +3043,7 @@
 				63DEC02D19B0A720003804E8 /* JGMediaQueryViewController.xib in Resources */,
 				63B1C9E01843E4FD00B75CD8 /* cnt-location@2x.png in Resources */,
 				63D670EE193634C700CBF1C3 /* placeholder-chats@2x.png in Resources */,
+				63C0F82A1AD5A9FB00709B0C /* webinterface.rtf in Resources */,
 				635127C51ABB70F100FA0C2B /* webdav_winxp.rtf in Resources */,
 				E9A85DA2184FD1AD00EB9B68 /* chatbar-attachment-icon-photo.png in Resources */,
 				6310C42119390E870029706A /* placeholder-groups@2x.png in Resources */,
@@ -3567,6 +3572,15 @@
 				631F6CD61705F5C700FB28D5 /* de */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		63C0F82C1AD5A9FB00709B0C /* webinterface.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63C0F82B1AD5A9FB00709B0C /* en */,
+				63C0F82D1AD5AA0100709B0C /* de */,
+			);
+			name = webinterface.rtf;
 			sourceTree = "<group>";
 		};
 		C5E8E3CD1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings */ = {
