@@ -150,7 +150,7 @@
         NSString * text;
 
         if (running) {
-            text = @"";
+            return nil;
         } else if (can_run) {
             text = HXOLocalizedString(@"server_stopped_can_run", nil, boxName, boxName, appName);
         } else {
