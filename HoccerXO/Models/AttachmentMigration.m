@@ -224,10 +224,12 @@ static NSString * filenameOf(Attachment * attachment) {
                             // attachment file changed since last seen
                             attachment.previewImageData = nil;
                             attachment.previewImage = nil;
-                            [attachment reinitializeInContext:context whenReady:^(Attachment * attachment, NSError * error) {
-                                NSLog(@"Reinitialized changed attachment %@, error = %@", attachment.humanReadableFileName,error);
-                            }];
-                            
+                            @autoreleasepool {
+                                [attachment reinitializeInContext:context whenReady:^(Attachment * attachment, NSError * error) {
+                                    NSLog(@"Reinitialized changed attachment %@, error = %@", attachment.humanReadableFileName,error);
+                                    [AppDelegate.instance saveContext:context];
+                                }];
+                            }
                         }
                     }
                 }

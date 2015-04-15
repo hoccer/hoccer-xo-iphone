@@ -1657,9 +1657,10 @@
 }
 
 -(void) computeSourceMac {
-    [self computeMAC:^(NSData *theMAC, NSError *theError) {
+    __weak Attachment * weakSelf = self;
+    [weakSelf computeMAC:^(NSData *theMAC, NSError *theError) {
         if (theError == nil && theMAC != nil) {
-            self.sourceMAC = theMAC;
+            weakSelf.sourceMAC = theMAC;
             NSLog(@"computeSourceMac: MAC=%@", self.sourceMACString);
         } else {
             NSLog(@"ERROR: failed to compute MAC for attachment URL %@, error = %@", [self contentURL], theError);

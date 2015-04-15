@@ -2222,12 +2222,15 @@ static NSTimer * _stateNotificationDelayTimer;
     // there was something to save, so ask
     if (contact.groupMemberships.count == 0) {
         // no group membership, but there are messages associated with this contact
+        if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: no group membership, but there are messages associated with contact id %@",contact.clientId);
         [self askForDeletionOfContact:contact];
     } else {
+        if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: group membership(s) found for contact id %@",contact.clientId);
         // there is an active group membership for this contact, so keep it
         if (!contact.isGroupFriend) {
             contact.relationshipState = kRelationStateGroupFriend;
             [self removedButKeptInGroupAlertForContact:contact];
+            if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: marking contact id %@ as group friend, ",contact.clientId);
         }
     }
 }
