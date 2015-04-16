@@ -746,7 +746,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "server_password_title"         = "Kennwort:";
 
 "server_tutorial_section_title" = "Verbinden mit";
-"server_tutorial_title_web"     = "Deinem Web Browser";
+"server_tutorial_title_web"     = "Web Browser";
 "server_tutorial_title_mac"     = "Mac OS";
 "server_tutorial_title_win8"    = "Windows 8";
 "server_tutorial_title_win7"    = "Windows 7";
