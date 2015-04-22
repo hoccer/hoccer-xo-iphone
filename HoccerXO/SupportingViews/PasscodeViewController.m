@@ -33,9 +33,9 @@
     NSDictionary * views = @{@"icon": self.iconView, @"prompt": self.prompt, @"field": self.passcodeField};
 
     [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|-[prompt]-|" options:0 metrics: nil views: views]];
-    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|-[field]-|" options:0 metrics: nil views: views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|-(64)-[field]-(64)-|" options:0 metrics: nil views: views]];
 
-    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"V:|-40-[icon]-[prompt]-[field]-(>=10)-|" options:0 metrics: nil views: views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"V:|-96-[icon]-(64)-[prompt]-(24)-[field]-(>=10)-|" options:0 metrics: nil views: views]];
 }
 
 - (void)didReceiveMemoryWarning {
