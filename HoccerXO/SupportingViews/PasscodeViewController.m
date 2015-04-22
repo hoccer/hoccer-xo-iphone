@@ -14,6 +14,7 @@
 
 @property (nonatomic, weak) IBOutlet UITextField * passcodeField;
 @property (nonatomic, weak) IBOutlet UIImageView * iconView;
+@property (nonatomic, weak) IBOutlet UILabel     * prompt;
 
 @end
 
@@ -21,11 +22,20 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.prompt.text = NSLocalizedString(@"access_control_prompt", nil);
     self.passcodeField.secureTextEntry = YES;
     self.passcodeField.delegate = self;
     self.iconView.image = [(AppDelegate*)[UIApplication sharedApplication].delegate appIcon];
     self.iconView.contentMode = UIViewContentModeCenter;
 
+    [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.iconView attribute: NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem: self.view attribute: NSLayoutAttributeCenterX multiplier: 1 constant: 0]];
+
+    NSDictionary * views = @{@"icon": self.iconView, @"prompt": self.prompt, @"field": self.passcodeField};
+
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|-[prompt]-|" options:0 metrics: nil views: views]];
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"H:|-[field]-|" options:0 metrics: nil views: views]];
+
+    [self.view addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: @"V:|-40-[icon]-[prompt]-[field]-(>=10)-|" options:0 metrics: nil views: views]];
 }
 
 - (void)didReceiveMemoryWarning {

@@ -19,33 +19,44 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VPV-2g-eVu" userLabel="Passcode Field">
-                                <rect key="frame" x="23" y="201" width="274" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
-                            </textField>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H6Q-OP-ei4">
-                                <rect key="frame" x="40" y="28" width="240" height="128"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="016-i3-UXb">
+                                <rect key="frame" x="40" y="73" width="240" height="128"/>
                             </imageView>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ppp-zJ-1KQ">
+                                <rect key="frame" x="112" y="280" width="97" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mz1-76-v8l">
+                                <rect key="frame" x="139" y="232" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="VPV-2g-eVu" firstAttribute="leading" secondItem="1yF-sA-0a1" secondAttribute="leadingMargin" constant="7" id="0jG-19-ZSM"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="H6Q-OP-ei4" secondAttribute="trailing" constant="24" id="EVa-ur-JOY"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="VPV-2g-eVu" secondAttribute="trailing" constant="7" id="PmF-nX-a4B"/>
-                            <constraint firstItem="H6Q-OP-ei4" firstAttribute="leading" secondItem="1yF-sA-0a1" secondAttribute="leadingMargin" constant="24" id="bXL-Xa-w2p"/>
-                            <constraint firstItem="H6Q-OP-ei4" firstAttribute="top" secondItem="OX6-ej-d5T" secondAttribute="bottom" constant="8" id="p23-pX-K3S"/>
-                            <constraint firstItem="VPV-2g-eVu" firstAttribute="top" secondItem="H6Q-OP-ei4" secondAttribute="bottom" constant="45" id="xsL-PO-CiF"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="mz1-76-v8l" secondAttribute="trailing" constant="123" placeholder="YES" id="AKs-MU-gE1"/>
+                            <constraint firstItem="ppp-zJ-1KQ" firstAttribute="leading" secondItem="1yF-sA-0a1" secondAttribute="leadingMargin" constant="96" placeholder="YES" id="C1e-6R-a4S"/>
+                            <constraint firstItem="mz1-76-v8l" firstAttribute="leading" secondItem="1yF-sA-0a1" secondAttribute="leadingMargin" constant="123" placeholder="YES" id="CLn-y9-u8F"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ppp-zJ-1KQ" secondAttribute="trailing" constant="95" placeholder="YES" id="DOf-cX-da4"/>
+                            <constraint firstItem="016-i3-UXb" firstAttribute="leading" secondItem="1yF-sA-0a1" secondAttribute="leadingMargin" constant="24" placeholder="YES" id="EBm-Pf-vL9"/>
+                            <constraint firstItem="ppp-zJ-1KQ" firstAttribute="top" secondItem="mz1-76-v8l" secondAttribute="bottom" constant="27" placeholder="YES" id="NH0-MU-7ej"/>
+                            <constraint firstItem="016-i3-UXb" firstAttribute="top" secondItem="OX6-ej-d5T" secondAttribute="bottom" constant="53" placeholder="YES" id="S4V-Hn-UnS"/>
+                            <constraint firstItem="mz1-76-v8l" firstAttribute="top" secondItem="016-i3-UXb" secondAttribute="bottom" constant="31" placeholder="YES" id="oEV-mF-wQo"/>
+                            <constraint firstItem="7dx-FQ-JMy" firstAttribute="top" secondItem="ppp-zJ-1KQ" secondAttribute="bottom" constant="258" placeholder="YES" id="q6r-So-JTL"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="016-i3-UXb" secondAttribute="trailing" constant="24" placeholder="YES" id="xht-gP-1S7"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="iconView" destination="H6Q-OP-ei4" id="n2Z-ld-ZfY"/>
-                        <outlet property="passcodeField" destination="VPV-2g-eVu" id="5En-bs-TXx"/>
+                        <outlet property="iconView" destination="016-i3-UXb" id="xaz-Qu-Sx7"/>
+                        <outlet property="passcodeField" destination="ppp-zJ-1KQ" id="FnK-ej-qYR"/>
+                        <outlet property="prompt" destination="mz1-76-v8l" id="YTL-PW-qsv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BGR-cL-cat" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-387" y="-2028"/>
+            <point key="canvasLocation" x="-356" y="-2015"/>
         </scene>
         <!--Chats-->
         <scene sceneID="11">
