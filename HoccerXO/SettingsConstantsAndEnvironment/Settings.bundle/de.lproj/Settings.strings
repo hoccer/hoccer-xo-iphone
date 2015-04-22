@@ -79,3 +79,9 @@
 "server_changed_instructions" =  "Nach dem Wechsel auf einen anderen Server gehe auf die Profilseite, drücke 'Bearbeiten', scrolle nach unten und lösche deine Zugangsdaten. Dabei verlierst du alle Daten auf dem Client. Wenn sich nur die IP Adresse des Servers geändert hat reicht es die App kurz in den Hintergrund zu schieben um einen Neuaufbau der Verbindung auszulösen.";
 
 "allow_untrusted_certificates" = "Allen Zertifikaten vertrauen";
+
+"access_control_timeout" = "Passwort Abfrage";
+"access_control_never"   = "Aus";
+"access_control_5_minutes" = "5 Minuten";
+"access_control_always"    = "Immer";
+
