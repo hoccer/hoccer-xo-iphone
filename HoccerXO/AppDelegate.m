@@ -751,13 +751,17 @@ BOOL sameObjects(id obj1, id obj2) {
 
     NSLog(@"isFirstRun:%d, isRegistered:%d", isFirstRun, [UserProfile sharedProfile].isRegistered);
     
+    BOOL passcodeRequired = self.isPasscodeRequired;
+    
     if (isFirstRun || ![UserProfile sharedProfile].isRegistered) {
         [self.chatBackend disable];
         dispatch_async(dispatch_get_main_queue(), ^{  // delay until window is realized
             [self.window.rootViewController performSegueWithIdentifier: @"showSetup" sender: self];
         });
     } else {
-        [self setupDone: NO];
+        if (!passcodeRequired) {
+            [self setupDone: NO];
+        }
     }
     
     NSString * buildNumber = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleVersion"];
@@ -806,7 +810,7 @@ BOOL sameObjects(id obj1, id obj2) {
     NSAssert([self.window.rootViewController isKindOfClass:[UITabBarController class]], @"Expecting UITabBarController");
     ((UITabBarController *)self.window.rootViewController).delegate = self;
 
-    if (self.isPasscodeRequired) {
+    if (passcodeRequired) {
         [self performSelectorOnMainThread: @selector(requestUserAuthentication:) withObject: self waitUntilDone: NO];
     }
 
@@ -945,10 +949,12 @@ BOOL sameObjects(id obj1, id obj2) {
 - (void)applicationWillEnterForeground:(UIApplication *)application
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-    [self.chatBackend start: NO];
 
     if (self.isPasscodeRequired) {
+        [self.chatBackend disable];
         [self requestUserAuthentication: nil];
+    } else {
+        [self.chatBackend start: NO];
     }
 
     [self setLastActiveDate];
@@ -3847,6 +3853,8 @@ enum {
                                   }
                               } else if (success) {
                                   // all good
+                                  [self.chatBackend enable];
+                                  [self.chatBackend start: NO];
                               } else {
                                   alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                                      message:@"You are not the device owner."
@@ -3880,6 +3888,8 @@ enum {
     vc.completionBlock = ^(NSString* passcode) {
         if ([passcode isEqualToString: [PasscodeViewController passcode]]) {
             // all good.
+            [self.chatBackend enable];
+            [self.chatBackend start: NO];
         } else {
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"access_control_wrong_passcode_title", nil)
                                                              message:nil

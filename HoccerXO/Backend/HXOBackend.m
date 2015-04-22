@@ -235,7 +235,11 @@ static NSTimer * _stateNotificationDelayTimer;
                     NSLog(@"Reachable via WiFi");
                     [self checkReconnect];
                     break;
-                    
+                default:
+                    NSLog(@"Reachable status=%d", status);
+                    [self checkReconnect];
+                    break;
+                   
             }
             
         };
@@ -1502,8 +1506,8 @@ static NSTimer * _stateNotificationDelayTimer;
         // check if we might be still connected
         NSLog(@"checkReconnect: backend still in ready state, try bing");
         [self bing:^(BOOL ok) {
-            // we still believe to be connected, but bing failed
             if (!ok && [self getBackendState] == kBackendReady) {
+                // we still believe to be connected, but bing failed
                 NSLog(@"checkReconnect: bing failed, disconnect and start over");
                 [self disconnect];
                 [self reconnect];
@@ -1532,10 +1536,13 @@ static NSTimer * _stateNotificationDelayTimer;
     if (state == UIApplicationStateBackground || state == UIApplicationStateInactive)
     {
         // do not reconnect when in background
-        return;
+        NSLog(@"reconnect: not reconnecting because app is in background");
+       return;
     }
     if ([self.delegate.internetReachabilty isReachable]) {
         [self start: _performRegistration];
+    } else {
+        NSLog(@"reconnect: not reconnecting because internet is not reachable");
     }
 }
 
