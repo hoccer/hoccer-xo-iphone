@@ -40,6 +40,7 @@
 #import "HXOEnvironment.h"
 #import "HXOUI.h" // XXX
 #import "ConversationViewController.h"
+#import "ModalTaskHUD.h"
 
 #import <sys/utsname.h>
 
@@ -5691,7 +5692,21 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) verifyKeyWithHandler:(BoolResultHandler) handler {
     NSData * myKeyBits = [[UserProfile sharedProfile] publicKey];
-    [self verifyKey:myKeyBits handler:handler];
+    if (myKeyBits == nil) {
+        ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
+        [hud show];
+        [UserProfile.sharedProfile renewKeypairWithSize: kHXODefaultKeySize completion: ^(BOOL success){
+            [hud dismiss];
+            if (success) {
+                NSData * myKeyBits = [[UserProfile sharedProfile] publicKey];
+                [self verifyKey:myKeyBits handler:handler];
+            } else {
+                handler(NO,NO);
+            }
+        }];
+    } else {
+        [self verifyKey:myKeyBits handler:handler];
+    }
 }
 
 - (void) registerApns: (NSString*) token {

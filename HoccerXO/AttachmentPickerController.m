@@ -600,11 +600,14 @@
 
 
 - (void) showImagePickerWithSource: (UIImagePickerControllerSourceType) sourceType withVideo: (BOOL) videoFlag {
+    
     UIImagePickerController * picker = [[UIImagePickerController alloc] init];
     picker.delegate = self;
     picker.sourceType = sourceType;
+    picker.modalPresentationStyle = UIModalPresentationCurrentContext;//UIModalPresentationCurrentContext;
+    picker.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
     NSInteger videoQuality = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"videoQuality"] integerValue];
-
+    
     if (sourceType == UIImagePickerControllerSourceTypeCamera){
         if (videoFlag) {
             picker.mediaTypes =[UIImagePickerController availableMediaTypesForSourceType:UIImagePickerControllerSourceTypeCamera];
@@ -621,10 +624,13 @@
         }
     }
     
+    // Show camera view controller.
     [self registerBackgroundTask];
     
-    [_viewController presentViewController: picker animated: YES completion: nil];
-
+    [_viewController presentViewController: picker animated: YES completion:^{
+        NSLog(@"showImagePickerWithSource completion");
+    }];
+    
 }
 
 - (void) showMediaPicker {
