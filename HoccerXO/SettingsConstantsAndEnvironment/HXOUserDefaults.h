@@ -54,7 +54,12 @@ FOUNDATION_EXPORT NSString * const kHXOConfirmMessagesSeen;
 FOUNDATION_EXPORT NSString * const kHXODebugAllowUntrustedCertificates;
 
 FOUNDATION_EXPORT NSString * const kHXOMPMediaAccess;
-FOUNDATION_EXPORT NSString * const kHXOPasscodeMode;
+FOUNDATION_EXPORT NSString * const kHXOAccessControlPasscodeMode;
+
+FOUNDATION_EXPORT NSString * const kHXOAccessControlTimeout;
+FOUNDATION_EXPORT NSString * const kHXOAccessControlPassscode;
+FOUNDATION_EXPORT NSString * const kHXOAccessControlTouchIdEnabled;
+
 
 
 @interface HXOUserDefaults : NSObject

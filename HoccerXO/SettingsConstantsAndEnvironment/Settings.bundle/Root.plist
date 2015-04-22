@@ -346,6 +346,52 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
+			<string>Access Control</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+			<key>Title</key>
+			<string>access_control_timeout</string>
+			<key>Key</key>
+			<string>AccessControlTimeout</string>
+			<key>DefaultValue</key>
+			<string></string>
+			<key>Titles</key>
+			<array>
+				<string>access_control_never</string>
+				<string>access_control_5_minutes</string>
+				<string>access_control_always</string>
+			</array>
+			<key>Values</key>
+			<array>
+				<string></string>
+				<integer>300</integer>
+				<integer>0</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSTextFieldSpecifier</string>
+			<key>Title</key>
+			<string>Passcode</string>
+			<key>Key</key>
+			<string>AccessControlPasscode</string>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Touch Id</string>
+			<key>Key</key>
+			<string>AccessControlTouchIdEnabled</string>
+			<key>DefaultValue</key>
+			<false/>
+		</dict>
+		<dict>
+			<key>Type</key>
+			<string>PSGroupSpecifier</string>
+			<key>Title</key>
 			<string></string>
 		</dict>
 		<dict>

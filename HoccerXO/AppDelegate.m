@@ -787,8 +787,7 @@ BOOL sameObjects(id obj1, id obj2) {
     
     [AppDelegate setDefaultAudioSession];
 
-    [self setLastActiveDate];
-    
+
     NSString * dumpRecordsForEntity = [[HXOUserDefaults standardUserDefaults] valueForKey: @"dumpRecordsForEntity"];
     if (dumpRecordsForEntity.length > 0) {
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];
@@ -806,7 +805,13 @@ BOOL sameObjects(id obj1, id obj2) {
 
     NSAssert([self.window.rootViewController isKindOfClass:[UITabBarController class]], @"Expecting UITabBarController");
     ((UITabBarController *)self.window.rootViewController).delegate = self;
-    
+
+    if (self.isPasscodeRequired) {
+        [self performSelectorOnMainThread: @selector(requestUserAuthentication:) withObject: self waitUntilDone: NO];
+    }
+
+    [self setLastActiveDate];
+
     return YES;
 }
 
@@ -941,13 +946,12 @@ BOOL sameObjects(id obj1, id obj2) {
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     [self.chatBackend start: NO];
-    [self setLastActiveDate];
-}
 
-- (void)applicationDidBecomeActive:(UIApplication *)application {
     if (self.isPasscodeRequired) {
-        [self showPasscodeViewController: nil];
+        [self requestUserAuthentication: nil];
     }
+
+    [self setLastActiveDate];
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
@@ -3793,21 +3797,21 @@ enum {
 #pragma mark - Passcode Handling
 
 - (BOOL) isPasscodeRequired {
-    NSString * passcodeMode = [PasscodeViewController passcodeMode];
-    BOOL isEnabled = [passcodeMode isEqualToString: @"simple"] ||
-                     [passcodeMode isEqualToString: @"standard"] ||
-                     [passcodeMode isEqualToString: @"touchid"];
+    BOOL isEnabled = [PasscodeViewController passcodeEnabled];
     BOOL isExpired = NO;
+    if (isEnabled) {
+        NSDate * lastTime = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlastActiveDate]];
+        NSTimeInterval dt = [[NSDate date] timeIntervalSinceDate: lastTime];
+        isExpired = !lastTime || dt > [PasscodeViewController passcodeTimeout];
+    }
     return isEnabled && isExpired;
 }
 
-- (void) showPasscodeViewController: (id) sender {
-    // XXX causes a warning: Unbalanced calls to begin/end appearance transitions for <UITabBarController>
-    // TODO: find out why...
-    if ([[PasscodeViewController passcodeMode] isEqualToString: @"touchid"]) {
+- (void) requestUserAuthentication: (id) sender {
+    if ([PasscodeViewController touchIdEnabled]) {
         [self authenticateUsingTouchId];
     } else {
-        [self.window.rootViewController performSegueWithIdentifier: @"showPasscode" sender: sender];
+        [self showPasscodeDialog];
     }
 }
 
@@ -3815,50 +3819,80 @@ enum {
     LAContext *context = [[LAContext alloc] init];
 
     NSError *error = nil;
-    if ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
-        [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics
-                localizedReason:@"Are you the device owner?"
+    if ([context canEvaluatePolicy: LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
+        [context evaluatePolicy: LAPolicyDeviceOwnerAuthenticationWithBiometrics
+                localizedReason: NSLocalizedString(@"access_control_touch_id_reason", nil)
                           reply:^(BOOL success, NSError *error) {
-
+                              UIAlertView * alert;
+                              void(^block)() = nil;
                               if (error) {
-                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                  message:@"There was a problem verifying your identity."
-                                                                                 delegate:nil
-                                                                        cancelButtonTitle:@"Ok"
-                                                                        otherButtonTitles:nil];
-                                  [alert show];
-                                  return;
-                              }
 
-                              if (success) {
-                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success"
-                                                                                  message:@"You are the device owner!"
-                                                                                 delegate:nil
-                                                                        cancelButtonTitle:@"Ok"
-                                                                        otherButtonTitles:nil];
-                                  [alert show];
-
+                                  if (error.code == LAErrorUserFallback) {
+                                      block = ^{
+                                          [self showPasscodeDialog];
+                                      };
+                                  } else if (error.code == LAErrorUserCancel) {
+                                      block = ^{ [self requestUserAuthentication: nil]; };
+                                  } else {
+                                      alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"error", nil)
+                                                                         message: error.userInfo[NSLocalizedDescriptionKey]
+                                                                        completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                                            [self requestUserAuthentication: nil];
+                                                                        }
+                                                               cancelButtonTitle:@"Ok"
+                                                               otherButtonTitles:nil];
+                                  }
+                                  if (block) {
+                                      dispatch_async(dispatch_get_main_queue(), block);
+                                  }
+                              } else if (success) {
+                                  // all good
                               } else {
-                                  UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                                  message:@"You are not the device owner."
-                                                                                 delegate:nil
-                                                                        cancelButtonTitle:@"Ok"
-                                                                        otherButtonTitles:nil];
-                                  [alert show];
+                                  alert = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                     message:@"You are not the device owner."
+                                                                    completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                                        [self requestUserAuthentication:nil];
+                                                                    }
+                                                           cancelButtonTitle:@"Ok"
+                                                           otherButtonTitles:nil];
                               }
-                              
+                              if (alert) {
+                                  dispatch_async(dispatch_get_main_queue(), ^{ [alert show]; });
+                              }
                           }];
-        
+
     } else {
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                        message:@"Your device cannot authenticate using TouchID."
-                                                       delegate:nil
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"error", nil)
+                                                        message: NSLocalizedString(@"access_control_touch_id_impossible", nil)
+                                                       completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                           [self showPasscodeDialog];
+                                                       }
                                               cancelButtonTitle:@"Ok"
                                               otherButtonTitles:nil];
         [alert show];
-        
+
     }
+}
+
+- (void) showPasscodeDialog {
+    UIStoryboard *storyboard = self.window.rootViewController.storyboard;
+    PasscodeViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"PasscodeDialog"];
+    vc.completionBlock = ^(NSString* passcode) {
+        if ([passcode isEqualToString: [PasscodeViewController passcode]]) {
+            // all good.
+        } else {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"access_control_wrong_passcode_title", nil)
+                                                             message:nil
+                                                     completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                         [self requestUserAuthentication: nil];
+
+                                                     }
+                                                   cancelButtonTitle: @"Ok"
+                                                   otherButtonTitles: nil];
+            [alert show];
+        }
+    };
+    [self.window.rootViewController presentViewController: vc animated: YES completion: nil];
 }
 
 - (UIImage*) appIcon {

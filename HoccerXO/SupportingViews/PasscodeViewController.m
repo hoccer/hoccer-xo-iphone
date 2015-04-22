@@ -22,6 +22,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.passcodeField.secureTextEntry = YES;
+    self.passcodeField.delegate = self;
     self.iconView.image = [(AppDelegate*)[UIApplication sharedApplication].delegate appIcon];
     self.iconView.contentMode = UIViewContentModeCenter;
 
@@ -34,12 +35,37 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
-    BOOL isSimple = [[PasscodeViewController passcodeMode] isEqualToString: @"simple"];
+    BOOL isSimple = NO;
     self.passcodeField.keyboardType = isSimple ? UIKeyboardTypeNumberPad : UIKeyboardTypeDefault;
+    self.passcodeField.text = @"";
     [self.passcodeField becomeFirstResponder];
 }
 
-+ (NSString*) passcodeMode {
-    return [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOPasscodeMode];
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
+    if ([self.passcodeField isEqual: textField]) {
+        if (self.completionBlock) {
+            self.completionBlock(self.passcodeField.text);
+        }
+        self.passcodeField.text = @"";
+        [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
+    }
+    return YES;
+}
+
++ (BOOL) passcodeEnabled {
+    return [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOAccessControlTimeout] && [[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOAccessControlTimeout] isKindOfClass: [NSNumber class]];
+;
+}
+
++ (NSString*) passcode {
+    return [[HXOUserDefaults standardUserDefaults] valueForKey: kHXOAccessControlPassscode];
+}
+
++ (double) passcodeTimeout {
+    return [[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOAccessControlTimeout] doubleValue];
+}
+
++ (BOOL) touchIdEnabled {
+    return [[[HXOUserDefaults standardUserDefaults] valueForKey: kHXOAccessControlTouchIdEnabled] boolValue];
 }
 @end

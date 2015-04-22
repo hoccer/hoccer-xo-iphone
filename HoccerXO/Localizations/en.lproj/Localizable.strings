@@ -36,6 +36,7 @@
 "save"     = "Save";
 "delete"   = "Delete";
 "enter"    = "Enter";
+"error"    = "Error";
 "no"       = "No";
 "go"       = "Go";
 "continue" = "Continue";
@@ -63,6 +64,14 @@
 //==============================================================================
 
 "about_nav_title"         = "About %@";
+
+//==============================================================================
+// Access Control
+//==============================================================================
+
+"access_control_touch_id_reason" = "Access control enabled";
+"access_control_wrong_passcode_title" = "Wrong passcode";
+"access_control_touch_id_impossible" =  "Your device cannot authenticate using TouchID.";
 
 //==============================================================================
 // Apple Push Notifications

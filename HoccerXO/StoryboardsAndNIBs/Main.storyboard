@@ -4,12 +4,13 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--Passcode-->
         <scene sceneID="gE3-Kn-Qdi">
             <objects>
-                <viewController id="BJ8-6d-t79" userLabel="Passcode" customClass="PasscodeViewController" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="PasscodeDialog" id="BJ8-6d-t79" userLabel="Passcode" customClass="PasscodeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="OX6-ej-d5T"/>
                         <viewControllerLayoutGuide type="bottom" id="7dx-FQ-JMy"/>
@@ -18,16 +19,24 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VPV-2g-eVu" userLabel="Passcode Field">
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="VPV-2g-eVu" userLabel="Passcode Field">
                                 <rect key="frame" x="23" y="201" width="274" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
                             </textField>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H6Q-OP-ei4">
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="H6Q-OP-ei4">
                                 <rect key="frame" x="40" y="28" width="240" height="128"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="VPV-2g-eVu" firstAttribute="leading" secondItem="1yF-sA-0a1" secondAttribute="leadingMargin" constant="7" id="0jG-19-ZSM"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="H6Q-OP-ei4" secondAttribute="trailing" constant="24" id="EVa-ur-JOY"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="VPV-2g-eVu" secondAttribute="trailing" constant="7" id="PmF-nX-a4B"/>
+                            <constraint firstItem="H6Q-OP-ei4" firstAttribute="leading" secondItem="1yF-sA-0a1" secondAttribute="leadingMargin" constant="24" id="bXL-Xa-w2p"/>
+                            <constraint firstItem="H6Q-OP-ei4" firstAttribute="top" secondItem="OX6-ej-d5T" secondAttribute="bottom" constant="8" id="p23-pX-K3S"/>
+                            <constraint firstItem="VPV-2g-eVu" firstAttribute="top" secondItem="H6Q-OP-ei4" secondAttribute="bottom" constant="45" id="xsL-PO-CiF"/>
+                        </constraints>
                     </view>
                     <connections>
                         <outlet property="iconView" destination="H6Q-OP-ei4" id="n2Z-ld-ZfY"/>

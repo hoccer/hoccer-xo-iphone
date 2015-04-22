@@ -36,6 +36,7 @@
 "save"     = "Speichern";
 "delete"   = "Löschen";
 "enter"    = "Eingeben";
+"error"    = "Fehler";
 "no"       = "Nein";
 "go"       = "Los";
 "continue" = "Weitermachen";
@@ -62,6 +63,14 @@
 //==============================================================================
 
 "about_nav_title"         = "Über %@";
+
+//==============================================================================
+// Access Control
+//==============================================================================
+
+"access_control_touch_id_reason" = "Zugriffskontrolle aktiv";
+"access_control_wrong_passcode_title" = "Falsches Passwort";
+"access_control_touch_id_impossible" =  "Dein Gerät kann dich nicht durch TouchID identifizieren.";
 
 //==============================================================================
 // Apple Push Notifications
