@@ -408,7 +408,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 - (void) configureTitle {
     Contact * partner = self.partner;
     if (partner != nil) {
-        self.titleLabel.text = partner.nickNameWithStatus;
+        NSString * label = partner.nickNameWithStatus;
+        // NSLog(@"setting title to %@", label);
+        self.titleLabel.text = label;
         self.titleLabel.ledOn = partner.isConnected;
         self.titleLabel.ledColor = partner.isBackground ? HXOUI.theme.avatarOnlineInBackgroundLedColor : HXOUI.theme.avatarOnlineLedColor;
     }

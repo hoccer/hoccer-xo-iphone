@@ -966,8 +966,8 @@ BOOL sameObjects(id obj1, id obj2) {
     _previewImageCache = nil;
     NSLog(@"applicationDidReceiveMemoryWarning: saving main context");
     [self saveDatabaseNow];
-    NSLog(@"applicationDidReceiveMemoryWarning: resetting main context");
-    [self.mainObjectContext reset];
+    //NSLog(@"applicationDidReceiveMemoryWarning: resetting main context");
+    //[self.mainObjectContext reset];
     NSLog(@"applicationDidReceiveMemoryWarning: done freeing memory");
 }
 

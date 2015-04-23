@@ -196,6 +196,7 @@ NSString * const kPresenceStateTyping = @"typing";
     if (self.alias != nil && self.alias.length > 0) {
         return self.alias;
     } else {
+        // NSLog(@"self = %@, nickname = %@", self, self.nickName);
         return self.nickName;
     }
 }
