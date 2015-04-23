@@ -64,11 +64,14 @@
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     if ([self.passcodeField isEqual: textField]) {
+        BOOL success = [self.passcodeField.text isEqualToString: [PasscodeViewController passcode]];
         if (self.completionBlock) {
-            self.completionBlock([self.passcodeField.text isEqualToString: [PasscodeViewController passcode]]);
+            self.completionBlock(success);
         }
         self.passcodeField.text = @"";
-        [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
+        if (success) {
+            [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
+        }
     }
     return YES;
 }
@@ -107,8 +110,6 @@
                                       self.completionBlock(YES);
                                   }
                                   [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
-//                                  [self.chatBackend enable];
-//                                  [self.chatBackend start: NO];
                               } else {
                                   alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                                      message:@"You are not the device owner."
