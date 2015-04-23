@@ -3824,7 +3824,6 @@ enum {
         [self.chatBackend enable];
         [self.chatBackend start: NO];
     };
-    // Not animated to prevent a glimpse of the initial view
     [self.window.rootViewController presentViewController: vc animated: NO completion: nil];
 }
 
