@@ -141,8 +141,8 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"error", nil)
                                                         message: NSLocalizedString(@"access_control_touch_id_impossible", nil)
                                                        delegate: nil
-                                              cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
+                                              cancelButtonTitle: @"Ok"
+                                              otherButtonTitles: nil];
         [alert show];
 
     }

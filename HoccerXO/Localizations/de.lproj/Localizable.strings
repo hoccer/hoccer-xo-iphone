@@ -71,7 +71,7 @@
 "access_control_touch_id_reason" = "Zugriffskontrolle aktiv";
 "access_control_wrong_passcode_title" = "Falsches Passwort";
 "access_control_touch_id_impossible" =  "Dein Gerät kann dich nicht durch TouchID identifizieren.";
-"access_control_prompt" = "Passwort:";
+"access_control_prompt" = "Passwort";
 
 //==============================================================================
 // Apple Push Notifications
