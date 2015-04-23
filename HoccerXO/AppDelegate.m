@@ -3814,80 +3814,14 @@ enum {
 }
 
 - (void) requestUserAuthentication: (id) sender {
-    if ([PasscodeViewController touchIdEnabled]) {
-        [self authenticateUsingTouchId];
-    } else {
-        [self showPasscodeDialog];
-    }
-}
-
-- (void) authenticateUsingTouchId {
-    LAContext *context = [[LAContext alloc] init];
-
-    NSError *error = nil;
-    if ([context canEvaluatePolicy: LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&error]) {
-        [context evaluatePolicy: LAPolicyDeviceOwnerAuthenticationWithBiometrics
-                localizedReason: NSLocalizedString(@"access_control_touch_id_reason", nil)
-                          reply:^(BOOL success, NSError *error) {
-                              UIAlertView * alert;
-                              void(^block)() = nil;
-                              if (error) {
-
-                                  if (error.code == LAErrorUserFallback) {
-                                      block = ^{
-                                          [self showPasscodeDialog];
-                                      };
-                                  } else if (error.code == LAErrorUserCancel) {
-                                      block = ^{ [self requestUserAuthentication: nil]; };
-                                  } else {
-                                      alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"error", nil)
-                                                                         message: error.userInfo[NSLocalizedDescriptionKey]
-                                                                        completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
-                                                                            [self requestUserAuthentication: nil];
-                                                                        }
-                                                               cancelButtonTitle:@"Ok"
-                                                               otherButtonTitles:nil];
-                                  }
-                                  if (block) {
-                                      dispatch_async(dispatch_get_main_queue(), block);
-                                  }
-                              } else if (success) {
-                                  // all good
-                                  [self.chatBackend enable];
-                                  [self.chatBackend start: NO];
-                              } else {
-                                  alert = [[UIAlertView alloc] initWithTitle:@"Error"
-                                                                     message:@"You are not the device owner."
-                                                                    completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
-                                                                        [self requestUserAuthentication:nil];
-                                                                    }
-                                                           cancelButtonTitle:@"Ok"
-                                                           otherButtonTitles:nil];
-                              }
-                              if (alert) {
-                                  dispatch_async(dispatch_get_main_queue(), ^{ [alert show]; });
-                              }
-                          }];
-
-    } else {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"error", nil)
-                                                        message: NSLocalizedString(@"access_control_touch_id_impossible", nil)
-                                                       completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
-                                                           [self showPasscodeDialog];
-                                                       }
-                                              cancelButtonTitle:@"Ok"
-                                              otherButtonTitles:nil];
-        [alert show];
-
-    }
+    [self showPasscodeDialog];
 }
 
 - (void) showPasscodeDialog {
     UIStoryboard *storyboard = self.window.rootViewController.storyboard;
     PasscodeViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"PasscodeDialog"];
-    vc.completionBlock = ^(NSString* passcode) {
-        if ([passcode isEqualToString: [PasscodeViewController passcode]]) {
-            // all good.
+    vc.completionBlock = ^(BOOL success) {
+        if (success) {
             [self.chatBackend enable];
             [self.chatBackend start: NO];
         } else {
