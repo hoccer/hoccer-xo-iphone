@@ -80,8 +80,10 @@
 
 "allow_untrusted_certificates" = "Allen Zertifikaten vertrauen";
 
-"access_control_timeout" = "Passwort Abfrage";
-"access_control_never"   = "Aus";
-"access_control_5_minutes" = "5 Minuten";
-"access_control_always"    = "Immer";
+"access_control_timeout"    = "Passwort Abfrage";
+"access_control_never"      = "Aus";
+"access_control_1_minute"   = "1 Minuten";
+"access_control_5_minutes"  = "5 Minuten";
+"access_control_15_minutes" = "15 Minuten";
+"access_control_always"     = "Immer";
 
