@@ -104,7 +104,7 @@
                                   if (error.code == LAErrorUserFallback) {
                                       //block = ^{ [self showPasscodeDialog]; };
                                   } else if (error.code == LAErrorUserCancel) {
-                                      block = ^{ [self presentTouchIdIfEnabled]; };
+                                      //block = ^{ [self presentTouchIdIfEnabled]; };
                                   } else {
                                       alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"error", nil)
                                                                          message: error.userInfo[NSLocalizedDescriptionKey]
