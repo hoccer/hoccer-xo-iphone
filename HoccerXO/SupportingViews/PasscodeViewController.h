@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-typedef void(^PasscodeCompletionBlock)(BOOL success);
+typedef void(^PasscodeCompletionBlock)();
 
 @interface PasscodeViewController : UIViewController <UITextFieldDelegate>
 

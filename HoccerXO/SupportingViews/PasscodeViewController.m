@@ -67,13 +67,24 @@
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     if ([self.passcodeField isEqual: textField]) {
         BOOL success = [self.passcodeField.text isEqualToString: [PasscodeViewController passcode]];
-        if (self.completionBlock) {
-            self.completionBlock(success);
-        }
         self.passcodeField.text = @"";
         if (success) {
+            if (self.completionBlock) {
+                self.completionBlock();
+            }
             [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
+        } else {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"access_control_wrong_passcode_title", nil)
+                                                             message:nil
+                                                     completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                         [self presentTouchIdIfEnabled];
+
+                                                     }
+                                                   cancelButtonTitle: @"Ok"
+                                                   otherButtonTitles: nil];
+            [alert show];
         }
+
     }
     return YES;
 }
@@ -109,7 +120,7 @@
                               } else if (success) {
                                   // all good
                                   if (self.completionBlock) {
-                                      self.completionBlock(YES);
+                                      self.completionBlock();
                                   }
                                   [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
                               } else {
@@ -129,7 +140,7 @@
     } else {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"error", nil)
                                                         message: NSLocalizedString(@"access_control_touch_id_impossible", nil)
-                                                completionBlock: nil
+                                                       delegate: nil
                                               cancelButtonTitle:@"Ok"
                                               otherButtonTitles:nil];
         [alert show];

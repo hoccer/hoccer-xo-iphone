@@ -3820,24 +3820,12 @@ enum {
 - (void) showPasscodeDialog {
     UIStoryboard *storyboard = self.window.rootViewController.storyboard;
     PasscodeViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"PasscodeDialog"];
-    __weak PasscodeViewController *wvc = vc;
-    vc.completionBlock = ^(BOOL success) {
-        if (success) {
-            [self.chatBackend enable];
-            [self.chatBackend start: NO];
-        } else {
-            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"access_control_wrong_passcode_title", nil)
-                                                             message:nil
-                                                     completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
-                                                         [wvc presentTouchIdIfEnabled];
-
-                                                     }
-                                                   cancelButtonTitle: @"Ok"
-                                                   otherButtonTitles: nil];
-            [alert show];
-        }
+    vc.completionBlock = ^() {
+        [self.chatBackend enable];
+        [self.chatBackend start: NO];
     };
-    [self.window.rootViewController presentViewController: vc animated: YES completion: nil];
+    // Not animated to prevent a glimpse of the initial view
+    [self.window.rootViewController presentViewController: vc animated: NO completion: nil];
 }
 
 - (UIImage*) appIcon {
