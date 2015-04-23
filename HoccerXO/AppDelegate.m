@@ -3820,6 +3820,7 @@ enum {
 - (void) showPasscodeDialog {
     UIStoryboard *storyboard = self.window.rootViewController.storyboard;
     PasscodeViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"PasscodeDialog"];
+    __weak PasscodeViewController *wvc = vc;
     vc.completionBlock = ^(BOOL success) {
         if (success) {
             [self.chatBackend enable];
@@ -3828,7 +3829,7 @@ enum {
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"access_control_wrong_passcode_title", nil)
                                                              message:nil
                                                      completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
-                                                         [self requestUserAuthentication: nil];
+                                                         [wvc presentTouchIdIfEnabled];
 
                                                      }
                                                    cancelButtonTitle: @"Ok"

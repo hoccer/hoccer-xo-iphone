@@ -11,6 +11,8 @@ typedef void(^PasscodeCompletionBlock)(BOOL success);
 
 @interface PasscodeViewController : UIViewController <UITextFieldDelegate>
 
+- (void) presentTouchIdIfEnabled;
+
 + (NSString*) passcode;
 + (BOOL) passcodeEnabled;
 + (BOOL) touchIdEnabled;

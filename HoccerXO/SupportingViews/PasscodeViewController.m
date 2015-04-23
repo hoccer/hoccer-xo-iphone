@@ -30,7 +30,9 @@
     self.passcodeField.returnKeyType = UIReturnKeyDone;
     self.passcodeField.delegate = self;
     self.iconView.image = [(AppDelegate*)[UIApplication sharedApplication].delegate appIcon];
-    self.iconView.contentMode = UIViewContentModeCenter;
+    self.iconView.contentMode = UIViewContentModeScaleAspectFit;
+    self.iconView.layer.cornerRadius = 16.0;
+    self.iconView.layer.masksToBounds = YES;
 
     [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.iconView attribute: NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem: self.view attribute: NSLayoutAttributeCenterX multiplier: 1 constant: 0]];
 
@@ -64,11 +66,14 @@
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     if ([self.passcodeField isEqual: textField]) {
+        BOOL success = [self.passcodeField.text isEqualToString: [PasscodeViewController passcode]];
         if (self.completionBlock) {
-            self.completionBlock([self.passcodeField.text isEqualToString: [PasscodeViewController passcode]]);
+            self.completionBlock(success);
         }
         self.passcodeField.text = @"";
-        [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
+        if (success) {
+            [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
+        }
     }
     return YES;
 }
@@ -107,8 +112,6 @@
                                       self.completionBlock(YES);
                                   }
                                   [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
-//                                  [self.chatBackend enable];
-//                                  [self.chatBackend start: NO];
                               } else {
                                   alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                                      message:@"You are not the device owner."
