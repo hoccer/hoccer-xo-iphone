@@ -192,8 +192,12 @@ NSString * const kPresenceStateTyping = @"typing";
             }
         }
     }
-
-    return self.alias && ! [self.alias isEqualToString: @""] ? self.alias : self.nickName;
+    
+    if (self.alias != nil && self.alias.length > 0) {
+        return self.alias;
+    } else {
+        return self.nickName;
+    }
 }
 
 - (NSString*) nickNameWithStatus {
