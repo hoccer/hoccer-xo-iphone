@@ -30,7 +30,9 @@
     self.passcodeField.returnKeyType = UIReturnKeyDone;
     self.passcodeField.delegate = self;
     self.iconView.image = [(AppDelegate*)[UIApplication sharedApplication].delegate appIcon];
-    self.iconView.contentMode = UIViewContentModeCenter;
+    self.iconView.contentMode = UIViewContentModeScaleAspectFit;
+    self.iconView.layer.cornerRadius = 16.0;
+    self.iconView.layer.masksToBounds = YES;
 
     [self.view addConstraint: [NSLayoutConstraint constraintWithItem: self.iconView attribute: NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem: self.view attribute: NSLayoutAttributeCenterX multiplier: 1 constant: 0]];
 
