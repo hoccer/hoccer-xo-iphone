@@ -73,6 +73,9 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 + (UserProfile*) sharedProfile {
+    if (profileInstance == nil) {
+        [self initialize];
+    }
     return profileInstance;
 }
 
@@ -710,7 +713,11 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 - (NSData *) publicKey {
-    return[[CCRSA sharedInstance] getPublicKeyBits];
+    NSData * result = [[CCRSA sharedInstance] getPublicKeyBits];
+    if (result == nil) {
+        NSLog(@"#ERROR: publicKey is nil");
+    }
+    return result;
 }
 
 - (SecKeyRef) getPublicKeyRef {

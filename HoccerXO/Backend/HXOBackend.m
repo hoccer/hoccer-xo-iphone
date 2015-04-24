@@ -47,7 +47,7 @@
 #define DELIVERY_TRACE      NO
 #define GLITCH_TRACE        NO
 #define SECTION_TRACE       NO
-#define CONNECTION_TRACE    NO
+#define CONNECTION_TRACE    YES
 #define GROUPKEY_DEBUG      NO
 #define GROUP_DEBUG         NO
 #define RELATIONSHIP_DEBUG  NO
@@ -5469,6 +5469,11 @@ static NSTimer * _stateNotificationDelayTimer;
    withConnectionStatus: (NSString*) clientConnectionStatus
                 handler:(GenericResultHandler)handler
 {
+    if (keyId == nil) {
+        NSLog(@"updatePresence() failed: keyId is nil");
+        handler(NO);
+        return;
+    }
     NSDictionary *params = @{
                              @"clientName" : clientName,
                              @"clientStatus" : clientStatus,
@@ -5700,6 +5705,7 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) verifyKeyWithHandler:(BoolResultHandler) handler {
     NSData * myKeyBits = [[UserProfile sharedProfile] publicKey];
     if (myKeyBits == nil) {
+#if 0
         ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
         [hud show];
         [UserProfile.sharedProfile renewKeypairWithSize: kHXODefaultKeySize completion: ^(BOOL success){
@@ -5711,6 +5717,10 @@ static NSTimer * _stateNotificationDelayTimer;
                 handler(NO,NO);
             }
         }];
+#else
+        NSLog(@"#ERROR: verifyKeyWithHandler failed, no public key");
+        handler(NO,NO);
+#endif
     } else {
         [self verifyKey:myKeyBits handler:handler];
     }
