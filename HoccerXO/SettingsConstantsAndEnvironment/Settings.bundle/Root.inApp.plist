@@ -346,7 +346,7 @@
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
-			<string>Access Control</string>
+			<string>access_control_group_title</string>
 		</dict>
 		<dict>
 			<key>Type</key>

@@ -78,9 +78,10 @@
 
 "allow_untrusted_certificates" = "Trust any certificate";
 
-"access_control_timeout" = "Passcode Timeout";
-"access_control_never"   = "Off";
-"access_control_1_minute"   = "1 minute";
-"access_control_5_minutes"  = "5 minutes";
-"access_control_15_minutes" = "15 minutes";
+"access_control_group_title" = "Access Control";
+"access_control_timeout"     = "Passcode Timeout";
+"access_control_never"       = "Off";
+"access_control_1_minute"    = "1 minute";
+"access_control_5_minutes"   = "5 minutes";
+"access_control_15_minutes"  = "15 minutes";
 "access_control_always"    = "Always";
