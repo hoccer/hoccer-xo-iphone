@@ -3814,17 +3814,20 @@ enum {
 }
 
 - (void) requestUserAuthentication: (id) sender {
-    [self showPasscodeDialog];
-}
-
-- (void) showPasscodeDialog {
     UIStoryboard *storyboard = self.window.rootViewController.storyboard;
     PasscodeViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"PasscodeDialog"];
     vc.completionBlock = ^() {
         [self.chatBackend enable];
         [self.chatBackend start: NO];
     };
-    [self.window.rootViewController presentViewController: vc animated: NO completion: nil];
+    UIViewController * root = self.window.rootViewController;
+    if (root.presentedViewController) {
+        [root dismissViewControllerAnimated: NO completion:^{
+            [root presentViewController: vc animated: NO completion: nil];
+        }];
+    } else {
+        [self.window.rootViewController presentViewController: vc animated: NO completion: nil];
+    }
 }
 
 - (UIImage*) appIcon {
