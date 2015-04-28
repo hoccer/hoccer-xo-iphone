@@ -609,6 +609,10 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "group_name_nearby_kept"                = "Stored Nearby Group";
 "group_name_nearby_empty"               = "Nobody Nearby";
 
+"group_name_worldwide_active"           = "All Worldwide (%d)";
+"group_name_worldwide_kept"             = "Stored Worldwide Group";
+"group_name_worldwide_empty"            = "Nobody Worldwide";
+
 //==============================================================================
 // Invitations
 //==============================================================================

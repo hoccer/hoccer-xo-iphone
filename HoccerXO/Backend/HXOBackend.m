@@ -299,7 +299,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if (_state == kBackendReady && !_locationUpdatePending) {
         if (_state == kBackendReady) {
             [self destroyEnvironmentType:type withHandler:^(BOOL ok) {
-                if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment destroyed = %d",ok);
+                if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment type %@ destroyed = %d",type, ok);
             }];
         }
     }
@@ -2856,6 +2856,7 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate saveContext:context];
 }
 
+#if 0
 -(Group*)findInspectedNearbyGroupInContext:(NSManagedObjectContext *)context {
     NSArray * groups = [self getNearbyGroupsInContext:context];
     for (Group * group in groups) {
@@ -2901,6 +2902,55 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     return nil;
 }
+#else
+
+-(NSArray*) getSpecialGroupsWithType:(NSString*)type inContext:(NSManagedObjectContext *)context{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Group" inManagedObjectContext: context];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"type == 'Group' AND groupType == '%@'",type ]];
+    
+    NSError *error;
+    NSArray *groups = [context executeFetchRequest:fetchRequest error:&error];
+    if (groups == nil)
+    {
+        NSLog(@"Fetch request for 'getSpecialGroupsWithType %@' failed: %@",type, error);
+        abort();
+    }
+    return groups;
+}
+
+-(Group*)findInspectedSpecialGroupWithType:(NSString*)type inContext:(NSManagedObjectContext *)context {
+    NSArray * groups = [self getSpecialGroupsWithType:type inContext:context];
+    for (Group * group in groups) {
+        if ([self.delegate isInspecting:group]) {
+            return group;
+        }
+    }
+    return nil;
+}
+
+-(Group*)singleSpecialGroupWithType:(NSString*)type withId:(NSString*)groupId inContext:(NSManagedObjectContext *)context {
+    if (SINGLE_NEARBY_DEBUG) NSLog(@"singleSpecialGroupWithType: %@ withId %@", type, groupId);
+    NSArray * groups = [self getSpecialGroupsWithType:type inContext:context];
+    if (SINGLE_NEARBY_DEBUG) NSLog(@"singleSpecialGroupWithType: %@, found %d %@ groups", groupId, (int)groups.count,type);
+    if (groups.count > 0) {
+        Group * inspectedGroup = [self findInspectedSpecialGroupWithType:type inContext:context];
+        if (inspectedGroup == nil) {
+            inspectedGroup = groups[0];
+        }
+        if (SINGLE_NEARBY_DEBUG) NSLog(@"singleSpecialGroupWithType %@: changing group %@ to %@", type, inspectedGroup.clientId, groupId);
+        [inspectedGroup changeIdTo:groupId];
+        
+        if (groups.count > 1) {
+            [self mergeGroups: groups intoGroup:inspectedGroup inContext:context];
+        }
+        return inspectedGroup;
+    }
+    return nil;
+}
+
+#endif
 
 - (BOOL) updateGroupHere: (NSDictionary*) groupDict inContext:(NSManagedObjectContext*) context {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
@@ -2937,9 +2987,11 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     if (group == nil) {
-        // handle nearby group merging
+        // handle nearby and worldwide group merging
         if ([kGroupTypeNearby isEqualToString: groupDict[@"groupType"]]) {
-            group = [self singleNearbyGroupWithId:groupId inContext:context];
+            group = [self singleSpecialGroupWithType:kGroupTypeNearby withId:groupId inContext:context];
+        } else if ([kGroupTypeWorldwide isEqualToString: groupDict[@"groupType"]]) {
+            group = [self singleSpecialGroupWithType:kGroupTypeWorldwide withId:groupId inContext:context];
         }
         if (group == nil) {
             group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:context];
@@ -3326,8 +3378,10 @@ static NSTimer * _stateNotificationDelayTimer;
             if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r1) %@",groupId);
             return;
         } else {
-            if ([@"nearbyMember" isEqualToString: groupMemberDict[@"role"]]) {
-                group = [self singleNearbyGroupWithId:groupId inContext:context];
+            if ([kGroupMembershipRoleNearbyMember isEqualToString: groupMemberDict[@"role"]]) {
+                group = [self singleSpecialGroupWithType:kGroupTypeNearby withId:groupId inContext:context];
+            } else  if ([kGroupMembershipRoleWorldwideMember isEqualToString: groupMemberDict[@"role"]]) {
+                group = [self singleSpecialGroupWithType:kGroupTypeWorldwide withId:groupId inContext:context];
             }
             if (group == nil) {
                 group = [self createLocalGroup:groupMemberDict[@"groupId"] withState:@"incomplete" inContext:context];
@@ -3572,7 +3626,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
     if (![group isEqual:myMember.contact]) { // not us
         if (!disinvited) {
-            // show group left alerts to all members if not a nearby group
+            // show group left alerts to all members if not a nearby or worldwide group
             if (!group.isNearbyGroup && !group.isWorldwideGroup) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self groupLeftAlertForGroupNamed:groupName withMemberNamed:contactName];
@@ -3608,8 +3662,8 @@ static NSTimer * _stateNotificationDelayTimer;
             if (group.messages.count == 0) {
                 // show kicked message
                 if (!disinvited) {
-                    // show kicked from group alert if not a nearby group
-                    if (![@"nearby" isEqualToString:group.groupType] && ![@"worldwide" isEqualToString:group.groupType]) {
+                    // show kicked from group alert if not a nearby or worldwide group
+                    if (![kGroupTypeNearby isEqualToString:group.groupType] && ![kGroupTypeWorldwide isEqualToString:group.groupType]) {
                         [self groupKickedAlertForGroupNamed:groupName];
                     }
                 } else {

@@ -670,6 +670,7 @@ nil
     int makeGroupIndex = -1;
     if (membersOther.count > 0) {
         makeGroupIndex = buttonIndex++;
+        // TODO: worldwide
         [buttonTitles addObject: NSLocalizedString(group.isNearby ? @"chat_group_clone_nearby" : @"chat_group_clone", nil)];
     }
     

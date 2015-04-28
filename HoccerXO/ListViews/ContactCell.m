@@ -168,6 +168,8 @@
     
     UIImage * avatar = contact.avatarImage;
     cell.avatar.image = avatar;
+    
+    // TODO: worldwide
     cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [((Group*)contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     cell.avatar.isBlocked = [contact isBlocked];
     cell.avatar.isPresent  = contact.isConnected && !contact.isKept;

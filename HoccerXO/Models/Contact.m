@@ -177,17 +177,18 @@ NSString * const kPresenceStateTyping = @"typing";
 }
 
 - (NSString*) nickNameOrAlias {
-    if (self.isGroup && self.isNearby) {
+    if (self.isGroup && (self.isNearby || self.isWorldwide)) {
         if (self.isKeptGroup) {
-            return NSLocalizedString(@"group_name_nearby_kept", nil);
+            return self.isNearby ? NSLocalizedString(@"group_name_nearby_kept", nil) : NSLocalizedString(@"group_name_worldwide_kept", nil);
         } else {
             Group * group = (Group*)self;
             NSUInteger otherCount = group.otherMembers.count;
 
             if (otherCount > 0) {
-                return [NSString stringWithFormat:NSLocalizedString(@"group_name_nearby_active", nil), otherCount];
+                return self.isNearby ? [NSString stringWithFormat:NSLocalizedString(@"group_name_nearby_active", nil), otherCount]
+                : [NSString stringWithFormat:NSLocalizedString(@"group_name_worldwide_active", nil), otherCount];
             } else {
-                return NSLocalizedString(@"group_name_nearby_empty", nil);
+                return self.isNearby ? NSLocalizedString(@"group_name_nearby_empty", nil) : NSLocalizedString(@"group_name_worldwide_empty", nil);
             }
         }
     }

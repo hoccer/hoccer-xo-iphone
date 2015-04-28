@@ -564,6 +564,7 @@ static int  groupMemberContext;
 
     [self addProfileObservers];
 
+    // TODO: worldwide
     self.avatarView.defaultIcon = self.group || self.groupInStatuNascendi ? [self.group.groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     self.backButtonTitle = self.contact.nickName;
     [super inspectedObjectDidChange];

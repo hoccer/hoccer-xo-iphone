@@ -172,7 +172,7 @@
 }
 
 -(void)configureForMode:(EnvironmentActivationMode)mode {
-    if (NEARBY_CONFIG_DEBUG) NSLog(@"ConversationViewController:configureForModee= %d", mode);
+    if (NEARBY_CONFIG_DEBUG) NSLog(@"ConversationViewController:configureForMode= %d", mode);
     [AppDelegate.instance configureForMode:mode];
     // hide plus button in nearby mode ... just for chrissy
     self.navigationItem.rightBarButtonItem = mode != ACTIVATION_MODE_NONE ? nil : self.addButton;
@@ -447,6 +447,7 @@
     if (self.environmentMode == ACTIVATION_MODE_NONE) {
         return [UIImage imageNamed: @"placeholder-chats"];
     } else if (self.environmentMode == ACTIVATION_MODE_NEARBY) {
+        // TODO: worldwide
         return [UIImage imageNamed: @"placeholder-nearby"];
     } else if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
         return [UIImage imageNamed: @"placeholder-worldwide"];
