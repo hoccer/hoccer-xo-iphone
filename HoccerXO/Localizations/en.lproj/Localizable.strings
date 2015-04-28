@@ -36,6 +36,7 @@
 "save"     = "Save";
 "delete"   = "Delete";
 "enter"    = "Enter";
+"error"    = "Error";
 "no"       = "No";
 "go"       = "Go";
 "continue" = "Continue";
@@ -63,6 +64,15 @@
 //==============================================================================
 
 "about_nav_title"         = "About %@";
+
+//==============================================================================
+// Access Control
+//==============================================================================
+
+"access_control_touch_id_reason" = "Access control enabled";
+"access_control_wrong_passcode_title" = "Wrong passcode";
+"access_control_touch_id_impossible" =  "Your device cannot authenticate using TouchID.";
+"access_control_prompt" = "Passcode";
 
 //==============================================================================
 // Apple Push Notifications
@@ -737,6 +747,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "server_password_title"         = "Password:";
 
 "server_tutorial_section_title" = "Connect using";
+"server_tutorial_title_web"     = "Web Browser";
 "server_tutorial_title_mac"     = "Mac OS";
 "server_tutorial_title_win8"    = "Windows 8";
 "server_tutorial_title_win7"    = "Windows 7";

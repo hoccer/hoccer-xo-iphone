@@ -83,10 +83,10 @@
 }
 
 - (void) addPredicates:(NSMutableArray *)predicates {
-    [super addPredicates: predicates];
-
     if (self.predicate) {
         [predicates addObject: self.predicate];
+    } else {
+        [super addPredicates: predicates];
     }
 }
 

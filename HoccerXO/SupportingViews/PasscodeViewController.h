@@ -7,9 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
+typedef void(^PasscodeCompletionBlock)();
 
-@interface PasscodeViewController : UIViewController
+@interface PasscodeViewController : UIViewController <UITextFieldDelegate>
 
-+ (NSString*) passcodeMode;
+- (void) presentTouchIdIfEnabled;
+
++ (NSString*) passcode;
++ (BOOL) passcodeEnabled;
++ (BOOL) touchIdEnabled;
++ (double) passcodeTimeout;
+
+@property (nonatomic,copy) PasscodeCompletionBlock completionBlock;
 
 @end

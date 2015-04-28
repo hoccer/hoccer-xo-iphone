@@ -25,6 +25,7 @@
 @property (nonatomic, readonly) DatasheetItem       * addressItem;
 
 @property (nonatomic, readonly) DatasheetSection    * connectionTutorialSection;
+@property (nonatomic, readonly) DatasheetItem       * webTutorial;
 @property (nonatomic, readonly) DatasheetItem       * macTutorial;
 @property (nonatomic, readonly) DatasheetItem       * winXpTutorial;
 @property (nonatomic, readonly) DatasheetItem       * win7Tutorial;
@@ -39,6 +40,7 @@
 @synthesize passwordItem  = _passwordItem;
 @synthesize addressItem   = _addressItem;
 @synthesize connectionTutorialSection = _connectionTutorialSection;
+@synthesize webTutorial = _webTutorial;
 @synthesize macTutorial = _macTutorial;
 @synthesize winXpTutorial = _winXpTutorial;
 @synthesize win7Tutorial = _win7Tutorial;
@@ -85,7 +87,7 @@
 - (BOOL) isCancelable { return NO; }
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    if ([item isEqual: self.addressItem] || [item isEqual: self.macTutorial] || [item isEqual: self.win7Tutorial] || [item isEqual: self.winXpTutorial] || [item isEqual: self.win8Tutorial]) {
+    if ([item isEqual: self.webTutorial] || [item isEqual: self.addressItem] || [item isEqual: self.macTutorial] || [item isEqual: self.win7Tutorial] || [item isEqual: self.winXpTutorial] || [item isEqual: self.win8Tutorial]) {
         return self.server.canRun && self.server.isRunning;
     }
     return [super isItemVisible: item];
@@ -148,7 +150,7 @@
         NSString * text;
 
         if (running) {
-            text = @""; //HXOLocalizedString(@"server_running", nil, boxName, boxName, boxName, boxName, appName, appName, boxName);
+            return nil;
         } else if (can_run) {
             text = HXOLocalizedString(@"server_stopped_can_run", nil, boxName, boxName, appName);
         } else {
@@ -198,15 +200,24 @@
     return _addressItem;
 }
 
-#pragma mark - Server Section
+#pragma mark - Tutorial Section
 
 - (DatasheetSection*) connectionTutorialSection {
     if ( ! _connectionTutorialSection) {
         _connectionTutorialSection = [DatasheetSection datasheetSectionWithIdentifier: @"server_tutorial_section"];
-        _connectionTutorialSection.items = @[self.macTutorial, self.win8Tutorial, self.win7Tutorial, self.winXpTutorial];
+        _connectionTutorialSection.items = @[self.webTutorial/* self.macTutorial, self.win8Tutorial, self.win7Tutorial, self.winXpTutorial*/];
         _connectionTutorialSection.title = [[NSAttributedString alloc] initWithString: HXOLocalizedString(@"server_tutorial_section_title", nil) attributes: nil];
     }
     return _connectionTutorialSection;
+}
+
+- (DatasheetItem*) webTutorial {
+    if ( ! _webTutorial) {
+        _webTutorial = [self itemWithIdentifier: @"server_tutorial_title_web" cellIdentifier: @"DatasheetActionCell"];
+        _webTutorial.accessoryStyle = DatasheetAccessoryDisclosure;
+        _webTutorial.segueIdentifier = @"showTutorial";
+    }
+    return _webTutorial;
 }
 
 - (DatasheetItem*) macTutorial {
@@ -249,7 +260,9 @@
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
     TutorialViewController * tutorial = (TutorialViewController*) segue.destinationViewController;
     NSString * tutorialKey;
-    if ([item isEqual: self.macTutorial]) {
+    if ([item isEqual: self.webTutorial]) {
+        tutorialKey = @"webinterface";
+    } else if ([item isEqual: self.macTutorial]) {
         tutorialKey = @"webdav_mac";
     } else if ([item isEqual: self.win8Tutorial]) {
         tutorialKey = @"webdav_win8";
@@ -277,7 +290,8 @@
     NSDictionary * userInfo = @{ @"APPNAME" : appName,
                                  @"BOXNAME" : boxName,
                                  @"URL"     : self.server.url,
-                                 @"PASSWORD": self.server.password
+                                 @"PASSWORD": self.server.password,
+                                 @"USER"    : @"hoccer"
                                  };
 
     NSError * error;

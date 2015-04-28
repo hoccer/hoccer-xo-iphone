@@ -8,6 +8,8 @@
 
 #import "SettingsViewController.h"
 
+#import <LocalAuthentication/LocalAuthentication.h>
+
 #import "IASKSpecifierValuesViewController.h"
 
 #import "UserProfile.h"
@@ -27,6 +29,12 @@
 - (void) viewDidLoad {
     [super viewDidLoad];
     self.delegate = self;
+    LAContext * ctx = [[LAContext alloc] init];
+    NSError * error;
+    if (![ctx canEvaluatePolicy: LAPolicyDeviceOwnerAuthenticationWithBiometrics error: &error])
+    {
+        self.hiddenKeys = [NSSet setWithObject: @"AccessControlTouchIdEnabled"];
+    }
 }
 
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {}

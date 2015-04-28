@@ -37,6 +37,9 @@ static NSObject * instanceLock;
     dispatch_once(&onceToken, ^{
         instance = [[CCRSA alloc] init];
     });
+    if (instance == nil) {
+        NSLog(@"#ERROR: CCRSA instance is nil");
+    }
     return instance;
 }
 
@@ -354,7 +357,8 @@ static NSObject * instanceLock;
         [privateKey setObject:privateKeyBits forKey:(__bridge id)kSecValueData];
         [privateKey setObject:(__bridge id) kSecAttrKeyClassPrivate forKey:(__bridge id)kSecAttrKeyClass];
         [privateKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnPersistentRef];
-        
+        [privateKey setObject:(__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly forKey:(__bridge id)kSecAttrAccessible];
+
         OSStatus secStatus = SecItemAdd((__bridge CFDictionaryRef)privateKey, &persistKey);
         
         if (persistKey != nil) CFRelease(persistKey);
@@ -531,6 +535,7 @@ static NSObject * instanceLock;
         [publicKey setObject:d_key forKey:(__bridge id)kSecValueData];
         [publicKey setObject:(__bridge id) kSecAttrKeyClassPublic forKey:(__bridge id)kSecAttrKeyClass];
         [publicKey setObject: @YES forKey:(__bridge id)kSecReturnPersistentRef];
+        [publicKey setObject:(__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly forKey:(__bridge id)kSecAttrAccessible];
         
         OSStatus secStatus = SecItemAdd((__bridge CFDictionaryRef)publicKey, &persistKey);
         if (persistKey != nil) CFRelease(persistKey);

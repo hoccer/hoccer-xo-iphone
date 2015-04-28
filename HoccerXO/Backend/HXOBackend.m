@@ -40,6 +40,8 @@
 #import "HXOEnvironment.h"
 #import "HXOUI.h" // XXX
 #import "ConversationViewController.h"
+#import "ModalTaskHUD.h"
+#import "GCDAsyncUDPSocket.h"
 
 #import <sys/utsname.h>
 
@@ -146,6 +148,7 @@ static NSTimer * _stateNotificationDelayTimer;
     GenericResultHandler _firstEnvironmentUpdateHandler;
 
     NSDate * _startedConnectingTime;
+    GCDAsyncUdpSocket *_udpSocket ; // create this first part as a global variable
 }
 
 - (void) identify;
@@ -234,7 +237,11 @@ static NSTimer * _stateNotificationDelayTimer;
                     NSLog(@"Reachable via WiFi");
                     [self checkReconnect];
                     break;
-                    
+                default:
+                    NSLog(@"Reachable status=%d", status);
+                    [self checkReconnect];
+                    break;
+                   
             }
             
         };
@@ -251,6 +258,7 @@ static NSTimer * _stateNotificationDelayTimer;
         
         _locationUpdatePending = NO;
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
+        _udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
     }
     
     return self;
@@ -478,6 +486,37 @@ static NSTimer * _stateNotificationDelayTimer;
                                                         object:self
                                                       userInfo:theTimer.userInfo];
     _stateNotificationDelayTimer = nil;
+}
+
+// send a udp packet in order to wake up/activate the network interface on some devices
+-(void)sendUDPPacket:(NSString*)string {
+    NSLog(@"Sending udp packet %@", string);
+    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding ];
+    [_udpSocket sendData:data toHost:@"www.hoccer.com" port:9999 withTimeout:-1 tag:1];
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didConnectToAddress:(NSData *)address {
+    NSLog(@"udp socket didConnectToAddress: %@",address);
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didNotConnect:(NSError *)error {
+    NSLog(@"udp socket didNotConnect: %@",error);
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didSendDataWithTag:(long)tag {
+    NSLog(@"udp socket didSendDataWithTag: %ld",tag);
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didNotSendDataWithTag:(long)tag dueToError:(NSError *)error{
+    NSLog(@"udp socket didNotSendDataWithTag: %ld dueToError %@",tag, error);
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didReceiveData:(NSData *)data fromAddress:(NSData*)address withFilterContext:(id)context {
+    NSLog(@"udp socket didReceiveData: %@ fromAdress %@ withFilter %@",data,address,context);
+}
+
+- (void)udpSocketDidClose:(GCDAsyncUdpSocket*)socket withError:(NSError *)error {
+    NSLog(@"udpSocketDidClose: withError: %@",error);
 }
 
 
@@ -1501,8 +1540,8 @@ static NSTimer * _stateNotificationDelayTimer;
         // check if we might be still connected
         NSLog(@"checkReconnect: backend still in ready state, try bing");
         [self bing:^(BOOL ok) {
-            // we still believe to be connected, but bing failed
             if (!ok && [self getBackendState] == kBackendReady) {
+                // we still believe to be connected, but bing failed
                 NSLog(@"checkReconnect: bing failed, disconnect and start over");
                 [self disconnect];
                 [self reconnect];
@@ -1523,6 +1562,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) reconnect {
+    [self sendUDPPacket:@"TEST"];
     if (_reconnectTimer != nil) {
         [_reconnectTimer invalidate];
         _reconnectTimer = nil;
@@ -1531,10 +1571,14 @@ static NSTimer * _stateNotificationDelayTimer;
     if (state == UIApplicationStateBackground || state == UIApplicationStateInactive)
     {
         // do not reconnect when in background
-        return;
+        NSLog(@"reconnect: not reconnecting because app is in background");
+       return;
     }
     if ([self.delegate.internetReachabilty isReachable]) {
         [self start: _performRegistration];
+    } else {
+        NSLog(@"reconnect: not reconnecting because internet is not reachable; sending an udp packet to try to activate network");
+        [self sendUDPPacket:@"TRY_ACTIVATE"];
     }
 }
 
@@ -2219,12 +2263,15 @@ static NSTimer * _stateNotificationDelayTimer;
     // there was something to save, so ask
     if (contact.groupMemberships.count == 0) {
         // no group membership, but there are messages associated with this contact
+        if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: no group membership, but there are messages associated with contact id %@",contact.clientId);
         [self askForDeletionOfContact:contact];
     } else {
+        if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: group membership(s) found for contact id %@",contact.clientId);
         // there is an active group membership for this contact, so keep it
         if (!contact.isGroupFriend) {
             contact.relationshipState = kRelationStateGroupFriend;
             [self removedButKeptInGroupAlertForContact:contact];
+            if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: marking contact id %@ as group friend, ",contact.clientId);
         }
     }
 }
@@ -5440,6 +5487,11 @@ static NSTimer * _stateNotificationDelayTimer;
    withConnectionStatus: (NSString*) clientConnectionStatus
                 handler:(GenericResultHandler)handler
 {
+    if (keyId == nil) {
+        NSLog(@"updatePresence() failed: keyId is nil");
+        handler(NO);
+        return;
+    }
     NSDictionary *params = @{
                              @"clientName" : clientName,
                              @"clientStatus" : clientStatus,
@@ -5670,7 +5722,26 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) verifyKeyWithHandler:(BoolResultHandler) handler {
     NSData * myKeyBits = [[UserProfile sharedProfile] publicKey];
-    [self verifyKey:myKeyBits handler:handler];
+    if (myKeyBits == nil) {
+#if 0
+        ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"key_renewal_hud_title", nil)];
+        [hud show];
+        [UserProfile.sharedProfile renewKeypairWithSize: kHXODefaultKeySize completion: ^(BOOL success){
+            [hud dismiss];
+            if (success) {
+                NSData * myKeyBits = [[UserProfile sharedProfile] publicKey];
+                [self verifyKey:myKeyBits handler:handler];
+            } else {
+                handler(NO,NO);
+            }
+        }];
+#else
+        NSLog(@"#ERROR: verifyKeyWithHandler failed, no public key");
+        handler(NO,NO);
+#endif
+    } else {
+        [self verifyKey:myKeyBits handler:handler];
+    }
 }
 
 - (void) registerApns: (NSString*) token {

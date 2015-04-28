@@ -600,6 +600,8 @@
         } else {
             NSLog(@"Kaputt: Unhandled segue item");
         }
+    } else {
+        [super prepareForSegue: segue withItem: item sender: sender];
     }
 }
 @end

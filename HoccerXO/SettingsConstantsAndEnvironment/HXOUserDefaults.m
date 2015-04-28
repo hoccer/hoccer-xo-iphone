@@ -56,7 +56,10 @@ NSString * const kHXODefaultsDefaultsFile = @"HXOUserDefaultsDefaults";
 
 NSString * const kHXOMPMediaAccess = @"mpMediaAccess";
 
-NSString * const kHXOPasscodeMode = @"passcodeMode";
+NSString * const kHXOAccessControlTimeout        = @"AccessControlTimeout";
+NSString * const kHXOAccessControlPassscode      = @"AccessControlPasscode";
+NSString * const kHXOAccessControlTouchIdEnabled = @"AccessControlTouchIdEnabled";
+
 
 
 @implementation HXOUserDefaults

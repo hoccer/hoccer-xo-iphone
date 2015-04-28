@@ -412,9 +412,14 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) configureTitle {
-    self.titleLabel.text = self.partner.nickNameWithStatus;
-    self.titleLabel.ledOn = self.partner.isConnected;
-    self.titleLabel.ledColor = self.partner.isBackground ? HXOUI.theme.avatarOnlineInBackgroundLedColor : HXOUI.theme.avatarOnlineLedColor;
+    Contact * partner = self.partner;
+    if (partner != nil) {
+        NSString * label = partner.nickNameWithStatus;
+        // NSLog(@"setting title to %@", label);
+        self.titleLabel.text = label;
+        self.titleLabel.ledOn = partner.isConnected;
+        self.titleLabel.ledColor = partner.isBackground ? HXOUI.theme.avatarOnlineInBackgroundLedColor : HXOUI.theme.avatarOnlineLedColor;
+    }
     [self.titleLabel sizeToFit];
 }
 

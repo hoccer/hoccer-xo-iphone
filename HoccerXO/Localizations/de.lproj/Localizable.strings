@@ -36,6 +36,7 @@
 "save"     = "Speichern";
 "delete"   = "Löschen";
 "enter"    = "Eingeben";
+"error"    = "Fehler";
 "no"       = "Nein";
 "go"       = "Los";
 "continue" = "Weitermachen";
@@ -62,6 +63,15 @@
 //==============================================================================
 
 "about_nav_title"         = "Über %@";
+
+//==============================================================================
+// Access Control
+//==============================================================================
+
+"access_control_touch_id_reason" = "Zugriffskontrolle aktiv";
+"access_control_wrong_passcode_title" = "Falsches Passwort";
+"access_control_touch_id_impossible" =  "Dein Gerät kann dich nicht durch TouchID identifizieren.";
+"access_control_prompt" = "Passwort";
 
 //==============================================================================
 // Apple Push Notifications
@@ -753,6 +763,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "server_password_title"         = "Kennwort:";
 
 "server_tutorial_section_title" = "Verbinden mit";
+"server_tutorial_title_web"     = "Web Browser";
 "server_tutorial_title_mac"     = "Mac OS";
 "server_tutorial_title_win8"    = "Windows 8";
 "server_tutorial_title_win7"    = "Windows 7";

@@ -48,7 +48,7 @@
     [self.contentView addSubview: self.label];
 
     NSDictionary * views = @{@"label": self.label};
-    NSString * format = [NSString stringWithFormat: @"H:|-%f-[label]-%f-|", kHXOCellPadding, kHXOCellPadding];
+    NSString * format = [NSString stringWithFormat: @"H:|-%f-[label]-(%f@250)-|", kHXOCellPadding, kHXOCellPadding];
     [self.contentView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
 
@@ -61,7 +61,7 @@
 
 
     // ... for now use this :-/
-    format = [NSString stringWithFormat: @"V:|-%f-[label]-%f-|", kHXOGridSpacing, kHXOCellPadding];
+    format = [NSString stringWithFormat: @"V:|-%f-[label]-(%f@250)-|", kHXOGridSpacing, kHXOCellPadding];
     NSArray * array =  [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views];
     self.topPadding = [array firstObject];
     self.bottomPadding = array[1];
