@@ -41,6 +41,7 @@
 #import "HXOUI.h" // XXX
 #import "ConversationViewController.h"
 #import "ModalTaskHUD.h"
+#import "GCDAsyncUDPSocket.h"
 
 #import <sys/utsname.h>
 
@@ -147,6 +148,7 @@ static NSTimer * _stateNotificationDelayTimer;
     GenericResultHandler _firstEnvironmentUpdateHandler;
 
     NSDate * _startedConnectingTime;
+    GCDAsyncUdpSocket *_udpSocket ; // create this first part as a global variable
 }
 
 - (void) identify;
@@ -256,6 +258,7 @@ static NSTimer * _stateNotificationDelayTimer;
         
         _locationUpdatePending = NO;
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
+        _udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
     }
     
     return self;
@@ -483,6 +486,37 @@ static NSTimer * _stateNotificationDelayTimer;
                                                         object:self
                                                       userInfo:theTimer.userInfo];
     _stateNotificationDelayTimer = nil;
+}
+
+// send a udp packet in order to wake up/activate the network interface on some devices
+-(void)sendUDPPacket:(NSString*)string {
+    NSLog(@"Sending udp packet %@", string);
+    NSData *data = [string dataUsingEncoding:NSUTF8StringEncoding ];
+    [_udpSocket sendData:data toHost:@"www.hoccer.com" port:9999 withTimeout:-1 tag:1];
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didConnectToAddress:(NSData *)address {
+    NSLog(@"udp socket didConnectToAddress: %@",address);
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didNotConnect:(NSError *)error {
+    NSLog(@"udp socket didNotConnect: %@",error);
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didSendDataWithTag:(long)tag {
+    NSLog(@"udp socket didSendDataWithTag: %ld",tag);
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didNotSendDataWithTag:(long)tag dueToError:(NSError *)error{
+    NSLog(@"udp socket didNotSendDataWithTag: %ld dueToError %@",tag, error);
+}
+
+- (void)udpSocket:(GCDAsyncUdpSocket*)socket didReceiveData:(NSData *)data fromAddress:(NSData*)address withFilterContext:(id)context {
+    NSLog(@"udp socket didReceiveData: %@ fromAdress %@ withFilter %@",data,address,context);
+}
+
+- (void)udpSocketDidClose:(GCDAsyncUdpSocket*)socket withError:(NSError *)error {
+    NSLog(@"udpSocketDidClose: withError: %@",error);
 }
 
 
@@ -1528,6 +1562,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) reconnect {
+    [self sendUDPPacket:@"TEST"];
     if (_reconnectTimer != nil) {
         [_reconnectTimer invalidate];
         _reconnectTimer = nil;
@@ -1542,7 +1577,8 @@ static NSTimer * _stateNotificationDelayTimer;
     if ([self.delegate.internetReachabilty isReachable]) {
         [self start: _performRegistration];
     } else {
-        NSLog(@"reconnect: not reconnecting because internet is not reachable");
+        NSLog(@"reconnect: not reconnecting because internet is not reachable; sending an udp packet to try to activate network");
+        [self sendUDPPacket:@"TRY_ACTIVATE"];
     }
 }
 
