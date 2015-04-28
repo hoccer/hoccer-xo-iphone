@@ -419,7 +419,7 @@ CGPoint _correctContentOffset;
 }
 
 bool almostEqual(CGFloat a, CGFloat b) {
-    return abs(a - b) < 0.01;
+    return fabs(a - b) < 0.01;
 }
 
 #ifdef SEARCHBAR_SCROLLING_IN_HACK

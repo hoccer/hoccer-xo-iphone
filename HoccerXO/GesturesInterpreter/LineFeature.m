@@ -161,7 +161,7 @@
 	if ([points count] < 2)
 		return YES;
 	
-	return (fabsf([self expectedYValueForX: point.x] - point.y) < 2);
+	return (fabs([self expectedYValueForX: point.x] - point.y) < 2);
 }
 
 - (float)expectedYValueForX: (float)x 

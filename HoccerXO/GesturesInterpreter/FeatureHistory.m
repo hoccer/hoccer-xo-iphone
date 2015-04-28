@@ -139,7 +139,7 @@
 	if (newestFeature == nil)
 		return NO;
 	
-	if (fabsf(newestFeature.newestPoint.y - targetValue) < variance)
+	if (fabs(newestFeature.newestPoint.y - targetValue) < variance)
 		return YES;
 	
 	return NO;
