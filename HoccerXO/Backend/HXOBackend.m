@@ -48,7 +48,7 @@
 #define DELIVERY_TRACE      NO
 #define GLITCH_TRACE        NO
 #define SECTION_TRACE       NO
-#define CONNECTION_TRACE    YES
+#define CONNECTION_TRACE    NO
 #define GROUPKEY_DEBUG      NO
 #define GROUP_DEBUG         NO
 #define RELATIONSHIP_DEBUG  NO
