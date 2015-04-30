@@ -367,6 +367,7 @@
 
 "contact_list_placeholder"                            = "[Lade Freunde ein](http://faq.hoccer.com/de/tutorial-xo/#freunde-einladen) sicher mit dir zu chatten.";
 "contact_list_placeholder_nearby"                     = "Warte auf Kontake [in der Nähe](http://faq.hoccer.com/de/tutorial-xo/#in-der-naehe)…";
+"contact_list_placeholder_worldwide"                  = "Warte auf Kontake [weltweit](http://faq.hoccer.com/de/tutorial-xo/#weltweit)…";
 
 //==============================================================================
 // Credentials

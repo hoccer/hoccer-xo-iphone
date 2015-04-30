@@ -364,6 +364,7 @@
 
 "contact_list_placeholder"                      = "[Invite friends](http://faq.hoccer.com/tutorial-xo/#invite) to chat with.";
 "contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://faq.hoccer.com/tutorial-xo/#nearby)…";
+"contact_list_placeholder_worldwide"            = "Waiting for others [worldwide](http://faq.hoccer.com/tutorial-xo/#worldwide)…";
 
 
 //==============================================================================

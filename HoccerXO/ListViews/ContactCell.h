@@ -14,6 +14,7 @@
 @class AvatarView;
 @class Contact;
 @class ContactCell;
+@class VectorArt;
 
 @protocol ContactCellDelegate <NSObject>
 - (void) contactCellDidPressAvatar: (ContactCell*) cell;
@@ -39,5 +40,6 @@
 - (void) highlightText:(NSString *)highlightText;
 
 + (NSString*) statusStringForContact: (Contact*) contact;
++ (VectorArt*)defaultIconForContact:(Contact *)contact;
 
 @end

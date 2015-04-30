@@ -447,10 +447,9 @@
     if (self.environmentMode == ACTIVATION_MODE_NONE) {
         return [UIImage imageNamed: @"placeholder-chats"];
     } else if (self.environmentMode == ACTIVATION_MODE_NEARBY) {
-        // TODO: worldwide
         return [UIImage imageNamed: @"placeholder-nearby"];
     } else if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
-        return [UIImage imageNamed: @"placeholder-worldwide"];
+        return [UIImage imageNamed: @"placeholder-world"];
     } else {
         NSLog(@"illegal environment mode %d", self.environmentMode);
         return nil;

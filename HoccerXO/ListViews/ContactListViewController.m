@@ -757,7 +757,8 @@ bool almostEqual(CGFloat a, CGFloat b) {
     BOOL hadTableHeader = self.tableView.tableHeaderView != nil;
     
     self.placeholderLabel.attributedText = [self placeholderText];
-    UIImage* placeholderImage = [[self placeholderImage] tintWithColor:[HXOUI theme].tablePlaceholderImageColor];
+    //UIImage* placeholderImage = [[self placeholderImage] tintWithColor:[HXOUI theme].tablePlaceholderImageColor];
+    UIImage* placeholderImage = [self placeholderImage];
     [self.placeholderImageButton setImage: placeholderImage forState: UIControlStateNormal];
     [_placeholderImageButton removeTarget: self action: NULL forControlEvents: UIControlEventTouchUpInside];
     if ([self placeholderAction]) {
@@ -802,7 +803,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
 }
 
 - (UIImage*) placeholderImage {
-    return [UIImage imageNamed: self.inGroupMode ? @"placeholder-groups" : @"placeholder-chats"];
+    return [UIImage imageNamed: self.inGroupMode ? @"placeholder-group" : @"placeholder-chats"];
 }
 
 - (SEL) placeholderAction {
