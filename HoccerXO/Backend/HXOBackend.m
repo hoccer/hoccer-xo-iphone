@@ -212,6 +212,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [_serverConnection registerIncomingCall: @"getEncryptedGroupKeys" withSelector:@selector(getEncryptedGroupKeys:withResponder:) asyncResult:YES];
         [_serverConnection registerIncomingCall: @"alertUser"           withSelector:@selector(alertUser:) isNotification: YES];
         [_serverConnection registerIncomingCall: @"settingsChanged"      withSelector:@selector(settingsChanged:) isNotification: YES];
+        [_serverConnection registerIncomingCall: @"deliveriesReady"      withSelector:@selector(deliveriesReady) isNotification: YES];
         
         _delegate = theAppDelegate;
         [self cleanupTablesInContext:theAppDelegate.mainObjectContext];
@@ -783,9 +784,7 @@ static NSTimer * _stateNotificationDelayTimer;
     
     // we need to log all message in chat to avoid timeSection problems
     // (when acceptedTime is set, the timesection of other messages will be touched, too)
-    //NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
-    
-    //[self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
+
     [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
         if (DELIVERY_TRACE) NSLog(@"receiveMessage");
         if (USE_VALIDATOR) [self validateObject: messageDictionary forEntity:@"RPC_TalkMessage_in"];  // TODO: Handle Validation Error
@@ -1568,7 +1567,7 @@ static NSTimer * _stateNotificationDelayTimer;
         _reconnectTimer = nil;
     }
     UIApplicationState state = [[UIApplication sharedApplication] applicationState];
-    if (state == UIApplicationStateBackground || state == UIApplicationStateInactive)
+    if ((state == UIApplicationStateBackground || state == UIApplicationStateInactive) && !self.delegate.processingBackgroundNotification)
     {
         // do not reconnect when in background
         NSLog(@"reconnect: not reconnecting because app is in background");
@@ -4754,6 +4753,17 @@ static NSTimer * _stateNotificationDelayTimer;
     }];
 }
 
+- (void) finishedIncoming: (GenericResultHandler) handler {
+    [_serverConnection invoke: @"finishedIncoming" withParams: nil onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            handler(YES);
+        } else {
+            NSLog(@"finishedIncoming failed: %@", responseOrError);
+            handler(NO);
+        }
+    }];
+}
+
 - (void) getTime: (DateHandler) handler {
     [_serverConnection invoke: @"getTime" withParams: nil onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
@@ -5211,6 +5221,15 @@ static NSTimer * _stateNotificationDelayTimer;
                     if (GLITCH_TRACE) {NSLog(@"#GLITCH: inDeliveryConfirm %@result: state unchanged %@->%@ for messageTag %@",method,delivery.state, responseOrError[@"state"], delivery.message.messageTag);}
                 }
                 [self incomingDeliveryUpdated:@[responseOrError]];
+                if (self.delegate.processingBackgroundNotification) {
+                    [self finishedIncoming:^(BOOL ok) {
+                        if (ok) {
+                            NSLog(@"inDeliveryConfirm : finishedIncoming ok");
+                        } else {
+                            NSLog(@"inDeliveryConfirm : finishedIncoming failed");
+                        }
+                    }];
+                }
             } else {
                 // it might happen that a delivery is gone on the server, but we still have it
                 // in these cases we will get an error with result code 0 and set the delivery state to unknown so
@@ -5958,6 +5977,13 @@ static NSTimer * _stateNotificationDelayTimer;
 
 
 #pragma mark - Incoming RPC Calls
+
+-(void)deliveriesReady {
+    NSLog(@"deliveriesReady");
+    if (self.delegate.processingBackgroundNotification) {
+        [self.delegate finishBackgroundNotificationProcessing];
+    }
+}
 
 - (void) incomingDelivery: (NSArray*) params {
     if (params.count != 2) {

@@ -73,7 +73,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>16477</string>
+	<string>16526</string>
 	<key>HXODefaultEnvironment</key>
 	<string>${HXO_DEFAULT_ENVIRONMENT}</string>
 	<key>HXOTestFlightToken</key>
@@ -86,6 +86,7 @@
 	<string>see InfoPlist.strings</string>
 	<key>UIBackgroundModes</key>
 	<array>
+		<string>remote-notification</string>
 		<string>audio</string>
 	</array>
 	<key>UIFileSharingEnabled</key>

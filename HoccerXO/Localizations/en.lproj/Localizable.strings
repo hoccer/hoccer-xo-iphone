@@ -43,8 +43,11 @@
 "abort"    = "Abort";
 "loading"  = "Loading…";
 "transfer" = "Transfer";
+"open"     = "Open";
 
 "edit_short" = "Edit";
+
+"open"      = "Open";
 
 
 "search_placeholder" = "search";

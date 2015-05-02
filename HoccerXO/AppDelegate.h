@@ -66,6 +66,8 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 @property (nonatomic, strong) NSString * openedFileMediaType;
 @property (nonatomic, strong) NSString * openedFileMimeType;
 
+@property (nonatomic, strong) NSDictionary * openNotificationInfo;
+
 @property (readonly) BOOL inNearbyMode;
 
 
@@ -77,8 +79,13 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 
 @property BOOL launchedAfterCrash;
 @property BOOL runningNewBuild;
+@property (readonly) BOOL processingBackgroundNotification;
+@property (readonly) BOOL processingBackgroundLaunch;
+@property (readonly) BOOL runningInBackground;
+@property (readonly) NSDictionary * pushNotificationInfo;
 
 @property (nonatomic, strong) ConversationViewController * conversationViewController;
+@property (nonatomic, strong) UITabBarController * tabBarController;
 
 
 - (void)saveContext;
@@ -132,7 +139,8 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 -(void)cachePreviewImage:(UIImage*)image withName:(NSString*)name;
 -(UIImage*)getCachedPreviewImagWithName:(NSString*)name;
 
-
+-(void)finishBackgroundNotificationProcessing;
+-(void)presentUserNotificationWithTitle:(NSString*)theTitle withText:(NSString*)theText withInfo:(NSDictionary*)userInfo;
 
 + (UIViewController*) getTopMostViewController;
 - (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller removeFile:(BOOL) removeFileFlag;

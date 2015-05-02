@@ -36,10 +36,14 @@
 @property (strong) id catchObserver;
 @property (strong) id messageObserver;
 @property (strong) id loginObserver;
+@property (strong) id openMessageObserver;
+
 @property (strong) NSDate * catchDate;
 @property (strong) HXOMessage * caughtMessage;
 @property (strong) HXOMessage * lastMessage;
 @property (strong) NSDate * lastMessageDate;
+
+@property (strong) HXOMessage * openedMessage;
 
 @property (strong) UIBarButtonItem * addButton;
 
@@ -141,8 +145,33 @@
                                                                            }
 
                                                                        }];
+    
+    self.openMessageObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"openHXOMessage"
+                                                                                 object:nil
+                                                                                  queue:[NSOperationQueue mainQueue]
+                                                                             usingBlock:^(NSNotification *note) {
+                                                                                 if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: openHXOMessage received");
+                                                                                 NSDictionary * info = [note userInfo];
+                                                                                 
+                                                                                 NSString * messageId = info[@"messageId"];
+                                                                                 if (messageId != nil) {
+                                                                                     HXOMessage * message = [HXOBackend.instance getMessageById:messageId inContext:AppDelegate.instance.mainObjectContext];
+                                                                                     if (message != nil) {
+                                                                                         self.catchDate = nil;
+                                                                                         self.openedMessage = message;
+                                                                                         self.lastMessage = nil;
+                                                                                         self.lastMessageDate = nil;
+                                                                                         NSLog(@"openHXOMessage: show chat for message id=%@", messageId);
+                                                                                         [self performSegueWithIdentifier: @"showChat" sender: self];
+                                                                                     } else {
+                                                                                         NSLog(@"openHXOMessage: message not found, id=%@", messageId);
+                                                                                     }
+                                                                                 } else {
+                                                                                     NSLog(@"openHXOMessage: missing messageId in info=%@", info);
+                                                                                 }
+                                                                             }];
     self.loginObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"loginSucceeded"
-                                                                             object:nil
+                                                                           object:nil
                                                                               queue:[NSOperationQueue mainQueue]
                                                                          usingBlock:^(NSNotification *note) {
                                                                              if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: loginSucceeded");
@@ -162,6 +191,10 @@
     if (self.loginObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.loginObserver];
     }
+    if (self.openMessageObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.openMessageObserver];
+    }
+
 }
 
 
@@ -211,6 +244,10 @@
         } else if ([segue.identifier isEqualToString:@"showContact"] || [segue.identifier isEqualToString: @"showGroup"]) {
             ((DatasheetViewController*)segue.destinationViewController).inspectedObject = contact;
         }
+    } else if ([segue.identifier isEqualToString:@"showChat"] && self.openedMessage != nil) {
+        _chatViewController = [segue destinationViewController];
+        _chatViewController.inspectedObject = self.openedMessage.contact;
+        self.openedMessage = nil;
     } else if ([segue.identifier isEqualToString:@"showChat"] && self.caughtMessage != nil) {
             _chatViewController = [segue destinationViewController];
             _chatViewController.inspectedObject = self.caughtMessage.contact;

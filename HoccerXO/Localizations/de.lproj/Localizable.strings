@@ -43,6 +43,7 @@
 "abort"    = "Beenden";
 "loading"  = "Lade…";
 "transfer" = "Übertragen";
+"open"     = "Öffnen";
 
 "edit_short" = "Bearb.";
 

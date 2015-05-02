@@ -205,6 +205,7 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (NSDate*) estimatedServerTime;
 
 -(Contact *) getContactByClientId:(NSString *) theClientId inContext:(NSManagedObjectContext *)context;
+-(HXOMessage*) getMessageById:(NSString*)messageId inContext:(NSManagedObjectContext*) context;
 
 + (NSData *) calcKeyId:(NSData *) myKeyBits;
 + (NSString *) keyIdString:(NSData *) myKeyId;

@@ -72,6 +72,7 @@
 #define TRACE_FILE_SEARCH           NO
 #define TRACE_DOCDIR_CHANGES        NO
 #define TRACE_IMAGE_CACHING         NO
+#define TRACE_NOTIFICATIONS         YES
 
 
 NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
@@ -111,6 +112,16 @@ static NSInteger validationErrorCount = 0;
     NSURL * _applicationDocumentDirectory;
     NSURL * _applicationTemporaryDocumentDirectory;
     NSURL * _applicationLibraryDirectory;
+
+    unsigned long _backgroundLaunch;
+    unsigned long _backgroundLaunchReady;
+    unsigned long _backgroundNotification;
+    unsigned long _backgroundNotificationReady;
+    
+    NSDictionary * _pushNotificationInfo;
+    void (^_backgroundFetchHandler)(UIBackgroundFetchResult result);
+    id<NSObject> _messageReceivedObserver;
+
 }
 
 @property (nonatomic, strong) ModalTaskHUD * hud;
@@ -129,6 +140,11 @@ static NSInteger validationErrorCount = 0;
 @synthesize persistentStoreCoordinator = _persistentStoreCoordinator;
 @synthesize inNearbyMode = _inNearbyMode;
 
+@dynamic processingBackgroundNotification;
+@dynamic processingBackgroundLaunch;
+@dynamic runningInBackground;
+@dynamic pushNotificationInfo;
+
 
 #ifdef WITH_WEBSERVER
 @synthesize httpServer = _httpServer;
@@ -136,6 +152,22 @@ static NSInteger validationErrorCount = 0;
 
 @synthesize rpcObjectModel = _rpcObjectModel;
 @synthesize userAgent;
+
+-(BOOL) processingBackgroundNotification {
+    return _backgroundNotificationReady < _backgroundNotification;
+}
+
+-(BOOL) processingBackgroundLaunch {
+    return _backgroundLaunchReady < _backgroundLaunch;
+}
+
+-(BOOL) runningInBackground {
+    return [UIApplication sharedApplication].applicationState == UIApplicationStateBackground;
+}
+
+-(NSDictionary*)pushNotificationInfo {
+    return _pushNotificationInfo;
+}
 
 -(NSMutableDictionary*)previewImageCache {
     if (_previewImageCache == nil) {
@@ -641,6 +673,26 @@ BOOL sameObjects(id obj1, id obj2) {
     }
 }
 
+-(void)presentUserNotificationWithTitle:(NSString*)theTitle withText:(NSString*)theText withInfo:(NSDictionary*)userInfo {
+    
+    UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+    
+    if (localNotif == nil) {
+        return;
+    }
+    
+    localNotif.alertBody = theText;
+    localNotif.alertTitle = theTitle;
+    localNotif.alertAction = NSLocalizedString(@"open", nil);
+    localNotif.soundName = UILocalNotificationDefaultSoundName;
+    
+    //localNotif.applicationIconBadgeNumber = 1;
+    
+    localNotif.userInfo = userInfo;
+    
+    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
+}
+
 + (id) registerKeyboardHidingOnSheetPresentationFor:(UIViewController*)controller {
     id observer = [[NSNotificationCenter defaultCenter] addObserverForName:@"hxoSheetViewShown"
                                                                     object:nil
@@ -791,6 +843,41 @@ BOOL sameObjects(id obj1, id obj2) {
     
     [AppDelegate setDefaultAudioSession];
 
+    _messageReceivedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"receivedNewHXOMessage"
+                                                                                 object:nil
+                                                                                  queue:[NSOperationQueue mainQueue]
+                                                                             usingBlock:^(NSNotification *note) {
+                                                                                 if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: Message received");
+                                                                                 NSDictionary * info = [note userInfo];
+                                                                                 HXOMessage * message = (HXOMessage *)info[@"message"];
+                                                                                 if (message != nil && self.processingBackgroundNotification) {
+                                                                                     Delivery * delivery = message.deliveries.anyObject;
+                                                                                     Contact * chat = message.contact;
+                                                                                     Contact * sender = delivery.sender;
+                                                                                     NSString * title;
+
+                                                                                     if ([chat.clientId isEqualToString:sender.clientId]) {
+                                                                                         title = sender.nickNameOrAlias;
+                                                                                     } else {
+                                                                                         title = [NSString stringWithFormat:@"%@->%@",sender.nickNameOrAlias,chat.nickNameOrAlias];
+                                                                                     }
+                                                                                     
+                                                                                     NSString * messageText = message.body;
+                                                                                     if (message.attachment != nil) {
+                                                                                         NSString * typeString = NSLocalizedString(message.attachment.mediaType, nil);
+                                                                                         messageText = [NSString stringWithFormat:@"[%@] %@",typeString,messageText];
+                                                                                     }
+                                                                                     messageText = [NSString stringWithFormat:@"%@:%@",message.contact.nickNameOrAlias,messageText];
+                                                                                     
+                                                                                     NSDictionary * messageInfo = @{@"type":@"userMessage",
+                                                                                                                    @"messageId":message.messageId,
+                                                                                                                    @"messageTag":message.messageTag,
+                                                                                                                    @"contactId":chat.clientId,
+                                                                                                                    @"senderId":sender.clientId};
+
+                                                                                     [self presentUserNotificationWithTitle:title withText:messageText withInfo:messageInfo];
+                                                                                 }
+                                                                             }];
 
     NSString * dumpRecordsForEntity = [[HXOUserDefaults standardUserDefaults] valueForKey: @"dumpRecordsForEntity"];
     if (dumpRecordsForEntity.length > 0) {
@@ -809,7 +896,8 @@ BOOL sameObjects(id obj1, id obj2) {
 
     NSAssert([self.window.rootViewController isKindOfClass:[UITabBarController class]], @"Expecting UITabBarController");
     ((UITabBarController *)self.window.rootViewController).delegate = self;
-
+    self.tabBarController = (UITabBarController*)self.window.rootViewController;
+    
     if (passcodeRequired) {
         [self performSelectorOnMainThread: @selector(requestUserAuthentication:) withObject: self waitUntilDone: NO];
     }
@@ -2107,6 +2195,77 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 - (void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
 }
 */
+
+- (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler
+{
+    NSLog(@"handleActionWithIdentifier %@", identifier);
+}
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    NSLog(@"didReceiveLocalNotification %@", notification.userInfo);
+    self.openNotificationInfo = notification.userInfo;
+    if (self.tabBarController != nil) {
+        self.tabBarController.selectedIndex = 0;
+    }
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"openHXOMessage"
+                                                        object:self
+                                                      userInfo:notification.userInfo
+     ];
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+    fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
+{
+    NSLog(@"didReceiveRemoteNotification %@", userInfo);
+    if (!self.runningInBackground) {
+        NSLog(@"didReceiveRemoteNotification - not running in background");
+        if (handler != nil) handler(UIBackgroundFetchResultNoData);
+        return;
+    }
+    _pushNotificationInfo = userInfo;
+    ++_backgroundNotification;
+    if (self.inNearbyMode) {
+        [self suspendNearbyMode]; // for resuming nearby mode, the Conversations- or ChatView are responsible; the must do it after login
+    }
+    [HXOBackend.instance start:NO];
+    _backgroundFetchHandler = handler;
+}
+
+-(void)finishBackgroundNotificationProcessing {
+    NSLog(@"finishBackgroundNotificationProcessing run %ld",_backgroundNotification);
+    [self saveDatabaseNow];
+    [self setLastActiveDate];
+    
+    void (^backgroundFetchHandler)(UIBackgroundFetchResult result) = _backgroundFetchHandler;
+    _backgroundFetchHandler = nil;
+    _backgroundNotificationReady = _backgroundNotification;
+    
+    NSUInteger unreadMessages = [self unreadMessageCount];
+    [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessages;
+    
+    _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        [self.chatBackend stop];
+        [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
+        _backgroundTask = UIBackgroundTaskInvalid;
+        NSLog(@"finishBackgroundNotificationProcessing, finishing other background tasks %ld",_backgroundNotification);
+        if (backgroundFetchHandler) {
+            backgroundFetchHandler(UIBackgroundFetchResultNewData);
+        }
+    }];
+    
+    // Start the long-running task and return immediately.
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self.chatBackend hintApnsUnreadMessage: unreadMessages handler: ^(BOOL success){
+            if (CONNECTION_TRACE, 1) NSLog(@"updated unread message count: %@", success ? @"success" : @"failed");
+            [self.chatBackend stop];
+            if (backgroundFetchHandler) {
+                NSLog(@"finishBackgroundNotificationProcessing, finishing notification background task %ld",_backgroundNotification);
+                backgroundFetchHandler(UIBackgroundFetchResultNewData);
+            }
+        }];
+    });
+
+}
 
 #pragma mark - getTopMostViewController
 
