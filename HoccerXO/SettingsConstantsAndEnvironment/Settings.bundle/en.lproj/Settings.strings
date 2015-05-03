@@ -85,3 +85,6 @@
 "access_control_5_minutes"   = "5 minutes";
 "access_control_15_minutes"  = "15 minutes";
 "access_control_always"    = "Always";
+
+"Notifications" = "Notifications";
+"Anonymous"     = "Anonymous";

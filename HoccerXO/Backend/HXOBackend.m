@@ -252,6 +252,12 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                                          queue:[NSOperationQueue mainQueue]
                                                                                     usingBlock:reachablityBlock];
         
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        [defaults addObserver:self
+                   forKeyPath:kHXOAnonymousNotifications
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
+        
         _attachmentDownloadsWaiting = [[NSMutableArray alloc] init];
         _attachmentUploadsWaiting = [[NSMutableArray alloc] init];
         _attachmentDownloadsActive = [[NSMutableArray alloc] init];
@@ -263,6 +269,19 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     return self;
+}
+
+-(void)observeValueForKeyPath:(NSString *)keyPath
+                     ofObject:(id)object
+                       change:(NSDictionary *)change
+                      context:(void *)context
+{
+    NSLog(@"HXOBackend KVO: %@ changed property %@ to value %@", object, keyPath, change);
+    if ([keyPath isEqualToString:kHXOAnonymousNotifications]) {
+        if (self.isReady) {
+            [self setApnsMode];
+        }
+    }
 }
 
 - (GCNetworkQueue *)attachmentUploadQueue {
@@ -5786,6 +5805,7 @@ static NSTimer * _stateNotificationDelayTimer;
     [_serverConnection invoke: @"registerApns" withParams: @[token] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"registerApns(): got result: %@", responseOrError);
+            [self setApnsMode];
         } else {
             // TODO retry?
             NSLog(@"registerApns(): failed: %@", responseOrError);
@@ -5804,6 +5824,29 @@ static NSTimer * _stateNotificationDelayTimer;
         }
     }];
 }
+
+- (void) setApnsMode: (NSString*) mode {
+    // NSLog(@"setApnsMode: %@", mode);
+    [_serverConnection invoke: @"setApnsMode" withParams: @[mode] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            // NSLog(@"registerApns(): got result: %@", responseOrError);
+        } else {
+            // TODO retry?
+            NSLog(@"setApnsMode(): failed: %@", responseOrError);
+        }
+    }];
+}
+
+- (void) setApnsMode {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOAnonymousNotifications]) {
+        [self setApnsMode:@"default"];
+    } else {
+        [self setApnsMode:@"background"];
+    }
+}
+
+
+
 /*
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
     // NSLog(@"generateToken:");

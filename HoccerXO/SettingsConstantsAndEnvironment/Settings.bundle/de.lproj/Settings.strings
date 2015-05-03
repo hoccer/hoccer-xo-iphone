@@ -88,3 +88,6 @@
 "access_control_15_minutes"  = "15 Minuten";
 "access_control_always"      = "Immer";
 
+"Notifications" = "Benachrichtigungen";
+"Anonymous"     = "Anonym";
+

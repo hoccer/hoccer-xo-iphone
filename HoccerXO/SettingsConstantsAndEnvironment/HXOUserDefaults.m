@@ -60,6 +60,7 @@ NSString * const kHXOAccessControlTimeout        = @"AccessControlTimeout";
 NSString * const kHXOAccessControlPassscode      = @"AccessControlPasscode";
 NSString * const kHXOAccessControlTouchIdEnabled = @"AccessControlTouchIdEnabled";
 
+NSString * const kHXOAnonymousNotifications = @"anonymousNotifications";
 
 
 @implementation HXOUserDefaults

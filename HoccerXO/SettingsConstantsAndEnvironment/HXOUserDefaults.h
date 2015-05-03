@@ -60,6 +60,7 @@ FOUNDATION_EXPORT NSString * const kHXOAccessControlTimeout;
 FOUNDATION_EXPORT NSString * const kHXOAccessControlPassscode;
 FOUNDATION_EXPORT NSString * const kHXOAccessControlTouchIdEnabled;
 
+FOUNDATION_EXPORT NSString * const kHXOAnonymousNotifications;
 
 
 @interface HXOUserDefaults : NSObject
