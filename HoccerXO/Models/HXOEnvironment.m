@@ -24,7 +24,7 @@
     CLLocation * _lastLocation;
     NSDate * _lastLocationUpdate;
     HXOBackend * _chatBackend;
-    BOOL _activationState;
+    EnvironmentActivationMode _activationMode;
 }
 @end
 
@@ -57,28 +57,49 @@ static HXOEnvironment *instance;
 		_locationManager.delegate = self;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.distanceFilter = 10.0;
-        _activationState = NO;
+        _activationMode = NO;
     }
     
     return self;
 }
 
-- (void)setActivation:(BOOL)active {
-    // if (active != _activationState) {
-        if (active) {
-            [self activate];
-        } else {
-            [self deactivate];
-            if (self.type != nil) {
-                [[self chatBackend] sendEnvironmentDestroyWithType:self.type];
-            }
-        }
-        _activationState = active;
-    // }
+-(NSString*)typeFromMode:(EnvironmentActivationMode)mode {
+    if (mode == ACTIVATION_MODE_NEARBY) {
+        return @"nearby";
+    } else if (mode == ACTIVATION_MODE_WORLDWIDE) {
+        return @"worldwide";
+    } else {
+        return nil;
+    }
 }
 
-- (BOOL)isActive {
-    return _activationState;
+- (void)setActivation:(EnvironmentActivationMode)activationMode {
+    NSLog(@"HXOEnvironment:setActivation %d", activationMode);
+    
+    if (activationMode != ACTIVATION_MODE_NONE) {
+        if (activationMode != self.activationMode) {
+            [self deactivate];
+            if (self.type != nil && self.activationMode != ACTIVATION_MODE_NONE) {
+                [[self chatBackend] sendEnvironmentDestroyWithType:[self typeFromMode:self.activationMode]];
+            }
+        }
+        _activationMode = activationMode;
+        NSLog(@"HXOEnvironment:setActivation(1) changed mode to %d", activationMode);
+        [self updateProperties];
+        [self activate];
+        return;
+    } else {
+        [self deactivate];
+        if (self.type != nil && self.activationMode != ACTIVATION_MODE_NONE) {
+            [[self chatBackend] sendEnvironmentDestroyWithType:[self typeFromMode:self.activationMode]];
+        }
+        NSLog(@"HXOEnvironment:setActivation(2) changed mode to %d", activationMode);
+        _activationMode = activationMode;
+    }
+}
+
+- (EnvironmentActivationMode)activationMode {
+    return _activationMode;
 }
 
 - (void)activate {
@@ -110,7 +131,7 @@ static HXOEnvironment *instance;
 }
 
 - (void) locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
-    if (_activationState) {
+    if (_activationMode) {
         [_locationManager handleAuthorizationStatus: status];
     }
 }
@@ -160,7 +181,8 @@ static HXOEnvironment *instance;
 }
 
 - (void) updateProperties {
-    self.type = @"nearby"; // for now
+    self.type = [self typeFromMode:self.activationMode];
+
     self.clientId = [UserProfile sharedProfile].clientId;
     self.timestamp = [HXOBackend millisFromDate:_lastLocationUpdate];
     

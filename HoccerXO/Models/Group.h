@@ -21,6 +21,7 @@ FOUNDATION_EXPORT NSString * const kGroupStateInternalKept;
 // group roles
 FOUNDATION_EXPORT NSString * const kGroupTypeUser;
 FOUNDATION_EXPORT NSString * const kGroupTypeNearby;
+FOUNDATION_EXPORT NSString * const kGroupTypeWorldwide;
 
 @class GroupMembership;
 
@@ -70,6 +71,7 @@ FOUNDATION_EXPORT NSString * const kGroupTypeNearby;
 - (BOOL)isRemovedGroup;
 - (BOOL)isExistingGroup;
 - (BOOL)isNearbyGroup;
+- (BOOL)isWorldwideGroup;
 - (BOOL)isIncompleteGroup;
 
 - (GroupMembership*) membershipWithClientId:(NSString*)clientId;

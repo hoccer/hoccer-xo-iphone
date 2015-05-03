@@ -40,8 +40,6 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 @property (nonatomic, strong)   NSString        * nickName;
 @property (nonatomic, strong)   NSString        * alias;
 @property (nonatomic, strong)   NSString        * status;
-//@property (nonatomic, strong)   NSString        * isNearbyTag; // using string as boolean because booleans totally suck in CoreData predicates;
-                                                               // values are the string "YES" for true, all other values indicate false
 
 @property (nonatomic, retain)   GroupMembership * myGroupMembership;
 
@@ -90,6 +88,9 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 @property (nonatomic, readonly) BOOL              isNearby; // valid for both single contacts and groups
 @property (nonatomic, readonly) BOOL              isNearbyContact; // only valid for non-group contacts
 
+@property (nonatomic, readonly) BOOL              isWorldwide; // valid for both single contacts and groups
+@property (nonatomic, readonly) BOOL              isWorldwideContact; // only valid for non-group contacts
+
 @property (nonatomic, retain)   NSDate          * lastUpdateReceived;
 
 @property (nonatomic ,strong)   NSNumber        * relationshipLastChangedMillis;
@@ -112,8 +113,6 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;
-//- (void) updateNearbyFlag;
-
 
 
 @end

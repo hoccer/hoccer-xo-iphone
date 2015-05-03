@@ -52,7 +52,7 @@
 
 @implementation ConversationViewController
 
-@dynamic inNearbyMode;
+@dynamic environmentMode;
 
 - (void)awakeFromNib {
     [super awakeFromNib];
@@ -80,7 +80,7 @@
 
 - (void) setupTitle {
     if (self.hasGroupContactToggle) {
-        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"chat_list_nav_title", nil), NSLocalizedString(@"nearby_list_nav_title", nil)]];
+        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"chat_list_nav_title", nil), NSLocalizedString(@"nearby_list_nav_title", nil),NSLocalizedString(@"worldwide_list_nav_title", nil)]];
         self.groupContactsToggle.selectedSegmentIndex = 0;
         [self.groupContactsToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
         self.navigationItem.titleView = self.groupContactsToggle;
@@ -175,7 +175,7 @@
                                                                               queue:[NSOperationQueue mainQueue]
                                                                          usingBlock:^(NSNotification *note) {
                                                                              if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: loginSucceeded");
-                                                                             [self configureForNearbyMode:self.inNearbyMode];
+                                                                             [self configureForMode:self.environmentMode];
                                                                          }];
 
 }
@@ -204,18 +204,18 @@
     // Dispose of any resources that can be recreated.
 }
 
--(void)configureForNearbyMode:(BOOL)mode {
-    if (NEARBY_CONFIG_DEBUG) NSLog(@"ConversationViewController:configureForNearbyMode= %d", mode);
-    [AppDelegate.instance configureForNearbyMode:mode];
+-(void)configureForMode:(EnvironmentActivationMode)mode {
+    if (NEARBY_CONFIG_DEBUG) NSLog(@"ConversationViewController:configureForMode= %d", mode);
+    [AppDelegate.instance configureForMode:mode];
     // hide plus button in nearby mode ... just for chrissy
-    self.navigationItem.rightBarButtonItem = mode ? nil : self.addButton;
+    self.navigationItem.rightBarButtonItem = mode != ACTIVATION_MODE_NONE ? nil : self.addButton;
     
 }
 
 - (void) segmentChanged: (id) sender {
     if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ConversationViewController:segmentChanged, sender= %@", sender);
     [super segmentChanged:sender];
-    [self configureForNearbyMode:self.inNearbyMode];
+    [self configureForMode:self.environmentMode];
 }
     
 #pragma mark - Table View
@@ -282,7 +282,7 @@
 #pragma mark - Fetched results controller
 
 - (NSArray*) sortDescriptors {
-    if (!self.inNearbyMode) {
+    if (self.environmentMode == ACTIVATION_MODE_NONE) {
         return @[[[NSSortDescriptor alloc] initWithKey: @"latestMessageTime" ascending: NO],
                  [[NSSortDescriptor alloc] initWithKey: @"nickName" ascending: YES]];
     } else {
@@ -291,12 +291,19 @@
     }
 }
 
-- (BOOL) inNearbyMode {
-    return self.groupContactsToggle != nil && self.groupContactsToggle.selectedSegmentIndex == 1;
+- (EnvironmentActivationMode) environmentMode {
+    if (self.groupContactsToggle != nil) {
+        if (self.groupContactsToggle.selectedSegmentIndex == 1) {
+            return ACTIVATION_MODE_NEARBY;
+        } else if (self.groupContactsToggle.selectedSegmentIndex == 2) {
+            return ACTIVATION_MODE_WORLDWIDE;
+        }
+    };
+    return ACTIVATION_MODE_NONE;
 }
 
 - (void) addPredicates: (NSMutableArray*) predicates {
-    if (self.inNearbyMode) {
+    if (self.environmentMode == ACTIVATION_MODE_NEARBY) {
         [predicates addObject: [NSPredicate predicateWithFormat:
                                 @"(type == 'Contact' AND \
                                 SUBQUERY(groupMemberships, $member, $member.group.groupType == 'nearby' AND $member.group.groupState =='exists').@count > 0 ) \
@@ -306,6 +313,16 @@
                                 myGroupMembership.group.groupType == 'nearby' AND \
                                 myGroupMembership.group.groupState =='exists' AND\
                                 SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'nearbyMember').@count > 1 ))"]];
+    } else if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
+        [predicates addObject: [NSPredicate predicateWithFormat:
+                                @"(type == 'Contact' AND \
+                                SUBQUERY(groupMemberships, $member, $member.group.groupType == 'worldwide' AND $member.group.groupState =='exists').@count > 0 ) \
+                                OR \
+                                (type == 'Group' AND \
+                                (myGroupMembership.state == 'joined' AND \
+                                myGroupMembership.group.groupType == 'worldwide' AND \
+                                myGroupMembership.group.groupState =='exists' AND\
+                                SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'worldwideMember').@count > 1 ))"]];
     } else {
         [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR (relationshipState == 'kept' AND messages.@count > 0) OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
     }
@@ -451,15 +468,33 @@
 #pragma mark - Empty Table Placeholder
 
 - (NSAttributedString*) placeholderText {
-    return HXOLocalizedStringWithLinks(self.inNearbyMode ? @"contact_list_placeholder_nearby" : @"contact_list_placeholder", nil);
+    if (self.environmentMode == ACTIVATION_MODE_NONE) {
+        return HXOLocalizedStringWithLinks(@"contact_list_placeholder", nil);
+    } else if (self.environmentMode == ACTIVATION_MODE_NEARBY) {
+        return HXOLocalizedStringWithLinks(@"contact_list_placeholder_nearby", nil);
+    } else if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
+        return HXOLocalizedStringWithLinks(@"contact_list_placeholder_worldwide", nil);
+    } else {
+        NSLog(@"illegal environment mode %d", self.environmentMode);
+        return nil;
+    }
 }
 
 - (UIImage*) placeholderImage {
-    return [UIImage imageNamed: self.inNearbyMode ? @"placeholder-nearby" : @"placeholder-chats"];
+    if (self.environmentMode == ACTIVATION_MODE_NONE) {
+        return [UIImage imageNamed: @"placeholder-chats"];
+    } else if (self.environmentMode == ACTIVATION_MODE_NEARBY) {
+        return [UIImage imageNamed: @"placeholder-nearby"];
+    } else if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
+        return [UIImage imageNamed: @"placeholder-world"];
+    } else {
+        NSLog(@"illegal environment mode %d", self.environmentMode);
+        return nil;
+    }
 }
 
 - (SEL) placeholderAction {
-    return self.inNearbyMode ? NULL : @selector(addButtonPressed:);
+    return self.environmentMode != ACTIVATION_MODE_NONE ? NULL : @selector(addButtonPressed:);
 }
 
 @end

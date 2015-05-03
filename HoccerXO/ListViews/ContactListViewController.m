@@ -567,7 +567,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
 - (void) addPredicates: (NSMutableArray*) predicates {
     if (FETCHED_RESULTS_DEBUG) NSLog(@"ContactListController:addPredicates %@", predicates);
     if ([self.entityName isEqualToString: @"Contact"]) {
-        [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept' OR relationshipState == 'groupfriend' OR relationshipState == 'invited' OR relationshipState == 'invitedMe' OR isNearbyTag== 'YES')", [self entityName]]];
+        [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@ AND (relationshipState == 'friend' OR relationshipState == 'blocked' OR relationshipState == 'kept' OR relationshipState == 'groupfriend' OR relationshipState == 'invited' OR relationshipState == 'invitedMe')", [self entityName]]];
     } /* else {
        [predicates addObject: [NSPredicate predicateWithFormat:@"type == %@", [self entityName]]];
     } */
@@ -757,7 +757,8 @@ bool almostEqual(CGFloat a, CGFloat b) {
     BOOL hadTableHeader = self.tableView.tableHeaderView != nil;
     
     self.placeholderLabel.attributedText = [self placeholderText];
-    UIImage* placeholderImage = [[self placeholderImage] tintWithColor:[HXOUI theme].tablePlaceholderImageColor];
+    //UIImage* placeholderImage = [[self placeholderImage] tintWithColor:[HXOUI theme].tablePlaceholderImageColor];
+    UIImage* placeholderImage = [self placeholderImage];
     [self.placeholderImageButton setImage: placeholderImage forState: UIControlStateNormal];
     [_placeholderImageButton removeTarget: self action: NULL forControlEvents: UIControlEventTouchUpInside];
     if ([self placeholderAction]) {
@@ -802,7 +803,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
 }
 
 - (UIImage*) placeholderImage {
-    return [UIImage imageNamed: self.inGroupMode ? @"placeholder-groups" : @"placeholder-chats"];
+    return [UIImage imageNamed: self.inGroupMode ? @"placeholder-group" : @"placeholder-chats"];
 }
 
 - (SEL) placeholderAction {

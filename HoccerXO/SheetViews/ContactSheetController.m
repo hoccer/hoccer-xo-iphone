@@ -19,8 +19,10 @@
 #import "HXOUI.h"
 #import "MediaBrowserDataSource.h"
 #import "avatar_contact.h"
+/*
 #import "avatar_group.h"
 #import "avatar_location.h"
+ */
 #import "GroupMembership.h"
 #import "SmallContactCell.h"
 #import "DatasheetViewController.h"
@@ -30,6 +32,7 @@
 #import "KeyStatusCell.h"
 #import "HXOPluralocalization.h"
 #import "NSString+UUID.h"
+#import "ContactCell.h"
 
 
 //#define SHOW_CONNECTION_STATUS
@@ -130,7 +133,7 @@ static int  groupMemberContext;
 }
 
 - (BOOL) isEditable {
-    return ! self.group || ! (self.group.myGroupMembership.isInvited || self.group.isNearbyGroup || self.group.isKept);
+    return ! self.group || ! (self.group.myGroupMembership.isInvited || self.group.isNearbyGroup || self.group.isWorldwideGroup ||self.group.isKept);
 }
 
 - (void) registerCellClasses: (DatasheetViewController*) viewController {
@@ -289,7 +292,7 @@ static int  groupMemberContext;
         return ! (self.group || self.groupInStatuNascendi) && [super isItemVisible: item];
         
     } else if ([item isEqual: self.inviteMembersItem]) {
-        return (self.group.iAmAdmin || self.groupInStatuNascendi) && ! self.group.isNearbyGroup && !self.group.isKept && [super isItemVisible: item];
+        return (self.group.iAmAdmin || self.groupInStatuNascendi) && !self.group.isNearbyGroup && !self.group.isWorldwideGroup && !self.group.isKept && [super isItemVisible: item];
         
     } else if ([item isEqual: self.joinGroupItem] || [item isEqual: self.invitationDeclineItem]) {
         return self.group.myGroupMembership.isInvited;
@@ -564,7 +567,12 @@ static int  groupMemberContext;
 
     [self addProfileObservers];
 
-    self.avatarView.defaultIcon = self.group || self.groupInStatuNascendi ? [self.group.groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
+    if (self.group || self.groupInStatuNascendi) {
+        self.avatarView.defaultIcon = [ContactCell defaultIconForContact:self.group];
+    } else {
+        self.avatarView.defaultIcon = [ContactCell defaultIconForContact:self.contact];
+    }
+    //self.avatarView.defaultIcon = self.group || self.groupInStatuNascendi ? [self.group.groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
     self.backButtonTitle = self.contact.nickName;
     [super inspectedObjectDidChange];
 }

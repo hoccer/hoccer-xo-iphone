@@ -224,6 +224,7 @@
 
 "chat_list_nav_title"                           = "Chats";
 "nearby_list_nav_title"                         = "Nearby";
+"worldwide_list_nav_title"                      = "Worldwide";
 
 "chat_message_placeholder"                      = "Message";
 "chat_call_phone_number_btn_title"              = "Call";
@@ -235,8 +236,11 @@
 "chat_wait_for_invitees_message"                = "You can not send a message to this group because no invited member has joined yet. You have to wait until at least one invitation is accepted.";
 "chat_group_you_are_alone_message"              = "You can not send a message to this group because there are no members except you. Please invite friends to this group.";
 "chat_nearby_group_you_are_alone_message"       = "You can not send a message to this group because there are no other active nearby users. Other users close to you must also activate 'Nearby' to join this group.";
+"chat_worldwide_group_you_are_alone_message"       = "You can not send a message to this group because there are no other active worldwide users. Other users must also activate 'Worldwide' to join this group.";
+
 "chat_no_groupkey_message"                      = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
 "chat_nearby_contact_offline"                   = "Sorry, the message can not be sent because the contact is no longer nearby or is offline and is not your friend.";
+"chat_worldwide_contact_offline"                = "Sorry, the message can not be sent because the contact is no longer available or is offline and is not your friend.";
 
 "chat_message_pending"                          = "pending";
 "chat_message_sent"                             = "sent";
@@ -363,6 +367,7 @@
 
 "contact_list_placeholder"                      = "[Invite friends](http://faq.hoccer.com/tutorial-xo/#invite) to chat with.";
 "contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://faq.hoccer.com/tutorial-xo/#nearby)…";
+"contact_list_placeholder_worldwide"            = "Waiting for others [worldwide](http://faq.hoccer.com/tutorial-xo/#worldwide)…";
 
 
 //==============================================================================
@@ -607,6 +612,10 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "group_name_nearby_active"              = "All Nearby (%d)";
 "group_name_nearby_kept"                = "Stored Nearby Group";
 "group_name_nearby_empty"               = "Nobody Nearby";
+
+"group_name_worldwide_active"           = "All Worldwide (%d)";
+"group_name_worldwide_kept"             = "Stored Worldwide Group";
+"group_name_worldwide_empty"            = "Nobody Worldwide";
 
 //==============================================================================
 // Invitations

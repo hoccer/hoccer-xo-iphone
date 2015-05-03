@@ -32,7 +32,6 @@
 @dynamic nickName;
 @dynamic alias;
 @dynamic status;
-//@dynamic isNearbyTag;
 
 // @dynamic currentTimeSection;
 @dynamic unreadMessages;
@@ -178,17 +177,18 @@ NSString * const kPresenceStateTyping = @"typing";
 }
 
 - (NSString*) nickNameOrAlias {
-    if (self.isGroup && self.isNearby) {
+    if (self.isGroup && (self.isNearby || self.isWorldwide)) {
         if (self.isKeptGroup) {
-            return NSLocalizedString(@"group_name_nearby_kept", nil);
+            return self.isNearby ? NSLocalizedString(@"group_name_nearby_kept", nil) : NSLocalizedString(@"group_name_worldwide_kept", nil);
         } else {
             Group * group = (Group*)self;
             NSUInteger otherCount = group.otherMembers.count;
 
             if (otherCount > 0) {
-                return [NSString stringWithFormat:NSLocalizedString(@"group_name_nearby_active", nil), otherCount];
+                return self.isNearby ? [NSString stringWithFormat:NSLocalizedString(@"group_name_nearby_active", nil), otherCount]
+                : [NSString stringWithFormat:NSLocalizedString(@"group_name_worldwide_active", nil), otherCount];
             } else {
-                return NSLocalizedString(@"group_name_nearby_empty", nil);
+                return self.isNearby ? NSLocalizedString(@"group_name_nearby_empty", nil) : NSLocalizedString(@"group_name_worldwide_empty", nil);
             }
         }
     }
@@ -314,6 +314,9 @@ NSString * const kPresenceStateTyping = @"typing";
     return self.isMemberinNearbyGroup;
 }
 
+- (BOOL) isWorldwideContact {
+    return self.isMemberinWorldwideGroup;
+}
 - (BOOL) isNearby {
     if (self.isGroup) {
         return [(Group*)self isNearbyGroup];
@@ -321,33 +324,30 @@ NSString * const kPresenceStateTyping = @"typing";
         return self.isNearbyContact;
     }
 }
-    
+
+- (BOOL) isWorldwide {
+    if (self.isGroup) {
+        return [(Group*)self isWorldwideGroup];
+    } else {
+        return self.isWorldwideContact;
+    }
+}
+
 - (BOOL) isMemberinNearbyGroup {
     NSSet * thGroupSet = [self.groupMemberships objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         return obj.group.isNearbyGroup && obj.group.isExistingGroup;
     }];
     return thGroupSet.count > 0;
 }
-    
-/*
--(void) updateNearbyFlag {
-    NSSet * myMemberships = self.groupMemberships;
-    BOOL isNearby = NO;
-    for (GroupMembership * memberShip in myMemberships) {
-        if (memberShip.isNearbyMember) {
-            isNearby = YES;
-            break;
-        }
-    }
-    if (isNearby != self.isNearbyContact) {
-        if (isNearby) {
-            self.isNearbyTag = @"YES";
-        } else {
-            self.isNearbyTag = nil;
-        }
-    }
+
+
+- (BOOL) isMemberinWorldwideGroup {
+    NSSet * thGroupSet = [self.groupMemberships objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.group.isWorldwideGroup && obj.group.isExistingGroup;
+    }];
+    return thGroupSet.count > 0;
 }
-*/
+
 - (NSString*) groupMembershipList {
     // NSLog(@"groupMembershipList called on contact %@",self);
     NSMutableArray * groups = [[NSMutableArray alloc] init];

@@ -23,6 +23,7 @@ NSString * const kGroupMembershipStateGroupRemoved  = @"groupRemoved";
 NSString * const kGroupMembershipRoleAdmin          = @"admin";
 NSString * const kGroupMembershipRoleMember         = @"member";
 NSString * const kGroupMembershipRoleNearbyMember   = @"nearbyMember";
+NSString * const kGroupMembershipRoleWorldwideMember   = @"worldwideMember";
 
 @implementation GroupMembership
 
@@ -123,12 +124,16 @@ NSString * const kGroupMembershipRoleNearbyMember   = @"nearbyMember";
     return [kGroupMembershipRoleNearbyMember isEqualToString: self.role];
 }
 
+- (BOOL)isWorldwideMember {
+    return [kGroupMembershipRoleWorldwideMember isEqualToString: self.role];
+}
+
 - (BOOL)isAdmin {
     return [kGroupMembershipRoleAdmin isEqualToString: self.role];
 }
 
 - (BOOL)hasActiveRole {
-    return self.isMember || self.isAdmin || self.isNearbyMember;
+    return self.isMember || self.isAdmin || self.isNearbyMember || self.isWorldwideMember;
 }
 
 - (NSData *) calcCipheredGroupKey {

@@ -21,6 +21,7 @@
 #import "avatar_contact.h"
 #import "avatar_group.h"
 #import "avatar_location.h"
+#import "avatar_worldwide.h"
 #import "disclosure_arrow.h"
 
 #define CELL_DEBUG NO
@@ -161,6 +162,20 @@
     }
 }
 
++(VectorArt*)defaultIconForContact:(Contact *)contact {
+    if ([contact.type isEqualToString: [Group entityName]]) {
+        if ([((Group*)contact).groupType isEqualToString: kGroupTypeNearby]) {
+            return [[avatar_location alloc] init];
+        } else if ([((Group*)contact).groupType isEqualToString: kGroupTypeWorldwide]) {
+            return [[avatar_worldwide alloc] init];
+        } else {
+            return [[avatar_group alloc] init];
+        }
+    } else {
+        return[[avatar_contact alloc] init];
+    }
+}
+
 + (void) configureCell:(UITableViewCell<ContactCell> *)cell forContact: (Contact *)contact {
     cell.delegate = nil;
     
@@ -168,7 +183,7 @@
     
     UIImage * avatar = contact.avatarImage;
     cell.avatar.image = avatar;
-    cell.avatar.defaultIcon = [contact.type isEqualToString: [Group entityName]] ? [((Group*)contact).groupType isEqualToString: @"nearby"] ? [[avatar_location alloc] init] : [[avatar_group alloc] init] : [[avatar_contact alloc] init];
+    cell.avatar.defaultIcon = [self defaultIconForContact:contact];
     cell.avatar.isBlocked = [contact isBlocked];
     cell.avatar.isPresent  = contact.isConnected && !contact.isKept;
     cell.avatar.isInBackground  = contact.isBackground;

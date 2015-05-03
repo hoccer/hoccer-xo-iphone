@@ -9,6 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <CoreLocation/CoreLocation.h>
 
+typedef enum  {
+    ACTIVATION_MODE_NONE = 0,
+    ACTIVATION_MODE_NEARBY = 1,
+    ACTIVATION_MODE_WORLDWIDE =2
+} EnvironmentActivationMode;
+
 @class HXOBackend;
 
 @interface HXOEnvironment : NSObject<CLLocationManagerDelegate>
@@ -47,7 +53,7 @@
 - (void)activateLocation;
 - (NSDictionary*) asDictionary;
 
-- (void)setActivation:(BOOL)active;
-- (BOOL)isActive;
+- (void)setActivation:(EnvironmentActivationMode)activationMode;
+- (EnvironmentActivationMode)activationMode;
 
 @end

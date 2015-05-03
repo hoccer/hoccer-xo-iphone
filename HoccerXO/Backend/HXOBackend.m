@@ -351,7 +351,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if (_state == kBackendReady && !_locationUpdatePending) {
         if (_state == kBackendReady) {
             [self destroyEnvironmentType:type withHandler:^(BOOL ok) {
-                if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment destroyed = %d",ok);
+                if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment type %@ destroyed = %d",type, ok);
             }];
         }
     }
@@ -1189,8 +1189,8 @@ static NSTimer * _stateNotificationDelayTimer;
         }
 #endif
         
-        if (HXOEnvironment.sharedInstance.isActive) {
-            NSLog(@"Nearby active, defering sync until environment update ready");
+        if (HXOEnvironment.sharedInstance.activationMode != ACTIVATION_MODE_NONE) {
+            NSLog(@"Nearby or worldwide active, defering sync until environment update ready");
             __block __typeof(self) __weak weakSelf = self;
             _firstEnvironmentUpdateHandler = ^(BOOL ok) {
                 if (ok) {
@@ -1311,8 +1311,8 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                 object:self
                                                               userInfo:nil
              ];
-            if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.inNearbyMode) {
-                [HXOEnvironment.sharedInstance setActivation:YES];
+            if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.environmentMode != ACTIVATION_MODE_NONE) {
+                [HXOEnvironment.sharedInstance setActivation:AppDelegate.instance.conversationViewController.environmentMode];
             }
         }
     }];
@@ -1378,8 +1378,8 @@ static NSTimer * _stateNotificationDelayTimer;
                             
                             [AppDelegate.instance setupDocumentDirectoryMonitoring];
                             
-                            if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.inNearbyMode) {
-                                [HXOEnvironment.sharedInstance setActivation:YES];
+                            if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.environmentMode != ACTIVATION_MODE_NONE) {
+                                [HXOEnvironment.sharedInstance setActivation:AppDelegate.instance.conversationViewController.environmentMode];
                             }
                         } else {
                             [self syncFailed];
@@ -2267,9 +2267,8 @@ static NSTimer * _stateNotificationDelayTimer;
                                                              }
                                                             break;
                                                          case 0:
-                                                             contact.relationshipState = kRelationStateInternalKept;
                                                              // keep contact and chats
-                                                             //[contact updateNearbyFlag];
+                                                             contact.relationshipState = kRelationStateInternalKept;
                                                              break;
                                                      }
                                                      [self.delegate saveContext:context];
@@ -2283,10 +2282,8 @@ static NSTimer * _stateNotificationDelayTimer;
 // background context safe
 - (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force inContext:(NSManagedObjectContext*) context {
     
-    // BOOL isInspected = [AppDelegate.instance isInspecting:contact];
-
     // autokeep contacts that are currently inspected
-    if (!force && ((AppDelegate.instance.inNearbyMode && contact.isNearby) /*|| isInspected*/)) { //TODO: remove "inspected" check, unwind instead
+    if (!force && (AppDelegate.instance.environmentMode != ACTIVATION_MODE_NONE && (contact.isNearby || contact.isWorldwide))) {
         if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: is active nearby or being inspected, autokeeping contact id %@",contact.clientId);
         if (contact.groupMemberships.count == 0) {
             contact.relationshipState = kRelationStateInternalKept;
@@ -2909,6 +2906,7 @@ static NSTimer * _stateNotificationDelayTimer;
     [self.delegate saveContext:context];
 }
 
+#if 0
 -(Group*)findInspectedNearbyGroupInContext:(NSManagedObjectContext *)context {
     NSArray * groups = [self getNearbyGroupsInContext:context];
     for (Group * group in groups) {
@@ -2954,18 +2952,56 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     return nil;
 }
-/*
-- (BOOL) updateGroupHereLocking:(NSDictionary*) groupDict inContext:(NSManagedObjectContext*) context {
-    NSString * groupId = groupDict[@"groupId"];
-    if (groupId != nil) {
-        [self.delegate lockId:groupId];
-        BOOL result = [self updateGroupHere:groupDict inContext:context];
-        [self.delegate unlockId:groupId];
-        return result;
+#else
+
+-(NSArray*) getSpecialGroupsWithType:(NSString*)type inContext:(NSManagedObjectContext *)context{
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Group" inManagedObjectContext: context];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"type == 'Group' AND groupType == '%@'",type ]];
+    
+    NSError *error;
+    NSArray *groups = [context executeFetchRequest:fetchRequest error:&error];
+    if (groups == nil)
+    {
+        NSLog(@"Fetch request for 'getSpecialGroupsWithType %@' failed: %@",type, error);
+        abort();
     }
-    return NO;
+    return groups;
 }
-*/
+
+-(Group*)findInspectedSpecialGroupWithType:(NSString*)type inContext:(NSManagedObjectContext *)context {
+    NSArray * groups = [self getSpecialGroupsWithType:type inContext:context];
+    for (Group * group in groups) {
+        if ([self.delegate isInspecting:group]) {
+            return group;
+        }
+    }
+    return nil;
+}
+
+-(Group*)singleSpecialGroupWithType:(NSString*)type withId:(NSString*)groupId inContext:(NSManagedObjectContext *)context {
+    if (SINGLE_NEARBY_DEBUG) NSLog(@"singleSpecialGroupWithType: %@ withId %@", type, groupId);
+    NSArray * groups = [self getSpecialGroupsWithType:type inContext:context];
+    if (SINGLE_NEARBY_DEBUG) NSLog(@"singleSpecialGroupWithType: %@, found %d %@ groups", groupId, (int)groups.count,type);
+    if (groups.count > 0) {
+        Group * inspectedGroup = [self findInspectedSpecialGroupWithType:type inContext:context];
+        if (inspectedGroup == nil) {
+            inspectedGroup = groups[0];
+        }
+        if (SINGLE_NEARBY_DEBUG) NSLog(@"singleSpecialGroupWithType %@: changing group %@ to %@", type, inspectedGroup.clientId, groupId);
+        [inspectedGroup changeIdTo:groupId];
+        
+        if (groups.count > 1) {
+            [self mergeGroups: groups intoGroup:inspectedGroup inContext:context];
+        }
+        return inspectedGroup;
+    }
+    return nil;
+}
+
+#endif
+
 - (BOOL) updateGroupHere: (NSDictionary*) groupDict inContext:(NSManagedObjectContext*) context {
     //[self validateObject: relationshipDict forEntity:@"RPC_TalkRelationship"];  // TODO: Handle Validation Error
     if (GROUP_DEBUG) NSLog(@"updateGroupHere with %@",groupDict);
@@ -2991,7 +3027,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     if ([kGroupStateNone isEqualToString: groupState]) {
-        if (group != nil && !group.isKeptGroup && !group.isRemovedGroup && !group.isNearbyGroup) {
+        if (group != nil && !group.isKeptGroup && !group.isRemovedGroup && !group.isNearbyGroup && !group.isWorldwideGroup) {
             if (GROUP_DEBUG) NSLog(@"updateGroupHere: handleDeletionOfGroup %@", group.clientId);
             [group updateWithDictionary: groupDict];
             [self handleDeletionOfGroup:group inContext:context];
@@ -3001,9 +3037,11 @@ static NSTimer * _stateNotificationDelayTimer;
     }
     
     if (group == nil) {
-        // handle nearby group merging
+        // handle nearby and worldwide group merging
         if ([kGroupTypeNearby isEqualToString: groupDict[@"groupType"]]) {
-            group = [self singleNearbyGroupWithId:groupId inContext:context];
+            group = [self singleSpecialGroupWithType:kGroupTypeNearby withId:groupId inContext:context];
+        } else if ([kGroupTypeWorldwide isEqualToString: groupDict[@"groupType"]]) {
+            group = [self singleSpecialGroupWithType:kGroupTypeWorldwide withId:groupId inContext:context];
         }
         if (group == nil) {
             group = (Group*)[NSEntityDescription insertNewObjectForEntityForName: [Group entityName] inManagedObjectContext:context];
@@ -3390,8 +3428,10 @@ static NSTimer * _stateNotificationDelayTimer;
             if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r1) %@",groupId);
             return;
         } else {
-            if ([@"nearbyMember" isEqualToString: groupMemberDict[@"role"]]) {
-                group = [self singleNearbyGroupWithId:groupId inContext:context];
+            if ([kGroupMembershipRoleNearbyMember isEqualToString: groupMemberDict[@"role"]]) {
+                group = [self singleSpecialGroupWithType:kGroupTypeNearby withId:groupId inContext:context];
+            } else  if ([kGroupMembershipRoleWorldwideMember isEqualToString: groupMemberDict[@"role"]]) {
+                group = [self singleSpecialGroupWithType:kGroupTypeWorldwide withId:groupId inContext:context];
             }
             if (group == nil) {
                 group = [self createLocalGroup:groupMemberDict[@"groupId"] withState:@"incomplete" inContext:context];
@@ -3636,8 +3676,8 @@ static NSTimer * _stateNotificationDelayTimer;
 
     if (![group isEqual:myMember.contact]) { // not us
         if (!disinvited) {
-            // show group left alerts to all members if not a nearby group
-            if (!group.isNearbyGroup) {
+            // show group left alerts to all members if not a nearby or worldwide group
+            if (!group.isNearbyGroup && !group.isWorldwideGroup) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [self groupLeftAlertForGroupNamed:groupName withMemberNamed:contactName];
                 });
@@ -3652,7 +3692,7 @@ static NSTimer * _stateNotificationDelayTimer;
             (!memberContact.isDirectlyRelated && memberContact.groupMemberships.count == 1))
         {
             if (memberContact.messages.count > 0 || memberContact.deliveriesSent.count > 0 || [self.delegate isInspecting:memberContact]) {
-                if (!group.isNearbyGroup) {
+                if (!group.isNearbyGroup && !group.isWorldwideGroup) {
                     [self askForDeletionOfContact:memberContact];
                 }  else {
                     //autokeep
@@ -3672,8 +3712,8 @@ static NSTimer * _stateNotificationDelayTimer;
             if (group.messages.count == 0) {
                 // show kicked message
                 if (!disinvited) {
-                    // show kicked from group alert if not a nearby group
-                    if (![@"nearby" isEqualToString:group.groupType] ) {
+                    // show kicked from group alert if not a nearby or worldwide group
+                    if (![kGroupTypeNearby isEqualToString:group.groupType] && ![kGroupTypeWorldwide isEqualToString:group.groupType]) {
                         [self groupKickedAlertForGroupNamed:groupName];
                     }
                 } else {
@@ -3687,16 +3727,16 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) handleDeletionOfGroup:(Group*)group inContext:(NSManagedObjectContext*) context {
     
-    if (group.isNearbyGroup) {
+    if (group.isNearbyGroup || group.isWorldwideGroup) {
         if (group.messages.count > 0 || [AppDelegate.instance isInspecting:group]) {
-            if (DEBUG_DELETION) NSLog(@"handleDeletionOfGroup: is nearby with messages, autokeeping group id %@",group.clientId);
+            if (DEBUG_DELETION) NSLog(@"handleDeletionOfGroup: is nearby or worldwide with messages, autokeeping group id %@",group.clientId);
             group.groupState = kRelationStateInternalKept;
             group.relationshipState = kRelationStateInternalKept;
             [self deleteInDatabaseAllMembersAndContactsofGroup:group inContext:context];
             [self.delegate saveContext:context];
             return;
         }
-        if (DEBUG_DELETION) NSLog(@"handleDeletionOfGroup: is active nearby, autokeeping group id %@",group.clientId);
+        if (DEBUG_DELETION) NSLog(@"handleDeletionOfGroup: is active nearby or worldwide, autokeeping group id %@",group.clientId);
     }
     
     NSString * groupId = group.clientId;
@@ -3904,7 +3944,7 @@ static NSTimer * _stateNotificationDelayTimer;
             {
                 if (member.contact.messages.count > 0 || member.contact.deliveriesSent.count > 0) {
                     // message in chat, ask for deletion
-                    if (!member.group.isNearby) {
+                    if (!member.group.isNearby && !member.group.isWorldwide) {
                         if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"ask for deletion of group member contact id %@", member.contact.clientId);
                         [self askForDeletionOfContact:member.contact];
                     } else {
@@ -3917,10 +3957,6 @@ static NSTimer * _stateNotificationDelayTimer;
                     if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"no messages deleting group member contact id %@", member.contact.clientId);
                     [AppDelegate.instance deleteObject:member.contact inContext:context];
                 }
-            } else {
-                //if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"updating nearby of group member contact id %@, nearby=%d", member.contact.clientId, member.contact.isNearby);
-                //[member.contact updateNearbyFlag];
-                //if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"updating nearby of group member contact id %@, nearby=%d", member.contact.clientId, member.contact.isNearby);
             }
         }
         // the membership can be deleted in any case, including our own membership
