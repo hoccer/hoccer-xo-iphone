@@ -61,6 +61,7 @@ NSString * const kHXOAccessControlPassscode      = @"AccessControlPasscode";
 NSString * const kHXOAccessControlTouchIdEnabled = @"AccessControlTouchIdEnabled";
 
 NSString * const kHXOAnonymousNotifications = @"anonymousNotifications";
+NSString * const kHXOAccessControlPhotoEnabled = @"AccessControlPhotoEnabled";
 
 
 @implementation HXOUserDefaults

@@ -210,4 +210,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 +(NSString*)appEntityId;
 - (UIImage*) appIcon;
 
+-(void)makeSnapShot:(void (^)(UIImage * image))handler;
+
+
 @end

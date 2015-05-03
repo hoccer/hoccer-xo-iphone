@@ -42,7 +42,9 @@
 #import "ConversationViewController.h"
 #import "ModalTaskHUD.h"
 #import "GCDAsyncUDPSocket.h"
+#import "HXOLocalization.h"
 
+#import <AVFoundation/AVFoundation.h>
 #import <sys/utsname.h>
 
 #define DELIVERY_TRACE      NO
@@ -257,6 +259,10 @@ static NSTimer * _stateNotificationDelayTimer;
                    forKeyPath:kHXOAnonymousNotifications
                       options:NSKeyValueObservingOptionNew
                       context:NULL];
+        [defaults addObserver:self
+                   forKeyPath:kHXOAccessControlPhotoEnabled
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
         
         _attachmentDownloadsWaiting = [[NSMutableArray alloc] init];
         _attachmentUploadsWaiting = [[NSMutableArray alloc] init];
@@ -280,6 +286,32 @@ static NSTimer * _stateNotificationDelayTimer;
     if ([keyPath isEqualToString:kHXOAnonymousNotifications]) {
         if (self.isReady) {
             [self setApnsMode];
+        }
+    }
+    if ([keyPath isEqualToString:kHXOAccessControlPhotoEnabled]) {
+        if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOAccessControlPhotoEnabled]) {
+            if ([AVCaptureDevice respondsToSelector:@selector(requestAccessForMediaType: completionHandler:)]) {
+                [AVCaptureDevice requestAccessForMediaType:AVMediaTypeVideo completionHandler:^(BOOL granted) {
+                    // Will get here on both iOS 7 & 8 even though camera permissions weren't required
+                    // until iOS 8. So for iOS 7 permission will always be granted.
+                    if (granted) {
+                        // Permission has been granted. Use dispatch_async for any UI updating
+                        // code because this block may be executed in a thread.
+                        //dispatch_async(dispatch_get_main_queue(), ^{
+                        //    [self showCameraPickerForType:type];
+                        //});
+                    } else {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [AppDelegate.instance showGenericAlertWithTitle:@"permission_denied_title"
+                                                                 andMessage:HXOLocalizedString(@"permission_denied_camera_attachment", nil, HXOAppName())
+                                                                withOKBlock:^{}];
+                        });
+                    }
+                }];
+            } else {
+                // We are on iOS <= 6. Just do what we need to do.
+                // [self showCameraPickerForType:type];
+            }
         }
     }
 }

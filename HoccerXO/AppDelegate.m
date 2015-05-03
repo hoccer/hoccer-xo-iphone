@@ -73,6 +73,7 @@
 #define TRACE_DOCDIR_CHANGES        NO
 #define TRACE_IMAGE_CACHING         NO
 #define TRACE_NOTIFICATIONS         YES
+#define TRACE_MUGSHOTS              YES
 
 
 NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
@@ -121,6 +122,8 @@ static NSInteger validationErrorCount = 0;
     NSDictionary * _pushNotificationInfo;
     void (^_backgroundFetchHandler)(UIBackgroundFetchResult result);
     id<NSObject> _messageReceivedObserver;
+    
+    dispatch_queue_t _sessionQueue;
 
 }
 
@@ -811,6 +814,7 @@ BOOL sameObjects(id obj1, id obj2) {
             [self.window.rootViewController performSegueWithIdentifier: @"showSetup" sender: self];
         });
     } else {
+        [self makeMugShot];
         if (!passcodeRequired) {
             [self setupDone: NO];
         }
@@ -1019,6 +1023,7 @@ BOOL sameObjects(id obj1, id obj2) {
 {
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
+    NSLog(@"applicationWillResignActive");
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -1038,6 +1043,10 @@ BOOL sameObjects(id obj1, id obj2) {
 {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 
+    NSLog(@"applicationWillEnterForeground");
+
+    [self makeMugShot];
+    
     if (self.isPasscodeRequired) {
         [self.chatBackend disable];
         [self requestUserAuthentication: nil];
@@ -1046,6 +1055,33 @@ BOOL sameObjects(id obj1, id obj2) {
     }
 
     [self setLastActiveDate];
+}
+
+-(void)makeMugShot {
+    
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOAccessControlPhotoEnabled]) {
+        
+        [self makeSnapShot:^(UIImage *image) {
+            if (image) {
+                //UIPasteboard.generalPasteboard.image = image;
+                //[[[ALAssetsLibrary alloc] init] writeImageToSavedPhotosAlbum:[image CGImage] orientation:(ALAssetOrientation)[image imageOrientation] completionBlock:nil];
+                
+                NSURL * myFileURL = nil;
+                UIImage * myImage = [Attachment qualityAdjustedImage:image];
+                NSString * newFileName = @"mugshot.jpg";
+                myFileURL = [AppDelegate uniqueNewFileURLForFileLike:newFileName isTemporary:YES];
+                
+                float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
+                [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
+                NSURL * permanentURL = [AppDelegate moveDocumentToPermanentLocation:myFileURL];
+                NSLog(@"Created and moved mugshot to %@", permanentURL);
+            }
+        }];
+    }
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    NSLog(@"applicationDidBecomeActive");
 }
 
 - (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
@@ -3996,10 +4032,160 @@ enum {
         UIImage * icon = [UIImage imageNamed: name];
         best = icon.size.width > best.size.width ? icon : best;
     }
+    
     return best;
+}
+#pragma mark - Camera Snapshots
+
+-(AVCaptureStillImageOutput *)openStillImageOutput {
+    
+    AVCaptureStillImageOutput *stillImageOutput = [[AVCaptureStillImageOutput alloc] init];
+    
+    NSArray * codecTypes = stillImageOutput.availableImageDataCodecTypes;
+    for (id type in codecTypes) {
+        if (TRACE_MUGSHOTS) NSLog(@"codecType:%@",type);
+    }
+
+    NSArray * pixelTypes = stillImageOutput.availableImageDataCVPixelFormatTypes;
+    for (id type in pixelTypes) {
+        if (TRACE_MUGSHOTS) NSLog(@"pixelType:%@",type);
+    }
+
+    NSDictionary *outputSettings = @{ AVVideoCodecKey : AVVideoCodecJPEG};
+    [stillImageOutput setOutputSettings:outputSettings];
+    
+    return stillImageOutput;
+}
+
+-(AVCaptureConnection *)openCameraConnection:(AVCaptureStillImageOutput*)stillImageOutput {
+
+    //return [stillImageOutput connectionWithMediaType:AVMediaTypeVideo];
+    
+    AVCaptureConnection *videoConnection = nil;
+    for (AVCaptureConnection *connection in stillImageOutput.connections) {
+        if (TRACE_MUGSHOTS) NSLog(@"Check connection: %@", connection);
+        for (AVCaptureInputPort *port in [connection inputPorts]) {
+            if (TRACE_MUGSHOTS) NSLog(@"Check port: %@", port);
+            if ([[port mediaType] isEqual:AVMediaTypeVideo] ) {
+                if (TRACE_MUGSHOTS) NSLog(@"Found port: %@, using connection %@", port, connection);
+                videoConnection = connection;
+                break;
+            }
+        }
+        if (videoConnection) { break; }
+    }
+    return videoConnection;
+}
+
+-(void)makeSnapShot:(AVCaptureStillImageOutput*)stillImageOutput
+     fromConnection:(AVCaptureConnection *)videoConnection
+             onDone:(void (^)(UIImage * image))handler
+{
+    
+    [stillImageOutput captureStillImageAsynchronouslyFromConnection:videoConnection
+                                                  completionHandler:^(CMSampleBufferRef imageSampleBuffer, NSError *error) {
+                                                      
+                                                      if (error == nil) {
+                                                          NSData *imageData = [AVCaptureStillImageOutput jpegStillImageNSDataRepresentation:imageSampleBuffer];
+                                                          
+                                                          UIImage *image = [[UIImage alloc] initWithData:imageData];
+                                                          handler(image);
+                                                     } else {
+                                                          NSLog(@"makeSnapShot: error %@",error);
+                                                          handler(nil);
+                                                      }
+                                                  }];
+}
+
++ (AVCaptureDevice *)deviceWithMediaType:(NSString *)mediaType preferringPosition:(AVCaptureDevicePosition)position {
+    
+    NSArray *devices = [AVCaptureDevice devicesWithMediaType:mediaType];
+    AVCaptureDevice *captureDevice = [devices firstObject];
+    
+    for (AVCaptureDevice *device in devices)  {
+        
+        if ([device position] == position) {
+            captureDevice = device;
+            break;
+        }
+    }
+    return captureDevice;
+}
+
+-(void)makeSnapShot:(void (^)(UIImage * image))handler {
+    
+    if (_sessionQueue == nil) {
+        _sessionQueue = dispatch_queue_create("session queue", DISPATCH_QUEUE_SERIAL);
+    }
+    
+    dispatch_async(_sessionQueue, ^{
+        AVCaptureSession *session = [[AVCaptureSession alloc] init];
+        
+        session.sessionPreset = AVCaptureSessionPreset640x480;
+        
+        AVCaptureDevice * currentDevice = nil;
+        NSArray *devices = [AVCaptureDevice devices];
+        for (AVCaptureDevice *device in devices) {
+            if (TRACE_MUGSHOTS) NSLog(@"Device name: %@", [device localizedName]);
+            if ([device hasMediaType:AVMediaTypeVideo]) {
+                if ([device position] == AVCaptureDevicePositionBack) {
+                    if (TRACE_MUGSHOTS) NSLog(@"Device position : back");
+                } else {
+                    if (TRACE_MUGSHOTS) NSLog(@"Device position : front");
+                    currentDevice = device;
+                }
+            }
+        }
+        
+        if ( [currentDevice lockForConfiguration:NULL] == YES ) {
+            if ([currentDevice isFocusModeSupported:AVCaptureFocusModeContinuousAutoFocus]) {
+                if (TRACE_MUGSHOTS) NSLog(@"Setting Focus");
+                CGPoint autofocusPoint = CGPointMake(0.5f, 0.5f);
+                [currentDevice setFocusPointOfInterest:autofocusPoint];
+                [currentDevice setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
+            }
+            
+            if ([currentDevice isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+                if (TRACE_MUGSHOTS) NSLog(@"Setting Exposure");
+                CGPoint exposurePoint = CGPointMake(0.5f, 0.5f);
+                [currentDevice setExposurePointOfInterest:exposurePoint];
+                [currentDevice setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
+            }
+            [currentDevice unlockForConfiguration];
+        }
+        
+        // Add inputs and outputs.
+        //AVCaptureDevice *device = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+        NSError *error = nil;
+        
+        AVCaptureDeviceInput *input = [AVCaptureDeviceInput deviceInputWithDevice:currentDevice error:&error];
+        
+        if (!input) {
+            // Handle the error appropriately.
+            NSLog(@"capture input creation failed, error=%@",error);
+        }
+        
+        [session addInput:input];
+        
+        AVCaptureStillImageOutput *stillImageOutput = [self openStillImageOutput];
+        [session addOutput:stillImageOutput];
+        
+        [session startRunning];
+        
+        AVCaptureConnection *videoConnection =[self openCameraConnection:stillImageOutput];
+        [self makeSnapShot:stillImageOutput fromConnection:videoConnection onDone:^(UIImage *image) {
+            [session stopRunning];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                handler(image);
+            });
+        }];
+    });
 }
 
 @end
+
+
+
 
 #ifdef DEBUG_RESPONDER
 
