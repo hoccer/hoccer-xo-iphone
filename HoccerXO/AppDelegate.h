@@ -10,6 +10,7 @@
 
 #import <AddressBookUI/AddressBookUI.h>
 #import <MessageUI/MessageUI.h>
+#import <AVFoundation/AVFoundation.h>
 
 #import "HXOEnvironment.h"
 #import "HXOBackend.h"
@@ -36,7 +37,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 @class MFSideMenuContainerViewController;
 @class HTTPServerController;
 
-@interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate, UITabBarControllerDelegate,UIDocumentInteractionControllerDelegate>
+@interface AppDelegate : UIResponder <UIApplicationDelegate, HXODelegate, UIAlertViewDelegate, UITabBarControllerDelegate,UIDocumentInteractionControllerDelegate, AVCaptureVideoDataOutputSampleBufferDelegate>
 {
     UIBackgroundTaskIdentifier _backgroundTask;
 }
@@ -213,6 +214,7 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 - (UIImage*) appIcon;
 
 -(void)makeSnapShot:(void (^)(UIImage * image))handler;
+-(void)tryMakeMugShot;
 
 
 @end

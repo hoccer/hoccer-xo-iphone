@@ -74,6 +74,7 @@
             }
             [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
         } else {
+            [AppDelegate.instance tryMakeMugShot];
             UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"access_control_wrong_passcode_title", nil)
                                                              message:nil
                                                      completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
@@ -103,8 +104,10 @@
 
                                   if (error.code == LAErrorUserFallback) {
                                       //block = ^{ [self showPasscodeDialog]; };
+                                      [AppDelegate.instance tryMakeMugShot];
                                   } else if (error.code == LAErrorUserCancel) {
                                       //block = ^{ [self presentTouchIdIfEnabled]; };
+                                      [AppDelegate.instance tryMakeMugShot];
                                   } else {
                                       alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"error", nil)
                                                                          message: error.userInfo[NSLocalizedDescriptionKey]
@@ -133,6 +136,7 @@
                                                            otherButtonTitles:nil];
                               }
                               if (alert) {
+                                  [AppDelegate.instance tryMakeMugShot];
                                   dispatch_async(dispatch_get_main_queue(), ^{ [alert show]; });
                               }
                           }];

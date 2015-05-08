@@ -52,6 +52,7 @@
 #define URL_TRANSLATION_DEBUG       NO
 
 #define TRACE_ATTACHMENT_FAULTING   NO
+#define TRACE_ATTACHMENT_DELETION   NO
 
 //#define LET_UPLOAD_FAIL
 //#define LET_DOWNLOAD_FAIL
@@ -2493,7 +2494,7 @@
 }
 
 - (void) prepareForDeletion {
-    NSLog(@"Attachment: prepareForDeletion: contentURL %@", self.contentURL);
+    if (TRACE_ATTACHMENT_DELETION) NSLog(@"Attachment: prepareForDeletion: contentURL %@", self.contentURL);
     [super prepareForDeletion];
     
     self.previewImage = nil; // purge from image cache
@@ -2524,15 +2525,15 @@
         if (attachments.count > 0) {
             if (attachments.count == 1) {
                 // delete ownedURL because it is only referenced by one message
-                NSLog(@"Deleting ownedURL %@, not referenced by other messages", self.ownedURL);
+                if (TRACE_ATTACHMENT_DELETION) NSLog(@"Deleting ownedURL %@, not referenced by other messages", self.ownedURL);
                 NSURL * myURL = [NSURL URLWithString:self.ownedURL];
                 [Attachment deleteFileAtUrl:myURL];
             } else {
-                NSLog(@"Keeping ownedURL %@, is referenced by other messages", self.ownedURL);
+                if (TRACE_ATTACHMENT_DELETION) NSLog(@"Keeping ownedURL %@, is referenced by other messages", self.ownedURL);
             }
         }        
     } else {
-        NSLog(@"File has no ownedURL, not deleting local URL %@", self.localURL);
+        if (TRACE_ATTACHMENT_DELETION) NSLog(@"File has no ownedURL, not deleting local URL %@", self.localURL);
     }
 
     // remove from transfer queues
@@ -2567,10 +2568,10 @@
                 if (myError != nil) {
                     NSLog(@"#ERROR: could not delete metadata file at URL %@, error = %@", metaURL, myError);
                 } else {
-                    NSLog(@"Deleted metadata file at URL %@", metaURL);
+                    if (TRACE_ATTACHMENT_DELETION) NSLog(@"Deleted metadata file at URL %@", metaURL);
                 }
             } else {
-                NSLog(@"No metadata file at URL %@", metaURL);
+                if (TRACE_ATTACHMENT_DELETION) NSLog(@"No metadata file at URL %@", metaURL);
             }
         }
     }
