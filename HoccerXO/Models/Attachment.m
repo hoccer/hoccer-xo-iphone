@@ -2646,6 +2646,7 @@
     attachment.mimeType = self.mimeType;
     attachment.humanReadableFileName = self.humanReadableFileName;
     attachment.ownedURL = self.ownedURL;
+    attachment.aspectRatio = self.aspectRatio;
     
     [attachment useURLs:self.localURL anOtherURL:self.assetURL];
     
@@ -2661,6 +2662,7 @@
         newAttachment.mediaType = attachment.mediaType;
         newAttachment.mimeType = attachment.mimeType;
         newAttachment.humanReadableFileName = attachment.humanReadableFileName;
+        newAttachment.aspectRatio = attachment.aspectRatio;
         
         CompletionBlock completion  = ^(NSError *myerror) {
             attachmentCompleted(newAttachment, myerror);

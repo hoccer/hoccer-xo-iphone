@@ -361,7 +361,13 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
                     //[attachment protectFile];
                     for (Contact *contact in contacts) {
                         NSLog(@"Sending attachment %@ to %@", attachment.humanReadableFileName, contact.nickName);
-                        [[[AppDelegate instance] chatBackend] sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:[attachment clone]];
+                        [attachment cloneWithCompletion:^(Attachment * attachment, NSError * error) {
+                            if (error == nil) {
+                                [[[AppDelegate instance] chatBackend] sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:attachment];
+                            } else {
+                                NSLog(@"Failed to clone attachment, error = %@",error );
+                            }
+                        }];
                     }
                 } else {
                     [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"attachment_not_available_message",nil) withTitle:NSLocalizedString(@"attachment_not_available_title",nil) withOKBlock:^{
