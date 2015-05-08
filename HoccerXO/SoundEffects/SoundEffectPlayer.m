@@ -8,6 +8,7 @@
 
 #import "SoundEffectPlayer.h"
 #import "HXOUserDefaults.h"
+#import "AppDelegate.h"
 
 SystemSoundID messageArrivedId = 0;
 SystemSoundID messageDeliveredId = 0;
@@ -65,7 +66,7 @@ const double minAlertSoundInterval = 2.0;
 
 // Will just play sound
 + (void)playSoundWithId: (SystemSoundID)soundId {
-	if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"playEffectSounds"] boolValue]) {
+	if (!AppDelegate.instance.runningInBackground && [[[HXOUserDefaults standardUserDefaults] objectForKey:@"playEffectSounds"] boolValue]) {
         if ([lastEffectSoundStart timeIntervalSinceNow] < -minEffectSoundInterval) {
             AudioServicesPlaySystemSound(soundId);
             lastEffectSoundStart = [[NSDate alloc] init];
@@ -75,7 +76,7 @@ const double minAlertSoundInterval = 2.0;
 
 // will play sound or vibrate if phone is set to silent mode
 + (void)playAlertSoundWithId: (SystemSoundID)soundId {
-	if ([[[HXOUserDefaults standardUserDefaults] objectForKey:@"playAlertSounds"] boolValue]) {
+	if (!AppDelegate.instance.runningInBackground && [[[HXOUserDefaults standardUserDefaults] objectForKey:@"playAlertSounds"] boolValue]) {
         if ([lastAlertSoundStart timeIntervalSinceNow] < -minAlertSoundInterval) {
             AudioServicesPlayAlertSound(soundId);
             lastAlertSoundStart = [[NSDate alloc] init];

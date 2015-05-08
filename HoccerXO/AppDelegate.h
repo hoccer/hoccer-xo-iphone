@@ -142,6 +142,8 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 -(void)finishBackgroundNotificationProcessing;
 -(void)presentUserNotificationWithTitle:(NSString*)theTitle withText:(NSString*)theText withInfo:(NSDictionary*)userInfo;
 
+- (NSUInteger) unreadMessageCount;
+
 + (UIViewController*) getTopMostViewController;
 - (BOOL) openWithInteractionController:(NSURL *)myURL withUTI:(NSString*)uti withName:(NSString*)name inView:(UIView*)view withController:(UIViewController*)controller removeFile:(BOOL) removeFileFlag;
 

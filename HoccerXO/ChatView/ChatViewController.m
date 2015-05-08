@@ -349,6 +349,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                          } else {
                                              [AppDelegate.instance configureForMode:ACTIVATION_MODE_NONE];
                                          }
+                                         if (AppDelegate.instance.unreadMessageCount > 0) {
+                                             // in case we have received messages in the background, we need to properly
+                                             // handle read message handling
+                                             [self.tableView reloadData];
+                                         }
                                      }];
 }
 
@@ -2281,7 +2286,7 @@ nil
 }
 
 - (BOOL) viewIsVisible {
-    return self.isViewLoaded && self.view.window;
+    return self.isViewLoaded && self.view.window && !AppDelegate.instance.runningInBackground;
 }
 
 - (void)configureCell:(MessageCell*)cell forMessage:(HXOMessage *) message withAttachmentPreview:(BOOL)loadPreview {
