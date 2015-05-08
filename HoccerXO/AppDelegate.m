@@ -1,5 +1,4 @@
-//
-//  AppDelegate.m
+////  AppDelegate.m
 //  HoccerXO
 //
 //  Created by David Siegel on 12.02.13.
@@ -4142,11 +4141,18 @@ enum {
                 [currentDevice setFocusMode:AVCaptureFocusModeContinuousAutoFocus];
             }
             
-            if ([currentDevice isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+            //if ([currentDevice isExposureModeSupported:AVCaptureExposureModeContinuousAutoExposure]) {
+            if ([currentDevice isExposureModeSupported:AVCaptureExposureModeAutoExpose]) {
                 if (TRACE_MUGSHOTS) NSLog(@"Setting Exposure");
                 CGPoint exposurePoint = CGPointMake(0.5f, 0.5f);
                 [currentDevice setExposurePointOfInterest:exposurePoint];
-                [currentDevice setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
+                //[currentDevice setExposureMode:AVCaptureExposureModeContinuousAutoExposure];
+                [currentDevice setExposureMode:AVCaptureExposureModeAutoExpose];
+                if (currentDevice.lowLightBoostSupported) {
+                    currentDevice.automaticallyEnablesLowLightBoostWhenAvailable = YES;
+                }
+                NSLog(@"low light supported: %d enabled: %d autoenable: %d",currentDevice.lowLightBoostSupported, currentDevice.isLowLightBoostEnabled,currentDevice.automaticallyEnablesLowLightBoostWhenAvailable);
+                NSLog(@"adjusted exposure");
             }
             [currentDevice unlockForConfiguration];
         }
@@ -4168,6 +4174,13 @@ enum {
         [session addOutput:stillImageOutput];
         
         [session startRunning];
+        
+        //[NSThread sleepForTimeInterval:0.2];
+
+        while (currentDevice.adjustingExposure) {
+            NSLog(@"adjusting exposure");
+            [NSThread sleepForTimeInterval:0.2];
+        }
         
         AVCaptureConnection *videoConnection =[self openCameraConnection:stillImageOutput];
         [self makeSnapShot:stillImageOutput fromConnection:videoConnection onDone:^(UIImage *image) {
@@ -4218,3 +4231,5 @@ enum {
 @end
 
 #endif
+
+
