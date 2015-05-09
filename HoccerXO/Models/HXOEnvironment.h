@@ -48,6 +48,16 @@ typedef enum  {
 // possible other location identifiers
 @property (nonatomic, strong) NSArray * identifiers;
 
+// possible other location identifiers
+@property (nonatomic, strong) NSString * tag;
+
+// default notification preference for worldwide groups
+@property (nonatomic, strong) NSString * notificationPreference;
+
+// time to live in ms for worldwide environment
+@property (nonatomic, strong) NSNumber * timeToLive;
+
+
 + (HXOEnvironment*)sharedInstance;
 - (void)deactivateLocation;
 - (void)activateLocation;

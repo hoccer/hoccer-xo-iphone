@@ -350,9 +350,15 @@ static NSTimer * _stateNotificationDelayTimer;
 -(void)sendEnvironmentDestroyWithType:(NSString*)type {
     if (_state == kBackendReady && !_locationUpdatePending) {
         if (_state == kBackendReady) {
-            [self destroyEnvironmentType:type withHandler:^(BOOL ok) {
-                if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment type %@ destroyed = %d",type, ok);
-            }];
+            if ([kGroupTypeNearby isEqualToString:type]) {
+                [self destroyEnvironmentType:type withHandler:^(BOOL ok) {
+                    if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment type %@ destroyed = %d",type, ok);
+                }];
+            } else {
+                [self releaseEnvironmentType:type withHandler:^(BOOL ok) {
+                    if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment type %@ released = %d",type, ok);
+                }];
+            }
         }
     }
 }
@@ -2808,6 +2814,22 @@ static NSTimer * _stateNotificationDelayTimer;
      }];
 }
 
+// void releaseEnvironment(String type);
+- (void) releaseEnvironmentType:(NSString*)type withHandler:(GenericResultHandler)handler {
+    
+    [_serverConnection invoke: @"releaseEnvironment" withParams: @[type]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             handler(YES);
+             if (GROUP_DEBUG) NSLog(@"releaseEnvironment() returned success");
+         } else {
+             NSLog(@"releaseEnvironment() failed: %@", responseOrError);
+             handler(NO);
+         }
+     }];
+}
+
 // get the list of all groups on the server I am a member of
 //TalkGroup[] getGroups(Date lastKnown);
 - (void) getGroups:(NSDate *)lastKnown groupsHandler:(GroupsHandler) handler {
@@ -2958,7 +2980,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSEntityDescription *entity = [NSEntityDescription entityForName:@"Group" inManagedObjectContext: context];
     [fetchRequest setEntity:entity];
-    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"type == 'Group' AND groupType == '%@'",type ]];
+    [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"type == 'Group' AND groupType == %@",type ]];
     
     NSError *error;
     NSArray *groups = [context executeFetchRequest:fetchRequest error:&error];

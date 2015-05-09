@@ -88,9 +88,25 @@
 "access_control_15_minutes"  = "15 Minuten";
 "access_control_always"      = "Immer";
 
-"Notifications" = "Benachrichtigungen";
-"Anonymous"     = "Anonym";
-
 "Make Photo"    = "Fahndungsfoto";
+
+"Notifications"             = "Benachrichtigungen";
+"Anonymous"                 = "Anonym";
+"WorldwideNotifications"    = "Im Weltweit-Modus";
+
+"WorldwideTitle"            = "Weltweit-Modus";
+"WorldwideTimeToLive"       = "Verlassen nach:";
+
+"ww_0"                      = "0 min (Sofort)";
+"ww_1"                      = "1 Minute";
+"ww_5"                      = "5 Minuten";
+"ww_10"                     = "10 Minuten";
+"ww_30"                     = "30 Minuten";
+"ww_1h"                     = "1 Stunde";
+"ww_6h"                     = "6 Stunden";
+"ww_12h"                    = "12 Stunden";
+"ww_24h"                    = "24 Stunden";
+
+
 
 

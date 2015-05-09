@@ -12,6 +12,7 @@
 #import "AppDelegate.h"
 #import "UserProfile.h"
 #import "CLLocationManager+AuthHelper.h"
+#import "HXOUserDefaults.h"
 
 #import <ifaddrs.h>
 #import <arpa/inet.h>
@@ -25,10 +26,35 @@
     NSDate * _lastLocationUpdate;
     HXOBackend * _chatBackend;
     EnvironmentActivationMode _activationMode;
+    NSString * _nearbyGroupId;
+    NSString * _worldwideGroupId;
+
 }
 @end
 
 @implementation HXOEnvironment
+
+@dynamic groupId;
+
+-(NSString*)groupId {
+    if (_activationMode == ACTIVATION_MODE_NEARBY) {
+        return _nearbyGroupId;
+    } else if (_activationMode == ACTIVATION_MODE_WORLDWIDE) {
+        return _worldwideGroupId;
+    } else {
+        return nil;
+    }
+}
+
+-(void)setGroupId:(NSString *)groupId {
+    if (_activationMode == ACTIVATION_MODE_NEARBY) {
+        _nearbyGroupId = groupId;
+    } else if (_activationMode == ACTIVATION_MODE_WORLDWIDE) {
+        _worldwideGroupId = groupId;
+    } else {
+        NSLog(@"#ERROR: HXOEnvironment setGroupId: environment not active");
+    }
+}
 
 
 static NSString * LOCATION_TYPE_GPS = @"gps";         // location from gps
@@ -57,7 +83,8 @@ static HXOEnvironment *instance;
 		_locationManager.delegate = self;
         _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
         _locationManager.distanceFilter = 10.0;
-        _activationMode = NO;
+        _activationMode = ACTIVATION_MODE_NONE;
+        
     }
     
     return self;
@@ -207,6 +234,11 @@ static HXOEnvironment *instance;
         self.bssids = bssids;
     }
     
+    if ([self.type isEqualToString:@"worldwide"]) {
+        self.notificationPreference = HXOEnvironment.worldwideNotificationPreferences;
+        self.timeToLive = HXOEnvironment.worldwideTimeToLive;
+    }
+    
     // possible other location identifiers
     // NSArray * identifiers;
 }
@@ -229,6 +261,16 @@ static HXOEnvironment *instance;
     if (self.name != nil) {
         result[@"name"] = self.name;
     }
+    if (self.tag != nil) {
+        result[@"tag"] = self.tag;
+    }
+    if (self.notificationPreference != nil) {
+        result[@"notificationPreference"] = self.notificationPreference;
+    }
+    if (self.timeToLive != nil) {
+        result[@"timeToLive"] = self.timeToLive;
+    }
+    
     return result;
 }
 
@@ -282,6 +324,19 @@ static HXOEnvironment *instance;
     }
     NSLog(@"WARNING: %s: returning nil BSSID,  failed to parse %@ at pos %d, gathered result up to %@", __func__, someBSSID, done, result);
     return nil;
+}
+
++ (NSNumber*) worldwideTimeToLive {
+    return [NSNumber numberWithUnsignedLong:[[[HXOUserDefaults standardUserDefaults]
+                                              valueForKey: kHXOWorldwideTimeToLive] unsignedLongValue] * 1000];
+}
+
++ (NSString*) worldwideNotificationPreferences {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey:kHXOWorldwideNotifications]) {
+        return @"enabled";
+    } else {
+        return @"disabled";
+    }
 }
 
 

@@ -60,8 +60,12 @@ NSString * const kHXOAccessControlTimeout        = @"AccessControlTimeout";
 NSString * const kHXOAccessControlPassscode      = @"AccessControlPasscode";
 NSString * const kHXOAccessControlTouchIdEnabled = @"AccessControlTouchIdEnabled";
 
-NSString * const kHXOAnonymousNotifications = @"anonymousNotifications";
-NSString * const kHXOAccessControlPhotoEnabled = @"AccessControlPhotoEnabled";
+NSString * const kHXOAnonymousNotifications     = @"anonymousNotifications";
+NSString * const kHXOAccessControlPhotoEnabled  = @"AccessControlPhotoEnabled";
+
+NSString * const kHXOWorldwideNotifications     = @"WorldwideNotifications";
+NSString * const kHXOWorldwideTimeToLive        = @"WorldwideTimeToLive";
+
 
 
 @implementation HXOUserDefaults

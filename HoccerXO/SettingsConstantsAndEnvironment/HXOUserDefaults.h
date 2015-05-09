@@ -63,6 +63,9 @@ FOUNDATION_EXPORT NSString * const kHXOAccessControlTouchIdEnabled;
 FOUNDATION_EXPORT NSString * const kHXOAnonymousNotifications;
 FOUNDATION_EXPORT NSString * const kHXOAccessControlPhotoEnabled;
 
+FOUNDATION_EXPORT NSString * const kHXOWorldwideNotifications;
+FOUNDATION_EXPORT NSString * const kHXOWorldwideTimeToLive;
+
 
 @interface HXOUserDefaults : NSObject
 
