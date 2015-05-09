@@ -4,6 +4,44 @@
 <dict>
 	<key>PreferenceSpecifiers</key>
 	<array>
+        <dict>
+            <key>Type</key>
+            <string>IASKButtonSpecifier</string>
+            <key>Title</key>
+            <string>server_button_title</string>
+            <key>Key</key>
+            <string>showWebServer</string>
+        </dict>
+        <dict>
+            <key>Type</key>
+            <string>PSGroupSpecifier</string>
+            <key>Title</key>
+            <string></string>
+        </dict>
+        <dict>
+            <key>Type</key>
+            <string>IASKButtonSpecifier</string>
+            <key>Title</key>
+            <string>tutorial_button_title</string>
+            <key>Key</key>
+            <string>showTutorial</string>
+        </dict>
+        <dict>
+            <key>Type</key>
+            <string>IASKButtonSpecifier</string>
+            <key>Title</key>
+            <string>faq_button_title</string>
+            <key>Key</key>
+            <string>showFaq</string>
+        </dict>
+        <dict>
+            <key>Type</key>
+            <string>IASKButtonSpecifier</string>
+            <key>Title</key>
+            <string>about_button_title</string>
+            <key>Key</key>
+            <string>showAbout</string>
+        </dict>
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
@@ -468,36 +506,6 @@
             <key>DefaultValue</key>
             <false/>
         </dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string></string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>IASKButtonSpecifier</string>
-			<key>Title</key>
-			<string>tutorial_button_title</string>
-			<key>Key</key>
-			<string>showTutorial</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>IASKButtonSpecifier</string>
-			<key>Title</key>
-			<string>faq_button_title</string>
-			<key>Key</key>
-			<string>showFaq</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>IASKButtonSpecifier</string>
-			<key>Title</key>
-			<string>about_button_title</string>
-			<key>Key</key>
-			<string>showAbout</string>
-		</dict>
 	</array>
 	<key>StringsTable</key>
 	<string>Settings</string>

@@ -196,7 +196,7 @@ static int  groupMemberContext;
     if ( ! _chatItem) {
         _chatItem = [self itemWithIdentifier: @"contact_chat_title" cellIdentifier: @"DatasheetKeyValueCell"];
         _chatItem.dependencyPaths = @[@"messages.@count"];
-        //_chatItem.visibilityMask = DatasheetModeView;
+        _chatItem.visibilityMask = DatasheetModeView;
         _chatItem.accessoryStyle = DatasheetAccessoryDisclosure;
     }
     return _chatItem;
@@ -216,6 +216,7 @@ static int  groupMemberContext;
     if (! _attachmentItem) {
         _attachmentItem = [self itemWithIdentifier:@"contact_attachment_title" cellIdentifier:@"DatasheetKeyValueCell"];
         _attachmentItem.accessoryStyle = DatasheetAccessoryDisclosure;
+        _attachmentItem.visibilityMask = DatasheetModeView;
     }
     return _attachmentItem;
 }

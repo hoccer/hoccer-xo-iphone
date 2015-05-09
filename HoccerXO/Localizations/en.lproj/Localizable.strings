@@ -750,9 +750,9 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 // Server
 //==============================================================================
 
-"server_stopped_can_run"        = "Enable the %@ to start a WebDAV-Server on this device. You can then connect to the %@ from a computer in the local network to copy media items between %@ and your computer.\n\nFor security reason do not start the server when connected to an untrusted public Wifi-network.";
+"server_stopped_can_run"        = "Enable the %@ to start a Web-Server on this. You can then connect to the %@ from a computer in the local network to copy media items between %@ and your computer with a web browser.\n\nFor security reason do not start the server when connected to an untrusted public Wifi-network.";
 
-"server_stopped_can_not_run"    = "You must be connected via WiFi in order to start the WebDAV-Server for the %@ on this device, but you are not.\n\nWith the server you can connect to the %@ App from a computer in the local network and copy media items between your device and your computer.\n\nFor security reasons do not start the server when connected to an untrusted public Wifi-network.";
+"server_stopped_can_not_run"    = "You must be connected via WiFi in order to start the Web-Server for the %@ on this device, but you are not.\n\nWith the server you can connect to the %@ App from a computer in the local network and copy media items between your device and your computer using a web browser.\n\nFor security reasons do not start the server when connected to an untrusted public Wifi-network.";
 
 "server_address_title"          = "Address:";
 "server_password_title"         = "Password:";

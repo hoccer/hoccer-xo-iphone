@@ -63,6 +63,7 @@
 "about_button_title"    = "Über";
 "tutorial_button_title" = "Anleitung";
 "faq_button_title"      = "FAQ";
+"server_button_title"   = "Webserver (Zugriff auf Anhänge)";
 
 "confirm_seen_messages" = "Lesebestätigung senden";
 
