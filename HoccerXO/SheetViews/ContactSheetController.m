@@ -53,6 +53,8 @@ static int  groupMemberContext;
 @property (nonatomic, readonly) DatasheetItem              * aliasItem;
 @property (nonatomic, readonly) DatasheetItem              * attachmentItem;
 @property (nonatomic, readonly) DatasheetItem              * blockContactItem;
+@property (nonatomic, readonly) DatasheetItem              * notificationItem;
+
 
 @property (nonatomic, readonly) DatasheetSection           * inviteContactSection;
 @property (nonatomic, readonly) DatasheetItem              * inviteContactItem;
@@ -90,6 +92,8 @@ static int  groupMemberContext;
 @synthesize chatItem = _chatItem;
 @synthesize attachmentItem = _attachmentItem;
 @synthesize blockContactItem = _blockContactItem;
+@synthesize notificationItem = _notificationItem;
+
 @synthesize inviteContactSection = _inviteContactSection;
 @synthesize inviteContactItem = _inviteContactItem;
 @synthesize chatBackend = _chatBackend;
@@ -124,7 +128,7 @@ static int  groupMemberContext;
     self.destructiveButton.target = self;
     self.destructiveButton.action = @selector(destructiveButtonPressed:);
 
-    self.destructiveSection.items = @[self.blockContactItem, self.destructiveButton];
+    self.destructiveSection.items = @[self.blockContactItem, self.notificationItem, self.destructiveButton];
 }
 
 - (void) dealloc {
@@ -227,6 +231,16 @@ static int  groupMemberContext;
     return _blockContactItem;
 }
 
+- (DatasheetItem*) notificationItem {
+    if ( ! _notificationItem) {
+        _notificationItem = [self itemWithIdentifier: @"notification_pref" cellIdentifier: @"DatasheetActionCell"];
+        _notificationItem.dependencyPaths = @[@"notificationPreference", kHXONickName];
+        _notificationItem.visibilityMask = DatasheetModeEdit;
+        _notificationItem.target = self;
+        _notificationItem.action = @selector(notificationToggled:);
+    }
+    return _notificationItem;
+}
 
 - (DatasheetSection*) inviteContactSection {
     if ( ! _inviteContactSection) {
@@ -279,6 +293,10 @@ static int  groupMemberContext;
     } else if ([item isEqual: self.blockContactItem]) {
         if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible blockContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
         return !self.contact.isGroup && !self.groupInStatuNascendi && (self.contact.isBlocked || self.contact.isFriend || self.contact.invitedMe || self.contact.isGroupFriend) && [super isItemVisible:item];
+        
+    } else if ([item isEqual: self.notificationItem]) {
+        if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible notificationItem %@ %d %d", self.contact.notificationPreference,self.contact.hasNotificationsEnabled, [super isItemVisible:item]);
+        return  !self.groupInStatuNascendi && [super isItemVisible:item];
         
     } else if ([item isEqual: self.inviteContactItem]) {
         if (DEBUG_INVITE_ITEMS) NSLog(@"isItemVisible inviteContactItem %d %d %d %d", self.contact.isBlocked,self.contact.isFriend,self.contact.invitedMe, [super isItemVisible:item]);
@@ -429,9 +447,13 @@ static int  groupMemberContext;
     }
 }
 
+
+
 - (NSString*) titleForItem:(DatasheetItem *)item {
     if ([item isEqual: self.blockContactItem]) {
         return [self blockItemTitle];
+    } else  if ([item isEqual: self.notificationItem]) {
+        return [self notificationItemTitle];
     } else  if ([item isEqual: self.inviteContactItem]) {
         return [self inviteItemTitle];
     } else if ([item isEqual: self.destructiveButton]) {
@@ -608,6 +630,16 @@ static int  groupMemberContext;
     return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
 }
 
+- (NSString*) notificationItemTitle {
+    NSString * formatKey = nil;
+    if (self.contact.hasNotificationsEnabled) {
+        formatKey = @"contact_notifications_disable_btn_title_format";
+    } else {
+        formatKey = @"contact_notifications_enable_btn_title_format";
+    }
+    return formatKey ? [NSString stringWithFormat: NSLocalizedString(formatKey, nil), self.nicknameItem.currentValue] : nil;
+}
+
 - (NSString*) inviteItemTitle {
     NSString * formatKey = nil;
     if (!self.contact.isInvited) {
@@ -631,6 +663,24 @@ static int  groupMemberContext;
         }];
     } else {
         NSLog(@"ContactSheetController toggleBlockedPressed: unhandled status %@", self.contact.status);
+    }
+}
+
+- (void) notificationToggled: (id) sender {
+    NSString * preference;
+    if (self.contact.hasNotificationsEnabled) {
+        preference = @"disabled";
+    } else {
+        preference = @"enabled";
+    }
+    if (self.contact.isGroup) {
+        [self.chatBackend setGroupNotifications:self.contact.clientId withPreference:preference handler:^(BOOL success) {
+            if (RELATIONSHIP_DEBUG || !success) NSLog(@"setGroupNotifications: %@", success ? @"success" : @"failed");
+        }];
+    } else {
+        [self.chatBackend setClientNotifications:self.contact.clientId withPreference:preference handler:^(BOOL success) {
+            if (RELATIONSHIP_DEBUG || !success) NSLog(@"setClientNotifications: %@", success ? @"success" : @"failed");
+        }];
     }
 }
 

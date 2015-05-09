@@ -41,6 +41,7 @@
 @dynamic publicKeyId;
 @dynamic connectionStatus;
 @dynamic presenceLastUpdated;
+@dynamic notificationPreference;
 
 @dynamic messages;
 @dynamic deliveriesSent;
@@ -333,6 +334,10 @@ NSString * const kPresenceStateTyping = @"typing";
     }
 }
 
+- (BOOL)hasNotificationsEnabled {
+    return ![@"disabled" isEqualToString: self.notificationPreference];
+}
+
 - (BOOL) isMemberinNearbyGroup {
     NSSet * thGroupSet = [self.groupMemberships objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         return obj.group.isNearbyGroup && obj.group.isExistingGroup;
@@ -397,6 +402,7 @@ NSString * const kPresenceStateTyping = @"typing";
     return @{ @"state"     : @"relationshipState",
               @"unblockState": @"relationshipUnblockState",
               @"lastChanged": @"relationshipLastChangedMillis",
+              @"notificationPreference" : @"notificationPreference"
               };
 }
 

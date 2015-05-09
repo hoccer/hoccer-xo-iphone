@@ -51,6 +51,8 @@ NSString * const kGroupMembershipRoleWorldwideMember   = @"worldwideMember";
 @dynamic sharedKeyDate;
 @dynamic sharedKeyDateMillis;
 
+@dynamic notificationPreference;
+
 @synthesize keySettingInProgress;
 
 #define GROUPKEY_DEBUG NO
@@ -99,6 +101,30 @@ NSString * const kGroupMembershipRoleWorldwideMember   = @"worldwideMember";
 - (void) setSharedKeyIdSaltString:(NSString*) theB64String {
     self.sharedKeyIdSalt = [NSData dataWithBase64EncodedString:theB64String];
 }
+
+- (void) setNotificationPreference:(NSString *)preference {
+    /*
+    [self willChangeValueForKey:@"notificationPreference"];
+    [self setPrimitiveValue: preference forKey: @"notificationPreference"];
+    [self didChangeValueForKey:@"notificationPreference"];
+     */
+    if (self.ownGroupContact != nil) {
+        self.ownGroupContact.notificationPreference = preference;
+    } else {
+        NSLog(@"#Warning: can not set notification preference on own group");
+    }
+}
+
+- (NSString *) notificationPreference {
+    if (self.ownGroupContact != nil) {
+        return self.ownGroupContact.notificationPreference;
+    } else {
+        //return [self primitiveValueForKey:@"notificationPreference"];
+        NSLog(@"#Warning: can not get notification preference from own group");
+        return nil;
+    }
+}
+
 
 - (BOOL)isJoined {
     return [kGroupMembershipStateJoined isEqualToString: self.state];
@@ -240,7 +266,8 @@ NSString * const kGroupMembershipRoleWorldwideMember   = @"worldwideMember";
               @"sharedKeyId"  : @"sharedKeyIdString",
               @"sharedKeyIdSalt" : @"sharedKeyIdSaltString",
               @"sharedKeyDate"  : @"sharedKeyDateMillis",
-              @"keySupplier"  : @"keySupplier"              
+              @"keySupplier"  : @"keySupplier",
+              @"notificationPreference" : @"notificationPreference"
               };
 }
 

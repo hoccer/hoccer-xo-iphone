@@ -25,6 +25,8 @@
 
 @property (nonatomic, strong)   NSString       * clientId; // needed for some debug output
 
+@property (nonatomic, retain)   NSString        * notificationPreference;
+
 @property                       BOOL           deletedObject;
 
 -(void) addGroupMemberContacts:(NSSet *)members;

@@ -55,6 +55,8 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 @property (nonatomic, retain)   NSString        * relationshipUnblockState;
 @property (nonatomic, retain)   NSDate          * relationshipLastChanged;
 
+@property (nonatomic, retain)   NSString        * notificationPreference;
+
 // dynamic key properties
 @property (nonatomic,strong)    NSString        * publicKeyString; // b64-string
 @property (readonly)            NSNumber        * keyLength;       // length of public key in bits
@@ -113,6 +115,8 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 
 - (SecKeyRef) getPublicKeyRef;
 - (BOOL) hasPublicKey;
+- (BOOL)hasNotificationsEnabled;
+
 
 
 @end

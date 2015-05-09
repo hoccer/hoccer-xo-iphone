@@ -129,6 +129,9 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 - (void) acceptFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
 - (void) refuseFriend: (NSString*) clientId handler: (GenericResultHandler) handler;
 
+- (void) setGroupNotifications:(NSString*)groupId withPreference:(NSString*)preference handler: (GenericResultHandler) handler;
+- (void) setClientNotifications:(NSString*)otherClientId withPreference:(NSString*)preference handler: (GenericResultHandler) handler;
+
 - (void) acceptFriendFailedAlertForContact:(Contact*)contact;
 - (void) refuseFriendFailedAlertForContact:(Contact*)contact;
 - (void) inviteFriendFailedAlertForContact:(Contact*)contact;

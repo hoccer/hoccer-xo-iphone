@@ -301,6 +301,9 @@
 "contact_unblock_btn_title_format"              = "Unblock %@";
 "contact_block_btn_title_format"                = "Block %@";
 
+"contact_notifications_disable_btn_title_format"= "Stop notifications from %@";
+"contact_notifications_enable_btn_title_format" = "Enable notifications from %@";
+
 "contact_invite_btn_title_format"               = "Invite as friend";
 "contact_disinvite_btn_title_format"            = "Disinvite %@";
 

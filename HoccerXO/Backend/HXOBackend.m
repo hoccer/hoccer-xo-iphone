@@ -263,6 +263,14 @@ static NSTimer * _stateNotificationDelayTimer;
                    forKeyPath:kHXOAccessControlPhotoEnabled
                       options:NSKeyValueObservingOptionNew
                       context:NULL];
+        [defaults addObserver:self
+                   forKeyPath:kHXOWorldwideNotifications
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
+        [defaults addObserver:self
+                   forKeyPath:kHXOWorldwideTimeToLive
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
         
         _attachmentDownloadsWaiting = [[NSMutableArray alloc] init];
         _attachmentUploadsWaiting = [[NSMutableArray alloc] init];
@@ -312,6 +320,11 @@ static NSTimer * _stateNotificationDelayTimer;
                 // We are on iOS <= 6. Just do what we need to do.
                 // [self showCameraPickerForType:type];
             }
+        }
+    }
+    if ([keyPath isEqualToString:kHXOWorldwideNotifications] || [keyPath isEqualToString:kHXOWorldwideTimeToLive]) {
+        if (HXOEnvironment.sharedInstance.activationMode == ACTIVATION_MODE_WORLDWIDE && self.isReady) {
+            [self sendEnvironmentUpdate];
         }
     }
 }
@@ -1195,7 +1208,7 @@ static NSTimer * _stateNotificationDelayTimer;
         }
 #endif
         
-        if (HXOEnvironment.sharedInstance.activationMode != ACTIVATION_MODE_NONE) {
+        if (HXOEnvironment.sharedInstance.activationMode != ACTIVATION_MODE_NONE && !AppDelegate.instance.runningInBackground) {
             NSLog(@"Nearby or worldwide active, defering sync until environment update ready");
             __block __typeof(self) __weak weakSelf = self;
             _firstEnvironmentUpdateHandler = ^(BOOL ok) {
@@ -6104,6 +6117,22 @@ static NSTimer * _stateNotificationDelayTimer;
 - (void) refuseFriend: (NSString*) clientId handler: (GenericResultHandler) handler {
     //NSLog(@"refuseFriend");
     [_serverConnection invoke: @"refuseFriend" withParams: @[clientId] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
+//void setGroupNotifications(String groupId, String preference);
+- (void) setGroupNotifications:(NSString*)groupId withPreference:(NSString*)preference handler: (GenericResultHandler) handler {
+    //NSLog(@"setGroupNotifications");
+    [_serverConnection invoke: @"setGroupNotifications" withParams: @[groupId, preference] onResponse: ^(id responseOrError, BOOL success) {
+        handler(success);
+    }];
+}
+
+//void setClientNotifications(String otherClientId, String preference);
+- (void) setClientNotifications:(NSString*)otherClientId withPreference:(NSString*)preference handler: (GenericResultHandler) handler {
+    //NSLog(@"setClientNotifications");
+    [_serverConnection invoke: @"setClientNotifications" withParams: @[otherClientId, preference] onResponse: ^(id responseOrError, BOOL success) {
         handler(success);
     }];
 }

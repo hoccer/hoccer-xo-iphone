@@ -1,6 +1,5 @@
 //
 //  GroupMembership.h
-//  QRCodeEncoderObjectiveCAtGithub
 //
 //  Created by David Siegel on 15.05.13.
 //
@@ -33,6 +32,8 @@ FOUNDATION_EXPORT NSString * const kGroupMembershipRoleWorldwideMember;
 @property (nonatomic, retain) NSData * cipheredGroupKey;
 @property (nonatomic, retain) NSData * distributedCipheredGroupKey;
 @property (nonatomic, retain) NSData * distributedGroupKey;
+@property (nonatomic, retain) NSString * notificationPreference;
+
 
 @property (nonatomic, retain) NSDate * lastChangedMillis;
 @property (nonatomic, retain) NSString * cipheredGroupKeyString;
