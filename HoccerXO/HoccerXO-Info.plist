@@ -73,7 +73,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>16661</string>
+	<string>16662</string>
 	<key>HXODefaultEnvironment</key>
 	<string>${HXO_DEFAULT_ENVIRONMENT}</string>
 	<key>HXOTestFlightToken</key>
