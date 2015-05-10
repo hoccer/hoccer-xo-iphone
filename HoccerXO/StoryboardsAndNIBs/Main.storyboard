@@ -369,10 +369,10 @@
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
                                 <state key="normal" image="fullscreen-button-back.png"/>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="hYH-dV-vAz" customClass="MPVolumeView">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hYH-dV-vAz" customClass="MPVolumeView">
                                 <rect key="frame" x="35" y="518" width="248" height="32"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="248" id="JIt-RA-ces"/>
+                                    <constraint firstAttribute="width" priority="100" constant="248" id="JIt-RA-ces"/>
                                     <constraint firstAttribute="height" constant="32" id="sIv-ho-DxM"/>
                                 </constraints>
                             </view>
@@ -469,6 +469,7 @@
                             <constraint firstItem="T5U-YR-stl" firstAttribute="top" secondItem="dGI-ip-VRl" secondAttribute="bottom" id="VXE-7A-NwU"/>
                             <constraint firstItem="ePq-at-U6r" firstAttribute="top" secondItem="KJX-QM-Eai" secondAttribute="bottom" constant="35" id="Vz7-sA-8BQ"/>
                             <constraint firstItem="MaU-B6-Kk7" firstAttribute="top" secondItem="hYH-dV-vAz" secondAttribute="bottom" constant="18" id="bDs-Js-XvI"/>
+                            <constraint firstAttribute="centerX" secondItem="hYH-dV-vAz" secondAttribute="centerX" id="fEa-Eu-iFr"/>
                             <constraint firstItem="k7m-XD-mWz" firstAttribute="top" secondItem="3zo-vz-vjI" secondAttribute="bottom" constant="40" id="fX2-UY-jue"/>
                             <constraint firstItem="ePq-at-U6r" firstAttribute="firstBaseline" secondItem="7br-sq-EAi" secondAttribute="firstBaseline" id="fqT-Ur-GYq"/>
                             <constraint firstItem="7br-sq-EAi" firstAttribute="baseline" secondItem="ePq-at-U6r" secondAttribute="baseline" id="frh-d7-2Ok"/>
@@ -483,7 +484,6 @@
                             <constraint firstItem="ePq-at-U6r" firstAttribute="baseline" secondItem="7br-sq-EAi" secondAttribute="baseline" id="kPf-sB-Lz9"/>
                             <constraint firstItem="3zo-vz-vjI" firstAttribute="centerX" secondItem="gSs-fM-2li" secondAttribute="centerX" id="nPS-gB-44F"/>
                             <constraint firstItem="3zo-vz-vjI" firstAttribute="top" secondItem="V7Z-6c-o9p" secondAttribute="bottom" constant="23" id="rEP-e5-aVc"/>
-                            <constraint firstItem="Ft5-cI-TVh" firstAttribute="leading" secondItem="hYH-dV-vAz" secondAttribute="trailing" constant="6" id="rlc-Em-FHW"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Ft5-cI-TVh" secondAttribute="trailing" constant="-4" id="soT-dq-ZU0"/>
                             <constraint firstItem="MaU-B6-Kk7" firstAttribute="top" secondItem="wsF-BK-75X" secondAttribute="bottom" constant="32" id="xHV-bN-PI2"/>
                         </constraints>
