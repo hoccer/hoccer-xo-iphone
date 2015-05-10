@@ -16,7 +16,9 @@
 #import "HXOUI.h"
 
 static const CGFloat kBlockedSignPaddingOffset = -0.541667;
+//static const CGFloat kBlockedSignPaddingOffset = -0.7;
 static const CGFloat kBlockedSignPaddingFactor = 0.0260417;
+//static const CGFloat kBlockedSignPaddingFactor = 0.001;
 
 static const CGFloat kBadgeFontSizeOffset = 49.0 / 6.0;
 static const CGFloat kBadgeFontSizeFactor = 7.0 / 48;
@@ -72,10 +74,42 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     return self;
 }
 
+#ifdef DEBUG_COORDS
+void printRect(CGRect rect, NSString * label) {
+    NSLog(@"%@: x:%f y:%f w:%f h:%f", label, rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+}
+
+void printPoint(CGPoint point, NSString * label) {
+    NSLog(@"%@: x:%f y:%f", label, point.x, point.y);
+}
+
+
+void printSize(CGSize size, NSString * label) {
+    NSLog(@"%@: x:%f y:%f", label, size.width, size.height);
+}
+
+- (void)printCoords:(NSString*)label {
+    NSLog(@"----- %@ ------", label);
+    printRect(self.bounds, @"self.bounds");
+    printRect(self.frame, @"self.frame");
+    printRect(self.layer.bounds, @"self.layer.bounds");
+    printPoint(self.layer.position, @"self.layer.position");
+    printRect(self.avatarLayer.bounds, @"self.avatarLayer.bounds");
+    printPoint(self.avatarLayer.position, @"self.avatarLayer.position");
+    printRect(self.defaultAvatarLayer.bounds, @"self.defaultAvatarLayer.bounds");
+    printPoint(self.defaultAvatarLayer.position, @"self.defaultAvatarLayer.position");
+    printRect(self.blockedSignLayer.bounds, @"self.blockedSignLayer.bounds");
+    printPoint(self.blockedSignLayer.position, @"self.blockedSignLayer.position");
+    printRect(self.circleMask.bounds, @"self.circleMask.bounds");
+    printPoint(self.circleMask.position, @"self.circleMask.position");
+}
+#endif
+
 - (void) commonInit {
     //self.layer.backgroundColor = [UIColor lightGrayColor].CGColor;
 
     CGFloat size = MIN(self.layer.bounds.size.width, self.layer.bounds.size.height);
+    
     self.layer.contentsGravity = kCAGravityResizeAspect;
 
     self.avatarLayer = [CALayer layer];
@@ -92,15 +126,23 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     self.defaultAvatarLayer.contentsGravity = kCAGravityResizeAspect;
     [self.avatarLayer addSublayer: self.defaultAvatarLayer];
 
+
     self.blockedSignLayer = [CAShapeLayer layer];
-    CGFloat blockSignSize = size - [self blockedSignPadding];
+    //CGFloat blockSignSize = size - [self blockedSignPadding];
+    CGFloat blockSignSize = size ;//* 0.7;
     self.blockedSignLayer.bounds = CGRectMake(0, 0, blockSignSize, blockSignSize);
     self.blockedSignLayer.position = avatarCenter;
-    self.blockedSignLayer.contentsGravity = kCAGravityResizeAspect;
+    //self.blockedSignLayer.contentsGravity = kCAGravityCenter;
+    
     self.blockedSignLayer.opacity = 0;
     VectorArt * blockedSign = [[ghost_busters_sign alloc] init];
-    self.blockedSignLayer.fillColor = blockedSign.fillColor.CGColor;
+#ifdef TEST_WITH_RED_GREEN
+    self.blockedSignLayer.strokeColor = UIColor.redColor.CGColor;
+    self.blockedSignLayer.fillColor = UIColor.greenColor.CGColor;
+#else
     self.blockedSignLayer.strokeColor = blockedSign.strokeColor.CGColor;
+    self.blockedSignLayer.fillColor = blockedSign.fillColor.CGColor;
+#endif
     _blockedSignLayer.path = [blockedSign pathScaledToSize: self.blockedSignLayer.bounds.size].CGPath;
     [self.avatarLayer addSublayer: self.blockedSignLayer];
     //self.blockedSignLayer.backgroundColor = [UIColor orangeColor].CGColor;
@@ -145,7 +187,9 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
     self.avatarLayer.mask = self.circleMask;
 
     self.badgeText = nil;
-
+#ifdef DEBUG_COORDS
+    [self printCoords:@"postInit"];
+#endif
     [self setNeedsLayout];
 }
 
@@ -160,8 +204,9 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
         self.avatarLayer.position = CGPointMake(0.5 * layer.bounds.size.width, 0.5 * layer.bounds.size.height);
         CGFloat size = MIN(layer.bounds.size.width, layer.bounds.size.height);
         CGFloat scale = size / self.avatarLayer.frame.size.width;
-        self.avatarLayer.transform = CATransform3DScale(self.avatarLayer.transform, scale, scale, scale);
+        self.avatarLayer.transform = CATransform3DScale(self.avatarLayer.transform, scale, scale, 1.0);
         //self.avatarLayer.bounds = CGRectMake(0, 0, size, size);
+
 
         self.badgeTextLayer.position = CGPointMake(CGRectGetMaxX(self.avatarLayer.frame), CGRectGetMinY(self.avatarLayer.frame));
         self.badgeBackgroundLayer.position = self.badgeTextLayer.position;
@@ -173,6 +218,11 @@ static const CGFloat kLedBorderWidthFactor = 1.0 / 96;
         //self.ledLayer.bounds = CGRectMake(0, 0, [self ledSize], [self ledSize]);
 
         [self updateBadge: self.badgeText];
+#ifdef DEBUG_COORDS
+        [self printCoords:@"postLayout"];
+        NSLog(@"size: %f", size);
+        NSLog(@"scale: %f", scale);
+#endif
 
     }
 }
