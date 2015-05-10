@@ -710,22 +710,38 @@ bool almostEqual(CGFloat a, CGFloat b) {
 
 - (UIView*) placeholderView {
     if ( ! _placeholderView) {
-        CGFloat h = self.view.bounds.size.height - (self.view.bounds.origin.y + 50);
+        CGFloat h = self.view.bounds.size.height - (self.view.bounds.origin.y + 150);
         _placeholderView = [[UIView alloc] initWithFrame: CGRectMake(0, 0, self.view.bounds.size.width, h)];
         _placeholderView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-
+        //_placeholderView.translatesAutoresizingMaskIntoConstraints = NO;
+        
         [_placeholderView addSubview: self.placeholderImageButton];
         [_placeholderView addSubview: self.placeholderLabel];
 
         NSDictionary * views = @{@"image": self.placeholderImageButton, @"label": self.placeholderLabel};
-        NSString * format = [NSString stringWithFormat: @"H:|-[image]-|"];
+        //NSString * format = [NSString stringWithFormat: @"H:|-[image]-|"];
+        NSString * format = [NSString stringWithFormat: @"H:|->=20-[image]->=20-|"];
+        
         [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
+        NSLayoutConstraint *constraintH = [NSLayoutConstraint constraintWithItem:self.placeholderImageButton attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:_placeholderView attribute:NSLayoutAttributeCenterX multiplier:1.0f constant:0.0f];
+        [_placeholderView addConstraint:constraintH];
+        
         format = [NSString stringWithFormat: @"H:|-[label]-|"];
         [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
 
         format = [NSString stringWithFormat: @"V:|-(%f)-[image]-(%f)-[label(>=40)]-(>=%f)-|", 8 * kHXOGridSpacing, 4 * kHXOGridSpacing, kHXOGridSpacing];
         [_placeholderView addConstraints: [NSLayoutConstraint constraintsWithVisualFormat: format options: 0 metrics: nil views: views]];
+        
+        NSLayoutConstraint *constraint =[NSLayoutConstraint
+                                         constraintWithItem:self.placeholderImageButton
+                                         attribute:NSLayoutAttributeHeight
+                                         relatedBy:NSLayoutRelationEqual
+                                         toItem:self.placeholderImageButton
+                                         attribute:NSLayoutAttributeWidth
+                                         multiplier:1.0 //4.0/3.0 //Aspect ratio: 4*height = 3*width
+                                         constant:0.0f];
+        [self.placeholderImageButton addConstraint:constraint];
     }
     return _placeholderView;
 }
