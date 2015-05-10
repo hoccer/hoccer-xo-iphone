@@ -1104,7 +1104,7 @@
         <!--Server Navigation-->
         <scene sceneID="e7s-zS-Vya">
             <objects>
-                <navigationController id="fb2-9g-9x6" userLabel="Server Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="unusedServerNavigation" id="fb2-9g-9x6" userLabel="Server Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Server UI" id="0XA-DL-LQL"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="KYL-Jc-u0e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -1240,15 +1240,15 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="57k-z7-2Ln"/>
-        <segue reference="8jZ-4R-eDF"/>
+        <segue reference="4Tx-uH-B8w"/>
+        <segue reference="UJI-wH-YH7"/>
+        <segue reference="yj0-Vd-HPq"/>
         <segue reference="Jku-Va-0fi"/>
         <segue reference="FuA-82-8A3"/>
         <segue reference="3XQ-ea-QwO"/>
         <segue reference="KXG-tu-Cv6"/>
-        <segue reference="yj0-Vd-HPq"/>
-        <segue reference="4Tx-uH-B8w"/>
-        <segue reference="UJI-wH-YH7"/>
+        <segue reference="57k-z7-2Ln"/>
+        <segue reference="8jZ-4R-eDF"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
 </document>
