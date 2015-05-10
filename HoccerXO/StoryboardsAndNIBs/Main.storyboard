@@ -855,7 +855,7 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oDn-ba-OW5">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oDn-ba-OW5">
                                 <rect key="frame" x="0.0" y="-8" width="320" height="512"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <connections>
@@ -863,6 +863,12 @@
                                 </connections>
                             </mapView>
                         </subviews>
+                        <constraints>
+                            <constraint firstItem="oDn-ba-OW5" firstAttribute="leading" secondItem="SMK-u8-fXi" secondAttribute="leading" id="EaY-7U-xyd"/>
+                            <constraint firstAttribute="trailing" secondItem="oDn-ba-OW5" secondAttribute="trailing" id="F2M-mU-QPL"/>
+                            <constraint firstItem="oDn-ba-OW5" firstAttribute="top" secondItem="SMK-u8-fXi" secondAttribute="topMargin" constant="-8" id="PTR-j5-00R"/>
+                            <constraint firstItem="oDn-ba-OW5" firstAttribute="bottom" secondItem="zwZ-8x-104" secondAttribute="top" id="SKw-BZ-ZVZ"/>
+                        </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="Drag the Pin" id="dZo-z5-Fid">
