@@ -103,26 +103,29 @@ NSString * const kGroupMembershipRoleWorldwideMember   = @"worldwideMember";
 }
 
 - (void) setNotificationPreference:(NSString *)preference {
-    /*
+    
     [self willChangeValueForKey:@"notificationPreference"];
     [self setPrimitiveValue: preference forKey: @"notificationPreference"];
     [self didChangeValueForKey:@"notificationPreference"];
-     */
-    if (self.ownGroupContact != nil) {
-        self.ownGroupContact.notificationPreference = preference;
-    } else {
-        NSLog(@"#Warning: can not set notification preference on own group");
+    
+    if (self.isOwnMembership) {
+        if (self.group != nil) {
+            self.group.notificationPreference = preference;
+        } else {
+            NSLog(@"#Warning: GroupMembership: can not set notification preference on own group, own group not yet there");
+        }
     }
 }
 
 - (NSString *) notificationPreference {
-    if (self.ownGroupContact != nil) {
-        return self.ownGroupContact.notificationPreference;
-    } else {
-        //return [self primitiveValueForKey:@"notificationPreference"];
-        NSLog(@"#Warning: can not get notification preference from own group");
-        return nil;
+    if (self.isOwnMembership) {
+        if (self.group != nil) {
+            return self.group.notificationPreference;
+        } else {
+            NSLog(@"#Warning: can not get notification preference from own group, own group not yet there");
+        }
     }
+    return [self primitiveValueForKey:@"notificationPreference"];
 }
 
 
