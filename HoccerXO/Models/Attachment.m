@@ -123,9 +123,8 @@
 @dynamic creationDate;           // date when this record was created
 
 @dynamic fileStatus;
-//@dynamic orderNumber;
-
 @dynamic fileModificationDate;
+@dynamic savedByContact;
 
 @dynamic attachmentJsonString;
 @dynamic attachmentJsonStringCipherText;
@@ -631,6 +630,17 @@
         }];
     }
 }
+
+- (void) ensurePreviewImageWithCompletion:(CompletionBlock)finished {
+    if (self.previewImage != nil) {
+        if (finished != nil) {
+            finished(nil);
+        }
+    } else {
+        [self loadPreviewImageIntoCacheWithCompletion:finished];
+    }
+}
+
 
 
 + (BOOL) tooLargeImage:(UIImage *)theFullImage {

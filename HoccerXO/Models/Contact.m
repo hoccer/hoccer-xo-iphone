@@ -32,8 +32,6 @@
 @dynamic nickName;
 @dynamic alias;
 @dynamic status;
-
-// @dynamic currentTimeSection;
 @dynamic unreadMessages;
 @dynamic latestMessage;
 @dynamic publicKey;
@@ -49,6 +47,9 @@
 @dynamic groupMemberships;
 @dynamic nickNameWithStatus;
 @dynamic myGroupMembership;
+@dynamic savedMessageBody;
+@dynamic savedAttachments;
+@dynamic savedAttachment;
 
 @dynamic lastUpdateReceived;
 

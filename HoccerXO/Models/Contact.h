@@ -13,6 +13,7 @@
 #import "HXOClientProtocol.h"
 
 @class GroupMembership;
+@class Attachment;
 
 FOUNDATION_EXPORT NSString * const kRelationStateNone;
 FOUNDATION_EXPORT NSString * const kRelationStateFriend;
@@ -56,6 +57,10 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 @property (nonatomic, retain)   NSDate          * relationshipLastChanged;
 
 @property (nonatomic, retain)   NSString        * notificationPreference;
+
+@property (nonatomic, retain)   NSString        * savedMessageBody;
+@property (nonatomic, retain)   NSDictionary    * savedAttachments;
+@property (nonatomic, retain)   Attachment      * savedAttachment;
 
 // dynamic key properties
 @property (nonatomic,strong)    NSString        * publicKeyString; // b64-string

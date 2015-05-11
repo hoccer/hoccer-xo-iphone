@@ -650,11 +650,12 @@ static NSTimer * _stateNotificationDelayTimer;
                 if (attachment != nil && attachment.state == kAttachmentWantsTransfer && ! deliveryFailed) {
                     [self enqueueUploadOfAttachment:attachment];
                 }
-                [AppDelegate.instance saveContext];
+                //* [AppDelegate.instance saveContext];
             }
         }];
     } else {
-        [AppDelegate.instance saveContext];
+        //* [AppDelegate.instance saveContext];
+        [AppDelegate.instance saveDatabase];
     }
 }
 
@@ -739,14 +740,14 @@ static NSTimer * _stateNotificationDelayTimer;
             message.attachment = attachment;
             attachment.cipheredSize = [attachment calcCipheredSize];
             delivery.attachmentState = kDelivery_ATTACHMENT_STATE_NEW;
-            [AppDelegate.instance saveContext:context];
+            //* [AppDelegate.instance saveContext:context];
             [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[message] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
                 [self createUrlsForTransferOfAttachmentOfMessage:managedObjects[0]];
             }];
             return;
         }
         delivery.attachmentState = kDelivery_ATTACHMENT_STATE_NONE;
-        [AppDelegate.instance saveContext:context];
+        //[AppDelegate.instance saveContext:context];
         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[message, delivery] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
             HXOMessage * message = managedObjects[0];
             Delivery * delivery = managedObjects[1];
@@ -767,7 +768,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 message.attachmentFileId = urls[@"fileId"];
                 attachment.transferSize = @(0);
                 attachment.cipherTransferSize = @(0);
-                [AppDelegate.instance saveContext];
+                //* [AppDelegate.instance saveContext];
                 // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
                 [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:attachment];
             } else {

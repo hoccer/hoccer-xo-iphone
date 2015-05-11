@@ -20,6 +20,7 @@
 @class AttachmentButton;
 
 typedef void (^ImageCompletionBlock)(UIImage * image, NSError* error);
+typedef void (^ArrayCompletionBlock)(NSArray * result);
 
 @interface ChatViewController : UIViewController
 <

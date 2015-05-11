@@ -16,6 +16,7 @@
 @class HXOBackend;
 @class CryptoEngine;
 @class Attachment;
+@class Contact;
 
 typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
 typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
@@ -96,8 +97,9 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSDate   * creationDate;           // date when this record was created
 // new properties with Model Version 47 not reliably available yet on old databse
 @property (nonatomic, strong) NSString * fileStatus;             // indicates the status of the referenced file, currently only "DOES_NOT_EXIST"
-//@property (nonatomic)         NSNumber * orderNumber;            // number of ciphertext bytes
+//@property (nonatomic)         NSNumber * orderNumber;          // number of ciphertext bytes
 @property (nonatomic, strong) NSDate   * fileModificationDate;   // lastModifiedDate of attached file
+@property (nonatomic, strong) Contact  * savedByContact;         // contact who selected this attachment when the view was removed
 
 // virtual properties
 @property (nonatomic) NSString * attachmentJsonString;
@@ -180,6 +182,7 @@ typedef enum AttachmentStates {
 
 - (void) loadImageAttachmentImage: (ImageLoaderBlock) block;
 - (void) loadPreviewImageIntoCacheWithCompletion:(CompletionBlock) block;
+- (void) ensurePreviewImageWithCompletion:(CompletionBlock)finished;
 
 - (void) loadAttachmentDict: (DictLoaderBlock) block;
 

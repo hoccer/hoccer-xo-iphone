@@ -63,7 +63,7 @@
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
 #define DEBUG_NOTIFICATIONS NO
-#define DEBUG_APPEAR NO
+#define DEBUG_APPEAR YES
 #define READ_DEBUG NO
 #define DEBUG_OBSERVERS NO
 #define DEBUG_CELL_HEIGHT_CACHING NO
@@ -97,6 +97,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property (nonatomic, strong)   NSTimer                        * typingTimer;
 
 @property  BOOL                                                keyboardShown;
+@property  BOOL                                                pickingAttachment;
 
 @property (strong) UIBarButtonItem * actionButton;
 
@@ -106,6 +107,9 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @property (nonatomic, readonly) NSMutableSet * observedContacts;
 @property (nonatomic, readonly) NSMutableSet * observedMembersGroups;
+
+@property (nonatomic, strong) ALAssetsLibrary * assetLibrary;
+
 
 @end
 
@@ -131,6 +135,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @synthesize observedContacts = _observedContacts;
 @synthesize observedMembersGroups = _observedMembersGroups;
 @synthesize multiAttachmentExportItems = _multiAttachmentExportItems;
+@synthesize assetLibrary = _assetLibrary;
 
 -(NSMutableSet *)observedContacts {
     if (_observedContacts == nil) {
@@ -144,6 +149,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         _observedMembersGroups = [NSMutableSet new];
     }
     return _observedMembersGroups;
+}
+
+-(ALAssetsLibrary*)assetLibrary {
+    if (_assetLibrary == nil) {
+        _assetLibrary = [[ALAssetsLibrary alloc] init];
+    }
+    return _assetLibrary;
 }
 
 - (void)viewDidLoad {
@@ -318,6 +330,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [HXOBackend broadcastConnectionInfo];
 
     [self scrollToRememberedCellOrToBottomIfNone];
+    [self restoreTypedBody];
+    if (!self.pickingAttachment) {
+        [self restoreAttachments];
+    } else {
+        self.pickingAttachment = NO;
+    }
+    
     [AppDelegate setWhiteFontStatusbarForViewController:self];
 
     NSNotificationCenter * nc = [NSNotificationCenter defaultCenter];
@@ -374,8 +393,204 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     return item;
 }
 
+-(void)rememberTypedBody {
+
+    if ([self.messageField isFirstResponder]) {
+        [self.autoCorrectTriggerHelper becomeFirstResponder]; // trigger autocompletion on last word ...
+        [self.messageField becomeFirstResponder];     // ... without hiding the keyboard
+    }
+    self.partner.savedMessageBody = self.messageField.text;
+}
+
+-(void)restoreTypedBody {
+    self.messageField.text = self.partner.savedMessageBody;
+    if (self.messageField.text.length > 0) {
+        [self.messageField becomeFirstResponder];
+    }
+    [self textViewDidChange: self.messageField];
+}
+
++(NSDictionary*)encodeMultiAttachments:(NSArray*)multiAttachments {
+    NSMutableDictionary * result = [NSMutableDictionary new];
+    for (id element in multiAttachments) {
+        
+        if ([element isKindOfClass:[MPMediaItem class]]) {
+            MPMediaItem * item = element;
+            NSNumber * persistentId = [NSNumber numberWithUnsignedLong:item.persistentID];
+            result[persistentId] = @"MPMediaItem";
+
+        } else if ([element isKindOfClass:[ALAsset class]]) {
+            ALAsset * asset = element;
+            NSURL * url = [asset valueForProperty:ALAssetPropertyAssetURL];
+            result[url] = @"ALAsset";
+            
+        } else {
+            NSLog(@"#ERROR: unknown item in multiAttachments:%@", element);
+        }
+    }
+    
+    return result;
+}
+
++(MPMediaItem*)mediaItemForId:(NSNumber*)myPersistentId {
+    MPMediaItem *song;
+    MPMediaPropertyPredicate *predicate;
+    MPMediaQuery *songQuery;
+    
+    predicate = [MPMediaPropertyPredicate predicateWithValue: myPersistentId forProperty:MPMediaItemPropertyPersistentID comparisonType:MPMediaPredicateComparisonEqualTo];
+    songQuery = [[MPMediaQuery alloc] init];
+    [songQuery addFilterPredicate: predicate];
+    if (songQuery.items.count > 0)
+    {
+        //song exists
+        song = [songQuery.items objectAtIndex:0];
+        return song;
+        //CellDetailLabel = [CellDetailLabel stringByAppendingString:[song valueForProperty: MPMediaItemPropertyTitle]];
+    }
+    return nil;
+}
+
+-(void)compactAttachments:(NSArray*)sparseArray whenFinished:(ArrayCompletionBlock)onReady {
+    NSMutableArray * result = [NSMutableArray new];
+    for (id element in sparseArray) {
+        if (![element isKindOfClass:[NSNull class]]) {
+            [result addObject:element];
+        }
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        onReady(result);
+    });
+}
+
+-(void)decodeMultiAttachments:(NSDictionary*)dictionary whenFinished:(ArrayCompletionBlock)onReady {
+    
+    NSMutableArray * interMediateResult = [NSMutableArray new];
+
+    //ALAssetsLibrary *assetLibrary = [[ALAssetsLibrary alloc] init];
+
+    int i = 0;
+    __block int done = 0;
+    for (id key in dictionary) {
+        [interMediateResult addObject:[NSNull new]];
+        NSString * className = dictionary[key];
+        if ([@"MPMediaItem" isEqualToString:className]) {
+            NSNumber * persistentId = key;
+            MPMediaItem * song = [ChatViewController mediaItemForId:persistentId];
+            if (song) {
+                [interMediateResult setObject:song atIndexedSubscript:i];
+            }
+            ++done;
+            
+        } else if ([@"ALAsset" isEqualToString:className]) {
+            NSURL * url = key;
+            [self.assetLibrary assetForURL:url resultBlock:^(ALAsset *asset) {
+                [interMediateResult setObject:asset atIndexedSubscript:i];
+                if (++done == dictionary.count) {
+                    [self compactAttachments:interMediateResult whenFinished:onReady];
+                }
+            } failureBlock:^(NSError *error) {
+                NSLog(@"#WARNING: url %@ in multiAttachments not found in assets, error=%@", url, error);
+                if (++done == dictionary.count) {
+                    [self compactAttachments:interMediateResult whenFinished:onReady];
+                }
+            }];
+        } else {
+            NSLog(@"#ERROR: unknown className in multiAttachments:%@", className);
+        }
+        ++i;
+    }
+    if (done == dictionary.count) {
+        [self compactAttachments:interMediateResult whenFinished:onReady];
+    }
+}
+
+-(void)decodeMultiAttachments2:(NSDictionary*)dictionary whenFinished:(ArrayCompletionBlock)onReady {
+    
+    NSMutableArray * interMediateResult = [NSMutableArray new];
+    
+    for (id key in dictionary) {
+        NSString * className = dictionary[key];
+        if ([@"MPMediaItem" isEqualToString:className]) {
+            NSNumber * persistentId = key;
+            MPMediaItem * song = [ChatViewController mediaItemForId:persistentId];
+            if (song) {
+                [interMediateResult addObject:song];
+            }
+            
+        } else if ([@"ALAsset" isEqualToString:className]) {
+            NSURL * url = key;
+            AVURLAsset * asset = [AVURLAsset assetWithURL:url];
+            if (asset != nil) {
+                [interMediateResult addObject:asset];
+            } else {
+                NSLog(@"#WARNING: url %@ in multiAttachments not found in assets", url);
+            };
+        } else {
+            NSLog(@"#ERROR: unknown className in multiAttachments:%@", className);
+        }
+    }
+    onReady(interMediateResult);
+}
+
+-(void)rememberAttachments {
+    
+    if (self.currentAttachment != nil) {
+        if (_currentPickInfo != nil) {
+            if (_currentExportSession != nil) {
+                [_currentExportSession cancelExport];
+                // attachment will be trashed when export session canceling will call finishPickedAttachmentProcessingWithImage
+                return;
+            } else {
+                // NSLog(@"Picking still in progress, can't trash - or can I?");
+            }
+        } else {
+            // there is a picked and exported attachment to remember
+            self.partner.savedAttachment = self.currentAttachment;
+        }
+        self.currentAttachment = nil;
+    } else if (self.currentMultiAttachment != nil) {
+        NSDictionary * savedAttachmentsDict = [ChatViewController encodeMultiAttachments:self.currentMultiAttachment];
+        self.partner.savedAttachments = savedAttachmentsDict;
+        self.currentMultiAttachment = nil;
+    }
+    [self decorateAttachmentButton:nil];
+    [AppDelegate.instance saveDatabase];
+    // TODO:
+    //_attachmentButton.hidden = NO;
+}
+
+-(void)restoreAttachments {
+    
+    if (self.partner.savedAttachment != nil) {
+        self.currentAttachment = self.partner.savedAttachment;
+        self.partner.savedAttachment = nil;
+        [AppDelegate.instance saveDatabase];
+        [self.currentAttachment ensurePreviewImageWithCompletion:^(NSError *theError) {
+            [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:theError];
+            if (theError != nil) {
+                NSLog(@"Failed to load preview for saved attachment, trashing %@, error = %@", self.currentAttachment, theError);
+            }
+            [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:theError];
+        }];
+    } else if (self.partner.savedAttachments != nil) {
+        [self decodeMultiAttachments2:self.partner.savedAttachments whenFinished:^(NSArray *result) {
+            self.currentMultiAttachment = result;
+            self.partner.savedAttachments = nil;
+            UIImage * preview = [ChatViewController createMultiAttachmentPreview:self.currentMultiAttachment];
+            [self finishPickedAttachmentProcessingWithImage:preview withError:nil];
+        }];
+    } else {
+        [self decorateAttachmentButton:nil];
+    }
+}
+
+
 - (void) viewWillDisappear:(BOOL)animated {
+    
     [self rememberLastVisibleCell];
+    [self rememberTypedBody];
+    [self rememberAttachments];
+    
     if (self.throwObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.throwObserver];
     }
@@ -1102,6 +1317,7 @@ nil
     } else if (_currentMultiAttachment != nil) {
         [self showAttachmentOptions];
     } else {
+        self.pickingAttachment = YES;
         [self.attachmentPicker showInView: self.view];
     }
 }
@@ -1547,6 +1763,17 @@ nil
     return copied;
 }
 
++ (UIImage*)createMultiAttachmentPreview:(NSArray*)multiAttachment {
+    UILabel * label = [UILabel new];
+    label.frame = CGRectMake(0,0,30,30);
+    label.textAlignment = NSTextAlignmentCenter;
+    label.backgroundColor = [HXOUI theme].tintColor;
+    label.textColor = [HXOUI theme].navigationBarBackgroundColor;
+    label.text = @(multiAttachment.count).stringValue;
+    UIImage * preview = [ChatViewController imageFromView:label withScale:4.0];
+    return preview;
+}
+
 - (void) didPickAttachment: (id) attachmentInfo {
     if (attachmentInfo == nil) {;
         return;
@@ -1568,13 +1795,7 @@ nil
             
             // multi attachment
             self.currentMultiAttachment = attachmentInfo;
-            UILabel * label = [UILabel new];
-            label.frame = CGRectMake(0,0,30,30);
-            label.textAlignment = NSTextAlignmentCenter;
-            label.backgroundColor = [HXOUI theme].tintColor;
-            label.textColor = [HXOUI theme].navigationBarBackgroundColor;
-            label.text = @(self.currentMultiAttachment.count).stringValue;
-            UIImage * preview = [ChatViewController imageFromView:label withScale:4.0];
+            UIImage * preview = [ChatViewController createMultiAttachmentPreview:self.currentMultiAttachment];
             [self finishPickedAttachmentProcessingWithImage:preview withError:nil];
             return;
         } else {
@@ -1711,7 +1932,6 @@ nil
             }
         }
         [AppDelegate.instance deleteObject:self.currentAttachment];
-        //[self.managedObjectContext deleteObject: self.currentAttachment];
         self.currentAttachment = nil;
     } else if (self.currentMultiAttachment != nil) {
         self.currentMultiAttachment = nil;
@@ -1758,6 +1978,7 @@ nil
                 [self trashCurrentAttachment];
                 break;
             case 1:
+                self.pickingAttachment = YES;
                 [self.attachmentPicker showInView: self.view];
                 // NSLog(@"Pick new attachment");
                 break;
