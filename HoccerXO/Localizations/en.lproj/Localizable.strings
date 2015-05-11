@@ -417,7 +417,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "credentials_key_import_confirm_btn_title"     = "Import";
 
 "credentials_delete_btn_title"                 = "Delete Login Credentials";
-"credentials_delete_safety_question"           = "Deleting credentials might result in the permanent loss of your current login all contacts. Do you really want to delete your credentials?";
+"credentials_delete_safety_question"           = "Deleting credentials might result in the permanent loss of your current login and all contacts. Do you really want to delete your credentials?";
 
 "credentials_deleted_title"                     = "Credentials Deleted";
 "credentials_deleted_message"                   = "Credentials have been deleted. Please restart the app.";

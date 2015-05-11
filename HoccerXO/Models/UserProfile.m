@@ -22,6 +22,8 @@
 #import "Contact.h"
 #import "AppDelegate.h"
 
+#import "KeyChainItem.h"
+
 static UserProfile * profileInstance;
 
 static NSString * const kHXOAccountIdentifier = @"HXOAccount";
@@ -29,13 +31,20 @@ static NSString * const kHXOSaltIdentifier    = @"HXOSalt";
 static NSString * const kHXOCredentialsDateIdentifier = @"HXOCredentialsDate";
 static const NSUInteger kHXOPasswordLength    = 23;
 
+static NSString * const kHXONewAccountIdentifier = @"Hoccer";
+
+static NSString * const kHXOClientId        = @"clientId";
+static NSString * const kHXOSalt            = @"salt";
+static NSString * const kHXOPassword        = @"password";
+static NSString * const kHXOCredentialsDate = @"credentialsDate";
+
+
 const NSUInteger kHXODefaultKeySize    = 2048;
 
 @interface UserProfile ()
 {
-    KeychainItemWrapper * _accountItem;
-    KeychainItemWrapper * _saltItem;
-    KeychainItemWrapper * _credentialsDateItem;
+    KeyChainItem * _credentialsItem;
+    
     UIImage * _avatarImage;
     unsigned int _avatarImageVersion;
     unsigned int _savedAvatarImageVersion;
@@ -55,12 +64,79 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 @dynamic hasActiveAccount;
 @synthesize accountJustDeleted;
 
+/*
+- (NSString*) oldClientId {
+    return [_oldAccountItem objectForKey: (__bridge id)(kSecAttrAccount)];
+}
+
+- (NSString*) oldPassword {
+    return [_oldAccountItem objectForKey: (__bridge id)(kSecValueData)];
+}
+
+- (NSString*) oldSalt {
+    return [_oldSaltItem objectForKey: (__bridge id)(kSecValueData)];
+}
+
+- (NSNumber*) oldCredentialsDate {
+    NSString * dateString = [_oldCredentialsDateItem objectForKey: (__bridge id)(kSecValueData)];
+    return [UserProfile credentialsDateFromString:dateString];
+}
+ */
+
++ (NSNumber*) credentialsDateFromString:(NSString*)millis {
+    if (millis == nil) {
+        millis = @"0";
+    }
+    return [NSNumber numberWithLongLong:[millis longLongValue]];
+}
+
++ (NSString*) hexPasswordFromString:(NSString*)password {
+    NSData * checkIfHexPassword = [NSData dataWithHexadecimalString:password];
+    if (checkIfHexPassword != nil && password.length % 2 == 0) {
+        return password;
+    }
+    return [[password dataUsingEncoding:NSUTF8StringEncoding] hexadecimalString];
+}
+
 - (id) init {
     self = [super init];
     if (self != nil) {
-        _accountItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOAccountIdentifier] accessGroup: nil];
-        _saltItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOSaltIdentifier] accessGroup: nil];
-        _credentialsDateItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOCredentialsDateIdentifier] accessGroup: nil];
+        _credentialsItem = [[KeyChainItem alloc] initWithService:[[Environment sharedEnvironment] suffixedString: kHXONewAccountIdentifier] account:@"credentials"];
+        if (!_credentialsItem.exists) {
+            // transfer old credentials to new keystore
+            
+            KeychainItemWrapper * oldAccountItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOAccountIdentifier] accessGroup: nil];
+            KeychainItemWrapper * oldSaltItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOSaltIdentifier] accessGroup: nil];
+            KeychainItemWrapper * oldCredentialsDateItem = [[KeychainItemWrapper alloc] initWithIdentifier: [[Environment sharedEnvironment] suffixedString: kHXOCredentialsDateIdentifier] accessGroup: nil];
+            
+            NSString * oldClientId = [oldAccountItem objectForKey: (__bridge id)(kSecAttrAccount)];
+            NSString * oldPassword = [UserProfile hexPasswordFromString:[oldAccountItem objectForKey: (__bridge id)(kSecValueData)]];
+            NSString * oldSalt = [oldSaltItem objectForKey: (__bridge id)(kSecValueData)];
+            NSNumber * oldDate = [UserProfile credentialsDateFromString:[oldCredentialsDateItem objectForKey: (__bridge id)(kSecValueData)]];
+            
+            if (oldClientId != nil && oldPassword != nil && oldSalt != nil &&
+                oldClientId.length > 0 && oldPassword.length > 0 && oldSalt.length > 0)
+            {
+                NSDictionary * credentials =
+                    @{ kHXOPassword: oldPassword,
+                       kHXOSalt : oldSalt,
+                       kHXOClientId : oldClientId,
+                       kHXOCredentialsDate : [oldDate stringValue]};
+                
+                _credentialsItem.data = credentials;
+                
+                if (_credentialsItem.data == nil) {
+                    NSLog(@"#ERROR: could not copy old credentials");
+                } else {
+                    NSLog(@"#INFO: copied old credentials to new format, deleting old items");
+                    [oldAccountItem resetKeychainItem];
+                    [oldSaltItem resetKeychainItem];
+                    [oldCredentialsDateItem resetKeychainItem];
+                }
+            } else {
+                NSLog(@"#INFO: neither new nor old credentials exist");
+            }
+        }
         [self loadProfile];
     }
     return self;
@@ -157,39 +233,31 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     [[NSNotificationCenter defaultCenter] postNotification:notification];
 }
 
-- (NSString*) clientId {
-    return [_accountItem objectForKey: (__bridge id)(kSecAttrAccount)];
-}
-
-- (NSString*) password {
-    return [_accountItem objectForKey: (__bridge id)(kSecValueData)];
-}
-
-- (NSString*) hexPassword {
-    NSData * checkIfHexPassword = [NSData dataWithHexadecimalString:self.password];
-    if (checkIfHexPassword != nil && self.password.length % 2 == 0) {
-        return self.password;
+- (NSString*)credentialsEntry:(NSString*)key {
+    if (_credentialsItem.data != nil) {
+        return _credentialsItem.data[key];
     }
-    return [[self.password dataUsingEncoding:NSUTF8StringEncoding] hexadecimalString];
+    return nil;
 }
 
+- (NSString*) clientId {
+    return [self credentialsEntry:kHXOClientId];
+}
+- (NSString*) password {
+    return [self credentialsEntry:kHXOPassword];
+}
 - (NSString*) salt {
-    return [_saltItem objectForKey: (__bridge id)(kSecValueData)];
+    return [self credentialsEntry:kHXOSalt];
 }
-
 - (NSNumber*) credentialsDate {
-    NSString * dateString = [_credentialsDateItem objectForKey: (__bridge id)(kSecValueData)];
+    NSString * dateString = [self credentialsEntry:kHXOSalt];
     return [UserProfile credentialsDateFromString:dateString];
 }
-
-+ (NSNumber*) credentialsDateFromString:(NSString*)millis {
-    if (millis == nil) {
-        millis = @"0";
-    }
-    return [NSNumber numberWithLongLong:[millis longLongValue]];
+/*
+- (NSString*) hexPassword {
+    return self.password;
 }
-
-
+*/
 - (NSString*)groupMembershipList {
     return @"n/a"; //TODO: return something more interesting
 }
@@ -203,15 +271,31 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return SRP.CONSTANTS_1024;
 }
 
+-  (NSDictionary *) composeCredentialsForClientId:(NSString*)clientID password:(NSString*)password salt:(NSString*)salt date:(NSString*)date  {
+    NSDictionary * credentials = @{ kHXOPassword: password,
+                                    kHXOSalt :salt,
+                                    kHXOClientId : clientID,
+                                    kHXOCredentialsDate : date };
+    return credentials;
+}
+
 - (NSString*) registerClientAndComputeVerifier: (NSString*) clientId {
-    [_accountItem setObject: clientId forKey: (__bridge id)(kSecAttrAccount)];
+    //[_accountItem setObject: clientId forKey: (__bridge id)(kSecAttrAccount)];
     NSString * newPassword = [NSString stringWithRandomCharactersOfLength: kHXOPasswordLength];
-    [_accountItem setObject: [[newPassword dataUsingEncoding:NSUTF8StringEncoding] hexadecimalString] forKey: (__bridge id)(kSecValueData)];
+    //[_accountItem setObject: [[newPassword dataUsingEncoding:NSUTF8StringEncoding] hexadecimalString] forKey: (__bridge id)(kSecValueData)];
     SRPParameters * params = [self srpParameters];
     id<SRPDigest> digest = [self srpDigest];
     NSData * salt = [SRP saltForDigest: digest];
     SRPVerifierGenerator * verifierGenerator = [[SRPVerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
-    NSData * verifier = [verifierGenerator generateVerifierWithSalt: salt username: self.clientId password: newPassword];
+    NSData * verifier = [verifierGenerator generateVerifierWithSalt: salt username: clientId password: newPassword];
+    
+    NSDate * date = [NSDate new];
+    _credentialsItem.data =[self composeCredentialsForClientId:clientId
+                               password:newPassword
+                                   salt:[salt hexadecimalString]
+                                   date:[[HXOBackend millisFromDate:date] stringValue]];
+    
+#if 0
     // XXX Workaround for keychain item issue:
     // first keychain claims there is no such item. Later it complains it can not create such
     // an item because it already exists. Using a unique identifier in kSecAttrAccount helps...
@@ -223,11 +307,15 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSDate * date = [NSDate new];
     [_credentialsDateItem setObject: keychainItemBugWorkaround2 forKey: (__bridge id)(kSecAttrAccount)];
     [_credentialsDateItem setObject: [[HXOBackend millisFromDate:date] stringValue]  forKey: (__bridge id)(kSecValueData)];
-    
+#else
+#endif
     //[ProfileViewController exportCredentials];
     return [verifier hexadecimalString];
 }
-    
+
+
+
+/*
 -  (NSDictionary *) extractCredentials {
     NSDictionary * credentials = @{ @"password": [self hexPassword],
                                     @"salt" :[self salt],
@@ -235,9 +323,9 @@ const NSUInteger kHXODefaultKeySize    = 2048;
                                     @"credentialsDate" : [self.credentialsDate stringValue] };
     return credentials;
 }
-
+*/
 - (BOOL) sameCredentialsInDict:(NSDictionary*)credentials {
-    NSDictionary * currentCredentials = [self extractCredentials];
+    NSDictionary * currentCredentials = _credentialsItem.data;
     //NSLog(@"current = %@", currentCredentials);
     //NSLog(@"imported = %@", credentials);
     
@@ -249,7 +337,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 
 // returns YES when the credentials are for the same client, have a different verifier and carry an older date stamp
 - (BOOL) olderCredentialsForSameAccountInDict:(NSDictionary*)credentials {
-    NSDictionary * currentCredentials = [self extractCredentials];
+    NSDictionary * currentCredentials = _credentialsItem.data;
     if ([credentials[@"clientId"] isEqualToString:currentCredentials[@"clientId"]]) {
         if (![credentials[@"password"] isEqualToString:currentCredentials[@"password"]] ||
             ![credentials[@"salt"] isEqualToString:currentCredentials[@"salt"]]) {
@@ -262,6 +350,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 - (void) setCredentialsWithDict:(NSDictionary*)credentials {
+#if 0
     [_accountItem setObject: credentials[@"clientId"] forKey: (__bridge id)(kSecAttrAccount)];
     [_accountItem setObject: credentials[@"password"] forKey: (__bridge id)(kSecValueData)];
     NSString * keychainItemBugWorkaround = [NSString stringWithUUID];
@@ -275,8 +364,16 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     NSString * keychainItemBugWorkaround2 = [NSString stringWithUUID];
     [_credentialsDateItem setObject: keychainItemBugWorkaround2 forKey: (__bridge id)(kSecAttrAccount)];
     [_credentialsDateItem setObject: date  forKey: (__bridge id)(kSecValueData)];
+#else
+    if ([credentials objectForKey:kHXOCredentialsDate] == nil) {
+        NSMutableDictionary * newCredentials = [NSMutableDictionary dictionaryWithDictionary:credentials];
+        newCredentials[kHXOCredentialsDate] = @"0";
+        credentials = newCredentials;
+    }
+    _credentialsItem.data = credentials;
+#endif
 }
-    
+
 -(NSURL*)getCredentialsURL {
     NSString *newFileName = @"credentials.json";
     NSURL * appDocDir = [((AppDelegate*)[[UIApplication sharedApplication] delegate]) applicationDocumentsDirectory];
@@ -287,7 +384,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 - (NSData*)encryptCredentialsWithPassphrase:(NSString*)passphrase {
-    NSDictionary * json = [self extractCredentials];
+    NSDictionary * json = _credentialsItem.data;
     NSError * error;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
     if ( jsonData == nil) {
@@ -356,13 +453,15 @@ const NSUInteger kHXODefaultKeySize    = 2048;
         NSLog(@"Not registered, not backing up credentials");
         return;
     }
+#if 0
     // change to hex password if not already hex
     if (![self.password isEqualToString:self.hexPassword]) {
         NSLog(@"Changing password to hex representation");
-        NSMutableDictionary * current = [NSMutableDictionary dictionaryWithDictionary:[self extractCredentials]];
+        NSMutableDictionary * current = [NSMutableDictionary dictionaryWithDictionary:_credentialsItem.data];
         current[@"password"] = self.hexPassword;
         [self setCredentialsWithDict:current];
     }
+#endif
     NSData * cryptedJsonData = [self encryptCredentialsWithPassphrase:@"Batldfh§$cx%&/()dgsGhajau"];
     if (cryptedJsonData != nil) {
         [[HXOUserDefaults standardUserDefaults] setValue: cryptedJsonData forKey: [self credentialsSettingWithId:myId]];
@@ -439,7 +538,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
         NSLog(@"Not registered, not transfering credentials");
         return NO;
     }
-    NSDictionary * json = [self extractCredentials];
+    NSDictionary * json = _credentialsItem.data;
     NSError * error;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject: json options: 0 error: &error];
     if ( jsonData == nil) {
@@ -682,9 +781,13 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 */
 
 - (void) deleteCredentials {
+#if 0
     [_accountItem resetKeychainItem];
     [_saltItem resetKeychainItem];
     [_credentialsDateItem resetKeychainItem];
+#else
+    [_credentialsItem deleteItem];
+#endif
     [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
     [[HXOUserDefaults standardUserDefaults] synchronize];
     [self deleteCredentialsBackup];
