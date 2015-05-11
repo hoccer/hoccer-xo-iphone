@@ -4141,12 +4141,11 @@ enum {
    didOutputSampleBuffer: ( CMSampleBufferRef ) sampleBuffer
           fromConnection: ( AVCaptureConnection * ) connection
 {
-    // 1. Check if this is the output we are expecting:
     if ( captureOutput == _videoOutput )
     {
         if (TRACE_MUGSHOTS) NSLog(@"captured sample buffer %lu", _captureCounter);
         
-        if (++_captureCounter >= 10) {
+        if (++_captureCounter == 10) {
             if (TRACE_MUGSHOTS) NSLog(@"using sample buffer %lu", _captureCounter);
             
             CGImageRef cgImage = [self imageFromSampleBuffer:sampleBuffer];
