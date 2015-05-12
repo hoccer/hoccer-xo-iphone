@@ -2,6 +2,9 @@
 
 "server_nav_title"              = "XOBox";
 
+"invite_mail_body"                = "Hey,\n\nI'm using the free messenger app %@ to chat securely with my friends.\nDownload it now and accept my friend request by clicking this link: %@.\n\nLet's go!";
+"invite_sms_text"                 = "Hey! I'm now using the free app %@ for secure chatting. Download it now and add me as a contact: %@\n%@";
+
 //==============================================================================
 // Color Scheme
 //==============================================================================

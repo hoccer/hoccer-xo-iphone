@@ -107,7 +107,7 @@
                 [mailView setSubject:  HXOLocalizedString(@"invite_mail_subject", nil, HXOAppName())];
                 [mailView setBccRecipients: recipients];
 
-                NSString * body = HXOLocalizedString(@"invite_mail_body", nil, HXOAppName(), [self inviteURL: token]);
+                NSString * body = HXOLabelledLocalizedString(@"invite_mail_body", nil, HXOAppName(), [self inviteURL: token]);
                 [mailView setMessageBody: body isHTML: NO];
             } break;
             case PeoplePickerModeText: {
@@ -115,7 +115,7 @@
                 vc = messageView;
                 messageView.messageComposeDelegate = self;
                 messageView.recipients = recipients;
-                messageView.body = HXOLocalizedString(@"invite_sms_text", nil, HXOAppName(), [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]);
+                messageView.body = HXOLabelledLocalizedString(@"invite_sms_text", nil, HXOAppName(), [self inviteURL: token], [[HXOUserDefaults standardUserDefaults] valueForKey: kHXONickName]);
             } break;
         }
         [self.composerCoolingPond insertObject: vc atIndex: 0];

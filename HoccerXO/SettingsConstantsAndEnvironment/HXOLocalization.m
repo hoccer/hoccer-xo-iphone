@@ -24,13 +24,18 @@ NSString* HXOLocalizedString(NSString* key, NSString* comment, ...) {
     return string;
 }
 
-NSString* HXOLabelledLocalizedString(NSString* key, NSString* comment) {
+NSString* HXOLabelledLocalizedString(NSString* key, NSString* comment, ...) {
+    va_list args;
+    va_start(args, comment);
+    
     NSString* bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
-    NSString * locString = NSLocalizedStringFromTable(key, bundleName, comment);
-    if (locString == nil) {
+    NSString * format = NSLocalizedStringFromTable(key, bundleName, comment);
+    if (format == nil) {
         NSLog(@"#ERROR: HXOLabelledLocalizedString: no label found for key '%@' in bundle '%@'", key, bundleName);
     }
-    return locString;
+
+    NSString * localizedString = [[NSString alloc] initWithFormat:format arguments:args];
+    return localizedString;
 }
 
 NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comment) {

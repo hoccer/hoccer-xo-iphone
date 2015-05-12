@@ -19,5 +19,5 @@
 
 HXO_OBJCPP_LINKAGE NSString* HXOAppName();
 HXO_OBJCPP_LINKAGE NSString* HXOLocalizedString(NSString* key, NSString* comment, ...);
-HXO_OBJCPP_LINKAGE NSString* HXOLabelledLocalizedString(NSString* key, NSString* comment);
+HXO_OBJCPP_LINKAGE NSString* HXOLabelledLocalizedString(NSString* key, NSString* comment, ...);
 HXO_OBJCPP_LINKAGE NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comment);
