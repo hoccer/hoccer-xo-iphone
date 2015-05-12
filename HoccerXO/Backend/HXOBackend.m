@@ -1150,6 +1150,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) startAuthentication {
     [self setState: kBackendAuthenticating];
+    [AppDelegate.instance pauseDocumentMonitoring];
     NSString * A = [[UserProfile sharedProfile] startSrpAuthentication];
     [self srpPhase1WithClientId: [UserProfile sharedProfile].clientId A: A andHandler:^(NSString * challenge, NSDictionary * errorReturned) {
         if (challenge == nil) {
@@ -1273,7 +1274,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self flushIncomingDeliveriesInContext:context];
     }];
     [self flushPendingFiletransfers];
-    [AppDelegate.instance setupDocumentDirectoryMonitoring];
+    [AppDelegate.instance resumeDocumentMonitoring];
 
 }
 
@@ -1400,7 +1401,7 @@ static NSTimer * _stateNotificationDelayTimer;
                                                                               userInfo:nil
                              ];
                             
-                            [AppDelegate.instance setupDocumentDirectoryMonitoring];
+                            [AppDelegate.instance resumeDocumentMonitoring];
                             
                             if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.environmentMode != ACTIVATION_MODE_NONE) {
                                 [HXOEnvironment.sharedInstance setActivation:AppDelegate.instance.conversationViewController.environmentMode];
@@ -5491,6 +5492,10 @@ static NSTimer * _stateNotificationDelayTimer;
 //void outDeliveryUnknown(String messageId, String recipientId);
 - (void) outDeliveryUnknown: (NSString*) theMessageId forClient:(NSString*) theReceiverClientId onReady:(DoneBlock)done {
     // NSLog(@"deliveryAbort: %@", delivery);
+    if (theReceiverClientId == nil) {
+        // handle group deliveries that failed to expand
+        theReceiverClientId = @"";
+    }
     [_serverConnection invoke: @"outDeliveryUnknown" withParams: @[theMessageId, theReceiverClientId]
                    onResponse: ^(id responseOrError, BOOL success)
      {
@@ -5784,17 +5789,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [self modifyPresenceConnectionStatusWithHandler:nil];
     }
 }
-/*
- if (fullPresenceUpdate) {
- [self updatePresenceWithHandler:^(BOOL success) {
- NSLog(@"Avatar upload succeeded=%d",success);
- }];
- } else {
- [self modifyPresenceAvatarURLWithHandler:^(BOOL success) {
- NSLog(@"Avatar upload succeeded=%d",success);
- }];
- }
- */
+
 
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
     if (_state == kBackendReady) {
@@ -6296,7 +6291,7 @@ static NSTimer * _stateNotificationDelayTimer;
 -(Delivery *) getDeliveryByMessageTagAndGroupId:(NSString *) theMessageTag withGroupId: (NSString *) theGroupId inContext:(NSManagedObjectContext*)context {
     NSDictionary * vars = @{ @"messageTag" : theMessageTag,
                              @"groupId" : theGroupId};
-    NSLog(@"getDeliveryByMessageTagAndGroupId vars = %@", vars);
+    if (DELIVERY_TRACE) NSLog(@"getDeliveryByMessageTagAndGroupId vars = %@", vars);
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveryByMessageTagAndGroupId" substitutionVariables: vars];
     NSError *error;
     NSArray *deliveries = [context executeFetchRequest:fetchRequest error:&error];
@@ -6368,6 +6363,14 @@ static NSTimer * _stateNotificationDelayTimer;
 
 - (void) outDeliveryAcknowledgeState:(NSString*)state withMessageId:(NSString*)messageId withReceiverId:(NSString*)receiverId {
 
+    if (receiverId == nil) {
+        // handle the rare case when a group delivery failed to expand
+        // so we have a out-delivery without a receiver id
+        // The server will properly treat this case when providing an
+        // empty String as receiver id
+        receiverId = @"";
+    }
+    
     NSString * updateKey = [NSString stringWithFormat:@"ack-%@-%@", messageId, receiverId];
     
     if ([_pendingDeliveryUpdates containsObject:updateKey]) {
@@ -6505,14 +6508,6 @@ static NSTimer * _stateNotificationDelayTimer;
         return;
     }
     
-    //NSString * groupId = deliveryDict[@"groupId"];
-    //NSString * senderId = deliveryDict[@"senderId"];
-
-    // we need to log all message in chat to avoid timeSection problems
-    // (when acceptedTime is set, the timesection of other messages will be touched, too)
-    //NSString * lockId = [self chatLockForSenderId:senderId andGroupId:groupId];
-    
-    //[self.delegate performWithLockingId:lockId inNewBackgroundContext:^(NSManagedObjectContext *context) {
     [self.delegate performWithLockingId:kqMessaging inNewBackgroundContext:^(NSManagedObjectContext *context) {
         
         NSString * myMessageTag = deliveryDict[@"messageTag"];
@@ -6547,26 +6542,7 @@ static NSTimer * _stateNotificationDelayTimer;
         if (DELIVERY_TRACE) NSLog(@"myMessage: message Id: %@ tag:%@ sender:%@ deliveries:%d",myMessage.messageId, myMessage.messageTag, myMessage.senderId, (int)myMessage.deliveries.count);
         
         if (myDelivery != nil && myMessage != nil) {
-             /*
-            if (myDelivery.isInFinalState && !isResult) {
-                NSLog(@"#WARNING: outgoingDeliveryUpdated: outdated Notification received for delivery already in final state '%@', attachmentState '%@', messageId: %@",
-                      myDelivery.state, myDelivery.attachmentState, deliveryDict[@"messageId"]);
-                
-                // acknowledge the state again just to satisfy the server although we already have received a newer state
-                if (![Delivery isAcknowledgedState:deliveryDict[@"state"]]) {
-                    [self outDeliveryAcknowledgeState:deliveryDict[@"state"] withMessageId:myMessageId withReceiverId:myReceiverId];
-                }
-                if (![Delivery isAcknowledgedAttachmentState:deliveryDict[@"attachmentState"]]) {
-                    [self outDeliveryAcknowledgeAttachmentState:deliveryDict[@"attachmentState"] forDelivery:myDelivery withFileId:myMessage.attachmentFileId forReceiver:myReceiverId];
-                }
-                if (done != nil) {
-                    [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                        done();
-                    }];
-                }
-                return;
-            }
-             */
+
             if ([myDelivery.state isEqualToString:deliveryDict[@"state"]] && [myDelivery.attachmentState isEqualToString:deliveryDict[@"attachmentState"]]) {
                 NSLog(@"#WARNING: outgoingDelivery notification received with unchanged state '%@', attachmentState '%@', messageId: %@",
                       myDelivery.state, myDelivery.attachmentState, deliveryDict[@"messageId"]);
@@ -6617,10 +6593,20 @@ static NSTimer * _stateNotificationDelayTimer;
             // Can't remember delivery, probably database was nuked since, and we have not way to indicate succesful delivery to the user,
             // so we just acknowledge or abort if we can
             
-            NSLog(@"#WARNING, outgoing message or delivery not found, myMessageId=%@, myReceiverId=%@", myMessageId, myReceiverId);
+            NSLog(@"#WARNING: outgoing message or delivery not found, myMessageId=%@, myReceiverId=%@", myMessageId, myReceiverId);
             
-            if (myMessageId == nil || myReceiverId == nil) {
-                NSLog(@"#WARNING, myMessageId or myReceiverId is nil, myMessageId=%@, myReceiverId=%@", myMessageId, myReceiverId);
+            if (myMessageId == nil) {
+                NSLog(@"#WARNING: myMessageId is nil, myMessageTag=%@, myReceiverId=%@, myGroupId=%@", myMessageTag, myReceiverId, myGroupId);
+            } else if (myReceiverId == nil) {
+                if (myGroupId == nil) {
+                    NSLog(@"#WARNING, myReceiverId and my myGroupId are nil, myMessageId=%@ myMessageTag=%@", myMessageId, myMessageTag);
+                } else {
+                    NSLog(@"#INFO: myReceiverId is nil, but groupId is set - probably a group devlivery that failed to expand, myMessageTag=%@, myReceiverId=%@, myGroupId=%@", myMessageTag, myReceiverId, myGroupId);
+                    [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                        [self outDeliveryUnknown:myMessageId forClient:myReceiverId onReady:^{
+                        }];
+                    }];
+               }
             } else {
                 [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
                     [self outDeliveryUnknown:myMessageId forClient:myReceiverId onReady:^{

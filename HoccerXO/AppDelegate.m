@@ -105,6 +105,7 @@ typedef void (^ImageHandler)(UIImage* image);
     
     unsigned long _documentDirectoryHandlingScheduledId;
     unsigned long _cancelDirectoryHandlingScheduledId;
+    unsigned long _documentMonitoringDisableCounter;
     
     NSDictionary *_fileEntities;
     
@@ -230,7 +231,7 @@ typedef void (^ImageHandler)(UIImage* image);
 
 -(void) setupDocumentDirectoryMonitoring {
     
-    [self cancelDocumentDirectoryMonitoring];
+    //[self cancelDocumentDirectoryMonitoring];
     NSLog(@"setupDocumentDirectoryMonitoring");
     
     // Get the path to the home directory
@@ -325,6 +326,26 @@ typedef void (^ImageHandler)(UIImage* image);
         //dispatch_release(_dirMonitorDispatchQueue);
     }
     _dirMonitorDispatchQueue = nil;
+}
+
+-(void)pauseDocumentMonitoring {
+    if (_documentMonitoringDisableCounter++ == 0) {
+        NSLog(@"#INFO: pauseDocumentMonitoring: disabling document monitoring");
+        [self cancelDocumentDirectoryMonitoring];
+    } else {
+        NSLog(@"#INFO: pauseDocumentMonitoring: document monitoring already paused, count = %lu",_documentMonitoringDisableCounter);
+    }
+}
+
+-(void)resumeDocumentMonitoring {
+    if (_documentMonitoringDisableCounter == 0) {
+        NSLog(@"#WARNING: resumeDocumentMonitoring: document monitoring already enabled");
+        return;
+    }
+    if (--_documentMonitoringDisableCounter == 0) {
+        NSLog(@"#INFO: resumeDocumentMonitoring: enabling document monitoring");
+        [self setupDocumentDirectoryMonitoring];
+    }
 }
 
 
@@ -790,6 +811,8 @@ BOOL sameObjects(id obj1, id obj2) {
     }
     
     application.applicationSupportsShakeToEdit = NO;
+    
+    //_documentMonitoringDisableCounter = 1; // account for document monitoring is not running at launch
     
     if (![self applicationTemporaryDocumentsDirectory]) {
         return NO;
@@ -3063,14 +3086,14 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 - (void) makeArchive:(NSURL*)archiveURL withHandler:(URLResultHandler)onReady {
     ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_make_hud_title", nil)];
     [hud show];
-    [self cancelDocumentDirectoryMonitoring];
+    [self pauseDocumentMonitoring];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
 
         NSURL * url = [self makeArchive:archiveURL];
         dispatch_async(dispatch_get_main_queue(), ^{
             [hud dismiss];
             onReady(url);
-            [self setupDocumentDirectoryMonitoring];
+            [self resumeDocumentMonitoring];
         });
     });
 }
@@ -3187,7 +3210,7 @@ enum {
 - (void) importArchive:(NSURL*)archiveURL withHandler:(GenericResultHandler)onReady {
     ModalTaskHUD * hud = [ModalTaskHUD modalTaskHUDWithTitle: NSLocalizedString(@"archive_import_hud_title", nil)];
     [hud show];
-    [self cancelDocumentDirectoryMonitoring];
+    [self pauseDocumentMonitoring];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         BOOL success = [self extractArchive:archiveURL];
@@ -3221,7 +3244,7 @@ enum {
             [hud dismiss];
             onReady(success);
             if (!success) {
-                [self setupDocumentDirectoryMonitoring];
+                [self resumeDocumentMonitoring];
             }
         });
     });

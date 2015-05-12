@@ -134,8 +134,9 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 - (void) importArchive:(NSURL*)archiveURL withHandler:(GenericResultHandler)onReady;
 - (BOOL)extractArchive:(NSURL*)archiveURL;
 
--(void) setupDocumentDirectoryMonitoring;
--(void) cancelDocumentDirectoryMonitoring;
+
+-(void)pauseDocumentMonitoring;
+-(void)resumeDocumentMonitoring;
 
 -(void)cachePreviewImage:(UIImage*)image withName:(NSString*)name;
 -(UIImage*)getCachedPreviewImagWithName:(NSString*)name;

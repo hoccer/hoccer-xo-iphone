@@ -1095,7 +1095,7 @@ nil
     if (self.multiAttachmentExportItems.count == 0) {
         self.multiAttachmentExportItems = nil;
         [self updateMultiAttachmentExportProgress];
-    
+        [AppDelegate.instance resumeDocumentMonitoring];
     } else {
         
         id mediaItemOrPartner = self.multiAttachmentExportItems[0];
@@ -1273,6 +1273,7 @@ nil
     if (self.multiAttachmentExportItems == nil) {
         // no export in progress, start one with items to export
         self.multiAttachmentExportItems = [NSArray arrayWithArray:self.currentMultiAttachment];
+        [AppDelegate.instance pauseDocumentMonitoring];
         [self exportAndSendMultiAttachmentsToContactOrGroup:self.partner];
     } else {
         // export in progress, append new partner and items to export
