@@ -291,7 +291,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     
     NSDate * date = [NSDate new];
     _credentialsItem.data =[self composeCredentialsForClientId:clientId
-                               password:newPassword
+                               password:[[newPassword dataUsingEncoding:NSUTF8StringEncoding] hexadecimalString]
                                    salt:[salt hexadecimalString]
                                    date:[[HXOBackend millisFromDate:date] stringValue]];
     
@@ -453,12 +453,12 @@ const NSUInteger kHXODefaultKeySize    = 2048;
         NSLog(@"Not registered, not backing up credentials");
         return;
     }
-#if 0
+#if 1
     // change to hex password if not already hex
-    if (![self.password isEqualToString:self.hexPassword]) {
+    if (![self.password isEqualToString:[UserProfile hexPasswordFromString:self.password]]) {
         NSLog(@"Changing password to hex representation");
         NSMutableDictionary * current = [NSMutableDictionary dictionaryWithDictionary:_credentialsItem.data];
-        current[@"password"] = self.hexPassword;
+        current[@"password"] = [UserProfile hexPasswordFromString:self.password];
         [self setCredentialsWithDict:current];
     }
 #endif
