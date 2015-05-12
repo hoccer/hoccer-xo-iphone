@@ -63,10 +63,11 @@
 #define DEBUG_ATTACHMENT_BUTTONS NO
 #define DEBUG_TABLE_CELLS NO
 #define DEBUG_NOTIFICATIONS NO
-#define DEBUG_APPEAR YES
+#define DEBUG_APPEAR NO
 #define READ_DEBUG NO
 #define DEBUG_OBSERVERS NO
 #define DEBUG_CELL_HEIGHT_CACHING NO
+#define DEBUG_MULTI_EXPORT NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
@@ -462,6 +463,10 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     });
 }
 
+// Recreate an array of ALAAsset and MPMediaItem from a dictionary
+// This is a bit complicated as the assetlibrary works asynchronously,
+// so we have to gather stuff first in an intermediate array
+// and remove potentially failed conversions
 -(void)decodeMultiAttachments:(NSDictionary*)dictionary whenFinished:(ArrayCompletionBlock)onReady {
     
     NSMutableArray * interMediateResult = [NSMutableArray new];
@@ -504,33 +509,6 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     }
 }
 
--(void)decodeMultiAttachments2:(NSDictionary*)dictionary whenFinished:(ArrayCompletionBlock)onReady {
-    
-    NSMutableArray * interMediateResult = [NSMutableArray new];
-    
-    for (id key in dictionary) {
-        NSString * className = dictionary[key];
-        if ([@"MPMediaItem" isEqualToString:className]) {
-            NSNumber * persistentId = key;
-            MPMediaItem * song = [ChatViewController mediaItemForId:persistentId];
-            if (song) {
-                [interMediateResult addObject:song];
-            }
-            
-        } else if ([@"ALAsset" isEqualToString:className]) {
-            NSURL * url = key;
-            AVURLAsset * asset = [AVURLAsset assetWithURL:url];
-            if (asset != nil) {
-                [interMediateResult addObject:asset];
-            } else {
-                NSLog(@"#WARNING: url %@ in multiAttachments not found in assets", url);
-            };
-        } else {
-            NSLog(@"#ERROR: unknown className in multiAttachments:%@", className);
-        }
-    }
-    onReady(interMediateResult);
-}
 
 -(void)rememberAttachments {
     
@@ -573,7 +551,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:theError];
         }];
     } else if (self.partner.savedAttachments != nil) {
-        [self decodeMultiAttachments2:self.partner.savedAttachments whenFinished:^(NSArray *result) {
+        [self decodeMultiAttachments:self.partner.savedAttachments whenFinished:^(NSArray *result) {
             self.currentMultiAttachment = result;
             self.partner.savedAttachments = nil;
             UIImage * preview = [ChatViewController createMultiAttachmentPreview:self.currentMultiAttachment];
@@ -1086,13 +1064,16 @@ nil
 }
 
 -(void)updateMultiAttachmentExportProgress {
+    NSLog(@"updateMultiAttachmentExportProgress: items = %lu", self.multiAttachmentExportItems.count);
     self.attachmentExportProgress.hidden = self.multiAttachmentExportItems == nil;
     self.attachmentExportProgress.text = [NSString stringWithFormat:@"%@", @(self.multiAttachmentExportItems.count)];
 }
 
 
 -(void)exportAndSendMultiAttachmentsToContactOrGroup:(Contact*)contact {
+    if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: items = %lu", self.multiAttachmentExportItems.count);
     if (self.multiAttachmentExportItems.count == 0) {
+        if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: ready");
         self.multiAttachmentExportItems = nil;
         [self updateMultiAttachmentExportProgress];
         [AppDelegate.instance resumeDocumentMonitoring];
@@ -1102,6 +1083,7 @@ nil
         self.multiAttachmentExportItems = [self.multiAttachmentExportItems subarrayWithRange:NSMakeRange(1, self.multiAttachmentExportItems.count-1)];
         
         if ([mediaItemOrPartner isKindOfClass:[Contact class]]) {
+            if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: changed partner to %@", contact.nickName);
             Contact* contact = mediaItemOrPartner;
             [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
             return;
@@ -1112,16 +1094,21 @@ nil
         
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-            
+
+            if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: dispatched on main queue");
+
             NSManagedObjectContext * context = [AppDelegate.instance currentObjectContext];
             Attachment * attachment =  (Attachment*)[NSEntityDescription insertNewObjectForEntityForName: [Attachment entityName]
                                                                                   inManagedObjectContext: context];
             
+            if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: inserted new attachment");
             if ([mediaItemOrPartner isKindOfClass:[MPMediaItem class]]) {
                 
                 MPMediaItem * item = mediaItemOrPartner;
                 
+                if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: calling didPickMPMediaAttachment");
                 [self didPickMPMediaAttachment:item into:attachment inSession:&_currentMultiExportSession withCompletion:^(UIImage *image, NSError *error) {
+                    if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: didPickMPMediaAttachment returned with image %@ error %@", image, error);
                     if (error == nil) {
                         if (attachment.contentSize > 0) {
                             [self.chatBackend sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:attachment];
@@ -1136,7 +1123,9 @@ nil
             } else if ([mediaItemOrPartner isKindOfClass:[ALAsset class]]) {
                 ALAsset * asset = mediaItemOrPartner;
                 
+                if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: calling exportALAsset");
                 [self exportALAsset:asset intoAttachment:attachment onCompletion:^(NSError *theError) {
+                    if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: exportALAsset returned with error %@", theError);
                     if (theError == nil) {
                         if (attachment.contentSize > 0) {
                             [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
@@ -1147,7 +1136,10 @@ nil
                     }
                     [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                 }];
-             }
+            } else {
+                NSLog(@"#ERROR: exportAndSendMultiAttachmentsToContactOrGroup: object with unhandled class %@", mediaItemOrPartner);
+                [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
+            }
         });
     }
 }
