@@ -1,6 +1,6 @@
 /* Localized versions of Info.plist keys */
 
-"NSLocationWhenInUseUsageDescription" = "Um mit Leuten in der Nähe zu chatten und Ortsmarken zu verschicken benötigt Hoccer deinen Standort.";
+"NSLocationWhenInUseUsageDescription" = "Um mit Leuten in der Nähe zu chatten und Ortsmarken zu verschicken wird dein Standort benötigt.";
 
 /*
 "CFBundleDisplayName" = "XOX (Hoccer)";
