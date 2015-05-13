@@ -687,6 +687,9 @@
 
 // we do this to avoid problems when the app is sent to background while a video export session is in progress
 - (void) registerBackgroundTask {
+    if (_backgroundTask != UIBackgroundTaskInvalid) {
+        NSLog(@"#WARNING: AttachmentPickerController: trying to registering background task while one is already registered");
+    }
     _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
         [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
         _backgroundTask = UIBackgroundTaskInvalid;

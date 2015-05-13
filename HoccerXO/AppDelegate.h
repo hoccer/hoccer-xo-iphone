@@ -138,6 +138,10 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 -(void)pauseDocumentMonitoring;
 -(void)resumeDocumentMonitoring;
 
+-(void)startedBackgroundTask;
+-(void)finishedBackgroundTask;
+-(void)backendTrafficWithRequestsOpen:(unsigned long)openRequests;
+
 -(void)cachePreviewImage:(UIImage*)image withName:(NSString*)name;
 -(UIImage*)getCachedPreviewImagWithName:(NSString*)name;
 

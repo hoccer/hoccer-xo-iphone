@@ -54,7 +54,7 @@
 #define GROUPKEY_DEBUG      NO
 #define GROUP_DEBUG         NO
 #define RELATIONSHIP_DEBUG  NO
-#define TRANSFER_DEBUG      NO
+#define TRANSFER_DEBUG      YES
 #define CHECK_URL_TRACE     NO
 #define CHECK_CERTS_DEBUG   NO
 #define DEBUG_DELETION      NO
@@ -62,6 +62,8 @@
 #define PRESENCE_DEBUG      NO
 #define SINGLE_NEARBY_DEBUG NO
 #define TRACE_INSERT_LOCKING NO
+
+//#define DEBUG_CHECK_FINISHED_UPLOADS
 
 #ifdef DEBUG
 #define USE_VALIDATOR YES
@@ -607,24 +609,29 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 // calls sendmessage after cloning the attachment
-- (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment {
+- (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment withCompletion:(CompletionWithError)completion {
     
     Attachment * newAttachment = nil;
     
-    AttachmentCompletionBlock completion  = ^(Attachment * myAttachment, NSError *myerror) {
+    AttachmentCompletionBlock attachmentCompletion  = ^(Attachment * myAttachment, NSError *myerror) {
         if (myerror == nil) {
-            [self sendMessage:text toContactOrGroup:contact toGroupMemberOnly:privateGroupMessageContact withAttachment:myAttachment];
+            [self sendMessage:text toContactOrGroup:contact toGroupMemberOnly:privateGroupMessageContact withAttachment:myAttachment withCompletion:completion];
         }
     };
     
-    newAttachment = [attachment cloneWithCompletion:completion];
+    newAttachment = [attachment cloneWithCompletion:attachmentCompletion];
     if (newAttachment == nil) {
         // send message without attachment right now, we will not get a completion call here
-        [self sendMessage: text toContactOrGroup:contact toGroupMemberOnly:privateGroupMessageContact withAttachment:nil];
+        [self sendMessage: text toContactOrGroup:contact toGroupMemberOnly:privateGroupMessageContact withAttachment:nil withCompletion:completion];
     }
 }
 
-- (void) finishSendMessage:(HXOMessage*)message toContact:(Contact*)contact withDelivery:(Delivery*)delivery withAttachment:(Attachment*)attachment {
+- (void) finishSendMessage:(HXOMessage*)message
+                 toContact:(Contact*)contact
+              withDelivery:(Delivery*)delivery
+            withAttachment:(Attachment*)attachment
+            withCompletion:(CompletionWithError)completion
+{
     if (CONNECTION_TRACE) {NSLog(@"finishSendMessage: %@ toContact: %@ withDelivery: %@ withAttachment: %@", message, contact, delivery, attachment);}
 
     message.sourceMAC = [message computeHMAC];
@@ -650,12 +657,16 @@ static NSTimer * _stateNotificationDelayTimer;
                 if (attachment != nil && attachment.state == kAttachmentWantsTransfer && ! deliveryFailed) {
                     [self enqueueUploadOfAttachment:attachment];
                 }
+                if (completion) completion(nil);
                 //* [AppDelegate.instance saveContext];
+            } else {
+                if (completion) completion(makeSendError(@"outDeliveryRequest failed"));
             }
         }];
     } else {
         //* [AppDelegate.instance saveContext];
         [AppDelegate.instance saveDatabase];
+        if (completion) completion(makeSendError(@"backend not ready or delivery is a failure"));
     }
 }
 
@@ -670,16 +681,24 @@ static NSTimer * _stateNotificationDelayTimer;
     return lockId;
 }
 
+NSError * makeSendError(NSString * reason) {
+    NSString *errMsg = reason;
+    NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+    return [NSError errorWithDomain:@"sendMessageError" code:4567 userInfo:info];
+}
+
 // TODO: contact should be an array of contacts
-- (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment {
+- (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment withCompletion:(CompletionWithError)completion {
     
     if (text == nil) {
         NSLog(@"ERROR: sendMessage text is nil");
+        if (completion) completion(makeSendError(@"text is nil"));
         return;
     }
     
     if (contact == nil) {
         NSLog(@"ERROR: sendMessage contact is nil");
+        if (completion) completion(makeSendError(@"contact is nil"));
         return;
     }
     
@@ -690,11 +709,10 @@ static NSTimer * _stateNotificationDelayTimer;
             if (![AppDelegate.instance hasManagedObjectBeenDeleted:attachment]) {
                 [AppDelegate.instance deleteObject:attachment];
             }
+            if (completion) completion(makeSendError(@"attachment unavailable"));
             return;
         }
     }
-    
-    //NSString * lockId = [self chatLockForSenderId:[UserProfile sharedProfile].clientId andGroupId: contact.isGroup ? contact.clientId : nil];
     
     NSManagedObjectID * contactId = contact.objectID;
     NSManagedObjectID * privateContactId = privateGroupMessageContact.objectID;
@@ -742,7 +760,7 @@ static NSTimer * _stateNotificationDelayTimer;
             delivery.attachmentState = kDelivery_ATTACHMENT_STATE_NEW;
             //* [AppDelegate.instance saveContext:context];
             [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[message] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
-                [self createUrlsForTransferOfAttachmentOfMessage:managedObjects[0]];
+                [self createUrlsForTransferOfAttachmentOfMessage:managedObjects[0] withCompletion:completion];
             }];
             return;
         }
@@ -751,12 +769,12 @@ static NSTimer * _stateNotificationDelayTimer;
         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[message, delivery] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
             HXOMessage * message = managedObjects[0];
             Delivery * delivery = managedObjects[1];
-            [self finishSendMessage:message toContact:message.contact withDelivery:delivery withAttachment:message.attachment];
+            [self finishSendMessage:message toContact:message.contact withDelivery:delivery withAttachment:message.attachment withCompletion:completion];
         }];
     }];
 }
 
-- (void) createUrlsForTransferOfAttachmentOfMessage:(HXOMessage*)message {
+- (void) createUrlsForTransferOfAttachmentOfMessage:(HXOMessage*)message withCompletion:(CompletionWithError) completion {
     if (CONNECTION_TRACE) {NSLog(@"createUrlsForTransferOfAttachmentOfMessage: %@", message);}
     Attachment * attachment = message.attachment;
     if (attachment != nil) {
@@ -770,22 +788,28 @@ static NSTimer * _stateNotificationDelayTimer;
                 attachment.cipherTransferSize = @(0);
                 //* [AppDelegate.instance saveContext];
                 // NSLog(@"sendMessage: message.attachment = %@", message.attachment);
-                [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:attachment];
+                [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:attachment withCompletion:completion];
             } else {
+                // TODO: come uo with something better than retrying
                 NSLog(@"ERROR: Could not get attachment urls, retrying");
-                [NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(retryCreateUrlsForTransferOfAttachment:) userInfo:message repeats:NO];
+                dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC);
+                dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                    [self createUrlsForTransferOfAttachmentOfMessage:message withCompletion:completion];
+                });
+
+                //[NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(retryCreateUrlsForTransferOfAttachment:) userInfo:message repeats:NO];
             }
         }];
     } else {
         NSLog(@"ERROR: createUrlsForTransferOfAttachmentOfMessage: message without attachment");
     }
 }
-
+/*
 - (void) retryCreateUrlsForTransferOfAttachment:(NSTimer*)theTimer {
     HXOMessage * message = [theTimer userInfo];
     [self createUrlsForTransferOfAttachmentOfMessage:message];
 }
-
+*/
 -(HXOMessage*) getMessageById:(NSString*)messageId inContext:(NSManagedObjectContext*) context {
     NSError *error;
     NSDictionary * vars = @{ @"messageId" : messageId};
@@ -1726,9 +1750,9 @@ static NSTimer * _stateNotificationDelayTimer;
             if (delivery != nil && delivery.receiver != nil) {
                 if (message.attachment != nil && (message.attachment.uploadURL == nil || message.attachment.uploadURL.length == 0)) {
                     // get attachment transfer url in case there are none yet
-                    [self createUrlsForTransferOfAttachmentOfMessage:message];
+                    [self createUrlsForTransferOfAttachmentOfMessage:message withCompletion:nil];
                 } else {
-                    [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:message.attachment];
+                    [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:message.attachment withCompletion:nil];
                 }
             } else {
                 NSLog(@"removing message without receiver, tag = %@", message.messageTag);
@@ -2377,7 +2401,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 
-- (void) fetchKeyForContact:(Contact *)theContact withKeyId:(NSString*) theId withCompletion:(CompletionBlock)handler {
+- (void) fetchKeyForContact:(Contact *)theContact withKeyId:(NSString*) theId withCompletion:(CompletionWithError)handler {
     
     [self getKeyForClientId: theContact.clientId withKeyId:theId keyHandler:^(NSDictionary * keyRecord) {
         if (theContact.clientId == nil) {
@@ -4252,13 +4276,14 @@ static NSTimer * _stateNotificationDelayTimer;
 
 
 - (void) checkReadyAttachmentUploads {
-    NSArray * readyAttachments = [self allReadyAttachmentUploads];
+    NSArray * readyAttachments = [self allReadyButPendingAttachmentUploads];
+    NSLog(@"checkReadyAttachmentUploads: found %lu ready but pending uploads", (unsigned long)readyAttachments.count);
     for (Attachment * attachment in readyAttachments) {
         [self uploadFinished:attachment];
     }
 }
 
--(NSArray*) allReadyAttachmentUploads {
+-(NSArray*) allReadyButPendingAttachmentUploads {
     NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"AllOutgoingAttachments" substitutionVariables: @{}];
     
     NSError *error;
@@ -4271,7 +4296,7 @@ static NSTimer * _stateNotificationDelayTimer;
     NSMutableArray * readyAttachments = [[NSMutableArray alloc]init];
     for (Attachment * attachment in attachments) {
         AttachmentState attachmentState = attachment.state;
-        if (attachmentState == kAttachmentTransfered)
+        if (attachmentState == kAttachmentTransfered && attachment.message != nil && attachment.message.deliveriesAttachmentsPending.count > 0)
         {
             [readyAttachments enqueue:attachment];
         }
@@ -4565,7 +4590,7 @@ static NSTimer * _stateNotificationDelayTimer;
     [self dequeueUploadOfAttachment:theAttachment];
     [self checkUploadQueue];
 #ifdef DEBUG_CHECK_FINISHED_UPLOADS
-    [self checkUploadStatus:theAttachment.uploadURL hasSize:[theAttachment.cipherTransferSize longLongValue]  withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
+    [HXOBackend checkUploadStatus:theAttachment.uploadURL hasSize:[theAttachment.cipherTransferSize longLongValue]  withCompletion:^(NSString *url, long long transferedSize, BOOL ok) {
         if (!ok) {
             NSLog(@"Upload check failed for Attachment url %@, uploaded = %lld, rescheduling",url,transferedSize);
 #ifdef REUPLOAD_WHEN_CHECK_FAILS
@@ -6684,7 +6709,26 @@ static NSTimer * _stateNotificationDelayTimer;
     } else {
         [self reconnect];
     }
+    [AppDelegate.instance backendTrafficWithRequestsOpen:0];
 }
+
+- (void) webSocket:(SRWebSocket *)webSocket didStartRequest:(unsigned long)requestId withOpenRequests:(unsigned long)openRequests {
+    NSLog(@"++++++ Start");
+    [AppDelegate.instance backendTrafficWithRequestsOpen:openRequests];
+}
+- (void) webSocket:(SRWebSocket *)webSocket didFinishRequest:(unsigned long)requestId withOpenRequests:(unsigned long)openRequests {
+    NSLog(@"++++++ Finish");
+    [AppDelegate.instance backendTrafficWithRequestsOpen:openRequests];
+}
+- (void) webSocket:(SRWebSocket *)webSocket didSendWithOpenRequests:(unsigned long)openRequests {
+    NSLog(@"++++++ Send");
+    [AppDelegate.instance backendTrafficWithRequestsOpen:openRequests];
+}
+- (void) webSocket:(SRWebSocket *)webSocket didReceiveWithOpenRequests:(unsigned long)openRequests {
+    NSLog(@"++++++ Receive");
+    [AppDelegate.instance backendTrafficWithRequestsOpen:openRequests];
+}
+
 
 - (void) webSocketDidFailWithError: (NSError*) error {
     NSLog(@"webSocketDidFailWithError: %@ %d", error, (int)error.code);
@@ -6715,7 +6759,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 #pragma mark - Group Avatar uploading
 
--(void)makeSureAvatarUploadedForGroup:(Group*)group withCompletion:(CompletionBlock)completion {
+-(void)makeSureAvatarUploadedForGroup:(Group*)group withCompletion:(CompletionWithError)completion {
     [self.delegate assertMainContext];
     if ([group iAmAdmin]) {
         NSData * myAvatarData = group.avatar;
@@ -6744,7 +6788,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 
-- (void) uploadAvatarIfNeededForGroup:(Group*)group withCompletion:(CompletionBlock)completion{
+- (void) uploadAvatarIfNeededForGroup:(Group*)group withCompletion:(CompletionWithError)completion{
     [self.delegate assertMainContext];
     if ([group iAmAdmin]) {
         NSData * myAvatarData = group.avatar;
@@ -6794,7 +6838,7 @@ static NSTimer * _stateNotificationDelayTimer;
     return theURL;
 }
 
-- (void) uploadAvatar:(NSData*)avatar toURL: (NSString*)toURL withDownloadURL:(NSString*)downloadURL inQueue:(GCNetworkQueue*)queue withCompletion:(CompletionBlock)handler {
+- (void) uploadAvatar:(NSData*)avatar toURL: (NSString*)toURL withDownloadURL:(NSString*)downloadURL inQueue:(GCNetworkQueue*)queue withCompletion:(CompletionWithError)handler {
     [self.delegate assertMainContext];
     if (CONNECTION_TRACE) {NSLog(@"uploadAvatar size %@ uploadURL=%@, downloadURL=%@", @(avatar.length), toURL, downloadURL );}
     

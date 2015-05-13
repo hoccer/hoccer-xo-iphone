@@ -76,8 +76,9 @@ static int ChatViewObserverContext = 0;
 
 typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
-@interface ChatViewController ()
-
+@interface ChatViewController () {
+    UIBackgroundTaskIdentifier _backgroundTaskId;
+}
 @property (nonatomic, strong)   UIPopoverController            * masterPopoverController;
 @property (nonatomic, readonly) AttachmentPickerController     * attachmentPicker;
 //@property (nonatomic, strong)   UIView                         * attachmentPreview;
@@ -157,6 +158,29 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         _assetLibrary = [[ALAssetsLibrary alloc] init];
     }
     return _assetLibrary;
+}
+
+- (void) registerBackgroundTask {
+    NSLog(@"ChatViewController: registering background task...");
+    [AppDelegate.instance startedBackgroundTask];
+    if (_backgroundTaskId != UIBackgroundTaskInvalid) {
+        NSLog(@"#WARNING: ChatViewController: trying to registering background task while one is already registered");
+    }
+    UIApplication *app = [UIApplication sharedApplication];
+    _backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler: ^{
+        // do cleanup here
+        NSLog(@"### ChatViewController: running background task expiration handler...");
+        [app endBackgroundTask:_backgroundTaskId];
+        _backgroundTaskId = UIBackgroundTaskInvalid;
+    }];
+}
+
+- (void) unregisterBackgroundTask {
+    NSLog(@"ChatViewController: unregistering background task...");
+    UIApplication *app = [UIApplication sharedApplication];
+    [app endBackgroundTask:_backgroundTaskId];
+    _backgroundTaskId = UIBackgroundTaskInvalid;
+    [AppDelegate.instance finishedBackgroundTask];
 }
 
 - (void)viewDidLoad {
@@ -1064,18 +1088,20 @@ nil
 }
 
 -(void)updateMultiAttachmentExportProgress {
-    NSLog(@"updateMultiAttachmentExportProgress: items = %lu", self.multiAttachmentExportItems.count);
+    NSLog(@"updateMultiAttachmentExportProgress: items = %lu", (unsigned long)
+          self.multiAttachmentExportItems.count);
     self.attachmentExportProgress.hidden = self.multiAttachmentExportItems == nil;
     self.attachmentExportProgress.text = [NSString stringWithFormat:@"%@", @(self.multiAttachmentExportItems.count)];
 }
 
 
 -(void)exportAndSendMultiAttachmentsToContactOrGroup:(Contact*)contact {
-    if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: items = %lu", self.multiAttachmentExportItems.count);
+    if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: items = %lu", (unsigned long)self.multiAttachmentExportItems.count);
     if (self.multiAttachmentExportItems.count == 0) {
         if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: ready");
         self.multiAttachmentExportItems = nil;
         [self updateMultiAttachmentExportProgress];
+        [self unregisterBackgroundTask];
         [AppDelegate.instance resumeDocumentMonitoring];
     } else {
         
@@ -1106,17 +1132,22 @@ nil
                 
                 MPMediaItem * item = mediaItemOrPartner;
                 
+                //[self registerBackgroundTask];
                 if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: calling didPickMPMediaAttachment");
                 [self didPickMPMediaAttachment:item into:attachment inSession:&_currentMultiExportSession withCompletion:^(UIImage *image, NSError *error) {
                     if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: didPickMPMediaAttachment returned with image %@ error %@", image, error);
                     if (error == nil) {
                         if (attachment.contentSize > 0) {
-                            [self.chatBackend sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:attachment];
+                            [self.chatBackend sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:attachment withCompletion:^(NSError *theError) {
+                                //[self unregisterBackgroundTask];
+                                [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
+                            }];
                         } else {
                             NSLog(@"#ERROR: media export error: contentSize is 0, attachment=%@", attachment);
                             [AppDelegate.instance deleteObject:attachment];
+                            //[self unregisterBackgroundTask];
+                            [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                         }
-                        [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                     }
                 }];
                 
@@ -1124,17 +1155,22 @@ nil
                 ALAsset * asset = mediaItemOrPartner;
                 
                 if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: calling exportALAsset");
+                //[self registerBackgroundTask];
                 [self exportALAsset:asset intoAttachment:attachment onCompletion:^(NSError *theError) {
                     if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: exportALAsset returned with error %@", theError);
                     if (theError == nil) {
                         if (attachment.contentSize > 0) {
-                            [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment];
+                            [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment withCompletion:^(NSError *theError) {
+                                //[self unregisterBackgroundTask];
+                                [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
+                            }];
                         } else {
                             NSLog(@"#ERROR: photo/video export error: contentSize is 0, attachment=%@", attachment);
                             [AppDelegate.instance deleteObject:attachment];
+                            //[self unregisterBackgroundTask];
+                            [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                         }
                     }
-                    [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                 }];
             } else {
                 NSLog(@"#ERROR: exportAndSendMultiAttachmentsToContactOrGroup: object with unhandled class %@", mediaItemOrPartner);
@@ -1266,6 +1302,7 @@ nil
         // no export in progress, start one with items to export
         self.multiAttachmentExportItems = [NSArray arrayWithArray:self.currentMultiAttachment];
         [AppDelegate.instance pauseDocumentMonitoring];
+        [self registerBackgroundTask];
         [self exportAndSendMultiAttachmentsToContactOrGroup:self.partner];
     } else {
         // export in progress, append new partner and items to export
@@ -1284,13 +1321,13 @@ nil
     }
     if (self.currentMultiAttachment == nil) {
         // handle 0 or 1 attachments
-        [self.chatBackend sendMessage:self.messageField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment];
+        [self.chatBackend sendMessage:self.messageField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:self.currentAttachment withCompletion:nil];
         self.currentAttachment = nil;
     } else {
         // handle multiattachment
         if (self.messageField.text.length > 0) {
             // send first message with text only
-            [self.chatBackend sendMessage:self.messageField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:nil];
+            [self.chatBackend sendMessage:self.messageField.text toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:nil withCompletion:nil];
         }
         [self createAndSendMultiAttachments];
     }
@@ -3150,7 +3187,7 @@ ready:;
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             NSString * numberedBody = [NSString stringWithFormat:@"%d:%@", i, message.body];
-            [self.chatBackend forwardMessage: numberedBody toContactOrGroup:message.contact toGroupMemberOnly:nil withAttachment:message.attachment];
+            [self.chatBackend forwardMessage: numberedBody toContactOrGroup:message.contact toGroupMemberOnly:nil withAttachment:message.attachment withCompletion:nil];
         });
     }
 }

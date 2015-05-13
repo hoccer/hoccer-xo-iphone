@@ -363,7 +363,8 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
                         NSLog(@"Sending attachment %@ to %@", attachment.humanReadableFileName, contact.nickName);
                         [attachment cloneWithCompletion:^(Attachment * attachment, NSError * error) {
                             if (error == nil) {
-                                [[[AppDelegate instance] chatBackend] sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:attachment];
+                                // TODO: make sending less resource consuming
+                                [[[AppDelegate instance] chatBackend] sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:attachment withCompletion:nil];
                             } else {
                                 NSLog(@"Failed to clone attachment, error = %@",error );
                             }

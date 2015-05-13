@@ -46,6 +46,8 @@ typedef void (^DataURLStatusHandler)(NSString * url, long long transferedSize, B
 typedef void (^UpdateEnvironmentHandler)(NSString*);
 typedef void (^DateHandler)(NSDate* date);
 typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
+typedef void (^CompletionWithError)(NSError* theError);
+
 
 @protocol HXODelegate <NSObject>
 
@@ -82,8 +84,8 @@ typedef void (^DeliveriesRequestCompletion)(NSArray* deliveries);
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
 
-- (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
-- (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment;
+- (void) sendMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment withCompletion:(CompletionWithError)completion;
+- (void) forwardMessage:(NSString *) text toContactOrGroup:(Contact*)contact toGroupMemberOnly:(Contact*)privateGroupMessageContact withAttachment: (Attachment*) attachment withCompletion:(CompletionWithError)completion;
 
 - (void) inDeliveryConfirmPrivate: (NSString*) messageId withDelivery: (Delivery*) delivery;
 - (void) inDeliveryConfirmSeen: (NSString*) messageId withDelivery: (Delivery*) delivery;

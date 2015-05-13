@@ -22,6 +22,10 @@ typedef void (^ResultBlock)(id responseOrError);
 - (void) incomingMethodCallDidFail: (NSError*) error;
 - (void) webSocketDidOpen: (SRWebSocket*) webSocket;
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean;
+- (void) webSocket:(SRWebSocket *)webSocket didStartRequest:(unsigned long)requestId withOpenRequests:(unsigned long)openRequests;
+- (void) webSocket:(SRWebSocket *)webSocket didFinishRequest:(unsigned long)requestId withOpenRequests:(unsigned long)openRequests;
+- (void) webSocket:(SRWebSocket *)webSocket didSendWithOpenRequests:(unsigned long)openRequests;
+- (void) webSocket:(SRWebSocket *)webSocket didReceiveWithOpenRequests:(unsigned long)openRequests;
 
 @end
 

@@ -131,6 +131,13 @@ typedef void (^ImageHandler)(UIImage* image);
     AVCaptureStillImageOutput *_stillImageOutput;
     ImageHandler _captureHandler;
     unsigned long _captureCounter;
+    
+    unsigned long _backgroundTaskCount;
+    ContinueBlock _backgroundFinalizer;
+    unsigned long _backendRequestsOpen;
+    NSDate *      _backendLastTrafficTime;
+    BOOL          _backgroundFinalizerTriggered;
+
 }
 
 @property (nonatomic, strong) ModalTaskHUD * hud;
@@ -348,7 +355,79 @@ typedef void (^ImageHandler)(UIImage* image);
     }
 }
 
+-(void)startedBackgroundTask {
+    _backgroundTaskCount++;
+    NSLog(@"#INFO: startedBackgroundTask: running = %lu",_backgroundTaskCount);
+}
 
+-(void)finishedBackgroundTask {
+    if (_backgroundTaskCount == 0) {
+        NSLog(@"#WARNING: finishedBackgroundTask: no backgroundtask running");
+        return;
+    }
+    if (--_backgroundTaskCount == 0) {
+        if (_backgroundFinalizer != nil && [self readyToFinalize]) {
+            NSLog(@"#INFO: finishedBackgroundTask: last task finished and ready to finalize, triggering");
+            [self triggerFinalizer];
+        }
+    }
+    NSLog(@"#INFO: finishedBackgroundTask: running = %lu",_backgroundTaskCount);
+}
+
+-(void)setBackgroundFinalizer:(ContinueBlock)finalizer {
+    if (_backgroundFinalizer != nil) {
+        NSLog(@"#WARNING: setBackgroundFinalizer: finalizer already set");
+    }
+    _backgroundFinalizer = finalizer;
+    if ([self readyToFinalize]) {
+        NSLog(@"#INFO: setBackgroundFinalizer: no backgroundtask running, finalizing");
+        [self triggerFinalizer];
+        return;
+    }
+}
+
+-(void)backendTrafficWithRequestsOpen:(unsigned long)openRequests {
+    _backendRequestsOpen = openRequests;
+    _backendLastTrafficTime = [NSDate new];
+    NSLog(@"#INFO: backendTrafficWithRequestsOpen %lu", openRequests);
+    if (_backgroundFinalizer != nil && _backgroundTaskCount == 0 && _backendRequestsOpen == 0) {
+        NSLog(@"#INFO: backendTrafficWithRequestsOpen no backgroundTasks, no open Requests, triggering finalizer");
+        [self triggerFinalizer];
+    }
+}
+
+const double MIN_TRAFFIC_GAP = 1.0;
+
+-(BOOL)readyToFinalize {
+    double lastTrafficAgo = -[_backendLastTrafficTime timeIntervalSinceNow];
+    NSLog(@"readyToFinalize: _backgroundTaskCount %lu, _backendRequestsOpen %lu, _backendLastTrafficTime %f secs. ago",
+          _backgroundTaskCount, _backendRequestsOpen, lastTrafficAgo);
+    
+    if (_backgroundTaskCount == 0 && _backendRequestsOpen == 0 &&
+        (_backendLastTrafficTime == nil || lastTrafficAgo > MIN_TRAFFIC_GAP)) {
+        return YES;
+    }
+    return NO;
+}
+
+// TODO: make sure finalizer is only triggered once
+// make sure we continue when coming back from background and are still active
+
+-(void)triggerFinalizer {
+    if ([self readyToFinalize]) {
+        NSLog(@"#INFO: triggerFinalizer no backgroundTasks, no open Requests, no traffic, finalizing");
+        if (_backgroundFinalizer != nil) {
+            _backgroundFinalizer();
+            _backgroundFinalizer = nil;
+        }
+    } else {
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, MIN_TRAFFIC_GAP * 1.2 * NSEC_PER_SEC);
+        NSLog(@"triggerFinalizer: scheduling retry in %f seconds", MIN_TRAFFIC_GAP * 1.2);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+            [self triggerFinalizer];
+        });
+    }
+}
 
 + (NSDate*)getModificationDateForPath:(NSString*)myFilePath {
     NSError * error = nil;
@@ -1056,7 +1135,8 @@ BOOL sameObjects(id obj1, id obj2) {
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
 {
-    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
+    NSLog(@"applicationDidEnterBackground");
+    // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     [self.chatBackend changePresenceToNotTyping]; // not typing anymore ... yep, pretty sure...
     [self saveDatabaseNow];
@@ -2220,6 +2300,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     NSUInteger unreadMessages = [self unreadMessageCount];
     [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessages;
     _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        NSLog(@"#WARNING: Running background expiration handler");
         [self.chatBackend stop];
         [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
         _backgroundTask = UIBackgroundTaskInvalid;
@@ -2229,7 +2310,10 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.chatBackend hintApnsUnreadMessage: unreadMessages handler: ^(BOOL success){
             if (CONNECTION_TRACE) NSLog(@"updated unread message count: %@", success ? @"success" : @"failed");
-            [self.chatBackend stop];
+            __weak AppDelegate * weakSelf = self;
+            [self setBackgroundFinalizer:^{
+                [weakSelf.chatBackend stop];
+            }];
         }];
     });
 }

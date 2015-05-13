@@ -2371,9 +2371,16 @@
 }
 
 - (void) registerBackgroundTask {
+    NSLog(@"Attachment: registering background task...");
+    
+    if (_backgroundTaskId != UIBackgroundTaskInvalid) {
+        NSLog(@"#WARNING: Attachment: trying to registering background task while one is already registered");
+    }
+
     UIApplication *app = [UIApplication sharedApplication];
     _backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler: ^{
-        if (self.transferRetryTimer != nil) {
+        NSLog(@"##WARNING: Attachment: runnung background task expiration handler...");
+       if (self.transferRetryTimer != nil) {
             [self.transferRetryTimer invalidate];
             self.transferRetryTimer = nil;
         }
@@ -2388,6 +2395,7 @@
 }
 
 - (void) unregisterBackgroundTask {
+    NSLog(@"Attachment: unregistering background task...");
     UIApplication *app = [UIApplication sharedApplication];
     [app endBackgroundTask:_backgroundTaskId];
     _backgroundTaskId = UIBackgroundTaskInvalid;

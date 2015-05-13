@@ -93,6 +93,9 @@ static const NSTimeInterval kResponseTimeout = 30;
 #pragma mark - Web Socket Delegate
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {
+    if ([self.delegate respondsToSelector:@selector(webSocket:didReceiveWithOpenRequests:)]) {
+        [self.delegate webSocket:webSocket didReceiveWithOpenRequests:_responseHandlers.count];
+    }
     if ([message isKindOfClass: [NSString class]]) {
         if ([[self verbosityLevel]isEqualToString:@"dump"]) {
             NSLog(@"JSON RECV<-: %@",message);
@@ -252,6 +255,10 @@ static const NSTimeInterval kResponseTimeout = 30;
         // kaputt
     }
     [self increaseTimeoutForRequestsAfterId:theId];
+
+    if ([self.delegate respondsToSelector:@selector(webSocket:didFinishRequest:withOpenRequests:)]) {
+        [self.delegate webSocket: _websocket didFinishRequest:[theId unsignedLongValue] withOpenRequests:_responseHandlers.count];
+    }
 }
 
 - (void) increaseTimeoutForRequestsAfterId:(NSNumber*)requestId {
@@ -297,7 +304,11 @@ static const NSTimeInterval kResponseTimeout = 30;
 
     if (![self sendJson: methodCall]) {
         [self droppedRequest:theId];
-    };
+    } else {
+        if ([self.delegate respondsToSelector:@selector(webSocket:didStartRequest:withOpenRequests:)]) {
+            [self.delegate webSocket:_websocket didStartRequest: [theId unsignedLongValue] withOpenRequests:_responseHandlers.count];
+        }
+    }
 }
 
 #ifdef TEST_COMPRESSION
@@ -386,6 +397,9 @@ static const NSTimeInterval kResponseTimeout = 30;
     }
     if (_websocket.readyState == SR_OPEN) {
         [_websocket send: myPayloadString];
+        if ([self.delegate respondsToSelector:@selector(webSocket:didSendWithOpenRequests:)]) {
+            [self.delegate webSocket:_websocket didSendWithOpenRequests:_responseHandlers.count];
+        }
         return YES;
     } else {
         NSLog(@"sendJson: sending failed, connection not open");
