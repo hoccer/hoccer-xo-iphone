@@ -6,6 +6,7 @@
         <attribute name="keyCiphertext" optional="YES" transient="YES" attributeType="String" minValueString="4" maxValueString="3000" syncable="YES"/>
         <attribute name="keyId" optional="YES" transient="YES" attributeType="String" minValueString="16" maxValueString="16" regularExpressionString="[0-9a-fA-F]{16}" syncable="YES"/>
         <attribute name="messageTag" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="64" syncable="YES"/>
+        <attribute name="reason" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="receiverId" optional="YES" transient="YES" attributeType="String" minValueString="36" maxValueString="36" regularExpressionString="[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}" syncable="YES"/>
         <attribute name="timeUpdatedIn" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
         <attribute name="timeUpdatedOut" optional="YES" transient="YES" attributeType="Integer 64" minValueString="0" maxValueString="2734339429864" syncable="YES"/>
@@ -82,7 +83,7 @@
         <attribute name="unblockState" optional="YES" transient="YES" attributeType="String" minValueString="4" maxValueString="20" regularExpressionString="none|friend|invited|invitedMe" syncable="YES"/>
     </entity>
     <elements>
-        <element name="RPC_TalkDelivery" positionX="0" positionY="0" width="128" height="163"/>
+        <element name="RPC_TalkDelivery" positionX="0" positionY="0" width="128" height="180"/>
         <element name="RPC_TalkDelivery_in" positionX="0" positionY="0" width="128" height="118"/>
         <element name="RPC_TalkDelivery_out" positionX="0" positionY="0" width="128" height="118"/>
         <element name="RPC_TalkKey" positionX="0" positionY="0" width="128" height="75"/>
