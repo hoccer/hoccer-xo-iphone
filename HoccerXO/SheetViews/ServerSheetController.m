@@ -291,7 +291,7 @@
                                  @"BOXNAME" : boxName,
                                  @"URL"     : self.server.url,
                                  @"PASSWORD": self.server.password,
-                                 @"USER"    : @"hoccer"
+                                 @"USER"    : HXOLabelledLocalizedString(@"server_user", nil)
                                  };
 
     NSError * error;

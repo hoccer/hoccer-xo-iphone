@@ -1,6 +1,10 @@
 "about_prosa" = "HOCCER - Der Messenger\n\nTootsie roll bear claw pastry. Muffin candy chocolate cake powder powder. Marzipan chocolate cake lollipop candy. Soufflé brownie wafer biscuit marshmallow. Marzipan unerdwear.com pudding toffee liquorice. Icing wafer sweet roll cotton candy wafer sweet roll pudding unerdwear.com cheesecake. Macaroon donut danish. Cheesecake applicake candy canes chocolate cake cake chocolate bar cheesecake candy pie.\n\nPastry donut tiramisu halvah cotton candy dessert bonbon. Lollipop candy canes wafer candy ice cream. Dragée dragée apple pie topping chocolate sweet wafer cheesecake. Soufflé croissant cookie muffin donut liquorice wafer. Soufflé unerdwear.com biscuit chocolate bar sesame snaps halvah. Bear claw fruitcake halvah tiramisu ice cream. Carrot cake caramels topping jelly-o sugar plum bonbon danish.";
 
-"server_nav_title"              = "HoccerDevBox";
+"server_nav_title" = "HoccerDevBox";
+"server_user" = "hoccer";
+
+"invite_mail_body" = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „%@“ zum sicheren Chatten mit meinen Freunden.\n\nLade die App jetzt herunter und bestätige meine Freundschaftsanfrage: %@\n\nUnd los geht´s!";
+"invite_sms_text" = "Hey, ich nutze die Gratis-App %@ zum sicheren Chatten! Jetzt herunterladen und mich als Kontakt hinzufügen: %@\n%@";
 
 //==============================================================================
 // Color Scheme

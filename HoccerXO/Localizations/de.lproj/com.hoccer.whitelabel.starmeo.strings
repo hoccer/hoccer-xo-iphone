@@ -1,6 +1,10 @@
 "about_prosa" = "Starmeo - Der Messenger\n\nStarmeo ist \"Der Messenger\" für anonyme, einfache und sichere Datenübertragung ohne Registrierungsprozess. Weder die Angabe der Mobilnummer noch der Mailadresse ist notwendig um mit Freunden oder Gruppen zu kommunizieren. Wir legen größten Wert auf Sicherheit, Datenschutz und Privatsphäre. Dank modernster Verschlüsselungs- und Übertragungstechnologien, setzt Starmeo neue Standards in der mobilen Datenübertragung und definiert Privatsphäre im Messaging-Sektor neu. Starmeo ermöglicht einen einfachen und unbegrenzten Datenaustausch zwischen Smartphones und Tablets ohne vorherige Eingabe von vertraulichen Nutzerdaten.";
 
-"server_nav_title"              = "StarmeoBox";
+"server_nav_title" = "StarmeoBox";
+"server_user" = "starmeo";
+
+"invite_mail_body" = "Hey,\n\nich nutze jetzt die Star App „%@“ zum sicheren Chatten mit meinen Freunden.\n\nLade die App jetzt herunter und bestätige meine Freundschaftsanfrage: %@\n\nUnd los geht´s!";
+"invite_sms_text" = "Hey, ich nutze die Star App %@ zum sicheren Chatten! Jetzt herunterladen und mich als Kontakt hinzufügen: %@\n%@";
 
 //==============================================================================
 // Color Scheme

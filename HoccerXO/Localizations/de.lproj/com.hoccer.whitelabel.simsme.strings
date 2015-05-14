@@ -1,6 +1,10 @@
 "about_prosa" = "Der kostenlose Secure Instant Messenger der Deutschen Post - für die vertrauensvolle Kommunikation mit Deinem Smartphone - Egal ob Android oder iOS.\n\nSIMSme ist der neue Secure Instant Messenger der Deutsche Post AG. Mit über 500 Jahren Erfahrung in der Übermittlung von Nachrichten ist die Deutsche Post AG der perfekte Partner für deine vertrauensvolle Kommunikation.";
 
 "server_nav_title" = "SIMSmeBox";
+"server_user" = "simsme";
+
+"invite_mail_body" = "Hey,\n\nich nutze jetzt die kostenlose Nachrichten App „%@“ zum sicheren Chatten mit meinen Freunden.\n\nLade die App jetzt herunter und bestätige meine Freundschaftsanfrage: %@\n\nUnd los geht´s!";
+"invite_sms_text" = "Hey, ich nutze die Gratis-App %@ zum sicheren Chatten! Jetzt herunterladen und mich als Kontakt hinzufügen: %@\n%@";
 
 //==============================================================================
 // Color Scheme

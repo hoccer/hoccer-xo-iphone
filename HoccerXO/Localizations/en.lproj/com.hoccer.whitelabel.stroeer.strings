@@ -1,6 +1,10 @@
 "about_prosa" = "STRÖER MESSENGER\n\nStröer Messenger is \"The Messenger\" for fast, easy and secure file transfer between smartphones and tablets, with unlimited data exchange without any setup or exchange of any personal data and the possibility of gesture controlled anonymous communication. Security, data protection and the protection of privacy are of extreme importance to us. Ströer Messenger sets new standards in mobile data transmission and puts mobile privacy to a new level, due to latest encryption and transmission technologies. No registration needed, no need of mobile number or mailadress to add friends.";
 
-"server_nav_title"              = "StröerBox";
+"server_nav_title" = "StröerBox";
+"server_user" = "stroeer";
+
+"invite_mail_body" = "Hey,\n\nI'm using the free messenger app %@ to chat securely with my friends.\nDownload it now and accept my friend request by clicking this link: %@.\n\nLet's go!";
+"invite_sms_text" = "Hey! I'm now using the free app %@ for secure chatting. Download it now and add me as a contact: %@\n%@";
 
 //==============================================================================
 // Color Scheme

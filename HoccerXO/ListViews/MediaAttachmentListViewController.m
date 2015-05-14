@@ -26,6 +26,7 @@
 #import "MediaBrowserDataSource.h"
 #import "tab_attachments.h"
 #import "ChatViewController.h"
+#import "HXOLocalization.h"
 
 #define FETCHED_RESULTS_DEBUG NO
 
@@ -555,7 +556,8 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
                 NSString * message;
                 if (selected.fileUnavailable) {
                     title = NSLocalizedString(@"attachment_file_gone_title", nil);
-                    message = NSLocalizedString(@"attachment_file_gone_message", nil);
+                    NSString * boxName = HXOLabelledLocalizedString(@"server_nav_title", nil);
+                    message = HXOLocalizedString(@"attachment_file_gone_message", nil, boxName);
                 } else {
                     title = NSLocalizedString(@"attachment_cannot_play_title", nil);
                     message = NSLocalizedString(@"attachment_cannot_play_message", nil);

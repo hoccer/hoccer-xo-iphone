@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F1C0BF11B039288002B346D /* com.hoccer.Hoccer-XO.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F1C0BEF1B039288002B346D /* com.hoccer.Hoccer-XO.strings */; };
 		1FA4DE52195D9B400008C9DD /* MediaAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBDB1934CC9E00C0D254 /* MediaAttachmentListViewController.m */; };
 		1FE9FA581AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */; };
 		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
@@ -293,7 +294,6 @@
 		C5EB3CCC1A824EFC00E236F6 /* com.artcom.Hoccer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */; };
 		C5EB3CD21A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */; };
 		C5EB3CD81A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */; };
-		C5EB3CDE1A82658900E236F6 /* com.hoccer.Hoccer-XO.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CE01A82658900E236F6 /* com.hoccer.Hoccer-XO.strings */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
@@ -550,6 +550,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1F1C0BF01B039288002B346D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO.strings"; sourceTree = "<group>"; };
+		1F1C0BF21B039293002B346D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO.strings"; sourceTree = "<group>"; };
 		1FE9FA571AC9822F00DBE7E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.hoccer.whitelabel.starmeo.strings; sourceTree = "<group>"; };
 		1FE9FA591AC9823C00DBE7E3 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.starmeo.strings; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
@@ -1088,8 +1090,6 @@
 		C5EB3CD51A824FF000E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.stroeer.strings; sourceTree = "<group>"; };
 		C5EB3CD91A82646800E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
 		C5EB3CDB1A82646A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
-		C5EB3CDF1A82658900E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO.strings"; sourceTree = "<group>"; };
-		C5EB3CE11A82658A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO.strings"; sourceTree = "<group>"; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
 		E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-42.xcdatamodel"; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
@@ -2015,9 +2015,9 @@
 		63AE45571705EE030099F0CB /* Localizations */ = {
 			isa = PBXGroup;
 			children = (
+				1F1C0BEF1B039288002B346D /* com.hoccer.Hoccer-XO.strings */,
 				C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */,
 				C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */,
-				C5EB3CE01A82658900E236F6 /* com.hoccer.Hoccer-XO.strings */,
 				C5E8E4171A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings */,
 				C5E8E3CD1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings */,
 				1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */,
@@ -3171,12 +3171,12 @@
 				C5E8E4151A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings in Resources */,
 				6382545117503531000347CD /* server_production.der in Resources */,
 				E9A85DA3184FD1AD00EB9B68 /* chatbar-attachment-icon-photo@2x.png in Resources */,
+				1F1C0BF11B039288002B346D /* com.hoccer.Hoccer-XO.strings in Resources */,
 				63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */,
 				E991E6721A0E975000015BEE /* Documentation.html in Resources */,
 				C5E8E3CB1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings in Resources */,
 				E96A3DD11AF2A6C50099325D /* placeholder-world@2x.png in Resources */,
 				C576EC331934CCB200C0D254 /* fullscreen-button-pause@2x.png in Resources */,
-				C5EB3CDE1A82658900E236F6 /* com.hoccer.Hoccer-XO.strings in Resources */,
 				E9A85DA1184FD1AD00EB9B68 /* chatbar-attachment-icon-music@2x.png in Resources */,
 				635127B61ABB6FFD00FA0C2B /* webdav_win8.rtf in Resources */,
 				E96A3DD71AF2A6C50099325D /* placeholder-group.png in Resources */,
@@ -3560,6 +3560,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		1F1C0BEF1B039288002B346D /* com.hoccer.Hoccer-XO.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1F1C0BF01B039288002B346D /* de */,
+				1F1C0BF21B039293002B346D /* en */,
+			);
+			name = "com.hoccer.Hoccer-XO.strings";
+			sourceTree = "<group>";
+		};
 		1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3683,15 +3692,6 @@
 				C5EB3CDB1A82646A00E236F6 /* de */,
 			);
 			name = "com.hoccer.Hoccer-XO-Dev.strings";
-			sourceTree = "<group>";
-		};
-		C5EB3CE01A82658900E236F6 /* com.hoccer.Hoccer-XO.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C5EB3CDF1A82658900E236F6 /* en */,
-				C5EB3CE11A82658A00E236F6 /* de */,
-			);
-			name = "com.hoccer.Hoccer-XO.strings";
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
