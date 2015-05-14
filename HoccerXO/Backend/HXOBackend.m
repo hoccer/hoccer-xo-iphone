@@ -6712,20 +6712,22 @@ NSError * makeSendError(NSString * reason) {
     [AppDelegate.instance backendTrafficWithRequestsOpen:0];
 }
 
+#define TRACE_TRAFFIC NO
+
 - (void) webSocket:(SRWebSocket *)webSocket didStartRequest:(unsigned long)requestId withOpenRequests:(unsigned long)openRequests {
-    NSLog(@"++++++ Start");
+    if (TRACE_TRAFFIC) NSLog(@"++++++ Start");
     [AppDelegate.instance backendTrafficWithRequestsOpen:openRequests];
 }
 - (void) webSocket:(SRWebSocket *)webSocket didFinishRequest:(unsigned long)requestId withOpenRequests:(unsigned long)openRequests {
-    NSLog(@"++++++ Finish");
+    if (TRACE_TRAFFIC) NSLog(@"++++++ Finish");
     [AppDelegate.instance backendTrafficWithRequestsOpen:openRequests];
 }
 - (void) webSocket:(SRWebSocket *)webSocket didSendWithOpenRequests:(unsigned long)openRequests {
-    NSLog(@"++++++ Send");
+    if (TRACE_TRAFFIC) NSLog(@"++++++ Send");
     [AppDelegate.instance backendTrafficWithRequestsOpen:openRequests];
 }
 - (void) webSocket:(SRWebSocket *)webSocket didReceiveWithOpenRequests:(unsigned long)openRequests {
-    NSLog(@"++++++ Receive");
+    if (TRACE_TRAFFIC) NSLog(@"++++++ Receive");
     [AppDelegate.instance backendTrafficWithRequestsOpen:openRequests];
 }
 

@@ -73,6 +73,8 @@
 #define TRACE_IMAGE_CACHING         NO
 #define TRACE_NOTIFICATIONS         YES
 #define TRACE_MUGSHOTS              YES
+#define TRACE_BACKGROUND_FINALIZER  NO
+#define TRACE_TRAFFIC_MONITOR       NO
 
 
 NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
@@ -368,7 +370,7 @@ typedef void (^ImageHandler)(UIImage* image);
     if (--_backgroundTaskCount == 0) {
         if (_backgroundFinalizer != nil && [self readyToFinalize]) {
             NSLog(@"#INFO: finishedBackgroundTask: last task finished and ready to finalize, triggering");
-            [self triggerFinalizer];
+            [self triggerFinalizer:YES];
         }
     }
     NSLog(@"#INFO: finishedBackgroundTask: running = %lu",_backgroundTaskCount);
@@ -381,7 +383,7 @@ typedef void (^ImageHandler)(UIImage* image);
     _backgroundFinalizer = finalizer;
     if ([self readyToFinalize]) {
         NSLog(@"#INFO: setBackgroundFinalizer: no backgroundtask running, finalizing");
-        [self triggerFinalizer];
+        [self triggerFinalizer:YES];
         return;
     }
 }
@@ -389,10 +391,10 @@ typedef void (^ImageHandler)(UIImage* image);
 -(void)backendTrafficWithRequestsOpen:(unsigned long)openRequests {
     _backendRequestsOpen = openRequests;
     _backendLastTrafficTime = [NSDate new];
-    NSLog(@"#INFO: backendTrafficWithRequestsOpen %lu", openRequests);
+    if (TRACE_TRAFFIC_MONITOR) NSLog(@"#INFO: backendTrafficWithRequestsOpen %lu", openRequests);
     if (_backgroundFinalizer != nil && _backgroundTaskCount == 0 && _backendRequestsOpen == 0) {
-        NSLog(@"#INFO: backendTrafficWithRequestsOpen no backgroundTasks, no open Requests, triggering finalizer");
-        [self triggerFinalizer];
+        if (TRACE_BACKGROUND_FINALIZER) NSLog(@"#INFO: backendTrafficWithRequestsOpen no backgroundTasks, no open Requests, triggering finalizer");
+        [self triggerFinalizer:YES];
     }
 }
 
@@ -400,7 +402,7 @@ const double MIN_TRAFFIC_GAP = 1.0;
 
 -(BOOL)readyToFinalize {
     double lastTrafficAgo = -[_backendLastTrafficTime timeIntervalSinceNow];
-    NSLog(@"readyToFinalize: _backgroundTaskCount %lu, _backendRequestsOpen %lu, _backendLastTrafficTime %f secs. ago",
+    if (TRACE_TRAFFIC_MONITOR) NSLog(@"readyToFinalize: _backgroundTaskCount %lu, _backendRequestsOpen %lu, _backendLastTrafficTime %f secs. ago",
           _backgroundTaskCount, _backendRequestsOpen, lastTrafficAgo);
     
     if (_backgroundTaskCount == 0 && _backendRequestsOpen == 0 &&
@@ -410,24 +412,47 @@ const double MIN_TRAFFIC_GAP = 1.0;
     return NO;
 }
 
-// TODO: make sure finalizer is only triggered once
-// make sure we continue when coming back from background and are still active
-
--(void)triggerFinalizer {
+-(void)triggerFinalizer:(BOOL)externally {
+    if (_backgroundFinalizerTriggered && externally) {
+        NSLog(@"#WARNING: _backgroundFinalizer already triggered");
+        return;
+    }
+    _backgroundFinalizerTriggered = YES;
     if ([self readyToFinalize]) {
-        NSLog(@"#INFO: triggerFinalizer no backgroundTasks, no open Requests, no traffic, finalizing");
         if (_backgroundFinalizer != nil) {
+            NSLog(@"#INFO: triggerFinalizer no backgroundTasks, no open Requests, no traffic, finalizing");
             _backgroundFinalizer();
             _backgroundFinalizer = nil;
+        } else {
+            NSLog(@"#INFO: triggerFinalizer: ending, finalizer was canceled (ready)");
         }
+        _backgroundFinalizerTriggered = NO;
     } else {
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, MIN_TRAFFIC_GAP * 1.2 * NSEC_PER_SEC);
-        NSLog(@"triggerFinalizer: scheduling retry in %f seconds", MIN_TRAFFIC_GAP * 1.2);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
-            [self triggerFinalizer];
-        });
+        if (_backgroundFinalizer != nil) {
+            dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, MIN_TRAFFIC_GAP * 1.2 * NSEC_PER_SEC);
+            NSLog(@"#INFO: triggerFinalizer: scheduling check in %f seconds", MIN_TRAFFIC_GAP * 1.2);
+            dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
+                [self triggerFinalizer:NO];
+            });
+        } else {
+            _backgroundFinalizerTriggered = NO;
+            NSLog(@"#INFO: triggerFinalizer: ending, finalizer was canceled (not ready)");
+        }
     }
 }
+
+-(void)cancelFinalizer {
+    if (_backgroundTask != UIBackgroundTaskInvalid) {
+        NSLog(@"cancelFinalizer: ending background task");
+        [[UIApplication sharedApplication] endBackgroundTask: _backgroundTask];
+        _backgroundTask = UIBackgroundTaskInvalid;
+    }
+    if (_backgroundFinalizer != nil) {
+        NSLog(@"cancelFinalizer: removing background finalizer");
+        _backgroundFinalizer = nil;
+    }
+}
+
 
 + (NSDate*)getModificationDateForPath:(NSString*)myFilePath {
     NSError * error = nil;
@@ -1154,13 +1179,17 @@ BOOL sameObjects(id obj1, id obj2) {
 
     NSLog(@"applicationWillEnterForeground");
 
-    
-    if (self.isPasscodeRequired) {
-        [self.chatBackend disable];
-        [self requestUserAuthentication: nil];
+    if (self.chatBackend.isReady) {
+        NSLog(@"applicationWillEnterForeground: still connected, keeping connection open");
+        [self cancelFinalizer];
     } else {
-        [self tryMakeMugShot];
-        [self.chatBackend start: NO];
+        if (self.isPasscodeRequired) {
+            [self.chatBackend disable];
+            [self requestUserAuthentication: nil];
+        } else {
+            [self tryMakeMugShot];
+            [self.chatBackend start: NO];
+        }
     }
 
     [self setLastActiveDate];
@@ -3847,7 +3876,9 @@ enum {
 
 - (void) backendDidStop {
     if (_backgroundTask != UIBackgroundTaskInvalid) {
-        NSLog(@"backendDidStop: done with background task ... good night");
+        [self saveDatabaseNow];
+        [self setLastActiveDate];
+        NSLog(@"#INFO: backendDidStop: done with background task ... good night");
         [[UIApplication sharedApplication] endBackgroundTask: _backgroundTask];
         _backgroundTask = UIBackgroundTaskInvalid;
     }

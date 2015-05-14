@@ -402,7 +402,7 @@ static const NSTimeInterval kResponseTimeout = 30;
         }
         return YES;
     } else {
-        NSLog(@"sendJson: sending failed, connection not open");
+        NSLog(@"#WARNING: sendJson: sending failed, connection not open");
     }
     return NO;
 }
@@ -412,7 +412,7 @@ static const NSTimeInterval kResponseTimeout = 30;
 }
 
 - (void) flushOpenRequests {
-    NSLog(@"JsonRpc: connection was closed,  flushing %d open requests", (int)_responseHandlers.count);
+    NSLog(@"#INFO: JsonRpc: connection was closed,  flushing %d open requests", (int)_responseHandlers.count);
     _flushedRequests = _responseHandlers.count;
     NSArray * allResponses = [_responseHandlers allKeys];
     for (id key in allResponses) {
@@ -422,14 +422,14 @@ static const NSTimeInterval kResponseTimeout = 30;
         ResponseBlock handler = request[@"handler"];
         NSTimer * timer = request[@"timer"];
         [timer invalidate];
-        NSLog(@"JsonRpc: request %@ was flushed (connection was closed)", theKey);
+        NSLog(@"#WARNING: JsonRpc: request %@ was flushed (connection was closed)", theKey);
         handler(@{@"message":@"connection closed",@"code":@7003}, NO);
     }
     
 }
 
 - (void) droppedRequest: (NSNumber*) jsonRpcId {
-    NSLog(@"JsonRpc: request %@ was dropped (no connection)", jsonRpcId);
+    NSLog(@"#WARNING: JsonRpc: request %@ was dropped (no connection)", jsonRpcId);
     NSDictionary * responseHandler = _responseHandlers[jsonRpcId];
     if (responseHandler != nil) {
         [_responseHandlers removeObjectForKey: jsonRpcId];
@@ -449,7 +449,7 @@ static const NSTimeInterval kResponseTimeout = 30;
         [_responseHandlers removeObjectForKey: jsonRpcId];
         handler(@{@"message":@"request timeout",@"code":@7002}, NO);
     } else {
-        NSLog(@"No response handler for request %@, timeout ignored",jsonRpcId);
+        NSLog(@"#WARNING: No response handler for request %@, timeout ignored",jsonRpcId);
     }
 }
 
