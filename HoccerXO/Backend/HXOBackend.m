@@ -135,13 +135,18 @@ static NSTimer * _stateNotificationDelayTimer;
     NSMutableArray * _attachmentUploadsWaiting;
     NSMutableArray * _attachmentDownloadsActive;
     NSMutableArray * _attachmentUploadsActive;
+    
     BOOL            _locationUpdatePending;
+    
     unsigned        _loginFailures;
     unsigned        _loginRefusals;
+    
     NSMutableSet * _pendingGroupDeletions;
+    
     NSMutableSet * _pendingDeliveryUpdates;
     NSMutableSet * _pendingAttachmentDeliveryUpdates;
     NSMutableSet * _postponedAttachmentDeliveryUpdates;
+    
     NSMutableSet * _groupsNotYetPresentedInvitation;
     NSMutableSet * _groupsPresentingInvitation;
     NSMutableSet * _contactPresentingFriendMessage;
@@ -163,6 +168,13 @@ static NSTimer * _stateNotificationDelayTimer;
 
 @dynamic isReady;
 
+-(void)clearDeliverySynchronizers {
+    _pendingDeliveryUpdates = [NSMutableSet new];
+    _pendingAttachmentDeliveryUpdates = [NSMutableSet new];
+    _postponedAttachmentDeliveryUpdates = [NSMutableSet new];
+}
+
+
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate {
     self = [super init];
     if (self != nil) {
@@ -175,9 +187,12 @@ static NSTimer * _stateNotificationDelayTimer;
         _loginRefusals = 0;
         _startedConnectingTime = nil;
         _pendingGroupDeletions = [NSMutableSet new];
+        
+        [self clearDeliverySynchronizers];
         _pendingDeliveryUpdates = [NSMutableSet new];
         _pendingAttachmentDeliveryUpdates = [NSMutableSet new];
         _postponedAttachmentDeliveryUpdates = [NSMutableSet new];
+        
         _groupsNotYetPresentedInvitation = [NSMutableSet new];
         _contactPresentingFriendMessage = [NSMutableSet new];
         _contactPresentingFriendInvitation = [NSMutableSet new];
@@ -1083,7 +1098,7 @@ NSError * makeSendError(NSString * reason) {
             //[self checkTransferQueues];
             
             id userInfo = @{ @"message":message };
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"receivedNewHXOMessage"
+            [[NSNotificationCenter defaultCenter] postNotificationName:kHXOReceivedNewHXOMessage
                                                                 object:self
                                                               userInfo:userInfo
              ];
@@ -1298,7 +1313,9 @@ NSError * makeSendError(NSString * reason) {
         [self flushIncomingDeliveriesInContext:context];
     }];
     [self flushPendingFiletransfers];
-    [AppDelegate.instance resumeDocumentMonitoring];
+    if (!self.delegate.runningInBackground) {
+        [AppDelegate.instance resumeDocumentMonitoring];
+    }
 
 }
 
@@ -1425,7 +1442,9 @@ NSError * makeSendError(NSString * reason) {
                                                                               userInfo:nil
                              ];
                             
-                            [AppDelegate.instance resumeDocumentMonitoring];
+                            if (!self.delegate.runningInBackground) {
+                                [AppDelegate.instance resumeDocumentMonitoring];
+                            }
                             
                             if (AppDelegate.instance.conversationViewController !=nil && AppDelegate.instance.conversationViewController.environmentMode != ACTIVATION_MODE_NONE) {
                                 [HXOEnvironment.sharedInstance setActivation:AppDelegate.instance.conversationViewController.environmentMode];
@@ -4655,11 +4674,11 @@ NSError * makeSendError(NSString * reason) {
         
         @synchronized(_postponedAttachmentDeliveryUpdates) {[_postponedAttachmentDeliveryUpdates addObject:fileId];}
         /*
-        // TODO: move to when request ready instead of delay
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self updateAttachmentInDeliveryStateIfNecessary:theAttachment];
-        });
+         // TODO: move to when request ready instead of delay
+         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 4.0 * NSEC_PER_SEC);
+         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+         [self updateAttachmentInDeliveryStateIfNecessary:theAttachment];
+         });
          */
     } else {
         Delivery * delivery = theAttachment.message.deliveries.anyObject;
@@ -4682,6 +4701,7 @@ NSError * makeSendError(NSString * reason) {
                             if (object) {
                                 Delivery * delivery = object[0];
                                 delivery.attachmentState = result;
+                                [AppDelegate.instance saveContext:context];
                             }
                             @synchronized(_pendingAttachmentDeliveryUpdates) {[_pendingAttachmentDeliveryUpdates removeObject:fileId];}
                             @synchronized(_postponedAttachmentDeliveryUpdates) {
@@ -4698,7 +4718,7 @@ NSError * makeSendError(NSString * reason) {
             } else if (state == kAttachmentTransfersExhausted) {
                 
                 @synchronized(_pendingAttachmentDeliveryUpdates) {[_pendingAttachmentDeliveryUpdates addObject:fileId];}
-
+                
                 [self failedFileDownload:fileId withhandler:^(NSString *result, BOOL ok) {
                     if (ok) {
                         if (![kDelivery_ATTACHMENT_STATE_DOWNLOAD_FAILED isEqualToString:result]) {
@@ -6693,6 +6713,9 @@ NSError * makeSendError(NSString * reason) {
     if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", (int)code, reason, wasClean);
     _uncleanConnectionShutdown = code != 0 || [_serverConnection numberOfOpenRequests] !=0 || [_serverConnection numberOfFlushedRequests] != 0;
     if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode _uncleanConnectionShutdown = %d, openRequests = %d, flushedRequests = %d", _uncleanConnectionShutdown, [_serverConnection numberOfOpenRequests], [_serverConnection numberOfFlushedRequests]);
+    
+    [self clearDeliverySynchronizers];
+
     BackendState oldState = _state;
     if (oldState == kBackendDisabling) {
         [self setState: kBackendDisabled];

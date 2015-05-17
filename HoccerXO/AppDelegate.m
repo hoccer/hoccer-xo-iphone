@@ -84,6 +84,8 @@ NSString * const kHXOTransferCredentialsURLExportScheme = @"hcrexport";
 NSString * const kHXOTransferArchiveUTI = @"com.hoccer.ios.archive.v1";
 NSString * const kHXODefaultArchiveName = @"default.hciarch";
 
+NSString * const kHXOReceivedNewHXOMessage = @"receivedNewHXOMessage";
+
 NSString * const kFileChangedNotification = @"fileChangedNotification";
 
 static NSInteger validationErrorCount = 0;
@@ -981,7 +983,7 @@ BOOL sameObjects(id obj1, id obj2) {
     
     [AppDelegate setDefaultAudioSession];
 
-    _messageReceivedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"receivedNewHXOMessage"
+    _messageReceivedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHXOReceivedNewHXOMessage
                                                                                  object:nil
                                                                                   queue:[NSOperationQueue mainQueue]
                                                                              usingBlock:^(NSNotification *note) {
@@ -1166,6 +1168,7 @@ BOOL sameObjects(id obj1, id obj2) {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     [self.chatBackend changePresenceToNormal]; // not typing anymore ... yep, pretty sure...
+    [self pauseDocumentMonitoring];
     [self saveDatabaseNow];
     [self setLastActiveDate];
     if (self.environmentMode != ACTIVATION_MODE_NONE) {
@@ -1184,6 +1187,7 @@ BOOL sameObjects(id obj1, id obj2) {
     if (self.chatBackend.isReady) {
         NSLog(@"applicationWillEnterForeground: still connected, keeping connection open");
         [self cancelFinalizer];
+        [self resumeDocumentMonitoring];
     } else {
         if (self.isPasscodeRequired) {
             [self.chatBackend disable];
@@ -2372,10 +2376,6 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     NSLog(@"Error in APN registration. Error: %@", err);
 }
 
-/* nothing to do here ... ?
-- (void) application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
-}
-*/
 
 - (void)application:(UIApplication *)application handleActionWithIdentifier:(NSString *)identifier forLocalNotification:(UILocalNotification *)notification completionHandler:(void (^)())completionHandler
 {
@@ -2408,7 +2408,22 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     if (self.environmentMode != ACTIVATION_MODE_NONE) {
         [self suspendEnvironmentMode]; // for resuming nearby mode, the Conversations- or ChatView are responsible; the must do it after login
     }
-    [HXOBackend.instance start:NO];
+    if (!HXOBackend.instance.isReady) {
+        NSLog(@"didReceiveRemoteNotification - starting backend");
+        [HXOBackend.instance start:NO];
+    } else {
+        NSLog(@"didReceiveRemoteNotification - backend still active in background");
+    }
+    if (_backgroundFetchHandler) {
+        NSLog(@"didReceiveRemoteNotification - old backgroundFetchHandler still there, executing...");
+        _backgroundFetchHandler(UIBackgroundFetchResultNewData);
+        _backgroundFetchHandler = nil;
+        if (_backgroundFinalizerTriggered) {
+            NSLog(@"didReceiveRemoteNotification - old _backgroundFinalizerTriggered triggered, canceling");
+            [self cancelFinalizer];
+        }
+    }
+    NSLog(@"didReceiveRemoteNotification - setting new background fetch handler...");
     _backgroundFetchHandler = handler;
 }
 

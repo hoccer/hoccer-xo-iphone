@@ -2378,6 +2378,7 @@
     }
 
     UIApplication *app = [UIApplication sharedApplication];
+    [AppDelegate.instance startedBackgroundTask];
     _backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler: ^{
         NSLog(@"##WARNING: Attachment: runnung background task expiration handler...");
        if (self.transferRetryTimer != nil) {
@@ -2389,6 +2390,7 @@
             self.transferConnection = nil;
             [(AppDelegate*)app.delegate saveDatabase];
         }
+        [AppDelegate.instance finishedBackgroundTask];
         [app endBackgroundTask:_backgroundTaskId];
         _backgroundTaskId = UIBackgroundTaskInvalid;
     }];
@@ -2396,6 +2398,7 @@
 
 - (void) unregisterBackgroundTask {
     NSLog(@"Attachment: unregistering background task...");
+    [AppDelegate.instance finishedBackgroundTask];
     UIApplication *app = [UIApplication sharedApplication];
     [app endBackgroundTask:_backgroundTaskId];
     _backgroundTaskId = UIBackgroundTaskInvalid;

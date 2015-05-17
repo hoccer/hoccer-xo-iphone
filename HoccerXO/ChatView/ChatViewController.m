@@ -170,6 +170,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     _backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler: ^{
         // do cleanup here
         NSLog(@"### ChatViewController: running background task expiration handler...");
+        [AppDelegate.instance finishedBackgroundTask];
         [app endBackgroundTask:_backgroundTaskId];
         _backgroundTaskId = UIBackgroundTaskInvalid;
     }];

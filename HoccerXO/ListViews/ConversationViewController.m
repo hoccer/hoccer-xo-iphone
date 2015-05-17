@@ -122,7 +122,7 @@
                                                                            self.lastMessageDate = nil;
                                                                        }];
     
-    self.messageObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"receivedNewHXOMessage"
+    self.messageObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHXOReceivedNewHXOMessage
                                                                            object:nil
                                                                             queue:[NSOperationQueue mainQueue]
                                                                        usingBlock:^(NSNotification *note) {

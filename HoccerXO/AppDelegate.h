@@ -23,6 +23,7 @@ FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLArchiveHost;
 FOUNDATION_EXPORT NSString * const kHXOTransferCredentialsURLExportScheme;
 FOUNDATION_EXPORT NSString * const kHXOTransferArchiveUTI;
 FOUNDATION_EXPORT NSString * const kHXODefaultArchiveName;
+FOUNDATION_EXPORT NSString * const kHXOReceivedNewHXOMessage;
 
 typedef void (^ContinueBlock)();
 typedef void (^ContextBlock)(NSManagedObjectContext* context);
