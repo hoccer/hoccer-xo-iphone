@@ -172,6 +172,7 @@ static NSTimer * _stateNotificationDelayTimer;
     _pendingDeliveryUpdates = [NSMutableSet new];
     _pendingAttachmentDeliveryUpdates = [NSMutableSet new];
     _postponedAttachmentDeliveryUpdates = [NSMutableSet new];
+    _locationUpdatePending = NO;
 }
 
 
@@ -189,9 +190,12 @@ static NSTimer * _stateNotificationDelayTimer;
         _pendingGroupDeletions = [NSMutableSet new];
         
         [self clearDeliverySynchronizers];
+        /*
         _pendingDeliveryUpdates = [NSMutableSet new];
         _pendingAttachmentDeliveryUpdates = [NSMutableSet new];
         _postponedAttachmentDeliveryUpdates = [NSMutableSet new];
+         _locationUpdatePending = NO;
+         */
         
         _groupsNotYetPresentedInvitation = [NSMutableSet new];
         _contactPresentingFriendMessage = [NSMutableSet new];
@@ -294,7 +298,6 @@ static NSTimer * _stateNotificationDelayTimer;
         _attachmentDownloadsActive = [[NSMutableArray alloc] init];
         _attachmentUploadsActive = [[NSMutableArray alloc] init];
         
-        _locationUpdatePending = NO;
         //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(defaultsChanged:) name:NSUserDefaultsDidChangeNotification object:nil];
         _udpSocket = [[GCDAsyncUdpSocket alloc] initWithDelegate:self delegateQueue:dispatch_get_main_queue()];
     }
@@ -378,27 +381,32 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 -(void)sendEnvironmentDestroyWithType:(NSString*)type {
-    if (_state == kBackendReady && !_locationUpdatePending) {
-        if (_state == kBackendReady) {
-            if ([kGroupTypeNearby isEqualToString:type]) {
-                [self destroyEnvironmentType:type withHandler:^(BOOL ok) {
-                    if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment type %@ destroyed = %d",type, ok);
-                }];
-            } else {
-                [self releaseEnvironmentType:type withHandler:^(BOOL ok) {
-                    if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment type %@ released = %d",type, ok);
-                }];
+    if (!AppDelegate.instance.runningInBackground) {
+        
+        if (_state == kBackendReady && !_locationUpdatePending) {
+            if (_state == kBackendReady) {
+                if ([kGroupTypeNearby isEqualToString:type]) {
+                    [self destroyEnvironmentType:type withHandler:^(BOOL ok) {
+                        if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment type %@ destroyed = %d",type, ok);
+                    }];
+                } else {
+                    [self releaseEnvironmentType:type withHandler:^(BOOL ok) {
+                        if (SINGLE_NEARBY_DEBUG) NSLog(@"Enviroment type %@ released = %d",type, ok);
+                    }];
+                }
             }
         }
     }
 }
 
 -(void)sendEnvironmentUpdate {
-    if (_state == kBackendReady && !_locationUpdatePending) {
-        _locationUpdatePending = YES;
-        [self updateEnvironment:[HXOEnvironment sharedInstance] withHandler:^(NSString * groupId) {
-            _locationUpdatePending = NO;
-        }];
+    if (!AppDelegate.instance.runningInBackground) {
+        if (_state == kBackendReady && !_locationUpdatePending) {
+            _locationUpdatePending = YES;
+            [self updateEnvironment:[HXOEnvironment sharedInstance] withHandler:^(NSString * groupId) {
+                _locationUpdatePending = NO;
+            }];
+        }
     }
 }
 
@@ -1189,7 +1197,6 @@ NSError * makeSendError(NSString * reason) {
 
 - (void) startAuthentication {
     [self setState: kBackendAuthenticating];
-    [AppDelegate.instance pauseDocumentMonitoring];
     NSString * A = [[UserProfile sharedProfile] startSrpAuthentication];
     [self srpPhase1WithClientId: [UserProfile sharedProfile].clientId A: A andHandler:^(NSString * challenge, NSDictionary * errorReturned) {
         if (challenge == nil) {
@@ -1224,6 +1231,7 @@ NSError * makeSendError(NSString * reason) {
 
 -(void)startSync {
     _firstEnvironmentUpdateHandler = nil;
+    //[AppDelegate.instance pauseDocumentMonitoring];
     if ([self quickStart]) {
         [self performParallelSync];
     } else {
@@ -2414,9 +2422,15 @@ NSError * makeSendError(NSString * reason) {
                 [self presenceUpdated:presence inContext:context];
                 //[self presenceUpdatedLocked:presence inContext:context];
             }
-            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                [self checkContactsWithCompletion:completion];
-            }];
+            if (!AppDelegate.instance.runningInBackground) {
+                [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                    [self checkContactsWithCompletion:completion];
+                }];
+            } else {
+                [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
+                    if (completion) completion(YES);
+                }];
+            }
         }];
     }];
 }
@@ -2933,13 +2947,15 @@ NSError * makeSendError(NSString * reason) {
         //[self.delegate performWithLockingId:@"groups" inNewBackgroundContext:^(NSManagedObjectContext *context) {
         [self.delegate performWithLockingId:kqContacts inNewBackgroundContext:^(NSManagedObjectContext *context) {
             if (GROUP_DEBUG) NSLog(@"getGroups result = %@",changedGroupsDicts);
+            NSMutableSet * groupsDone = [NSMutableSet new];
+            BOOL ok = YES;
             if ([changedGroupsDicts isKindOfClass:[NSArray class]]) {
-                BOOL ok = YES;
                 for (NSDictionary * groupDict in changedGroupsDicts) {
                     
                     BOOL stateOk = [self updateGroupHere:groupDict inContext:context];
                     Group * group = [self getGroupById:groupDict[@"groupId"] inContext:context];
                     if (group != nil) {
+                        [groupsDone addObject:group.clientId];
                         [self.delegate performAfterCurrentContextFinishedInMainContextPassing:@[group] withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects)  {
                             Group * group = managedObjects[0];
                             [self makeSureAvatarUploadedForGroup:group withCompletion:^(NSError *theError) {
@@ -2955,17 +2971,27 @@ NSError * makeSendError(NSString * reason) {
                     ok = ok && stateOk;
                 }
             }
-            [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context)  {
-                [self checkGroupMembershipsWithCompletion:completion];
-            }];
+            if (!forceAll) {
+                [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context)  {
+                    NSArray * groupArray = [self getActiveGroupsInContext:self.delegate.mainObjectContext];
+                    for (Group * group in groupArray) {
+                        if (![groupsDone containsObject:group.clientId]) {
+                            [self getGroupMembers:group lastKnown:[group latestMemberChangeDate] withCompletion:nil];
+                        }
+                    }
+                }];
+            }
+            if (!AppDelegate.instance.runningInBackground) {
+                [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context)  {
+                    [self checkGroupMembershipsWithCompletion:completion];
+                }];
+            } else {
+                [self.delegate performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context)  {
+                    if (completion) completion(ok);
+                }];
+            }
         }];
     }];
-    if (!forceAll) {
-        NSArray * groupArray = [self getActiveGroupsInContext:self.delegate.mainObjectContext];
-        for (Group * group in groupArray) {
-            [self getGroupMembers:group lastKnown:[group latestMemberChangeDate] withCompletion:nil];
-        }
-    }
 }
 
 -(void) mergeGroups:(NSArray*)myGroups intoGroup:(Group*)targetGroup inContext:(NSManagedObjectContext *)context {

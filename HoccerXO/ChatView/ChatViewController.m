@@ -387,17 +387,19 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                           queue:[NSOperationQueue mainQueue]
                                      usingBlock:^(NSNotification *note) {
                                          if (DEBUG_NOTIFICATIONS) NSLog(@"ChatView: loginSucceeded");
-                                         if (self.partner.isNearby) {
-                                             [AppDelegate.instance configureForMode:ACTIVATION_MODE_NEARBY];
-                                         } else if (self.partner.isWorldwide) {
-                                             [AppDelegate.instance configureForMode:ACTIVATION_MODE_WORLDWIDE];
-                                         } else {
-                                             [AppDelegate.instance configureForMode:ACTIVATION_MODE_NONE];
-                                         }
-                                         if (AppDelegate.instance.unreadMessageCount > 0) {
-                                             // in case we have received messages in the background, we need to properly
-                                             // handle read message handling
-                                             [self.tableView reloadData];
+                                         if (!AppDelegate.instance.runningInBackground) {
+                                             if (self.partner.isNearby) {
+                                                 [AppDelegate.instance configureForMode:ACTIVATION_MODE_NEARBY];
+                                             } else if (self.partner.isWorldwide) {
+                                                 [AppDelegate.instance configureForMode:ACTIVATION_MODE_WORLDWIDE];
+                                             } else {
+                                                 [AppDelegate.instance configureForMode:ACTIVATION_MODE_NONE];
+                                             }
+                                             if (AppDelegate.instance.unreadMessageCount > 0) {
+                                                 // in case we have received messages in the background, we need to properly
+                                                 // handle read message handling
+                                                 [self.tableView reloadData];
+                                             }
                                          }
                                      }];
 }

@@ -1188,6 +1188,9 @@ BOOL sameObjects(id obj1, id obj2) {
         NSLog(@"applicationWillEnterForeground: still connected, keeping connection open");
         [self cancelFinalizer];
         [self resumeDocumentMonitoring];
+        if (self.environmentMode != ACTIVATION_MODE_NONE) {
+            [self suspendEnvironmentMode]; // for resuming nearby or worldwide mode, the Conversations- or ChatView are responsible; the must do it after login
+        }
     } else {
         if (self.isPasscodeRequired) {
             [self.chatBackend disable];
