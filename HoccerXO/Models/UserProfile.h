@@ -33,7 +33,7 @@ enum {
 
 @property (nonatomic,strong)   NSString * nickName;
 @property (nonatomic,strong)   NSString * status;
-@property (nonatomic,strong)   NSString * connectionStatus;
+@property (nonatomic,readonly) NSString * connectionStatus;
 
 @property (nonatomic, strong) NSData   * publicKey;       // public key of this contact
 @property (nonatomic, strong) NSString * publicKeyId;     // id of public key
@@ -119,6 +119,7 @@ enum {
 - (BOOL)deleteAllKeys;
 - (SecKeyRef) getPublicKeyRef;
 
-
+- (void) changePresenceToNormal;
+- (void) changePresenceToTyping;
 
 @end

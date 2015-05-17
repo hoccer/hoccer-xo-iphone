@@ -156,7 +156,7 @@ typedef void (^CompletionWithError)(NSError* theError);
 - (void) modifyPresenceConnectionStatusWithHandler:(GenericResultHandler)handler;
 
 - (void) changePresenceToTyping;
-- (void) changePresenceToNotTyping;
+- (void) changePresenceToNormal;
 
 - (void) start: (BOOL) performRegistration;
 - (void) stop;

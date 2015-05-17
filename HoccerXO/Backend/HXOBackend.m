@@ -5797,26 +5797,22 @@ NSError * makeSendError(NSString * reason) {
 
 - (void) modifyPresenceConnectionStatusWithHandler:(GenericResultHandler)handler {
     NSString * myConnectionStatus = [UserProfile sharedProfile].connectionStatus;
-    if (myConnectionStatus == nil) {
-        myConnectionStatus = @"online";
-    }
     [self modifyPresenceConnectionStatus:myConnectionStatus handler:handler];
 }
 
-- (void) changePresenceToNotTyping {
+- (void) changePresenceToNormal {
     if (![kPresenceStateOnline isEqualToString:[UserProfile sharedProfile].connectionStatus]) {
-        [UserProfile sharedProfile].connectionStatus=kPresenceStateOnline;
+        [[UserProfile sharedProfile] changePresenceToNormal];
         [self modifyPresenceConnectionStatusWithHandler:nil];
     }
 }
 
 - (void) changePresenceToTyping {
     if (![kPresenceStateTyping isEqualToString:[UserProfile sharedProfile].connectionStatus]) {
-        [UserProfile sharedProfile].connectionStatus=kPresenceStateTyping;
+        [[UserProfile sharedProfile] changePresenceToTyping];
         [self modifyPresenceConnectionStatusWithHandler:nil];
     }
 }
-
 
 - (void) profileUpdatedByUser:(NSNotification*)aNotification {
     if (_state == kBackendReady) {

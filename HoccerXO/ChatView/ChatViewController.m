@@ -745,7 +745,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 }
 
 - (void) typingTimerFired: (NSTimer*) timer {
-    [self.chatBackend changePresenceToNotTyping];
+    [self.chatBackend changePresenceToNormal];
     self.typingTimer = nil;
 }
 

@@ -44,6 +44,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 @interface UserProfile ()
 {
     KeyChainItem * _credentialsItem;
+    BOOL _isTyping;
     
     UIImage * _avatarImage;
     unsigned int _avatarImageVersion;
@@ -57,7 +58,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 @implementation UserProfile
 
 @dynamic groupMembershipList;
-@synthesize connectionStatus;
+@dynamic connectionStatus;
 @synthesize deletedObject;
 @dynamic avatarImage;
 @dynamic keyLength;
@@ -82,6 +83,31 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return [UserProfile credentialsDateFromString:dateString];
 }
  */
+
+-(NSString*)connectionStatus {
+    if (HXOBackend.instance.isReady) {
+        if (AppDelegate.instance.runningInBackground) {
+            return kPresenceStateBackground;
+        } else {
+            if (_isTyping) {
+                return kPresenceStateTyping;
+            } else {
+                return kPresenceStateOnline;
+            }
+        }
+    } else {
+        return kPresenceStateOffline;
+    }
+}
+
+- (void) changePresenceToNormal {
+    _isTyping = NO;
+}
+
+- (void) changePresenceToTyping {
+    _isTyping = YES;
+}
+
 
 + (NSNumber*) credentialsDateFromString:(NSString*)millis {
     if (millis == nil) {

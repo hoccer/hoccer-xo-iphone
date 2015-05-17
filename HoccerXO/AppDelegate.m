@@ -815,7 +815,9 @@ BOOL sameObjects(id obj1, id obj2) {
     }
     
     localNotif.alertBody = theText;
-    localNotif.alertTitle = theTitle;
+    if ([localNotif respondsToSelector:@selector(alertTitle)]) {
+        localNotif.alertTitle = theTitle;
+    }
     localNotif.alertAction = NSLocalizedString(@"open", nil);
     localNotif.soundName = UILocalNotificationDefaultSoundName;
     
@@ -1163,7 +1165,7 @@ BOOL sameObjects(id obj1, id obj2) {
     NSLog(@"applicationDidEnterBackground");
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-    [self.chatBackend changePresenceToNotTyping]; // not typing anymore ... yep, pretty sure...
+    [self.chatBackend changePresenceToNormal]; // not typing anymore ... yep, pretty sure...
     [self saveDatabaseNow];
     [self setLastActiveDate];
     if (self.environmentMode != ACTIVATION_MODE_NONE) {
