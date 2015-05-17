@@ -240,7 +240,7 @@
 
 "chat_no_groupkey_message"                      = "Die Nachricht kann nicht versendet werden, weil der Gruppenschlüssel aufgrund eines technischen Problems nicht vorhanden ist. Bitte versuchen sie es später noch einmal.";
 "chat_nearby_contact_offline"                   = "Die Nachricht kann nicht versendet werden, weil der Kontakt sich nicht mehr im Umfeld befindet oder abgemeldet ist und keine Freundschaftsbeziehung besteht.";
-"chat_worldwide_contact_offline"                   = "Die Nachricht kann nicht versendet werden, weil der Kontakt sich nicht mehr in der Gruppe befindet oder abgemeldet ist und keine Freundschaftsbeziehung besteht.";
+"chat_worldwide_contact_offline"                   = "Die Nachricht kann nicht versendet werden, weil der Kontakt sich nicht mehr in derselben Weltweit-Gruppe befindet und keine Freundschaftsbeziehung besteht.";
 
 
 "chat_message_pending"                          = "ausgehend";

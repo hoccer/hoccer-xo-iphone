@@ -986,7 +986,7 @@ BOOL sameObjects(id obj1, id obj2) {
                                                                                  if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: Message received");
                                                                                  NSDictionary * info = [note userInfo];
                                                                                  HXOMessage * message = (HXOMessage *)info[@"message"];
-                                                                                 if (message != nil && self.processingBackgroundNotification) {
+                                                                                 if (message != nil && self.runningInBackground) {
                                                                                      Delivery * delivery = message.deliveries.anyObject;
                                                                                      Contact * chat = message.contact;
                                                                                      Contact * sender = delivery.sender;
@@ -2326,6 +2326,10 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 }
 
 - (void) updateUnreadMessageCountAndStop {
+    if (_backgroundTask != UIBackgroundTaskInvalid) {
+        NSLog(@"#WARNING: updateUnreadMessageCountAndStop: already excuting background task, doing nothing");
+        return;
+    }
     NSUInteger unreadMessages = [self unreadMessageCount];
     [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessages;
     _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
@@ -2408,6 +2412,12 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 
 -(void)finishBackgroundNotificationProcessing {
     NSLog(@"finishBackgroundNotificationProcessing run %ld",_backgroundNotification);
+ 
+    if (_backgroundFetchHandler == nil) {
+        NSLog(@"#WARNING: finishBackgroundNotificationProcessing: no _backgroundFetchHandler, doing nothing");
+        return;
+    }
+
     [self saveDatabaseNow];
     [self setLastActiveDate];
     
@@ -2432,14 +2442,17 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [self.chatBackend hintApnsUnreadMessage: unreadMessages handler: ^(BOOL success){
             if (CONNECTION_TRACE, 1) NSLog(@"updated unread message count: %@", success ? @"success" : @"failed");
-            [self.chatBackend stop];
-            if (backgroundFetchHandler) {
-                NSLog(@"finishBackgroundNotificationProcessing, finishing notification background task %ld",_backgroundNotification);
-                backgroundFetchHandler(UIBackgroundFetchResultNewData);
-            }
+            __weak AppDelegate * weakSelf = self;
+            unsigned long backgroundNotification = _backgroundNotification;
+            [self setBackgroundFinalizer:^{
+                [weakSelf.chatBackend stop];
+                if (backgroundFetchHandler) {
+                    NSLog(@"finishBackgroundNotificationProcessing, finishing notification background task %ld",backgroundNotification);
+                    backgroundFetchHandler(UIBackgroundFetchResultNewData);
+                }
+            }];
         }];
     });
-
 }
 
 #pragma mark - getTopMostViewController

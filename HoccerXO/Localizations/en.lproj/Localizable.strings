@@ -240,7 +240,7 @@
 
 "chat_no_groupkey_message"                      = "Sorry, the message can not be sent right now because due to a technical problem you do not have the group key. Please try again later.";
 "chat_nearby_contact_offline"                   = "Sorry, the message can not be sent because the contact is no longer nearby or is offline and is not your friend.";
-"chat_worldwide_contact_offline"                = "Sorry, the message can not be sent because the contact is no longer available or is offline and is not your friend.";
+"chat_worldwide_contact_offline"                = "Sorry, the message can not be sent because the contact is no longer available in your worldwide group and is not your friend.";
 
 "chat_message_pending"                          = "pending";
 "chat_message_sent"                             = "sent";

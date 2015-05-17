@@ -324,7 +324,8 @@
                                 myGroupMembership.group.groupState =='exists' AND\
                                 SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'worldwideMember').@count > 1 ))"]];
     } else {
-        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR (relationshipState == 'kept' AND messages.@count > 0) OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept'))"]];
+        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR (relationshipState == 'kept' AND messages.@count > 0) OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept')) OR (type == 'Contact' AND \
+                                SUBQUERY(groupMemberships, $member, $member.group.groupType == 'worldwide' AND $member.group.groupState =='exists').@count > 0 )"]];
     }
 }
 

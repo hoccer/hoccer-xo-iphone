@@ -2332,7 +2332,7 @@ NSError * makeSendError(NSString * reason) {
 - (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force inContext:(NSManagedObjectContext*) context {
     
     // autokeep contacts that are currently inspected
-    if (!force && (AppDelegate.instance.environmentMode != ACTIVATION_MODE_NONE && (contact.isNearby || contact.isWorldwide))) {
+    if (!force && (AppDelegate.instance.environmentMode != ACTIVATION_MODE_NONE && contact.isNearby)) {
         if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: is active nearby or being inspected, autokeeping contact id %@",contact.clientId);
         if (contact.groupMemberships.count == 0) {
             contact.relationshipState = kRelationStateInternalKept;
@@ -2369,8 +2369,10 @@ NSError * makeSendError(NSString * reason) {
         // there is an active group membership for this contact, so keep it
         if (!contact.isGroupFriend) {
             contact.relationshipState = kRelationStateGroupFriend;
-            [self removedButKeptInGroupAlertForContact:contact];
-            if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: marking contact id %@ as group friend, ",contact.clientId);
+            if (!contact.isWorldwide) {
+                [self removedButKeptInGroupAlertForContact:contact];
+                if (DEBUG_DELETION) NSLog(@"handleDeletionOfContact: marking contact id %@ as group friend, ",contact.clientId);
+            }
         }
     }
 }

@@ -218,7 +218,11 @@ NSString * const kPresenceStateTyping = @"typing";
     } else if (!self.isGroup && self.isNotRelated) {
         statusString = @"✢";
     } else if (!self.isGroup && self.isGroupFriend) {
-        statusString = @"❖";
+        if (self.isWorldwideContact) {
+            statusString = @"🌐";
+        } else {
+            statusString = @"❖";
+        }
     } else if (self.isTyping) {
         //statusString = @"✍"; //writing hand
         //statusString = @"✎"; //Pen
