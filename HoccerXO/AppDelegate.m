@@ -873,6 +873,8 @@ BOOL sameObjects(id obj1, id obj2) {
 #ifdef DEBUG
     [self testFSSize];
 #endif
+    _documentMonitoringDisableCounter = 1; // account for document monitoring is not running at launch
+
     _idLocks = [NSMutableDictionary new];
     _backgroundContexts = [NSMutableDictionary new];
     _inspectionLock = [NSObject new];
@@ -920,7 +922,6 @@ BOOL sameObjects(id obj1, id obj2) {
     
     application.applicationSupportsShakeToEdit = NO;
     
-    //_documentMonitoringDisableCounter = 1; // account for document monitoring is not running at launch
     
     if (![self applicationTemporaryDocumentsDirectory]) {
         return NO;
