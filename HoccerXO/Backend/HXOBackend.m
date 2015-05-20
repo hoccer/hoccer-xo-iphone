@@ -1271,6 +1271,9 @@ NSError * makeSendError(NSString * reason) {
                     [weakSelf stopAndRetry];
                 }
             };
+            if (HXOEnvironment.sharedInstance.activationMode == ACTIVATION_MODE_WORLDWIDE) {
+                [self sendEnvironmentUpdate];
+            }
         } else {
             [self startSync];
         }
