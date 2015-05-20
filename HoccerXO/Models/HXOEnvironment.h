@@ -59,6 +59,8 @@ typedef enum  {
 
 
 + (HXOEnvironment*)sharedInstance;
++ (BOOL)locationDenied;
+
 - (void)deactivateLocation;
 - (void)activateLocation;
 - (NSDictionary*) asDictionary;

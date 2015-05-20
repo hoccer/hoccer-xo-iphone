@@ -100,6 +100,10 @@ static HXOEnvironment *instance;
     }
 }
 
++ (BOOL)locationDenied {
+    return CLLocationManager.authorizationStatus == kCLAuthorizationStatusDenied;
+}
+
 - (void)setActivation:(EnvironmentActivationMode)activationMode {
     NSLog(@"HXOEnvironment:setActivation %d", activationMode);
     
@@ -144,6 +148,7 @@ static HXOEnvironment *instance;
     [_locationManager stopUpdatingLocation];
     _lastLocationUpdate = nil;
 }
+
 - (void)activateLocation{
     if (LOCATION_DEBUG) {NSLog(@"Environment: startUpdatingLocation");}
     _lastLocationUpdate = nil;

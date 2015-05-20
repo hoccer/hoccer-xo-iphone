@@ -84,6 +84,7 @@
         self.groupContactsToggle.selectedSegmentIndex = 0;
         [self.groupContactsToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
         self.navigationItem.titleView = self.groupContactsToggle;
+        [self updateSegmentDisabling];
     }
     self.navigationItem.title = NSLocalizedString(@"chat_list_nav_title", nil);
 }
@@ -100,6 +101,7 @@
     [HXOBackend broadcastConnectionInfo];
 
     [AppDelegate setWhiteFontStatusbarForViewController:self];
+    [self updateSegmentDisabling];
 
     if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: viewWillAppear, adding observers");
 
@@ -175,7 +177,9 @@
                                                                               queue:[NSOperationQueue mainQueue]
                                                                          usingBlock:^(NSNotification *note) {
                                                                              if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: loginSucceeded");
-                                                                             [self configureForMode:self.environmentMode];
+                                                                             if (![self updateSegmentDisabling]) {
+                                                                                 [self configureForMode:self.environmentMode];
+                                                                             }
                                                                          }];
 
 }
@@ -197,7 +201,6 @@
 
 }
 
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -212,8 +215,23 @@
     
 }
 
+- (BOOL) updateSegmentDisabling {
+    BOOL result = NO;
+    if (self.environmentMode != ACTIVATION_MODE_NONE && HXOEnvironment.locationDenied) {
+        // reset toggle to chats when location disabled
+        if (self.groupContactsToggle.selectedSegmentIndex != 0) {
+            self.groupContactsToggle.selectedSegmentIndex = 0;
+            [self segmentChanged:self];
+            result = YES;
+        }
+    }
+    [self.groupContactsToggle setEnabled:!HXOEnvironment.locationDenied forSegmentAtIndex:1];
+    [self.groupContactsToggle setEnabled:!HXOEnvironment.locationDenied forSegmentAtIndex:2];
+    return result;
+}
+
 - (void) segmentChanged: (id) sender {
-    if (FETCHED_RESULTS_DEBUG_PERF) NSLog(@"ConversationViewController:segmentChanged, sender= %@", sender);
+    if (FETCHED_RESULTS_DEBUG_PERF||NEARBY_CONFIG_DEBUG) NSLog(@"ConversationViewController:segmentChanged, sender= %@", sender);
     [super segmentChanged:sender];
     [self configureForMode:self.environmentMode];
 }
