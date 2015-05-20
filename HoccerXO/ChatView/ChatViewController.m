@@ -1099,6 +1099,7 @@ nil
 
 
 -(void)exportAndSendMultiAttachmentsToContactOrGroup:(Contact*)contact {
+    // TODO: communicate exported items failures to user
     if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: items = %lu", (unsigned long)self.multiAttachmentExportItems.count);
     if (self.multiAttachmentExportItems.count == 0) {
         if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: ready");
@@ -1151,6 +1152,11 @@ nil
                             //[self unregisterBackgroundTask];
                             [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                         }
+                    } else {
+                        NSLog(@"#ERROR: media export failed, error: %@, attachment=%@", error, attachment);
+                        [AppDelegate.instance deleteObject:attachment];
+                        //[self unregisterBackgroundTask];
+                        [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                     }
                 }];
                 
@@ -1173,6 +1179,11 @@ nil
                             //[self unregisterBackgroundTask];
                             [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                         }
+                    } else {
+                        NSLog(@"#ERROR: photo/video export failed, error: %@, attachment=%@", theError, attachment);
+                        [AppDelegate.instance deleteObject:attachment];
+                        //[self unregisterBackgroundTask];
+                        [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                     }
                 }];
             } else {
@@ -1181,6 +1192,12 @@ nil
             }
         });
     }
+}
+
+NSError * makeMediaError(NSString * reason) {
+    NSString *errMsg = reason;
+    NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+    return [NSError errorWithDomain:@"mediaError" code:4568 userInfo:info];
 }
 
 -(void)exportALAsset:(ALAsset*)asset intoAttachment:(Attachment*)attachment onCompletion:(CompletionBlock)completion {
@@ -1229,7 +1246,12 @@ nil
         NSURL * myURL = [self acquireAndReserveFileUrlFor:@"albumImage.jpg" isTemporary:YES];
         
         float photoQualityCompressionSetting = [[[HXOUserDefaults standardUserDefaults] objectForKey:@"photoCompressionQuality"] floatValue];
-        [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO];
+        
+        if (![UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myURL atomically:NO]) {
+            NSString * reason = [NSString stringWithFormat:@"ChatViewController: exportALAsset: could not write jpeg representation of image %@ to url %@", myImage, myURL ];
+            completion(makeMediaError(reason));
+            return;
+        };
         
         NSURL * permanentURL = [AppDelegate moveDocumentToPermanentLocation:myURL];
         attachment.ownedURL = [permanentURL absoluteString];
@@ -1295,6 +1317,9 @@ nil
                 default: { NSLog (@"ERROR: AVAssetExportSessionStatusWaiting: didn't get export status"); break;}
             }
         }];
+    } else {
+        NSString * reason = [NSString stringWithFormat:@"ChatViewController: exportALAsset: unknown media type %@ for asset %@", type, [asset valueForProperty:ALAssetPropertyAssetURL]];
+        completion(makeMediaError(reason));
     }
 }
 
