@@ -185,6 +185,7 @@
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
     if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: viewWillDisappear, removing observers");
     if (self.catchObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.catchObserver];

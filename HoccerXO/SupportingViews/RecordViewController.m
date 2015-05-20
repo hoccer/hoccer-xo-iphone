@@ -93,6 +93,7 @@ static const CGFloat kRingWidth = 6.0;
 }
 
 - (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     self.hasRecording = NO;
 }
 

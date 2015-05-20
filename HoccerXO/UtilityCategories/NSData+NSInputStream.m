@@ -33,7 +33,9 @@
     free(buff);
     
     if (read < 0) {
-        *error = input.streamError;
+        if (error != nil) {
+            *error = input.streamError;
+        }
         [input close];
         return result;
     }

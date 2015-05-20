@@ -244,7 +244,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     CGFloat s = 50; // magic toolbar size
 
-    UIImage * icon = [[paper_clip alloc] init].image;
+    //UIImage * icon = [[paper_clip alloc] init].image;
     self.attachmentButton = [[AttachmentButton alloc] initWithFrame: CGRectMake(0, 0, s, s)];
     self.attachmentButton.frame = CGRectMake(0, 0, 50, s);
     self.attachmentButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
@@ -277,7 +277,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.messageFieldPlaceholder.text = NSLocalizedString(@"chat_message_placeholder", nil);
     [self.chatbar addSubview: self.messageFieldPlaceholder];
 
-    icon = [[paper_dart alloc] init].image;
+    UIImage * icon = [[paper_dart alloc] init].image;
     self.sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
     self.sendButton.frame = CGRectMake(CGRectGetMaxX(self.messageField.frame), 0, s, s);
     self.sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
@@ -605,6 +605,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     if (self.loginObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.loginObserver];
     }
+    [super viewWillDisappear:animated];
 }
 
 - (void) viewDidDisappear:(BOOL)animated {
@@ -2650,11 +2651,12 @@ NSError * makeMediaError(NSString * reason) {
     } else {
         [self finishConfigureGenericAttachmentSection:section forMessage:message withAttachmentPreview:loadPreview];
     }
-
+/*
     NSString * title = message.attachment.humanReadableFileName;
     if (title == nil || [title isEqualToString: @""]) {
         title = @"<>";
     }
+ */
     section.title.text = [self attachmentTitle: message];
     if (message.attachment.fileUnavailable) {
         section.title.attributedText = [self strikeThroughText:section.title.text];
@@ -2927,7 +2929,7 @@ ready:;
         //NSUInteger attachmentMissingCount = attachmentsMissing.count;
         
         NSSet * attachmentsPending = message.deliveriesAttachmentsPending;
-        NSUInteger attachmentPendingCount = attachmentsPending.count;
+        //NSUInteger attachmentPendingCount = attachmentsPending.count;
         
         NSSet * attachmentsFailed = message.deliveriesAttachmentsFailed;
         NSUInteger attachmentFailedCount = attachmentsFailed.count;
@@ -2940,7 +2942,7 @@ ready:;
         }
         attachmentsPending = differenceOfSets(attachmentsPending, messagesDelivering);
         attachmentsPending = differenceOfSets(attachmentsPending, messagesNew);
-        attachmentPendingCount = attachmentsPending.count;
+        NSUInteger attachmentPendingCount = attachmentsPending.count;
         
         if (attachmentPendingCount != 0) {
             [info addObject: [NSString stringWithFormat:@"%d %@", (int)attachmentPendingCount, [self stateStringForDelivery:attachmentsPending.anyObject]]];

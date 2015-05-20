@@ -87,12 +87,14 @@
 }
 
 - (void) viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     self.playbackTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateCurrentTime) userInfo:nil repeats:YES];
     [self updatePlaylistStatus];
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
     [self.playbackTimer invalidate];
+    [super viewWillDisappear:animated];
 }
 
 - (void) dealloc {
