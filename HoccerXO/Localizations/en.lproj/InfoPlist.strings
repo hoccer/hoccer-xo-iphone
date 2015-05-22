@@ -1,6 +1,6 @@
 /* Localized versions of Info.plist keys */
 
-"NSLocationWhenInUseUsageDescription" = "To chat with people nearby and to send placemarks, access to your location is required.";
+"NSLocationWhenInUseUsageDescription" = "To chat with people nearby or in worldwide mode or to send placemarks, access to your location is required.";
 
 /*
 "CFBundleDisplayName" = "XOX (Hoccer)";
