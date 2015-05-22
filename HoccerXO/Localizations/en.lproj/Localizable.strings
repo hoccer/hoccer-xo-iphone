@@ -477,7 +477,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 
 "account_delete_failed_title"       = "Account Deletion Failed";
 "account_delete_failed_message"     = "The Account could not be deleted. You are probably not connected to the server.";
-"account_delete_safety_question"    = "Do you really want to delete your Account? All your contacts, group memberships and your account will be gone forever. The data already on your phone will not be affected.";
+"account_delete_safety_question"    = "Do you really want to delete your account? All your contacts, group memberships and your account will be gone forever. The data already on your phone will not be affected.";
 
 //==============================================================================
 // Archive
