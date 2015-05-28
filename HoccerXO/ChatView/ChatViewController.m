@@ -68,6 +68,7 @@
 #define DEBUG_OBSERVERS NO
 #define DEBUG_CELL_HEIGHT_CACHING NO
 #define DEBUG_MULTI_EXPORT NO
+#define DEBUG_ROTATION NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
@@ -1396,6 +1397,40 @@ NSError * makeMediaError(NSString * reason) {
 }
 
 #pragma mark - Attachments
+
+/*
+-(void) viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    NSLog(@"ChatViewController:viewWillTransitionToSize");
+}
+
+-(void)willTransitionToTraitCollection:(UITraitCollection *)newCollection withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator {
+    NSLog(@"ChatViewController:willTransitionToTraitCollection");
+}
+*/
+
+-(NSUInteger)supportedInterfaceOrientations{
+    if (DEBUG_ROTATION) NSLog(@"ChatViewController:supportedInterfaceOrientations %@",self.presentedViewController);
+
+    // Please note that this call needs to be forwarded by the tabbar controller delegate and the navigation controller
+    // in order to get called at all
+    if (self.presentedViewController != nil && [self.presentedViewController isKindOfClass:[UIImagePickerController class]]) {
+        // Make sure the Image Picker (which who knows why works properly only in portrait mode) will not rotate
+        return UIInterfaceOrientationMaskPortrait;
+    }
+    return UIInterfaceOrientationMaskAllButUpsideDown;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    if (DEBUG_ROTATION) NSLog(@"ChatViewController:preferredInterfaceOrientationForPresentation");
+    return UIInterfaceOrientationPortrait;
+}
+
+// This function will not get called on iOS >= 7
+- (BOOL) shouldAutorotate {
+    if (DEBUG_ROTATION) NSLog(@"ChatViewController:shouldAutorotate");
+    return YES;
+}
+
 
 - (AttachmentPickerController*) attachmentPicker {
     _attachmentPicker = [[AttachmentPickerController alloc] initWithViewController: self delegate: self];

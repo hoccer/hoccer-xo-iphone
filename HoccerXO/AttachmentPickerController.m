@@ -445,14 +445,9 @@
 }
 
 - (void) pickAudioFromRecorder {
-    // NSLog(@"creating view");
     self.recordViewController.delegate = self;
-    //[_viewController presentViewController: self.recordViewController animated: YES completion: nil];
-
-    // NSLog(@"adding view");
-    
-    //[UIApplication.sharedApplication.delegate.window.rootViewController.view addSubview:self.recordViewController.view];
-    [_viewController presentSemiModalViewController:self.recordViewController inView: UIApplication.sharedApplication.delegate.window];
+    [_viewController presentSemiModalViewController:self.recordViewController
+                                             inView: UIApplication.sharedApplication.delegate.window];
 }
 
 - (void)audiorecorder:(RecordViewController *)audioRecorder didRecordAudio:(NSURL *)audioFileURL {
@@ -624,9 +619,13 @@
         }
     }
     
-    // Show camera view controller.
     [self registerBackgroundTask];
-    
+
+    // Hack to make sure the camera picker will appear in portrait mode
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+
+    // Show camera view controller.
     [_viewController presentViewController: picker animated: YES completion:^{
         NSLog(@"showImagePickerWithSource completion");
     }];

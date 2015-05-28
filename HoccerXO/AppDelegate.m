@@ -75,6 +75,7 @@
 #define TRACE_MUGSHOTS              YES
 #define TRACE_BACKGROUND_FINALIZER  NO
 #define TRACE_TRAFFIC_MONITOR       NO
+#define DEBUG_ROTATION              NO
 
 
 NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
@@ -172,6 +173,7 @@ typedef void (^ImageHandler)(UIImage* image);
 
 @synthesize rpcObjectModel = _rpcObjectModel;
 @synthesize userAgent;
+
 
 -(BOOL) processingBackgroundNotification {
     return _backgroundNotificationReady < _backgroundNotification;
@@ -4169,6 +4171,38 @@ enum {
         [(id)destinationViewController wasSelectedByTabBarController:tabBarController];
     }
 }
+
+- (NSUInteger)tabBarControllerSupportedInterfaceOrientations:(UITabBarController *)tabBarController {
+    if (DEBUG_ROTATION) NSLog(@"AppDelegate:tabBarControllerSupportedInterfaceOrientations top %@ sel %@", AppDelegate.getTopMostViewController, tabBarController.selectedViewController);
+    return tabBarController.selectedViewController.supportedInterfaceOrientations;
+}
+
+- (UIInterfaceOrientation)tabBarControllerPreferredInterfaceOrientationForPresentation:(UITabBarController *)tabBarController {
+    if (DEBUG_ROTATION) NSLog(@"AppDelegate:tabBarControllerPreferredInterfaceOrientationForPresentation top %@ sel %@", AppDelegate.getTopMostViewController, tabBarController.selectedViewController);
+    return tabBarController.selectedViewController.preferredInterfaceOrientationForPresentation;
+};
+
+/*
+ 
+ // The following three functions will not called, but left here for debugging purposes:
+ 
+ -(NSUInteger)supportedInterfaceOrientations{
+ NSLog(@"AppDelegate:supportedInterfaceOrientations");
+ return UIInterfaceOrientationMaskPortrait;
+ }
+ 
+ - (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+ NSLog(@"AppDelegate:preferredInterfaceOrientationForPresentation");
+ return UIInterfaceOrientationPortrait;
+ }
+ 
+ - (BOOL) shouldAutorotate {
+ NSLog(@"AppDelegate:shouldAutorotate");
+ return NO;
+ }
+ 
+ */
+
 
 #pragma mark - Passcode Handling
 

@@ -8,18 +8,26 @@
 
 #import "HXOThemedNavigationController.h"
 
+#define DEBUG_ROTATION NO
+
 @implementation HXOThemedNavigationController
 
 - (BOOL) shouldAutorotate {
-    return [[self.viewControllers lastObject] shouldAutorotate];
+    BOOL should = [[self.viewControllers lastObject] shouldAutorotate];
+    if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:shouldAutorotate:%d %@", should, self.viewControllers.lastObject);
+    return should;
 }
 
 - (NSUInteger) supportedInterfaceOrientations {
-    return [[self.viewControllers lastObject] supportedInterfaceOrientations];
+    NSUInteger supported = [[self.viewControllers lastObject] supportedInterfaceOrientations];
+    if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:supportedInterfaceOrientations:%lu %@", supported, self.viewControllers.lastObject);
+    return supported;
 }
 
 - (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
-    return [[self.viewControllers lastObject] preferredInterfaceOrientationForPresentation];
+    UIInterfaceOrientation preferred = [[self.viewControllers lastObject] preferredInterfaceOrientationForPresentation];
+    if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:preferredInterfaceOrientationForPresentation:%lu %@", preferred, self.viewControllers.lastObject);
+    return preferred;
 }
 
 @end
