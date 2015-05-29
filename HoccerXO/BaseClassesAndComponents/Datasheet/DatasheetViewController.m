@@ -255,7 +255,12 @@ static CGFloat kHeaderHeight;
         func(item.target, item.action, item);
     }
     if (item.segueIdentifier && ! [item.segueIdentifier isEqualToString:@""]) {
-        [self performSegueWithIdentifier: item.segueIdentifier sender: self];
+        @try {
+            [self performSegueWithIdentifier: item.segueIdentifier sender: self];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"### Exception in performSegueWithIdentifier: ex = %@, controller = %@, item = %@, item.segueIdentifier=%@, stack=%@",exception, self, item, item.segueIdentifier, [NSThread callStackSymbols]);
+        }
     }
 
     // Attempt to work around dissapearing separators
