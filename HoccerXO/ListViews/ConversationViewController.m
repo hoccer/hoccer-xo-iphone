@@ -335,16 +335,29 @@
     } else if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
         [predicates addObject: [NSPredicate predicateWithFormat:
                                 @"(type == 'Contact' AND \
-                                SUBQUERY(groupMemberships, $member, $member.group.groupType == 'worldwide' AND $member.group.groupState =='exists').@count > 0 ) \
+                                    SUBQUERY(groupMemberships, $member, \
+                                        $member.state == 'joined' AND \
+                                        $member.group.groupType == 'worldwide' AND \
+                                        $member.group.groupState =='exists').@count > 0 ) \
                                 OR \
                                 (type == 'Group' AND \
-                                (myGroupMembership.state == 'joined' AND \
-                                myGroupMembership.group.groupType == 'worldwide' AND \
-                                myGroupMembership.group.groupState =='exists' AND\
-                                SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'worldwideMember').@count > 1 ))"]];
+                                ((myGroupMembership.state == 'joined' OR myGroupMembership.state == 'suspended') AND \
+                                    myGroupMembership.group.groupType == 'worldwide' AND \
+                                    myGroupMembership.group.groupState =='exists' AND\
+                                    SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'worldwideMember').@count > 1 ))"]];
     } else {
-        [predicates addObject: [NSPredicate predicateWithFormat: @"relationshipState == 'friend' OR (relationshipState == 'kept' AND messages.@count > 0) OR relationshipState == 'blocked' OR (type == 'Group' AND (myGroupMembership.state == 'joined' OR myGroupMembership.group.groupState == 'kept')) OR (type == 'Contact' AND \
-                                SUBQUERY(groupMemberships, $member, $member.group.groupType == 'worldwide' AND $member.group.groupState =='exists').@count > 0 )"]];
+        [predicates addObject: [NSPredicate predicateWithFormat:
+                                @"relationshipState == 'friend' OR (relationshipState == 'kept' AND messages.@count > 0) OR \
+                                    relationshipState == 'blocked' OR \
+                                (type == 'Group' AND \
+                                    (myGroupMembership.state == 'joined' OR \
+                                        myGroupMembership.state == 'suspended' OR \
+                                        myGroupMembership.group.groupState == 'kept')) OR \
+                                (type == 'Contact' AND \
+                                    SUBQUERY(groupMemberships, $member, \
+                                    $member.state != 'suspended' AND \
+                                    $member.group.groupType == 'worldwide' AND \
+                                    $member.group.groupState =='exists').@count > 0 )"]];
     }
 }
 

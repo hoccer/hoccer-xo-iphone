@@ -97,6 +97,7 @@ FOUNDATION_EXPORT NSString * const kPresenceStateTyping;
 
 @property (nonatomic, readonly) BOOL              isWorldwide; // valid for both single contacts and groups
 @property (nonatomic, readonly) BOOL              isWorldwideContact; // only valid for non-group contacts
+@property (nonatomic, readonly) BOOL              isSuspendedWorldwideContact; // only valid for non-group contacts
 
 @property (nonatomic, retain)   NSDate          * lastUpdateReceived;
 

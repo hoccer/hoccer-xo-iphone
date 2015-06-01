@@ -219,7 +219,11 @@ NSString * const kPresenceStateTyping = @"typing";
         statusString = @"✢";
     } else if (!self.isGroup && self.isGroupFriend) {
         if (self.isWorldwideContact) {
-            statusString = @"🌐";
+            if (self.isSuspendedWorldwideContact) {
+                statusString = @"🌑";
+            } else {
+                statusString = @"🌐";
+            }
         } else {
             statusString = @"❖";
         }
@@ -323,6 +327,11 @@ NSString * const kPresenceStateTyping = @"typing";
 - (BOOL) isWorldwideContact {
     return self.isMemberinWorldwideGroup;
 }
+
+- (BOOL) isSuspendedWorldwideContact {
+    return self.isSuspendedMemberinWorldwideGroup;
+}
+
 - (BOOL) isNearby {
     if (self.isGroup) {
         return [(Group*)self isNearbyGroup];
@@ -354,6 +363,13 @@ NSString * const kPresenceStateTyping = @"typing";
 - (BOOL) isMemberinWorldwideGroup {
     NSSet * thGroupSet = [self.groupMemberships objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
         return obj.group.isWorldwideGroup && obj.group.isExistingGroup;
+    }];
+    return thGroupSet.count > 0;
+}
+
+- (BOOL) isSuspendedMemberinWorldwideGroup {
+    NSSet * thGroupSet = [self.groupMemberships objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
+        return obj.group.isWorldwideGroup && obj.group.isExistingGroup && [obj.state isEqualToString:@"suspended"];
     }];
     return thGroupSet.count > 0;
 }

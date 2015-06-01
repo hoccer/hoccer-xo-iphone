@@ -3539,7 +3539,10 @@ NSError * makeSendError(NSString * reason) {
     if (LOCKING_TRACE) NSLog(@"Entering unsynchronized updateGroupMemberHere %@",groupId);
     Group * group = [self getGroupById: groupId inContext:context];
     if (group == nil) {
-        if ([groupMemberDict[@"state"] isEqualToString:@"none"] || [groupMemberDict[@"state"] isEqualToString:@"groupRemoved"]) {
+        if ([groupMemberDict[@"state"] isEqualToString:@"none"] ||
+            [groupMemberDict[@"state"] isEqualToString:@"suspended"] ||
+            [groupMemberDict[@"state"] isEqualToString:@"groupRemoved"])
+        {
             if (LOCKING_TRACE) NSLog(@"Done synchronized updateGroupMemberHere (r1) %@",groupId);
             return;
         } else {
@@ -3569,7 +3572,9 @@ NSError * makeSendError(NSString * reason) {
         
         if (memberContact == nil && ![[UserProfile sharedProfile].clientId isEqualToString:memberClientId]) {
             // There is no contact for this clientId, and it is not us
-            if ([groupMemberDict[@"state"] isEqualToString:@"none"] || [groupMemberDict[@"state"] isEqualToString:@"groupRemoved"]) {
+            if ([groupMemberDict[@"state"] isEqualToString:@"none"] ||
+                [groupMemberDict[@"state"] isEqualToString:@"suspended"] ||
+                [groupMemberDict[@"state"] isEqualToString:@"groupRemoved"]) {
                 // do not process unknown contacts with membership state ‘none'
                 if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere not processing group member with state %@ id %@",groupMemberDict[@"state"], memberClientId);
                 if (LOCKING_TRACE) NSLog(@"Done updateGroupMemberHere (r2) %@",groupId);
