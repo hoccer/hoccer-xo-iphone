@@ -20,13 +20,13 @@
 
 - (NSUInteger) supportedInterfaceOrientations {
     NSUInteger supported = [[self.viewControllers lastObject] supportedInterfaceOrientations];
-    if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:supportedInterfaceOrientations:%lu %@", supported, self.viewControllers.lastObject);
+    if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:supportedInterfaceOrientations:%lu %@", (unsigned long)supported, self.viewControllers.lastObject);
     return supported;
 }
 
 - (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
     UIInterfaceOrientation preferred = [[self.viewControllers lastObject] preferredInterfaceOrientationForPresentation];
-    if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:preferredInterfaceOrientationForPresentation:%lu %@", preferred, self.viewControllers.lastObject);
+    if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:preferredInterfaceOrientationForPresentation:%lu %@", (long)preferred, self.viewControllers.lastObject);
     return preferred;
 }
 
