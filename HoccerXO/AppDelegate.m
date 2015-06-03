@@ -1192,7 +1192,7 @@ BOOL sameObjects(id obj1, id obj2) {
         [self cancelFinalizer];
         [self resumeDocumentMonitoring];
         if (self.environmentMode != ACTIVATION_MODE_NONE) {
-            [self suspendEnvironmentMode]; // for resuming nearby or worldwide mode, the Conversations- or ChatView are responsible; the must do it after login
+            [self configureForMode:self.environmentMode];
         }
     } else {
         if (self.isPasscodeRequired) {
