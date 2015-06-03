@@ -2012,6 +2012,8 @@ NSError * makeSendError(NSString * reason) {
             if ([relationshipDict[@"state"] isEqualToString: @"none"]) {
                 // if there is a local contact, check if we should delete, otherwise do nothing and return
                 if (contact != nil) {
+                    contact.notificationPreference = relationshipDict[@"notificationPreference"];
+                    contact.relationshipLastChangedMillis = relationshipDict[@"lastChanged"];
                     BOOL disinvitation = contact.isInvited || contact.invitedMe;
                     if (disinvitation) {
                         if (contact.groupMemberships.count > 0) {
