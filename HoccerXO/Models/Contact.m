@@ -184,7 +184,7 @@ NSString * const kPresenceStateTyping = @"typing";
             return self.isNearby ? NSLocalizedString(@"group_name_nearby_kept", nil) : NSLocalizedString(@"group_name_worldwide_kept", nil);
         } else {
             Group * group = (Group*)self;
-            NSUInteger otherCount = group.otherMembers.count;
+            NSUInteger otherCount = group.otherJoinedMembers.count;
 
             if (otherCount > 0) {
                 return self.isNearby ? [NSString stringWithFormat:NSLocalizedString(@"group_name_nearby_active", nil), otherCount]
