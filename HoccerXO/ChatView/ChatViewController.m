@@ -1171,7 +1171,7 @@ nil
                     if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: exportALAsset returned with error %@", theError);
                     if (theError == nil) {
                         if (attachment.contentSize > 0) {
-                            [self.chatBackend sendMessage:@"" toContactOrGroup:self.partner toGroupMemberOnly:nil withAttachment:attachment withCompletion:^(NSError *theError) {
+                            [self.chatBackend sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:attachment withCompletion:^(NSError *theError) {
                                 //[self unregisterBackgroundTask];
                                 [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                             }];
