@@ -41,6 +41,8 @@
 #import "HTTPServerController.h"
 #endif
 
+#import <HockeySDK/HockeySDK.h>
+
 #include <ifaddrs.h>
 #include <arpa/inet.h>
 #include <net/if.h>
@@ -870,6 +872,12 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"9463c48810f576a586b504ecdf970c0c"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator
+     authenticateInstallation];
+    
     [self cleanupTmpDirectory];
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
 #ifdef DEBUG

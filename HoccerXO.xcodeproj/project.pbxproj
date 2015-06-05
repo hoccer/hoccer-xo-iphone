@@ -294,6 +294,9 @@
 		C5EB3CCC1A824EFC00E236F6 /* com.artcom.Hoccer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */; };
 		C5EB3CD21A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */; };
 		C5EB3CD81A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */; };
+		E925624F1B1F77BE0002E33F /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E925624E1B1F77BE0002E33F /* QuickLook.framework */; };
+		E92562511B1F78250002E33F /* HockeySDK.embeddedframework in Resources */ = {isa = PBXBuildFile; fileRef = E92562501B1F78250002E33F /* HockeySDK.embeddedframework */; };
+		E92562531B1F79830002E33F /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E92562521B1F79830002E33F /* HockeySDK.framework */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
 		E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEC1186DF49800D72D79 /* chatbar-attachment-icon-data.png */; };
@@ -1090,6 +1093,9 @@
 		C5EB3CD51A824FF000E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.stroeer.strings; sourceTree = "<group>"; };
 		C5EB3CD91A82646800E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
 		C5EB3CDB1A82646A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
+		E925624E1B1F77BE0002E33F /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
+		E92562501B1F78250002E33F /* HockeySDK.embeddedframework */ = {isa = PBXFileReference; lastKnownFileType = folder; name = HockeySDK.embeddedframework; path = "HockeySDK-iOS/HockeySDK.embeddedframework"; sourceTree = "<group>"; };
+		E92562521B1F79830002E33F /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HockeySDK.framework; path = "HockeySDK-iOS/HockeySDK.embeddedframework/HockeySDK.framework"; sourceTree = "<group>"; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
 		E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-42.xcdatamodel"; sourceTree = "<group>"; };
 		E92FAEB5186DEB5900D72D79 /* cnt-data.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cnt-data.png"; sourceTree = "<group>"; };
@@ -1409,6 +1415,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E92562531B1F79830002E33F /* HockeySDK.framework in Frameworks */,
+				E925624F1B1F77BE0002E33F /* QuickLook.framework in Frameworks */,
 				6370DFBF1AB73A9E0071E5CD /* LocalAuthentication.framework in Frameworks */,
 				C59E6FDC1A7FA9870068856C /* libcrypto.a in Frameworks */,
 				E98769751A100DD70068CA33 /* ImageIO.framework in Frameworks */,
@@ -2060,6 +2068,9 @@
 		63AEE2D616CA4D0200522F92 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E92562521B1F79830002E33F /* HockeySDK.framework */,
+				E92562501B1F78250002E33F /* HockeySDK.embeddedframework */,
+				E925624E1B1F77BE0002E33F /* QuickLook.framework */,
 				6370DFBE1AB73A9E0071E5CD /* LocalAuthentication.framework */,
 				E98769741A100DD70068CA33 /* ImageIO.framework */,
 				E991E5111A0D134C00015BEE /* libxml2.2.dylib */,
@@ -2905,6 +2916,7 @@
 				6330492317019ED60045E64E /* Increment Build Number */,
 				633049241701A02B0045E64E /* Increment Patch Level When Archiving */,
 				631A96FA18AB9E84003363F5 /* Inject Debug Settings Pane */,
+				E925623F1B1F775D0002E33F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3169,6 +3181,7 @@
 				63DEC02319B0A720003804E8 /* Albums@2x.png in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
 				C5E8E4151A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings in Resources */,
+				E92562511B1F78250002E33F /* HockeySDK.embeddedframework in Resources */,
 				6382545117503531000347CD /* server_production.der in Resources */,
 				E9A85DA3184FD1AD00EB9B68 /* chatbar-attachment-icon-photo@2x.png in Resources */,
 				1F1C0BF11B039288002B346D /* com.hoccer.Hoccer-XO.strings in Resources */,
@@ -3243,6 +3256,19 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "# xcode-version-bump.sh\n# @desc Auto-increment the version number (only) when a project is archived for export.\n# @usage\n# 1. Select: your Target in Xcode\n# 2. Select: Build Phases Tab\n# 3. Select: Add Build Phase -> Add Run Script\n# 4. Paste code below in to new \"Run Script\" section\n# 5. Check the checkbox \"Run script only when installing\"\n# 6. Drag the \"Run Script\" below \"Link Binaries With Libraries\"\n# 7. Insure your starting version number is in SemVer format (e.g. 1.0.0)\n\n# This splits a two-decimal version string, such as \"0.45.123\", allowing us to increment the third position.\nVERSIONNUM=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nNEWSUBVERSION=`echo $VERSIONNUM | awk -F \".\" '{print $3}'`\nNEWSUBVERSION=$(($NEWSUBVERSION + 1))\nNEWVERSIONSTRING=`echo $VERSIONNUM | awk -F \".\" '{print $1 \".\" $2 \".'$NEWSUBVERSION'\" }'`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString $NEWVERSIONSTRING\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+		E925623F1B1F775D0002E33F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "FILE=\"${SRCROOT}/HockeySDK-iOS/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3739,6 +3765,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -3847,6 +3877,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4057,6 +4091,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4099,6 +4137,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4170,6 +4212,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4279,6 +4325,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4391,6 +4441,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4498,6 +4552,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4607,6 +4665,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4715,6 +4777,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4825,6 +4891,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -4933,6 +5003,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5043,6 +5117,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
@@ -5151,6 +5229,10 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
 				HEADER_SEARCH_PATHS = (
