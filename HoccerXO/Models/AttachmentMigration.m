@@ -23,14 +23,15 @@
 #define DEBUG_QUERY NO
 #define DEBUG_TIMING YES
 #define DEBUG_MORE_TIMING YES
+#define DEBUG_BASIC_STUFF NO
 
 @implementation AttachmentMigration
 
 + (void)adoptOrphanedFile:(NSString*)file inDirectory:(NSURL*)inDirectory {
-    NSLog(@"orphaned file: %@", file);
+    if (DEBUG_BASIC_STUFF) NSLog(@"orphaned file: %@", file);
     
     if ([[file substringWithRange:NSMakeRange(0, 1)] isEqualToString:@"."]) {
-        NSLog(@"Ignoring file starting with dot: %@",file);
+        if (DEBUG_BASIC_STUFF) NSLog(@"Ignoring file starting with dot: %@",file);
         return;
     }
     
@@ -39,7 +40,7 @@
     NSURL * fullURL = [NSURL fileURLWithPath:fullPath];
     
     if ([AppDelegate isBusyFile:fullPath]) {
-        NSLog(@"Ignoring busy file : %@",file);
+        if (DEBUG_BASIC_STUFF) NSLog(@"Ignoring busy file : %@",file);
         return;
     }
     
@@ -57,13 +58,13 @@
             // seen the asset stuff causing problem when invoking from background thread
             dispatch_sync(dispatch_get_main_queue(), ^{
             // [AppDelegate.instance performAfterCurrentContextFinishedInMainContext:^(NSManagedObjectContext *context) {
-                NSLog(@"Making attachment for orphaned file %@ mediaType %@ mimeType %@ url %@", file, mediaType, mimeType, localURL);
+                if (DEBUG_BASIC_STUFF) NSLog(@"Making attachment for orphaned file %@ mediaType %@ mimeType %@ url %@", file, mediaType, mimeType, localURL);
 #define ARMED
 #ifdef ARMED
                 [Attachment makeAttachmentWithMediaType:mediaType mimeType:mimeType humanReadableFileName:file localURL:localURL assetURL:nil inContext:AppDelegate.instance.mainObjectContext whenReady:^(Attachment * attachment, NSError * error) {
                     attachment.duplicate = @"ORIGINAL";
                     //NSLog(@"Finished making attachment %@, error=%@",attachment, error);
-                    NSLog(@"Finished making attachment %@",attachment.humanReadableFileName);
+                    if (DEBUG_BASIC_STUFF) NSLog(@"Finished making attachment %@",attachment.humanReadableFileName);
                     [attachment determinePlayability];
                     attachment.previewImage = nil; // save memory
                     [AppDelegate.instance saveDatabase];
@@ -73,7 +74,7 @@
             });
 
         } else {
-            NSLog(@"Ignoring file with zero size or no extension: %@",file);
+            if (DEBUG_BASIC_STUFF) NSLog(@"Ignoring file with zero size or no extension: %@",file);
         }
     }
 }
@@ -90,7 +91,7 @@ static BOOL isOldAttachment(Attachment * attachment) {
         oldEnough = YES;
     } else {
         NSTimeInterval attachmentAge = -[attachment.creationDate timeIntervalSinceNow];
-        NSLog(@"attachmentAge = %f", attachmentAge);
+        //NSLog(@"attachmentAge = %f", attachmentAge);
         oldEnough = attachmentAge > 10;
     }
     return oldEnough;
@@ -177,7 +178,7 @@ static NSString * filenameOf(Attachment * attachment) {
         }
          */
         NSURL * attachmentURL = significantURL(attachment);
-        if (DEBUG_MIGRATION)NSLog(@"Checking attachment %@, file %@", attachment.objectID.URIRepresentation, [attachmentURL lastPathComponent]);
+        if (DEBUG_MIGRATION) NSLog(@"Checking attachment %@, file %@", attachment.objectID.URIRepresentation, [attachmentURL lastPathComponent]);
         
         BOOL fileDuplicate = NO;
         BOOL urlDuplicate = NO;
@@ -220,13 +221,13 @@ static NSString * filenameOf(Attachment * attachment) {
                     if (attributes) {
                         NSString * entityTag= [AppDelegate etagFromAttributes:attributes];
                         if (![entityTag isEqualToString:attachment.entityTag]) {
-                            NSLog(@"Reinitializing changed attachment %@", attachment.humanReadableFileName);
+                            if (DEBUG_BASIC_STUFF) NSLog(@"Reinitializing changed attachment %@", attachment.humanReadableFileName);
                             // attachment file changed since last seen
                             attachment.previewImageData = nil;
                             attachment.previewImage = nil;
                             @autoreleasepool {
                                 [attachment reinitializeInContext:context whenReady:^(Attachment * attachment, NSError * error) {
-                                    NSLog(@"Reinitialized changed attachment %@, error = %@", attachment.humanReadableFileName,error);
+                                    if (DEBUG_BASIC_STUFF) NSLog(@"Reinitialized changed attachment %@, error = %@", attachment.humanReadableFileName,error);
                                     [AppDelegate.instance saveContext:context];
                                 }];
                             }
@@ -245,7 +246,7 @@ static NSString * filenameOf(Attachment * attachment) {
             } else {
                 // attachment without file
                 if ((attachment.message == nil && isOldAttachment(attachment)) || (attachment.message != nil && qualifiesForDeletion(attachment))) {
-                    NSLog(@"adding broken attachment for deletion: %@", attachment.contentURL);
+                    if (DEBUG_BASIC_STUFF) NSLog(@"adding broken attachment for deletion: %@", attachment.contentURL);
                     [brokenAttachments addObject:attachment];
                 } else {
                     attachment.fileStatus = @"DOES_NOT_EXIST";
@@ -264,7 +265,7 @@ static NSString * filenameOf(Attachment * attachment) {
                 }
             } else {
                 if (attachment.message == nil && isOldAttachment(attachment)) {
-                    NSLog(@"adding for deletion attachment without message and content: %@", attachment);
+                    if (DEBUG_BASIC_STUFF) NSLog(@"adding for deletion attachment without message and content: %@", attachment);
                     [brokenAttachments addObject:attachment];
                 }
             }
@@ -294,18 +295,18 @@ static NSString * filenameOf(Attachment * attachment) {
                 NSString * was = attachment.duplicate;
                 attachment.duplicate = @"DUPLICATE";
                 // we remember duplicates in the dictionary
-                NSLog(@"marked duplicate attachment for file: %@ (was %@) %@ %@ %@", [attachmentURL lastPathComponent], was, fileDuplicate?@"fileDuplicate":@"", urlDuplicate?@"urlDuplicate":@"", macDuplicate?@"macDuplicate":@"");
+                if (DEBUG_BASIC_STUFF) NSLog(@"marked duplicate attachment for file: %@ (was %@) %@ %@ %@", [attachmentURL lastPathComponent], was, fileDuplicate?@"fileDuplicate":@"", urlDuplicate?@"urlDuplicate":@"", macDuplicate?@"macDuplicate":@"");
             } else {
                 if (DEBUG_DUPLICATES) NSLog(@"found duplicate attachment for file: %@", [attachmentURL lastPathComponent]);
             }
         } else {
             if (![attachment.duplicate isEqualToString:@"ORIGINAL"]) {
-                NSLog(@"unmarking duplicate attachment for file: %@", [attachmentURL lastPathComponent]);
+                if (DEBUG_BASIC_STUFF) NSLog(@"unmarking duplicate attachment for file: %@", [attachmentURL lastPathComponent]);
                 attachment.duplicate = @"ORIGINAL";
             }
         }
     }
-    NSLog(@"fileDuplicates: %lu, urlDuplicates: %lu, macDuplicates: %lu", fileDuplicates, urlDuplicates, macDuplicates);
+    if (DEBUG_BASIC_STUFF) NSLog(@"fileDuplicates: %lu, urlDuplicates: %lu, macDuplicates: %lu", fileDuplicates, urlDuplicates, macDuplicates);
     
     // find new or changed files with no attachment pointing to them,
     // but consider only the files supplied in corresponding method arguments
@@ -313,7 +314,7 @@ static NSString * filenameOf(Attachment * attachment) {
     [orphanedFilesSet addObjectsFromArray:changedFiles];
     [orphanedFilesSet minusSet:referencedFiles];
     
-    NSLog(@"Total attachments: %lu, total attached files: %lu, duplicates = %lu, dangling attachments: %lu, broken attachments: %lu, total files: %lu, orphaned files:%lu", (unsigned long)attachments.count, (unsigned long)referencedFiles.count, (unsigned long)attachments.count - (unsigned long)referencedFiles.count,(unsigned long)danglingAttachments.count, (unsigned long)brokenAttachments.count, (unsigned long)allFiles.count, (unsigned long)orphanedFilesSet.count);
+    if (DEBUG_BASIC_STUFF) NSLog(@"Total attachments: %lu, total attached files: %lu, duplicates = %lu, dangling attachments: %lu, broken attachments: %lu, total files: %lu, orphaned files:%lu", (unsigned long)attachments.count, (unsigned long)referencedFiles.count, (unsigned long)attachments.count - (unsigned long)referencedFiles.count,(unsigned long)danglingAttachments.count, (unsigned long)brokenAttachments.count, (unsigned long)allFiles.count, (unsigned long)orphanedFilesSet.count);
 
 
     for (NSString * file in orphanedFilesSet) {
@@ -328,7 +329,7 @@ static NSString * filenameOf(Attachment * attachment) {
         [AppDelegate.instance performAfterCurrentContextFinishedInMainContextPassing:brokenAttachments
                                                                            withBlock:^(NSManagedObjectContext *context, NSArray *managedObjects) {
                                                                                for (Attachment * attachment in managedObjects) {
-                                                                                   NSLog(@"Deleting broken attachment object pointing to %@", significantURL(attachment));
+                                                                                   if (DEBUG_BASIC_STUFF) NSLog(@"Deleting broken attachment object pointing to %@", significantURL(attachment));
 #ifdef ARMED
                                                                                    [AppDelegate.instance deleteObject:attachment inContext:context];
 #endif
@@ -472,7 +473,7 @@ static NSString * filenameOf(Attachment * attachment) {
                 [uniqueSortedAttachments addObject:attachment];
                 currentId = newId;
             } else {
-                NSLog(@"ignoring same attachment %@", newId);
+                if (DEBUG_BASIC_STUFF) NSLog(@"ignoring same attachment %@", newId);
             }
         }
         NSDate * stop2 = [NSDate new];
