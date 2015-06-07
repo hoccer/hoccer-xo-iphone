@@ -1766,7 +1766,17 @@ NSError * makeSendError(NSString * reason) {
 
 - (void) flushPendingMessages {
     // fetch all deliveries with state 'new'
-    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"DeliveriesWithStateNew"];
+    //NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestTemplateForName:@"DeliveriesWithStateNew"];
+    NSFetchRequest *fetchRequest = [self.delegate.managedObjectModel fetchRequestFromTemplateWithName:@"DeliveriesWithStateNew" substitutionVariables: @{}];
+   
+   // NSEntityDescription *entity = [NSEntityDescription entityForName:[Attachment entityName] inManagedObjectContext:self.delegate.currentObjectContext];
+   // NSFetchRequest *fetchRequest = [NSFetchRequest new];
+   // [fetchRequest setEntity:entity];
+    
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"message.timeSent" ascending:YES];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
     NSError *error;
     NSArray *deliveries = [self.delegate.mainObjectContext executeFetchRequest:fetchRequest error:&error];
     if (deliveries == nil)
@@ -1775,10 +1785,11 @@ NSError * makeSendError(NSString * reason) {
         abort();
     }
     // collect all messages that have a delivery with state 'new'
-    NSMutableSet * pendingMessages = [[NSMutableSet alloc] init];
+    NSMutableArray * pendingMessages = [[NSMutableArray alloc] init];
     for (Delivery * delivery in deliveries) {
         if (! [pendingMessages containsObject: delivery.message]) {
             [pendingMessages addObject: delivery.message];
+            NSLog(@"flushPendingMessages: adding message %@ timeSent %@", delivery.message.body, delivery.message.timeSent);
         }
     }
     // for each message collect those deliveries that have state 'new' and send them out
@@ -1790,6 +1801,7 @@ NSError * makeSendError(NSString * reason) {
                     // get attachment transfer url in case there are none yet
                     [self createUrlsForTransferOfAttachmentOfMessage:message withCompletion:nil];
                 } else {
+                    NSLog(@"flushPendingMessages: sending message %@ timeSent %@", delivery.message.body, delivery.message.timeSent);
                     [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:message.attachment withCompletion:nil];
                 }
             } else {
