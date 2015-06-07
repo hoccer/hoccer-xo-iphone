@@ -2610,6 +2610,10 @@ NSError * makeMediaError(NSString * reason) {
         NSLog(@"%@", [NSThread callStackSymbols]);
         return;
     }
+    if (message.isDeleted) {
+        NSLog(@"#WARNING: ChatViewController:configureCell called with deleted message");
+        return;
+    }
     if (DEBUG_TABLE_CELLS) NSLog(@"configureCell %@ withPreview=%d",cell,loadPreview);
 
     cell.delegate = self;

@@ -1017,6 +1017,10 @@ NSError * makeSendError(NSString * reason) {
             contact = group;
         } else {
             contact = sender;
+            if ([kRelationStateNone isEqualToString:contact.relationshipState]) {
+                // autokeep contact when a late message arrives from worldwide
+                contact.relationshipState = kRelationStateInternalKept;
+            }
         }
         
         message.isOutgoing = NO;
