@@ -886,11 +886,13 @@ static int  groupMemberContext;
 - (DatasheetSection*) invitationResponseSection {
     if ( ! _invitationResponseSection) {
         _invitationResponseSection = [DatasheetSection datasheetSectionWithIdentifier: @"group_invitation_response_section"];
-        _invitationResponseSection.title = [[NSAttributedString alloc] initWithString: @"Du bist eingeladen der gruppe beizutreten" attributes: nil];
+        _invitationResponseSection.title = [[NSAttributedString alloc] initWithString:  NSLocalizedString(@"group_invitation_response_section_title", nil) attributes: nil];
         [_invitationResponseSection setItems: @[self.joinGroupItem, self.invitationDeclineItem]];
     }
     return _invitationResponseSection;
 }
+
+
 
 @synthesize joinGroupItem = _joinGroupItem;
 - (DatasheetItem*) joinGroupItem {

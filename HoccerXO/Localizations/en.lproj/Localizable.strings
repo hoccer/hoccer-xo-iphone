@@ -620,6 +620,9 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "group_name_worldwide_kept"             = "Stored Worldwide Group";
 "group_name_worldwide_empty"            = "Nobody Worldwide";
 
+"group_invitation_response_section_title" = "You are invited to join the group.";
+
+
 //==============================================================================
 // Invitations
 //==============================================================================
