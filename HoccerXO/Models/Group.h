@@ -76,7 +76,7 @@ FOUNDATION_EXPORT NSString * const kGroupTypeWorldwide;
 
 - (GroupMembership*) membershipWithClientId:(NSString*)clientId;
 
--(void)changeIdTo:(NSString*)newId;
+-(void)changeIdTo:(NSString*)newId removeMembers:(BOOL)removeMembers;
 
 @end
 

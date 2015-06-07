@@ -172,14 +172,16 @@ NSString * const kGroupTypeWorldwide   = @"worldwide";
 }
 
 
--(void)changeIdTo:(NSString*)newId {
-    //NSSet * myMembers = self.members;
-    self.clientId = newId;
-    /*
+-(void)changeIdTo:(NSString*)newId removeMembers:(BOOL)removeMembers {
+    NSSet * myMembers = self.members;
     for (GroupMembership * member in myMembers) {
-        member.group = self;
+        if (member.contact.messages.count > 0) {
+            member.state = kGroupStateInternalKept;
+        } else {
+            member.state = kGroupStateNone;
+        }
     }
-     */
+    self.clientId = newId;
 }
 
 -(BOOL) hasGroupKey {

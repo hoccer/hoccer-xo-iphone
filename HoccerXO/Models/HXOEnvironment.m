@@ -242,6 +242,11 @@ static HXOEnvironment *instance;
     if ([self.type isEqualToString:@"worldwide"]) {
         self.notificationPreference = HXOEnvironment.worldwideNotificationPreferences;
         self.timeToLive = HXOEnvironment.worldwideTimeToLive;
+        self.tag = HXOEnvironment.worldwideGroupTag;
+    } else {
+        self.notificationPreference = nil;
+        self.timeToLive = nil;
+        self.tag =nil;
     }
     
     // possible other location identifiers
@@ -334,6 +339,10 @@ static HXOEnvironment *instance;
 + (NSNumber*) worldwideTimeToLive {
     return [NSNumber numberWithUnsignedLong:[[[HXOUserDefaults standardUserDefaults]
                                               valueForKey: kHXOWorldwideTimeToLive] unsignedLongValue] * 1000];
+}
+
++ (NSString*) worldwideGroupTag {
+    return [[HXOUserDefaults standardUserDefaults] stringForKey: kHXOWorldwideGroupTag];
 }
 
 + (NSString*) worldwideNotificationPreferences {

@@ -365,6 +365,10 @@ CGPoint _correctContentOffset;
 
 - (void) segmentChanged: (id) sender {
     if (FETCHED_RESULTS_DEBUG) NSLog(@"ContactViewController:segmentChanged, sender= %@", sender);
+    [self updateFetchRequest];
+}
+
+-(void)updateFetchRequest {
     self.currentFetchedResultsController.delegate = nil;
     [self clearFetchedResultsControllers];
     [self.tableView reloadData];

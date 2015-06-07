@@ -6,6 +6,8 @@
 	<integer>0</integer>
 	<key>WorldwideNotifications</key>
 	<false/>
+	<key>WorldwideGroupTag</key>
+	<string>*</string>
 	<key>anonymousNotifications</key>
 	<false/>
 	<key>AccessControlPhotoEnabled</key>

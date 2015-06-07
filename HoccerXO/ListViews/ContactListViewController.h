@@ -37,5 +37,6 @@
 - (void) invitePeople;
 - (void) addButtonPressed: (id) sender;
 - (void) segmentChanged: (id) sender;
+- (void) updateFetchRequest;
 
 @end

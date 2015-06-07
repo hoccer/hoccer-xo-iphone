@@ -26,10 +26,14 @@
 #import "SoundEffectPlayer.h"
 #import "DatasheetViewController.h"
 
+#import "GroupMembership.h"
+
 #define TRACE_NOTIFICATIONS NO
 #define FETCHED_RESULTS_DEBUG_PERF NO
 #define NEARBY_CONFIG_DEBUG NO
 #define SEGUE_DEBUG NO
+
+//#define DEBUG_LATEST_MESSAGE
 
 @interface ConversationViewController ()
 
@@ -68,6 +72,7 @@
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXODefaultScreenShooting]) {
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
+    [HXOEnvironment.sharedInstance addObserver:self forKeyPath:@"groupId" options:0 context:nil];
 }
 
 - (id) cellClass {
@@ -181,7 +186,14 @@
                                                                                  [self configureForMode:self.environmentMode];
                                                                              }
                                                                          }];
-
+    self.loginObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"environmentGroupChanged"
+                                                                           object:nil
+                                                                            queue:[NSOperationQueue mainQueue]
+                                                                       usingBlock:^(NSNotification *note) {
+                                                                           if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: environmentChanged");
+                                                                           [self updateFetchRequest];
+                                                                       }];
+    
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
@@ -201,6 +213,18 @@
     }
 
 }
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context {
+    if ([object isEqual:HXOEnvironment.sharedInstance] && [keyPath isEqual:@"groupId"]) {
+        if (TRACE_NOTIFICATIONS) NSLog(@"ConversationView: environment groupId changed to %@", HXOEnvironment.sharedInstance.groupId);
+        [self updateFetchRequest];
+    } else {
+        if ([super respondsToSelector:@selector(observeValueForKeyPath:ofObject:change:context:)]) {
+            [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
+        }
+    }
+}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -333,9 +357,15 @@
                                 myGroupMembership.group.groupState =='exists' AND\
                                 SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'nearbyMember').@count > 1 ))"]];
     } else if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
+        NSString * myWorldWideGroupId = HXOEnvironment.sharedInstance.groupId;
+        if (myWorldWideGroupId == nil) {
+            myWorldWideGroupId = @"no-environment-group";
+        }
+        if (NEARBY_CONFIG_DEBUG) NSLog(@"addPredicates: myWorldWideGroupId=%@", myWorldWideGroupId);
         [predicates addObject: [NSPredicate predicateWithFormat:
                                 @"(type == 'Contact' AND \
                                     SUBQUERY(groupMemberships, $member, \
+                                        $member.group.clientId == %@ AND \
                                         $member.state == 'joined' AND \
                                         $member.group.groupType == 'worldwide' AND \
                                         $member.group.groupState =='exists').@count > 0 ) \
@@ -344,7 +374,7 @@
                                 ((myGroupMembership.state == 'joined' OR myGroupMembership.state == 'suspended') AND \
                                     myGroupMembership.group.groupType == 'worldwide' AND \
                                     myGroupMembership.group.groupState =='exists' AND\
-                                    SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'worldwideMember').@count > 1 ))"]];
+                                    SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'worldwideMember' AND $member.state == 'joined').@count > 1 ))",myWorldWideGroupId]];
     } else {
         [predicates addObject: [NSPredicate predicateWithFormat:
                                 @"relationshipState == 'friend' OR (relationshipState == 'kept' AND messages.@count > 0) OR \
@@ -459,10 +489,18 @@
     Contact * contact = (Contact*)[self.currentFetchedResultsController objectAtIndexPath:indexPath];
 
 #ifdef DEBUG_LATEST_MESSAGE
-    NSLog(@"contact class %@ nick %@, latestCount=%d group.latestMessageTime=%@ millis=%@", contact.class, contact.nickName, contact.latestMessage.count, contact.latestMessageTime, [HXOBackend millisFromDate:contact.latestMessageTime]);
+    NSLog(@"contact class %@ nick %@, latestCount=%lu group.latestMessageTime=%@ millis=%@", contact.class, contact.nickName, (unsigned long)contact.latestMessage.count, contact.latestMessageTime, [HXOBackend millisFromDate:contact.latestMessageTime]);
     
     HXOMessage * myLatestMessage = [self latestMessageForContact:contact];
     NSLog(@"myLatestMessage: %@ %@, millis=%@", myLatestMessage.body, myLatestMessage.timeAccepted, [HXOBackend millisFromDate:myLatestMessage.timeAccepted]);
+    
+    
+    NSSet * memberships = contact.groupMemberships;
+    for (GroupMembership * membership in memberships) {
+        NSLog(@"member in group %@", membership.group);
+        
+    }
+    
 #endif
     
     cell.delegate = self;

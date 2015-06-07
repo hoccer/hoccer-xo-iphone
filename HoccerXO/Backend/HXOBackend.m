@@ -292,6 +292,12 @@ static NSTimer * _stateNotificationDelayTimer;
                    forKeyPath:kHXOWorldwideTimeToLive
                       options:NSKeyValueObservingOptionNew
                       context:NULL];
+        [defaults addObserver:self
+                   forKeyPath:kHXOWorldwideGroupTag
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
+
+        
         
         _attachmentDownloadsWaiting = [[NSMutableArray alloc] init];
         _attachmentUploadsWaiting = [[NSMutableArray alloc] init];
@@ -342,7 +348,9 @@ static NSTimer * _stateNotificationDelayTimer;
             }
         }
     }
-    if ([keyPath isEqualToString:kHXOWorldwideNotifications] || [keyPath isEqualToString:kHXOWorldwideTimeToLive]) {
+    if ([keyPath isEqualToString:kHXOWorldwideNotifications] ||
+        [keyPath isEqualToString:kHXOWorldwideTimeToLive] ||
+        [keyPath isEqualToString:kHXOWorldwideGroupTag]) {
         if (HXOEnvironment.sharedInstance.activationMode == ACTIVATION_MODE_WORLDWIDE && self.isReady) {
             [self sendEnvironmentUpdate];
         }
@@ -3106,8 +3114,12 @@ NSError * makeSendError(NSString * reason) {
         if (inspectedGroup == nil) {
             inspectedGroup = groups[0];
         }
-        if (SINGLE_NEARBY_DEBUG) NSLog(@"singleSpecialGroupWithType %@: changing group %@ to %@", type, inspectedGroup.clientId, groupId);
-        [inspectedGroup changeIdTo:groupId];
+        if (![inspectedGroup.clientId isEqualToString:groupId]) {
+            // "rename" inspected group
+            if (SINGLE_NEARBY_DEBUG) NSLog(@"singleSpecialGroupWithType %@: changing group %@ to %@", type, inspectedGroup.clientId, groupId);
+            [inspectedGroup changeIdTo:groupId removeMembers:[kHXOWorldwideGroupTag isEqualToString:type]];
+        }
+        
         
         if (groups.count > 1) {
             [self mergeGroups: groups intoGroup:inspectedGroup inContext:context];

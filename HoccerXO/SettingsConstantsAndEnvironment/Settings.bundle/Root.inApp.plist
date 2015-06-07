@@ -218,6 +218,14 @@
                 <integer>86400</integer>
             </array>
         </dict>
+        <dict>
+            <key>Type</key>
+            <string>PSTextFieldSpecifier</string>
+            <key>Title</key>
+            <string>WorldwideGroupTag</string>
+            <key>Key</key>
+            <string>WorldwideGroupTag</string>
+        </dict>
 		<dict>
 			<key>Title</key>
 			<string>Sound</string>
