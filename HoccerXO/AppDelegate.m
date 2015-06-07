@@ -343,6 +343,10 @@ typedef void (^ImageHandler)(UIImage* image);
     _dirMonitorDispatchQueue = nil;
 }
 
+-(BOOL)documentMonitoringEnabled {
+    return _documentMonitoringDisableCounter == 0;
+}
+
 -(void)pauseDocumentMonitoring {
     if (_documentMonitoringDisableCounter++ == 0) {
         NSLog(@"#INFO: pauseDocumentMonitoring: disabling document monitoring");
@@ -1179,7 +1183,9 @@ BOOL sameObjects(id obj1, id obj2) {
     // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     [self.chatBackend changePresenceToNormal]; // not typing anymore ... yep, pretty sure...
-    [self pauseDocumentMonitoring];
+    if (self.documentMonitoringEnabled) {
+        [self pauseDocumentMonitoring];
+    }
     [self saveDatabaseNow];
     [self setLastActiveDate];
     if (self.environmentMode != ACTIVATION_MODE_NONE) {
@@ -1195,7 +1201,7 @@ BOOL sameObjects(id obj1, id obj2) {
 
     NSLog(@"applicationWillEnterForeground");
 
-    if (self.chatBackend.isReady) {
+    if (self.chatBackend.isLoggedIn) {
         NSLog(@"applicationWillEnterForeground: still connected, keeping connection open");
         [self cancelFinalizer];
         [self resumeDocumentMonitoring];
@@ -2352,6 +2358,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     }
     NSUInteger unreadMessages = [self unreadMessageCount];
     [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessages;
+    
     _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
         NSLog(@"#WARNING: Running background expiration handler");
         [self.chatBackend stop];
@@ -2359,16 +2366,36 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         _backgroundTask = UIBackgroundTaskInvalid;
     }];
 
-    // Start the long-running task and return immediately.
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [self.chatBackend hintApnsUnreadMessage: unreadMessages handler: ^(BOOL success){
-            if (CONNECTION_TRACE) NSLog(@"updated unread message count: %@", success ? @"success" : @"failed");
-            __weak AppDelegate * weakSelf = self;
-            [self setBackgroundFinalizer:^{
-                [weakSelf.chatBackend stop];
+    if (self.chatBackend.isLoggedIn) {
+    
+        // Start the long-running task and return immediately.
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            [self.chatBackend hintApnsUnreadMessage: unreadMessages handler: ^(BOOL success){
+                if (CONNECTION_TRACE) NSLog(@"updated unread message count: %@", success ? @"success" : @"failed");
+                __weak AppDelegate * weakSelf = self;
+                [self setBackgroundFinalizer:^{
+                    NSLog(@"#INFO: Executing background finalizer in updateUnreadMessageCountAndStop");
+                    if (weakSelf.chatBackend.isLoggedIn) {
+                        NSLog(@"#INFO: Still logged in, stopping backend");
+                        [weakSelf.chatBackend stop];
+                    } else {
+                        NSLog(@"#INFO: No longer logged in, stopping immediately");
+                        [weakSelf.chatBackend stop];
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [weakSelf backendDidStop];
+                        });
+                    }
+                }];
             }];
+        });
+    } else {
+        __weak AppDelegate * weakSelf = self;
+        [self setBackgroundFinalizer:^{
+            NSLog(@"#INFO: Not logged in, stopping immediately");
+            [weakSelf.chatBackend stop];
+            [weakSelf backendDidStop];
         }];
-    });
+    }
 }
 
 #pragma mark - Apple Push Notifications
@@ -2422,7 +2449,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     if (self.environmentMode != ACTIVATION_MODE_NONE) {
         [self suspendEnvironmentMode]; // for resuming nearby mode, the Conversations- or ChatView are responsible; the must do it after login
     }
-    if (!HXOBackend.instance.isReady) {
+    if (!HXOBackend.instance.isLoggedIn) {
         NSLog(@"didReceiveRemoteNotification - starting backend");
         [HXOBackend.instance start:NO];
     } else {
@@ -2476,6 +2503,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             __weak AppDelegate * weakSelf = self;
             unsigned long backgroundNotification = _backgroundNotification;
             [self setBackgroundFinalizer:^{
+                NSLog(@"Executing background finalizer for notification processing");
                 [weakSelf.chatBackend stop];
                 if (backgroundFetchHandler) {
                     NSLog(@"finishBackgroundNotificationProcessing, finishing notification background task %ld",backgroundNotification);

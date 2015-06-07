@@ -85,7 +85,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
  */
 
 -(NSString*)connectionStatus {
-    if (HXOBackend.instance.isReady) {
+    if (HXOBackend.instance.isLoggedIn) {
         if (AppDelegate.instance.runningInBackground) {
             return kPresenceStateBackground;
         } else {
@@ -465,7 +465,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 
 - (BOOL) hasActiveAccount {
     BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
-    BOOL active = (!isFirstRun && self.isRegistered && HXOBackend.instance.isReady && !self.accountJustDeleted);
+    BOOL active = (!isFirstRun && self.isRegistered && HXOBackend.instance.isLoggedIn && !self.accountJustDeleted);
     //NSLog(@"hasActiveAccount:%d", active);
     return active;
 }

@@ -296,6 +296,7 @@ static NSObject * instanceLock;
         
         if (sanityCheck != noErr)
         {
+            NSLog(@"getPublicKeyBitsForTag %@, error = %d", tag, sanityCheck);
             publicKeyBits = nil;
         } else {
             publicKeyBits = (__bridge_transfer NSData *)publicKeyBitsCF;

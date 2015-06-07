@@ -166,7 +166,7 @@ static NSTimer * _stateNotificationDelayTimer;
 
 @implementation HXOBackend
 
-@dynamic isReady;
+@dynamic isLoggedIn;
 
 -(void)clearDeliverySynchronizers {
     _pendingDeliveryUpdates = [NSMutableSet new];
@@ -318,7 +318,7 @@ static NSTimer * _stateNotificationDelayTimer;
 {
     NSLog(@"HXOBackend KVO: %@ changed property %@ to value %@", object, keyPath, change);
     if ([keyPath isEqualToString:kHXOAnonymousNotifications]) {
-        if (self.isReady) {
+        if (self.isLoggedIn) {
             [self setApnsMode];
         }
     }
@@ -351,7 +351,7 @@ static NSTimer * _stateNotificationDelayTimer;
     if ([keyPath isEqualToString:kHXOWorldwideNotifications] ||
         [keyPath isEqualToString:kHXOWorldwideTimeToLive] ||
         [keyPath isEqualToString:kHXOWorldwideGroupTag]) {
-        if (HXOEnvironment.sharedInstance.activationMode == ACTIVATION_MODE_WORLDWIDE && self.isReady) {
+        if (HXOEnvironment.sharedInstance.activationMode == ACTIVATION_MODE_WORLDWIDE && self.isLoggedIn) {
             [self sendEnvironmentUpdate];
         }
     }
@@ -384,7 +384,7 @@ static NSTimer * _stateNotificationDelayTimer;
     }
 }
 
--(BOOL)isReady {
+-(BOOL)isLoggedIn {
     return _state == kBackendReady;
 }
 
@@ -1705,7 +1705,8 @@ NSError * makeSendError(NSString * reason) {
         _reconnectTimer = nil;
     }
     UIApplicationState state = [[UIApplication sharedApplication] applicationState];
-    if ((state == UIApplicationStateBackground || state == UIApplicationStateInactive) && !self.delegate.processingBackgroundNotification)
+    //if ((state == UIApplicationStateBackground || state == UIApplicationStateInactive) && !self.delegate.processingBackgroundNotification)
+    if (state == UIApplicationStateBackground  && !self.delegate.processingBackgroundNotification)
     {
         // do not reconnect when in background
         NSLog(@"reconnect: not reconnecting because app is in background");
@@ -5876,8 +5877,10 @@ NSError * makeSendError(NSString * reason) {
 }
 
 - (void) modifyPresenceConnectionStatusWithHandler:(GenericResultHandler)handler {
-    NSString * myConnectionStatus = [UserProfile sharedProfile].connectionStatus;
-    [self modifyPresenceConnectionStatus:myConnectionStatus handler:handler];
+    if (self.isLoggedIn) {
+        NSString * myConnectionStatus = [UserProfile sharedProfile].connectionStatus;
+        [self modifyPresenceConnectionStatus:myConnectionStatus handler:handler];
+    }
 }
 
 - (void) changePresenceToNormal {

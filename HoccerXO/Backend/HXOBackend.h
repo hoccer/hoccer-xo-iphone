@@ -79,7 +79,7 @@ typedef void (^CompletionWithError)(NSError* theError);
 @property (readonly, nonatomic) NSArray * certificates;
 
 @property BOOL firstConnectionAfterCrashOrUpdate;
-@property (readonly) BOOL isReady;
+@property (readonly) BOOL isLoggedIn;
 
 
 - (id) initWithDelegate: (AppDelegate *) theAppDelegate;
