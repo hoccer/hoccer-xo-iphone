@@ -14,6 +14,7 @@ FOUNDATION_EXPORT NSString * const kGroupMembershipStateNone;
 FOUNDATION_EXPORT NSString * const kGroupMembershipStateInvited;
 FOUNDATION_EXPORT NSString * const kGroupMembershipStateJoined;
 FOUNDATION_EXPORT NSString * const kGroupMembershipStateGroupRemoved;
+FOUNDATION_EXPORT NSString * const kGroupMembershipStateSuspended;
 
 FOUNDATION_EXPORT NSString * const kGroupMembershipRoleAdmin;
 FOUNDATION_EXPORT NSString * const kGroupMembershipRoleMember;
@@ -66,6 +67,8 @@ FOUNDATION_EXPORT NSString * const kGroupMembershipRoleWorldwideMember;
 - (BOOL)isInvited;
 - (BOOL)isStateNone;
 - (BOOL)isGroupRemoved;
+- (BOOL)isSuspended;
+
 - (BOOL)isMember;
 - (BOOL)isNearbyMember;
 - (BOOL)isWorldwideMember;

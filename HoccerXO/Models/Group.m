@@ -79,7 +79,7 @@ NSString * const kGroupTypeWorldwide   = @"worldwide";
 
 - (NSSet*) otherMembers {
     NSSet * theMemberSet = [self.members objectsPassingTest:^BOOL(GroupMembership* obj, BOOL *stop) {
-        return ![self isEqual:obj.contact];
+        return ![self isEqual:obj.contact] && !obj.isStateNone && !obj.isSuspended;
     }];
     return theMemberSet;
 }

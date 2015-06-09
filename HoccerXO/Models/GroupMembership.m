@@ -19,6 +19,7 @@ NSString * const kGroupMembershipStateNone          = @"none";
 NSString * const kGroupMembershipStateInvited       = @"invited";
 NSString * const kGroupMembershipStateJoined        = @"joined";
 NSString * const kGroupMembershipStateGroupRemoved  = @"groupRemoved";
+NSString * const kGroupMembershipStateSuspended     = @"suspended";
 
 NSString * const kGroupMembershipRoleAdmin          = @"admin";
 NSString * const kGroupMembershipRoleMember         = @"member";
@@ -139,6 +140,10 @@ NSString * const kGroupMembershipRoleWorldwideMember   = @"worldwideMember";
 
 - (BOOL)isStateNone {
     return [kGroupMembershipStateNone isEqualToString: self.state];
+}
+
+- (BOOL)isSuspended {
+    return [kGroupMembershipStateSuspended isEqualToString: self.state];
 }
 
 - (BOOL)isGroupRemoved {
