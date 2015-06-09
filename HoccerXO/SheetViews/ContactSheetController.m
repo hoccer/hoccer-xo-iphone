@@ -1171,7 +1171,7 @@ static int  groupMemberContext;
     NSMutableArray *predicates = [NSMutableArray array];
 
     //[predicates addObject: [NSPredicate predicateWithFormat:@"(group.clientId == %@) AND (contact.clientId != group.clientId)", self.group.clientId]];
-    [predicates addObject: [NSPredicate predicateWithFormat:@"group.clientId == %@", self.group.clientId]];
+    [predicates addObject: [NSPredicate predicateWithFormat:@"group.clientId == %@ AND state != 'suspended'", self.group.clientId]];
 
     NSPredicate * filterPredicate = [NSCompoundPredicate andPredicateWithSubpredicates: predicates];
     [fetchRequest setPredicate:filterPredicate];

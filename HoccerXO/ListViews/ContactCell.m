@@ -228,7 +228,13 @@
         }
         return joinedStatus;
     } else {
-        NSString * relationshipKey = [NSString stringWithFormat: @"contact_relationship_%@", contact.relationshipState];
+        NSString * state = contact.relationshipState;
+        if (contact.isGroupFriend) {
+            if (contact.isSuspendedWorldwideContact) {
+                state = @"suspended";
+            }
+        }
+        NSString * relationshipKey = [NSString stringWithFormat: @"contact_relationship_%@", state];
         return NSLocalizedString(relationshipKey, nil);
     }
 }

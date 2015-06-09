@@ -19,6 +19,9 @@
 
 #import <SystemConfiguration/CaptiveNetwork.h>
 
+#define ENVIRONMENT_DEBUG NO
+#define LOCATION_DEBUG NO
+
 @interface HXOEnvironment ()
 {
     CLLocationManager * _locationManager;
@@ -64,7 +67,6 @@ static NSString * LOCATION_TYPE_MANUAL = @"manual";   // location was set by use
 static NSString * LOCATION_TYPE_OTHER = @"other";
 static NSString * LOCATION_TYPE_NONE = @"none";       // indicates that location is invalid
 
-#define LOCATION_DEBUG NO
 
 static HXOEnvironment *instance;
 
@@ -105,7 +107,7 @@ static HXOEnvironment *instance;
 }
 
 - (void)setActivation:(EnvironmentActivationMode)activationMode {
-    NSLog(@"HXOEnvironment:setActivation %d", activationMode);
+    if (ENVIRONMENT_DEBUG) NSLog(@"HXOEnvironment:setActivation %d", activationMode);
     
     if (activationMode != ACTIVATION_MODE_NONE) {
         if (activationMode != self.activationMode) {
@@ -115,7 +117,7 @@ static HXOEnvironment *instance;
             }
         }
         _activationMode = activationMode;
-        NSLog(@"HXOEnvironment:setActivation(1) changed mode to %d", activationMode);
+        if (ENVIRONMENT_DEBUG) NSLog(@"HXOEnvironment:setActivation(1) changed mode to %d", activationMode);
         [self updateProperties];
         [self activate];
         [self sendEnvironmentUpdate];
@@ -125,7 +127,7 @@ static HXOEnvironment *instance;
         if (self.type != nil && self.activationMode != ACTIVATION_MODE_NONE) {
             [[self chatBackend] sendEnvironmentDestroyWithType:[self typeFromMode:self.activationMode]];
         }
-        NSLog(@"HXOEnvironment:setActivation(2) changed mode to %d", activationMode);
+        if (ENVIRONMENT_DEBUG) NSLog(@"HXOEnvironment:setActivation(2) changed mode to %d", activationMode);
         _activationMode = activationMode;
     }
 }

@@ -30,6 +30,7 @@ typedef void (^PresenceHandler)(NSArray*);
 typedef void (^GroupMembersOutdatedHandler)(NSArray*);
 typedef void (^PublicKeyHandler)(NSDictionary*);
 typedef void (^ObjectResultHandler)(NSDictionary*);
+typedef void (^NumberResultHandler)(NSNumber* result);
 typedef void (^HelloHandler)(NSDictionary*);
 typedef void (^GenericResultHandler)(BOOL ok);
 typedef void (^URLResultHandler)(NSURL * url);

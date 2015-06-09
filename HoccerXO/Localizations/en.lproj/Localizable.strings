@@ -369,7 +369,8 @@
 // relationship state display in contact list
 "contact_relationship_none"                     = "None";
 "contact_relationship_friend"                   = "Friend";
-"contact_relationship_groupfriend"              = "Acquaintance by group";
+"contact_relationship_groupfriend"              = "Acquaintance by Group";
+"contact_relationship_suspended"                = "Former Worldwide Acquaintance";
 "contact_relationship_kept"                     = "No Relationship";
 "contact_relationship_blocked"                  = "Blocked";
 "contact_relationship_invited"                  = "Invited as Friend";

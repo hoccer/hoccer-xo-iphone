@@ -372,6 +372,7 @@
 // relationship state display in contact list
 "contact_relationship_friend"                         = "Freund";
 "contact_relationship_groupfriend"                    = "Gruppenbekanntschaft";
+"contact_relationship_suspended"                      = "ehemalige Weltweit-Bekanntschaft";
 "contact_relationship_kept"                           = "Keine Beziehung";
 "contact_relationship_blocked"                        = "Geblockt";
 "contact_relationship_invited"                        = "Eingeladen als Freund";

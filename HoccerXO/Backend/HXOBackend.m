@@ -54,7 +54,7 @@
 #define GROUPKEY_DEBUG      NO
 #define GROUP_DEBUG         NO
 #define RELATIONSHIP_DEBUG  NO
-#define TRANSFER_DEBUG      YES
+#define TRANSFER_DEBUG      NO
 #define CHECK_URL_TRACE     NO
 #define CHECK_CERTS_DEBUG   NO
 #define DEBUG_DELETION      NO
@@ -2387,6 +2387,36 @@ NSError * makeSendError(NSString * reason) {
     }];
 }
 
+-(void)deleteContactIfNoUnfinishedDeliveries:(Contact*)theContact onDeleted:(GenericResultHandler)handler {
+    NSString * clientId = theContact.clientId;
+    [self unfinishedDeliveriesFrom:clientId onResult:^(NSNumber * result) {
+        if (result != nil) {
+            NSManagedObjectContext* context = AppDelegate.instance.currentObjectContext;
+            Contact * contact = [self getContactByClientId:clientId inContext:context];
+            if (contact == nil) {
+                NSLog(@"deleteContactIfNoUnfinishedDeliveries: contact %@ disappeared", clientId);
+                if (handler != nil) handler(NO);
+                return;
+            }
+            ///NSLog(@"result = %@", result);
+            long unfinished = [result longValue];
+            if (unfinished > 0) {
+                //autokeep
+                if (DEBUG_DELETION) NSLog(@"deleteContactIfNoUnfinishedDeliveries: autokeeping contact with clientId %@ because there are %ld unfinished delivereis",contact.clientId, unfinished);
+                contact.relationshipState = kRelationStateInternalKept;
+                if (handler != nil) handler(NO);
+            } else {
+                if (DEBUG_DELETION) NSLog(@"deleteContactIfNoUnfinishedDeliveries: deleting contact with clientId %@",contact.clientId);
+                [AppDelegate.instance deleteObject:contact inContext:context];
+                if (handler != nil) handler(YES);
+            }
+        } else {
+            if (handler != nil) handler(NO);
+        }
+    }];
+}
+
+
 // background context safe
 - (void) handleDeletionOfContact:(Contact*)contact withForce:(BOOL)force inContext:(NSManagedObjectContext*) context {
     
@@ -2406,9 +2436,12 @@ NSError * makeSendError(NSString * reason) {
         // if there is nothing to save, delete right away and dont ask
         if (RELATIONSHIP_DEBUG || DEBUG_DELETION) NSLog(@"handleDeletionOfContact: nothing to save or kept, delete contact id %@",contact.clientId);
         if ([self ensureUnwindView:contact]) {
-            if (!force) {
-                [self removedAlertForContact:contact];
-            }
+            [self deleteContactIfNoUnfinishedDeliveries:contact onDeleted:^(BOOL deleted) {
+                if (!force && deleted) {
+                    [self removedAlertForContact:contact];
+                }
+            }];
+
             [AppDelegate.instance deleteObject:contact inContext:context];
         } else {
             NSLog(@"#WARNING: could not unwind inspector of contact, autokeeping");
@@ -3490,7 +3523,6 @@ NSError * makeSendError(NSString * reason) {
     }];
 }
 
-
 //TalkGroup getGroup(String groupId);
 - (void) getGroup:(NSString *)groupId onResult:(ObjectResultHandler)handler {
     [_serverConnection invoke: @"getGroup" withParams: @[groupId] onResponse: ^(id responseOrError, BOOL success) {
@@ -3499,6 +3531,22 @@ NSError * makeSendError(NSString * reason) {
             handler(responseOrError);
         } else {
             NSLog(@"getGroup(): failed: %@", responseOrError);
+            handler(nil);
+        }
+    }];
+}
+
+
+// return total number of undelivered and unfinished deliveries from a particular client
+// used by the client to decide when a contact can be finally deleted
+// long unfinishedDeliveriesFrom(String senderId);
+- (void) unfinishedDeliveriesFrom:(NSString *)groupId onResult:(NumberResultHandler)handler {
+    [_serverConnection invoke: @"unfinishedDeliveriesFrom" withParams: @[groupId] onResponse: ^(id responseOrError, BOOL success) {
+        if (success) {
+            if (PRESENCE_DEBUG || GROUP_DEBUG) NSLog(@"unfinishedDeliveriesFrom(): got result: %@", responseOrError);
+            handler(responseOrError);
+        } else {
+            NSLog(@"unfinishedDeliveriesFrom(): failed: %@", responseOrError);
             handler(nil);
         }
     }];
@@ -3852,8 +3900,9 @@ NSError * makeSendError(NSString * reason) {
                     memberContact.relationshipState = kRelationStateInternalKept;
                 }
             } else {
-                if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: deleting contact with clientId %@",memberContact.clientId);
-                [AppDelegate.instance deleteObject:memberContact inContext:context];
+                if (GROUP_DEBUG) NSLog(@"updateGroupMemberHere: try deleting contact with clientId %@",memberContact.clientId);
+                [self deleteContactIfNoUnfinishedDeliveries:memberContact onDeleted:^(BOOL ok) {
+                }];
             }
         }
         // delete group membership
@@ -4107,8 +4156,10 @@ NSError * makeSendError(NSString * reason) {
                     }
                 } else {
                     // we can throw out this member contact without asking
-                    if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"no messages deleting group member contact id %@", member.contact.clientId);
-                    [AppDelegate.instance deleteObject:member.contact inContext:context];
+                    if (GROUP_DEBUG || DEBUG_DELETION) NSLog(@"no messages, try deleting group member contact id %@", member.contact.clientId);
+                    [self deleteContactIfNoUnfinishedDeliveries:member.contact onDeleted:^(BOOL deleted) {
+                    }];
+                    //[AppDelegate.instance deleteObject:member.contact inContext:context];
                 }
             }
         }
