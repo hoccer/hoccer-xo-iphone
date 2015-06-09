@@ -118,6 +118,7 @@ static HXOEnvironment *instance;
         NSLog(@"HXOEnvironment:setActivation(1) changed mode to %d", activationMode);
         [self updateProperties];
         [self activate];
+        [self sendEnvironmentUpdate];
         return;
     } else {
         [self deactivate];

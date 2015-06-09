@@ -66,7 +66,7 @@ NSString * const kHXOAccessControlPhotoEnabled  = @"AccessControlPhotoEnabled";
 NSString * const kHXOWorldwideNotifications     = @"WorldwideNotifications";
 NSString * const kHXOWorldwideTimeToLive        = @"WorldwideTimeToLive";
 NSString * const kHXOWorldwideGroupTag          = @"WorldwideGroupTag";
-
+NSString * const kHXOWorldwideDialogShown       = @"WorldwideDialogShown";
 
 @implementation HXOUserDefaults
 

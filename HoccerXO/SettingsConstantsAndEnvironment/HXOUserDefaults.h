@@ -66,6 +66,7 @@ FOUNDATION_EXPORT NSString * const kHXOAccessControlPhotoEnabled;
 FOUNDATION_EXPORT NSString * const kHXOWorldwideNotifications;
 FOUNDATION_EXPORT NSString * const kHXOWorldwideTimeToLive;
 FOUNDATION_EXPORT NSString * const kHXOWorldwideGroupTag;
+FOUNDATION_EXPORT NSString * const kHXOWorldwideDialogShown;
 
 
 @interface HXOUserDefaults : NSObject

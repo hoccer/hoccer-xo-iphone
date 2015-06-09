@@ -352,6 +352,7 @@ static NSTimer * _stateNotificationDelayTimer;
         [keyPath isEqualToString:kHXOWorldwideTimeToLive] ||
         [keyPath isEqualToString:kHXOWorldwideGroupTag]) {
         if (HXOEnvironment.sharedInstance.activationMode == ACTIVATION_MODE_WORLDWIDE && self.isLoggedIn) {
+            [HXOEnvironment.sharedInstance updateProperties];
             [self sendEnvironmentUpdate];
         }
     }
@@ -1284,6 +1285,7 @@ NSError * makeSendError(NSString * reason) {
                 }
             };
             if (HXOEnvironment.sharedInstance.activationMode == ACTIVATION_MODE_WORLDWIDE) {
+                [HXOEnvironment.sharedInstance updateProperties];
                 [self sendEnvironmentUpdate];
             }
         } else {

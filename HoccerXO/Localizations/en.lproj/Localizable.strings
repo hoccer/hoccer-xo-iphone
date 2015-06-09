@@ -276,6 +276,13 @@
 "chat_group_clone"                              = "Clone group";
 "chat_group_clone_nearby"                       = "Create permanent group";
 
+"chat_worldwide_intro_title"                    = "Worldwide";
+"chat_worldwide_intro_message"                  = "In Worldwide-Mode you can chat with random users worldwide who have also activated worldwide-mode. Please take a look at the available settings for worldwide mode. How long do you want to keep worldwide mode activated after leaving the worldwide view?";
+"chat_worldwide_intro_0_min"                    = "Deactivate immediately";
+"chat_worldwide_intro_30_min"                   = "after 30 minutes";
+"chat_worldwide_intro_6_hours"                  = "after 6 hours";
+
+
 //==============================================================================
 // Collection
 //==============================================================================

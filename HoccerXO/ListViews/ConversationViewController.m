@@ -259,7 +259,50 @@
     if (FETCHED_RESULTS_DEBUG_PERF||NEARBY_CONFIG_DEBUG) NSLog(@"ConversationViewController:segmentChanged, sender= %@", sender);
     [super segmentChanged:sender];
     [self configureForMode:self.environmentMode];
+    if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
+        [self showFirstTimeWorldwideAlert];
+    }
 }
+
+// main context only
+- (void) showFirstTimeWorldwideAlert {        
+    
+    BOOL dialogShown = [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOWorldwideDialogShown]];
+    if (dialogShown) {
+        return;
+    }
+    
+    
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"chat_worldwide_intro_message",nil)];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"chat_worldwide_intro_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                             completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                 unsigned long worldwide_delay = 0;
+                                                 switch (buttonIndex) {
+                                                     case 0: {
+                                                         // 0 min
+                                                         worldwide_delay = 0;
+                                                     }
+                                                         break;
+                                                     case 1: {
+                                                         // 30 min
+                                                         worldwide_delay =  60 * 30;
+                                                     }
+                                                         break;
+                                                     case 2:
+                                                         // 6 hours min
+                                                         worldwide_delay = 60 * 60 * 6;
+                                                         break;
+                                                 }
+                                                 [[HXOUserDefaults standardUserDefaults] setValue:[NSNumber numberWithUnsignedLong:worldwide_delay] forKey:kHXOWorldwideTimeToLive];
+                                                 [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOWorldwideDialogShown]];
+                                             }
+                                           cancelButtonTitle: nil
+                                           otherButtonTitles: NSLocalizedString(@"chat_worldwide_intro_0_min", nil), NSLocalizedString(@"chat_worldwide_intro_30_min", nil), NSLocalizedString(@"chat_worldwide_intro_6_hours", nil),nil];
+    [alert show];
+}
+
+
     
 #pragma mark - Table View
 

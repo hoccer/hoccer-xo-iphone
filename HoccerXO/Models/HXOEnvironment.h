@@ -68,4 +68,7 @@ typedef enum  {
 - (void)setActivation:(EnvironmentActivationMode)activationMode;
 - (EnvironmentActivationMode)activationMode;
 
+- (void) updateProperties;
+
+
 @end
