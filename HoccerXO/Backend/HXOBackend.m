@@ -6060,6 +6060,8 @@ NSError * makeSendError(NSString * reason) {
 #else
         NSLog(@"#ERROR: verifyKeyWithHandler failed, no public key");
         handler(NO,NO);
+        [AppDelegate.instance showFatalErrorAlertWithMessage:@"fatal_error_no_public_key_message" withTitle:nil];
+        [self disable];
 #endif
     } else {
         [self verifyKey:myKeyBits handler:handler];

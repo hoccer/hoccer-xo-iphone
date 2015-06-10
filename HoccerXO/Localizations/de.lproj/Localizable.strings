@@ -55,6 +55,8 @@
 "operation_failed_default_title"    = "Vorgang fehlgeschlagen";
 "operation_failed_default_message"  = "Ein Vorgang ist fehlgeschlagen. Überprüfe deine Netzwerkverbindung und versuche es später noch einmal.";
 
+"fatal_error_no_public_key_message" = "Das Betriebsystem hat der App den Zugriff auf den Schlüsselspeicher verweigert. Wenn dieser Zustand nach Neustart der App erneut auftritt, solltest du dein Gerät ausschalten und neu starten.";  
+
 
 "hoccer_tutorial_url" = "http://faq.hoccer.com/de/tutorial-xo/";
 "hoccer_faq_url" = "http://faq.hoccer.com/de/";
