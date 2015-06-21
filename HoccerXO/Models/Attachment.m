@@ -21,6 +21,9 @@
 #import <CommonCrypto/CommonHMAC.h>
 
 #import "HXOMessage.h"
+#import "Delivery.h"
+#import "Group.h"
+
 #import "HXOBackend.h"
 #import "AppDelegate.h"
 #import "CryptingInputStream.h"
@@ -330,6 +333,12 @@
         }
     } else {
         // incoming
+        Delivery * delivery = self.message.deliveries.anyObject;
+        BOOL wwAutoDownload = [[HXOUserDefaults standardUserDefaults] boolForKey:kHXOWorldwideAutoDownload];
+        if (!wwAutoDownload && delivery.group.isWorldwide) {
+            return YES;
+        }
+        
         long long downloadLimit;
         if (reachableViaWLAN) {
             downloadLimit = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOAutoDownloadLimitWLAN] longLongValue];

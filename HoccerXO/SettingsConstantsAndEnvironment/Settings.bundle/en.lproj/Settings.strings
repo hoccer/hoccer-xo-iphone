@@ -96,6 +96,7 @@
 
 "WorldwideTitle"            = "Worldwide Mode";
 "WorldwideTimeToLive"       = "Leave after";
+"WorldwideAutoDownload"     = "Auto-Download Attachments";
 
 "ww_0"                      = "0 min (Immediately)";
 "ww_1"                      = "1 minute";

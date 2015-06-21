@@ -67,7 +67,7 @@ FOUNDATION_EXPORT NSString * const kHXOWorldwideNotifications;
 FOUNDATION_EXPORT NSString * const kHXOWorldwideTimeToLive;
 FOUNDATION_EXPORT NSString * const kHXOWorldwideGroupTag;
 FOUNDATION_EXPORT NSString * const kHXOWorldwideDialogShown;
-
+FOUNDATION_EXPORT NSString * const kHXOWorldwideAutoDownload;
 
 @interface HXOUserDefaults : NSObject
 
