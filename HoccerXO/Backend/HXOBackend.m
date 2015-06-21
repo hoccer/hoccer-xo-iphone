@@ -348,12 +348,19 @@ static NSTimer * _stateNotificationDelayTimer;
             }
         }
     }
-    if ([keyPath isEqualToString:kHXOWorldwideNotifications] ||
-        [keyPath isEqualToString:kHXOWorldwideTimeToLive] ||
-        [keyPath isEqualToString:kHXOWorldwideGroupTag]) {
-        if (HXOEnvironment.sharedInstance.activationMode == ACTIVATION_MODE_WORLDWIDE && self.isLoggedIn) {
-            [HXOEnvironment.sharedInstance updateProperties];
-            [self sendEnvironmentUpdate];
+    if (self.isLoggedIn) {
+        if ([keyPath isEqualToString:kHXOWorldwideNotifications] ||
+            [keyPath isEqualToString:kHXOWorldwideTimeToLive] ||
+            [keyPath isEqualToString:kHXOWorldwideGroupTag]) {
+            if (HXOEnvironment.sharedInstance.activationMode == ACTIVATION_MODE_WORLDWIDE) {
+                [HXOEnvironment.sharedInstance updateProperties];
+                [self sendEnvironmentUpdate];
+            } else {
+                if ([keyPath isEqualToString:kHXOWorldwideNotifications] || [keyPath isEqualToString:kHXOWorldwideTimeToLive]) {
+                    [self releaseEnvironmentType:kGroupTypeWorldwide usingTTL:HXOEnvironment.worldwideTimeToLive withNotificationPreference:HXOEnvironment.worldwideNotificationPreferences withHandler:^(BOOL ok) {
+                    }];
+                }
+            }
         }
     }
 }
@@ -2968,6 +2975,22 @@ NSError * makeSendError(NSString * reason) {
              if (GROUP_DEBUG) NSLog(@"releaseEnvironment() returned success");
          } else {
              NSLog(@"releaseEnvironment() failed: %@", responseOrError);
+             handler(NO);
+         }
+     }];
+}
+
+// void releaseEnvironmentUpdatingParameters(String type, long timeToLive, String notificationPreference) {
+- (void) releaseEnvironmentType:(NSString*)type usingTTL:(NSNumber*)timeToLive withNotificationPreference:(NSString*)notificationPreference withHandler:(GenericResultHandler)handler {
+    
+    [_serverConnection invoke: @"releaseEnvironmentUpdatingParameters" withParams: @[type, timeToLive, notificationPreference]
+                   onResponse: ^(id responseOrError, BOOL success)
+     {
+         if (success) {
+             handler(YES);
+             if (GROUP_DEBUG) NSLog(@"releaseEnvironmentUpdatingParameters() returned success");
+         } else {
+             NSLog(@"releaseEnvironmentUpdatingParameters() failed: %@", responseOrError);
              handler(NO);
          }
      }];

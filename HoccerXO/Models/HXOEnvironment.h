@@ -70,5 +70,8 @@ typedef enum  {
 
 - (void) updateProperties;
 
++ (NSNumber*) worldwideTimeToLive;
++ (NSString*) worldwideGroupTag;
++ (NSString*) worldwideNotificationPreferences;
 
 @end
