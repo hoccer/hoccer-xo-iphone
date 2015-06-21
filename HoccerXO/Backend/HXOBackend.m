@@ -830,12 +830,15 @@ NSError * makeSendError(NSString * reason) {
                 [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:attachment withCompletion:completion];
             } else {
                 // TODO: come uo with something better than retrying
+#if 0
                 NSLog(@"ERROR: Could not get attachment urls, retrying");
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC);
                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
                     [self createUrlsForTransferOfAttachmentOfMessage:message withCompletion:completion];
                 });
-
+#else
+                NSLog(@"ERROR: Could not get attachment urls, will send on next sync");
+#endif
                 //[NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(retryCreateUrlsForTransferOfAttachment:) userInfo:message repeats:NO];
             }
         }];
@@ -1806,6 +1809,7 @@ NSError * makeSendError(NSString * reason) {
             NSLog(@"flushPendingMessages: adding message %@ timeSent %@", delivery.message.body, delivery.message.timeSent);
         }
     }
+#if 0
     // for each message collect those deliveries that have state 'new' and send them out
     for (HXOMessage * message in pendingMessages) {
         if (message.deliveries.count == 1) {
@@ -1826,6 +1830,42 @@ NSError * makeSendError(NSString * reason) {
             NSLog(@"removing message without bad number of deliveries=%d (must be 1), tag = %@", (int)message.deliveries.count,  message.messageTag);
             [self.delegate deleteObject:message];
         }
+    }
+#else
+    [self flushOutgoingMessages:pendingMessages];
+#endif
+}
+
+-(void)flushOutgoingMessages:(NSArray*)pending {
+    if (pending.count == 0) {
+        NSLog(@"fflushOutgoingMessages: finished");
+        return;
+    }
+    HXOMessage * message = pending.firstObject;
+    NSArray * restMessages = [pending subarrayWithRange:NSMakeRange(1, pending.count-1)];
+    if (message.deliveries.count == 1) {
+        Delivery * delivery = message.deliveries.anyObject;
+        if (delivery != nil && delivery.receiver != nil) {
+            if (message.attachment != nil && (message.attachment.uploadURL == nil || message.attachment.uploadURL.length == 0)) {
+                // get attachment transfer url in case there are none yet
+                [self createUrlsForTransferOfAttachmentOfMessage:message withCompletion:^(NSError *theError) {
+                    [self flushOutgoingMessages:restMessages];
+                }];
+            } else {
+                NSLog(@"flushOutgoingMessages: sending message %@ timeSent %@", delivery.message.body, delivery.message.timeSent);
+                [self finishSendMessage:message toContact:message.contact withDelivery:message.deliveries.anyObject withAttachment:message.attachment withCompletion:^(NSError *theError) {
+                    [self flushOutgoingMessages:restMessages];
+                }];
+            }
+        } else {
+            NSLog(@"flushOutgoingMessages: removing message without receiver, tag = %@", message.messageTag);
+            [self.delegate deleteObject:message];
+            [self flushOutgoingMessages:restMessages];
+        }
+    } else {
+        NSLog(@"flushOutgoingMessages: removing message without bad number of deliveries=%d (must be 1), tag = %@", (int)message.deliveries.count,  message.messageTag);
+        [self.delegate deleteObject:message];
+        [self flushOutgoingMessages:restMessages];
     }
 }
 
@@ -6083,7 +6123,7 @@ NSError * makeSendError(NSString * reason) {
 #else
         NSLog(@"#ERROR: verifyKeyWithHandler failed, no public key");
         handler(NO,NO);
-        [AppDelegate.instance showFatalErrorAlertWithMessage:@"fatal_error_no_public_key_message" withTitle:nil];
+        [AppDelegate.instance showFatalErrorAlertWithMessage:NSLocalizedString(@"fatal_error_no_public_key_message",nil) withTitle:nil];
         [self disable];
 #endif
     } else {
@@ -6867,7 +6907,7 @@ NSError * makeSendError(NSString * reason) {
     } else {
         [self setState: kBackendStopped];
     }
-    if (oldState == kBackendStopping || oldState == kBackendDisabling) {
+    if (oldState == kBackendStopping || oldState == kBackendDisabling || oldState == kBackendDisabled) {
         [self cancelStateNotificationDelayTimer];
         if ([self.delegate respondsToSelector:@selector(backendDidStop)]) {
             [self.delegate backendDidStop];
