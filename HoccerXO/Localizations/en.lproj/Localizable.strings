@@ -58,7 +58,7 @@
 "operation_failed_default_title"    = "Operation Failed";
 "operation_failed_default_message"  = "The operation has failed. Check you network connection and try again later";
 
-"fatal_error_no_public_key_message" = "The operating system has denied the keychain access for the app. If this happens again after restaring the app you switch your device off and reboot it.";
+"fatal_error_no_public_key_message" = "The operating system has denied the keychain access for the app. If this happens again after restaring the app, switch your device off and reboot it.";
 
 
 "hoccer_tutorial_url" = "http://faq.hoccer.com/tutorial-xo/";
