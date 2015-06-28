@@ -365,6 +365,7 @@ CGPoint _correctContentOffset;
 
 - (void) segmentChanged: (id) sender {
     if (FETCHED_RESULTS_DEBUG) NSLog(@"ContactViewController:segmentChanged, sender= %@", sender);
+    self.searchBar.text = nil;
     [self updateFetchRequest];
 }
 
