@@ -337,7 +337,7 @@
 
 "contact_relationship_removed_title"            = "Relationship removal";
 "contact_relationship_removed_message"          = "Relationship with contact '%@' has been removed.";
-"contact_kept_and_relationship_removed_message" = "No Friend relationship with contact '%@' exists, but contact is still acquainted because of memberships in group(s) > %@ <.";
+"contact_kept_and_relationship_removed_message" = "No Friend relationship with contact '%@' exists, but contact is still acquainted because of your common membership in group(s) > %@ <.";
 
 // for invitation in contact sheet
 "contact_friend_invitation_section_title"       = "You are invited as friend";
