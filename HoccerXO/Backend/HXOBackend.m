@@ -1123,7 +1123,7 @@ NSError * makeSendError(NSString * reason) {
             
              [self inDeliveryConfirmMessage: message withDelivery: delivery];
              
-            if (message.attachment == nil) {
+            if (message.attachment == nil && message.contact.hasNotificationsEnabled) {
                 [SoundEffectPlayer messageArrived];
             }
             //[self checkTransferQueues];
@@ -4753,7 +4753,9 @@ NSError * makeSendError(NSString * reason) {
     [self.delegate saveDatabase];
     [self updateAttachmentInDeliveryStateIfNecessary:theAttachment];
     [self dequeueDownloadOfAttachment:theAttachment];
-    [SoundEffectPlayer messageArrived];
+    if (theAttachment.message.contact.hasNotificationsEnabled) {
+        [SoundEffectPlayer messageArrived];
+    }
 }
 
 - (void) uploadStarted:(Attachment *)theAttachment {
