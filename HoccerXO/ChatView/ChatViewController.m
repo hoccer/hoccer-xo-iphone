@@ -993,7 +993,7 @@ nil
             return;
             
         }
-    } else if ((!self.partner.isFriend && !self.partner.isKept) || self.partner.isBlocked) {
+    } else if (!self.partner.isFriend) {
         NSString * messageText = nil;
         if (self.partner.isBlocked) {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];

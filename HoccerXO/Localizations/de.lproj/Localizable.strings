@@ -231,7 +231,7 @@
 
 "chat_cant_send_alert_title"                    = "Nachricht kann nicht gesendet werden";
 "chat_contact_blocked_message"                  = "Der Kontakt ist geblockt.";
-"chat_relationship_removed_message"             = "Es existiert keine Beziehung zu diesem Kontakt mehr.";
+"chat_relationship_removed_message"             = "Es existiert keine Beziehung zu diesem Kontakt mehr. Versuche, den Kontakt über die Profilansicht als Freund einzuladen.";
 "chat_message_too_long_message"                 = "Die Nachricht ist länger als %d bytes. Bitte fasse Dich kurz.";
 "chat_wait_for_invitees_message"                = "Du kannst keine Nachrichten an die Gruppe verschicken weil noch niemand deine Einladung angenommen hat.";
 "chat_group_you_are_alone_message"              = "Du kannst keine Nachrichten an die Gruppe verschicken weil sie ausser dir keine Mitglieder hat. Du kannst unter ‘Gruppen‘ deine Freunde einladen.";
