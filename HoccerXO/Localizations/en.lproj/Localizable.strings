@@ -287,6 +287,9 @@
 "chat_worldwide_intro_6_hours"                  = "after 6 hours";
 "chat_worldwide_intro_24_hours"                 = "after 24 hours";
 
+"chat_nearby_intro_title"                       = "About Nearby Mode";
+"chat_nearby_intro_message"                     = "In the Nearby mode you can immediately chat with people around you who have also activated nearby-mode. Share media files with the nearby group or single contacts in your vicinity (100m) without making friends with them beforehand. Nearby-mode is deactivated after leaving the nearby view.";
+
 
 //==============================================================================
 // Collection

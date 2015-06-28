@@ -289,6 +289,10 @@
 "chat_worldwide_intro_14_hours"                 = "24 Stunden";
 
 
+"chat_nearby_intro_title"                       = "In der Nähe";
+"chat_nearby_intro_message"                     = "In der Ansicht 'In der Nähe' kannst du sofort mit Leuten in deiner unmittelbaren Umgebung (100m) chatten, die ebenfalls den in der Nähe-Modus aktiviert haben. Teile jede beliebige Datei mit der Nahebei-Gruppe oder einzelnen Kontakten in deiner Nähe, ohne dich vorher mit Ihnen angefreundet zu haben. Der in der Nähe-Modus wird automatisch deaktiviert mit Verlassen der Ansicht.";
+
+
 
 //==============================================================================
 // Collection

@@ -69,6 +69,8 @@ NSString * const kHXOWorldwideGroupTag          = @"WorldwideGroupTag";
 NSString * const kHXOWorldwideDialogShown       = @"WorldwideDialogShown";
 NSString * const kHXOWorldwideAutoDownload      = @"WorldwideAutoDownload";
 
+NSString * const kHXONearbyDialogShown       = @"NearbyDialogShown";
+
 @implementation HXOUserDefaults
 
 + (void) initialize {

@@ -261,6 +261,8 @@
     [self configureForMode:self.environmentMode];
     if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
         [self showFirstTimeWorldwideAlert];
+    } else if (self.environmentMode == ACTIVATION_MODE_NEARBY) {
+        [self showFirstTimeNearbyAlert];
     }
 }
 
@@ -269,7 +271,7 @@
     
     BOOL dialogShown = [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOWorldwideDialogShown]];
     if (dialogShown) {
-        // return;
+        return;
     }
     
     
@@ -325,6 +327,25 @@
     [alert show];
 }
 
+// main context only
+- (void) showFirstTimeNearbyAlert {
+    
+    BOOL dialogShown = [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXONearbyDialogShown]];
+    if (dialogShown) {
+        return;
+    }
+    
+    
+    NSString * message = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_intro_message",nil)];
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"chat_nearby_intro_title", nil)
+                                                     message: NSLocalizedString(message, nil)
+                                             completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                 [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXONearbyDialogShown]];
+                                             }
+                                           cancelButtonTitle: nil
+                                           otherButtonTitles: NSLocalizedString(@"ok", nil),nil];
+    [alert show];
+}
 
 
 #pragma mark - Table View
