@@ -420,8 +420,8 @@
                                     SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'worldwideMember' AND $member.state == 'joined').@count > 1 ))",myWorldWideGroupId]];
     } else {
         [predicates addObject: [NSPredicate predicateWithFormat:
-                                @"relationshipState == 'friend' OR (relationshipState == 'kept' AND messages.@count > 0) OR \
-                                    relationshipState == 'blocked' OR \
+                                @"relationshipState == 'friend' OR \
+                                   ((relationshipState == 'kept' OR relationshipState == 'blocked') AND messages.@count > 0) OR \
                                 (type == 'Group' AND \
                                     (myGroupMembership.state == 'joined' OR \
                                         myGroupMembership.state == 'suspended' OR \
