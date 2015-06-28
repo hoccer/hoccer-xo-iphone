@@ -269,7 +269,7 @@
     
     BOOL dialogShown = [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOWorldwideDialogShown]];
     if (dialogShown) {
-        return;
+        // return;
     }
     
     
@@ -278,6 +278,7 @@
                                                      message: NSLocalizedString(message, nil)
                                              completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
                                                  unsigned long worldwide_delay = 0;
+#if 0
                                                  switch (buttonIndex) {
                                                      case 0: {
                                                          // 0 min
@@ -290,20 +291,42 @@
                                                      }
                                                          break;
                                                      case 2:
-                                                         // 6 hours min
+                                                         // 6 hours
                                                          worldwide_delay = 60 * 60 * 6;
                                                          break;
                                                  }
+#else
+                                                 switch (buttonIndex) {
+                                                     case 0: {
+                                                         // 60 min
+                                                         worldwide_delay = 60 * 60;
+                                                     }
+                                                         break;
+                                                     case 1: {
+                                                         // 6 hours
+                                                         worldwide_delay =  60 * 60 * 6;
+                                                     }
+                                                         break;
+                                                     case 2:
+                                                         // 24 hours min
+                                                         worldwide_delay = 60 * 60 * 24;
+                                                         break;
+                                                 }
+#endif
                                                  [[HXOUserDefaults standardUserDefaults] setValue:[NSNumber numberWithUnsignedLong:worldwide_delay] forKey:kHXOWorldwideTimeToLive];
                                                  [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOWorldwideDialogShown]];
                                              }
                                            cancelButtonTitle: nil
+#if 0
                                            otherButtonTitles: NSLocalizedString(@"chat_worldwide_intro_0_min", nil), NSLocalizedString(@"chat_worldwide_intro_30_min", nil), NSLocalizedString(@"chat_worldwide_intro_6_hours", nil),nil];
+#else
+                                            otherButtonTitles: NSLocalizedString(@"chat_worldwide_intro_1_hour", nil), NSLocalizedString(@"chat_worldwide_intro_6_hours", nil), NSLocalizedString(@"chat_worldwide_intro_24_hours", nil),nil];
+#endif
     [alert show];
 }
 
 
-    
+
 #pragma mark - Table View
 
 - (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -158,9 +158,6 @@
             <key>Titles</key>
             <array>
                 <string>ww_0</string>
-                <string>ww_1</string>
-                <string>ww_5</string>
-                <string>ww_10</string>
                 <string>ww_30</string>
                 <string>ww_1h</string>
                 <string>ww_6h</string>
@@ -170,9 +167,6 @@
             <key>Values</key>
             <array>
                 <integer>0</integer>
-                <integer>60</integer>
-                <integer>300</integer>
-                <integer>600</integer>
                 <integer>1800</integer>
                 <integer>3600</integer>
                 <integer>21600</integer>

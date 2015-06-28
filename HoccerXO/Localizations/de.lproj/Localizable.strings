@@ -281,9 +281,12 @@
 
 "chat_worldwide_intro_title"                    = "Weltweit";
 "chat_worldwide_intro_message"                  = "Mit der Weltweit-Funktion kannst du mit zufällig ausgewählten Teilnehmern kommunizieren, die ebenfalls 'Weltweit' aktiviert haben. Mache dich bitte mit den Einstellungen zu diesem Modus vertraut. Wie lange möchstest du nach dem Verlassen der 'Weltweit'-Ansicht noch weltweit erreichbar sein?";
+
 "chat_worldwide_intro_0_min"                    = "Gar nicht";
 "chat_worldwide_intro_30_min"                   = "30 Minuten";
+"chat_worldwide_intro_1_hour"                   = "1 Stunde";
 "chat_worldwide_intro_6_hours"                  = "6 Stunden";
+"chat_worldwide_intro_14_hours"                 = "24 Stunden";
 
 
 
