@@ -1627,6 +1627,15 @@ NSError * makeSendError(NSString * reason) {
         [self setState:kBackendDisabled];
         return;
     }
+        
+    if (!performRegistration) {
+        BOOL mugshotmade = [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOShowMugshotDialog];
+        if (mugshotmade) {
+            [AppDelegate.instance showGenericAlertWithTitle:@"mugshot_made_title" andMessage:@"mugshot_made_message" withOKBlock:^{
+                [[HXOUserDefaults standardUserDefaults] setBool: NO forKey: kHXOShowMugshotDialog];
+            }];
+        }
+    }
     _performRegistration = performRegistration;
     [self setState: kBackendConnecting];
     _startedConnectingTime = [NSDate new];

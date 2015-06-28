@@ -1240,6 +1240,7 @@ BOOL sameObjects(id obj1, id obj2) {
                 [UIImageJPEGRepresentation(myImage,photoQualityCompressionSetting/10.0) writeToURL:myFileURL atomically:NO];
                 NSURL * permanentURL = [AppDelegate moveDocumentToPermanentLocation:myFileURL];
                 NSLog(@"Created and moved mugshot to %@", permanentURL);
+                [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: kHXOShowMugshotDialog];
             }
         }];
     }

@@ -71,6 +71,8 @@ FOUNDATION_EXPORT NSString * const kHXOWorldwideAutoDownload;
 
 FOUNDATION_EXPORT NSString * const kHXONearbyDialogShown;
 
+FOUNDATION_EXPORT NSString * const kHXOShowMugshotDialog;
+
 
 @interface HXOUserDefaults : NSObject
 

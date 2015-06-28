@@ -71,6 +71,10 @@ NSString * const kHXOWorldwideAutoDownload      = @"WorldwideAutoDownload";
 
 NSString * const kHXONearbyDialogShown       = @"NearbyDialogShown";
 
+NSString * const kHXOShowMugshotDialog       = @"ShowMugshotDialog";
+
+
+
 @implementation HXOUserDefaults
 
 + (void) initialize {

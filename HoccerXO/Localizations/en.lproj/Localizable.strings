@@ -802,4 +802,11 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 
 "settings_nav_title" = "Settings";
 
+//==============================================================================
+// Misc
+//==============================================================================
+"mugshot_made_title"        = "Mugshot(s) available";
+"mugshot_made_message"      = "A new Mugshot has been made while the app was launched. You can inspect it in the media browser.";
+
+
 // See Settings.strings
