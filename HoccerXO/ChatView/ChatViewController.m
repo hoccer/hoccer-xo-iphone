@@ -993,14 +993,14 @@ nil
             return;
             
         }
-    } else if (!self.partner.isFriend && !(self.partner.isWorldwide && !(self.partner.isKept))) {
+    } else if ((!self.partner.isFriend && !self.partner.isKept) || self.partner.isBlocked) {
         NSString * messageText = nil;
         if (self.partner.isBlocked) {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];
         } else if (self.partner.isNearby || self.partner.isWorldwide) {
             if (!self.partner.isPresent && self.partner.isNearby) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_contact_offline", nil)];
-            }else if (!self.partner.isPresent && self.partner.isWorldwide) {
+            } else if (self.partner.isSuspendedWorldwideContact) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_worldwide_contact_offline", nil)];
             }
         } else {
