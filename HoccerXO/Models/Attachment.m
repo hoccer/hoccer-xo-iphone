@@ -335,7 +335,10 @@
         // incoming
         Delivery * delivery = self.message.deliveries.anyObject;
         BOOL wwAutoDownload = [[HXOUserDefaults standardUserDefaults] boolForKey:kHXOWorldwideAutoDownload];
-        if (!wwAutoDownload && delivery.group.isWorldwide) {
+        if (!wwAutoDownload &&
+            (delivery.group.isWorldwide ||
+             (delivery.sender.isGroupFriend &&  delivery.sender.isWorldwideContact)))
+        {
             return YES;
         }
         
