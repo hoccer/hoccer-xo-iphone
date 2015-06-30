@@ -1053,7 +1053,7 @@ BOOL sameObjects(id obj1, id obj2) {
     ((UITabBarController *)self.window.rootViewController).delegate = self;
     self.tabBarController = (UITabBarController*)self.window.rootViewController;
     
-    if (passcodeRequired) {
+    if (passcodeRequired && !isFirstRun) {
         [self performSelectorOnMainThread: @selector(requestUserAuthentication:) withObject: self waitUntilDone: NO];
     }
 
@@ -4259,7 +4259,7 @@ enum {
     PasscodeViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"PasscodeDialog"];
     vc.completionBlock = ^() {
         [self.chatBackend enable];
-        [self.chatBackend start: NO];
+        [self.chatBackend start: ![UserProfile sharedProfile].isRegistered];
     };
     UIViewController * root = self.window.rootViewController;
     if (root.presentedViewController) {
