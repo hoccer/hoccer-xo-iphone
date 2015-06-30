@@ -26,6 +26,7 @@
 
 @property (nonatomic, readonly) DatasheetSection    * connectionTutorialSection;
 @property (nonatomic, readonly) DatasheetItem       * webTutorial;
+@property (nonatomic, readonly) DatasheetItem       * webTutorialIE;
 @property (nonatomic, readonly) DatasheetItem       * macTutorial;
 @property (nonatomic, readonly) DatasheetItem       * winXpTutorial;
 @property (nonatomic, readonly) DatasheetItem       * win7Tutorial;
@@ -41,6 +42,7 @@
 @synthesize addressItem   = _addressItem;
 @synthesize connectionTutorialSection = _connectionTutorialSection;
 @synthesize webTutorial = _webTutorial;
+@synthesize webTutorialIE = _webTutorialIE;
 @synthesize macTutorial = _macTutorial;
 @synthesize winXpTutorial = _winXpTutorial;
 @synthesize win7Tutorial = _win7Tutorial;
@@ -87,7 +89,7 @@
 - (BOOL) isCancelable { return NO; }
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
-    if ([item isEqual: self.webTutorial] || [item isEqual: self.addressItem] || [item isEqual: self.macTutorial] || [item isEqual: self.win7Tutorial] || [item isEqual: self.winXpTutorial] || [item isEqual: self.win8Tutorial]) {
+    if ([item isEqual: self.webTutorial] || [item isEqual: self.webTutorialIE] ||[item isEqual: self.addressItem] || [item isEqual: self.macTutorial] || [item isEqual: self.win7Tutorial] || [item isEqual: self.winXpTutorial] || [item isEqual: self.win8Tutorial]) {
         return self.server.canRun && self.server.isRunning;
     }
     return [super isItemVisible: item];
@@ -205,7 +207,7 @@
 - (DatasheetSection*) connectionTutorialSection {
     if ( ! _connectionTutorialSection) {
         _connectionTutorialSection = [DatasheetSection datasheetSectionWithIdentifier: @"server_tutorial_section"];
-        _connectionTutorialSection.items = @[self.webTutorial/* self.macTutorial, self.win8Tutorial, self.win7Tutorial, self.winXpTutorial*/];
+        _connectionTutorialSection.items = @[self.webTutorial, self.webTutorialIE/* self.macTutorial, self.win8Tutorial, self.win7Tutorial, self.winXpTutorial*/];
         _connectionTutorialSection.title = [[NSAttributedString alloc] initWithString: HXOLocalizedString(@"server_tutorial_section_title", nil) attributes: nil];
     }
     return _connectionTutorialSection;
@@ -219,6 +221,16 @@
     }
     return _webTutorial;
 }
+
+- (DatasheetItem*) webTutorialIE {
+    if ( ! _webTutorialIE) {
+        _webTutorialIE = [self itemWithIdentifier: @"server_tutorial_title_web_IE" cellIdentifier: @"DatasheetActionCell"];
+        _webTutorialIE.accessoryStyle = DatasheetAccessoryDisclosure;
+        _webTutorialIE.segueIdentifier = @"showTutorial";
+    }
+    return _webTutorialIE;
+}
+
 
 - (DatasheetItem*) macTutorial {
     if ( ! _macTutorial) {
@@ -262,6 +274,8 @@
     NSString * tutorialKey;
     if ([item isEqual: self.webTutorial]) {
         tutorialKey = @"webinterface";
+    } else if ([item isEqual: self.webTutorialIE]) {
+        tutorialKey = @"webinterface_IE";
     } else if ([item isEqual: self.macTutorial]) {
         tutorialKey = @"webdav_mac";
     } else if ([item isEqual: self.win8Tutorial]) {

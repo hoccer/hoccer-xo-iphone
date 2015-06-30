@@ -309,6 +309,7 @@
 		E95176101913EB6100EFD1C6 /* LineFeature.m in Sources */ = {isa = PBXBuildFile; fileRef = E951760A1913EB6100EFD1C6 /* LineFeature.m */; };
 		E95176111913EB6100EFD1C6 /* ThrowDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = E951760C1913EB6100EFD1C6 /* ThrowDetector.m */; };
 		E95176141913ECCB00EFD1C6 /* NSObject+DelegateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176131913ECCB00EFD1C6 /* NSObject+DelegateHelper.m */; };
+		E9546CA81B42A642007FE754 /* webinterface_IE.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E9546CA61B42A642007FE754 /* webinterface_IE.rtf */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
 		E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */; };
 		E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E95A75A118D24C060027AE3E /* OpenSSLCrypto.m */; };
@@ -1135,6 +1136,8 @@
 		E95176121913ECCB00EFD1C6 /* NSObject+DelegateHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+DelegateHelper.h"; sourceTree = "<group>"; };
 		E95176131913ECCB00EFD1C6 /* NSObject+DelegateHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+DelegateHelper.m"; sourceTree = "<group>"; };
 		E953EEF61868EB8400381836 /* HoccerXO-23.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-23.xcdatamodel"; sourceTree = "<group>"; };
+		E9546CA71B42A642007FE754 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/webinterface_IE.rtf; sourceTree = "<group>"; };
+		E9546CB71B42A66D007FE754 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = de; path = de.lproj/webinterface_IE.rtf; sourceTree = "<group>"; };
 		E959F0861738553C00CD14BB /* TDSemiModal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModal.h; path = Source/TDSemiModal.h; sourceTree = "<group>"; };
 		E959F0871738553C00CD14BB /* TDSemiModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TDSemiModalViewController.h; path = Source/TDSemiModalViewController.h; sourceTree = "<group>"; };
 		E959F0881738553C00CD14BB /* TDSemiModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TDSemiModalViewController.m; path = Source/TDSemiModalViewController.m; sourceTree = "<group>"; };
@@ -2032,6 +2035,7 @@
 				635127B81ABB6FFD00FA0C2B /* webdav_win8.rtf */,
 				635127C71ABB70F100FA0C2B /* webdav_winxp.rtf */,
 				63C0F82C1AD5A9FB00709B0C /* webinterface.rtf */,
+				E9546CA61B42A642007FE754 /* webinterface_IE.rtf */,
 			);
 			path = Localizations;
 			sourceTree = "<group>";
@@ -3169,6 +3173,7 @@
 				C576EC2D1934CCB200C0D254 /* cover-art-fallback@2x.png in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
 				63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */,
+				E9546CA81B42A642007FE754 /* webinterface_IE.rtf in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
 				63DEC02319B0A720003804E8 /* Albums@2x.png in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
@@ -3696,6 +3701,15 @@
 				C5EB3CDB1A82646A00E236F6 /* de */,
 			);
 			name = "com.hoccer.Hoccer-XO-Dev.strings";
+			sourceTree = "<group>";
+		};
+		E9546CA61B42A642007FE754 /* webinterface_IE.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E9546CA71B42A642007FE754 /* en */,
+				E9546CB71B42A66D007FE754 /* de */,
+			);
+			name = webinterface_IE.rtf;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
