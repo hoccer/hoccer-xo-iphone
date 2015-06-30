@@ -286,7 +286,7 @@
 "chat_worldwide_intro_30_min"                   = "30 Minuten";
 "chat_worldwide_intro_1_hour"                   = "1 Stunde";
 "chat_worldwide_intro_6_hours"                  = "6 Stunden";
-"chat_worldwide_intro_14_hours"                 = "24 Stunden";
+"chat_worldwide_intro_24_hours"                 = "24 Stunden";
 
 
 "chat_nearby_intro_title"                       = "In der Nähe";
