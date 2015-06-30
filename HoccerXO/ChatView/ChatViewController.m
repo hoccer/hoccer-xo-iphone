@@ -2011,6 +2011,7 @@ NSError * makeMediaError(NSString * reason) {
             if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage: trashCurrentAttachment");
             [self trashCurrentAttachment];
         }
+        self.pickingAttachment = NO;
     });
 }
 
@@ -2031,6 +2032,7 @@ NSError * makeMediaError(NSString * reason) {
         self.currentMultiAttachment = nil;
     }
     [self decorateAttachmentButton:nil];
+    self.pickingAttachment = NO;
     // TODO:
     //_attachmentButton.hidden = NO;
 }
