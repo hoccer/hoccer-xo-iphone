@@ -99,7 +99,7 @@
 "WorldwideTimeToLive"       = "Verlassen nach:";
 "WorldwideAutoDownload"     = "Anhänge automatisch laden";
 
-"ww_0"                      = "0 min (Sofort)";
+"ww_0"                      = "Sofort (nicht empfohlen)";
 "ww_1"                      = "1 Minute";
 "ww_5"                      = "5 Minuten";
 "ww_10"                     = "10 Minuten";
