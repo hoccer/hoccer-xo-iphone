@@ -387,7 +387,7 @@ static NSString * filenameOf(Attachment * attachment) {
 + (void) adoptOrphanedFiles:(NSArray*)newFiles changedFiles:(NSArray*)changedFiles deletedFiles:(NSArray*)deletedFiles withRemovingAttachmentsNotInFiles:(NSArray*)allFiles inDirectory:(NSURL*)inDirectory {
     AppDelegate *delegate = [AppDelegate instance];
     
-    [delegate performWithLockingId:@"adoptOrphanedFiles" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+    [delegate performWithLockingId:@"Attachments" inNewBackgroundContext:^(NSManagedObjectContext *context) {
         
         // fetch
         NSError * myError = nil;
@@ -433,13 +433,18 @@ static NSString * filenameOf(Attachment * attachment) {
             if (DEBUG_QUERY) NSLog(@"done = %d",done);
             
             if (fetchRequest.fetchOffset > totalCount + fetchRequest.fetchLimit * 2) {
-                NSLog(@"fetching too much slices, starting over");
+                NSLog(@"fetching too much slices, starting over with one fetch");
                 [context reset];
                 attachments = [NSMutableArray new];
                 fetchRequest.fetchOffset = 0;
                 fetchRequest.fetchLimit = -1;
                 totalCount = [context countForFetchRequest:fetchRequest error:&myError];
+                /*
                 fetchRequest.fetchLimit = 200;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [AppDelegate.instance saveContext];
+                });
+                 */
             }
 
         } while (!done);

@@ -2527,8 +2527,12 @@
 }
 
 - (void) prepareForDeletion {
-    if (TRACE_ATTACHMENT_DELETION) NSLog(@"Attachment: prepareForDeletion: contentURL %@", self.contentURL);
+    if (TRACE_ATTACHMENT_DELETION) NSLog(@"Attachment: prepareForDeletion: contentURL %@ ownedURL %@", self.contentURL, self.ownedURL);
     [super prepareForDeletion];
+    if (![AppDelegate.instance.currentObjectContext isEqual:AppDelegate.instance.mainObjectContext]) {
+        if (TRACE_ATTACHMENT_DELETION) NSLog(@"Attachment: prepareForDeletion: not in main context, doing nothing");
+        return;
+    }
     
     self.previewImage = nil; // purge from image cache
     
@@ -2546,6 +2550,10 @@
     
     // remove associated media file if not referenced by other attachments
     if (self.ownedURL != nil && self.ownedURL.length > 0) {
+        NSURL * myURL = [NSURL URLWithString:self.ownedURL];
+        if (TRACE_ATTACHMENT_DELETION) NSLog(@"Deleting ownedURL %@", myURL);
+        [Attachment deleteFileAtUrl:myURL];
+        /*
         AppDelegate * delegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
         NSError *error;
         NSDictionary * vars = @{ @"ownedURL" : self.ownedURL};
@@ -2555,16 +2563,19 @@
             NSLog(@"Fetch request failed: %@", error);
             abort();
         }
-        if (attachments.count > 0) {
-            if (attachments.count == 1) {
-                // delete ownedURL because it is only referenced by one message
-                if (TRACE_ATTACHMENT_DELETION) NSLog(@"Deleting ownedURL %@, not referenced by other messages", self.ownedURL);
-                NSURL * myURL = [NSURL URLWithString:self.ownedURL];
-                [Attachment deleteFileAtUrl:myURL];
-            } else {
-                if (TRACE_ATTACHMENT_DELETION) NSLog(@"Keeping ownedURL %@, is referenced by other messages", self.ownedURL);
-            }
-        }        
+        if (TRACE_ATTACHMENT_DELETION) NSLog(@"Found %lu attachments referenced by ownedURL %@", attachments.count, self.ownedURL);
+        
+        // the fetch request will not return the attachment being deleted
+        
+        if (attachments.count == 0) {
+            // delete ownedURL because it is only referenced by one message
+            if (TRACE_ATTACHMENT_DELETION) NSLog(@"Deleting ownedURL %@, not referenced by other messages", self.ownedURL);
+            NSURL * myURL = [NSURL URLWithString:self.ownedURL];
+            [Attachment deleteFileAtUrl:myURL];
+        } else {
+            if (TRACE_ATTACHMENT_DELETION) NSLog(@"Keeping ownedURL %@, is referenced by other messages", self.ownedURL);
+        }
+         */
     } else {
         if (TRACE_ATTACHMENT_DELETION) NSLog(@"File has no ownedURL, not deleting local URL %@", self.localURL);
     }
@@ -2773,5 +2784,16 @@
         [newAttachment makeDataAttachment:localURL anOtherURL:assetURL withCompletion:completion];
     }
 }
+
+
+- (void)performSafeDeletion {
+    [AppDelegate.instance saveContext];
+    NSManagedObjectID * currentAttachmentId = self.objectID;
+    [AppDelegate.instance performWithLockingId:@"Attachments" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        Attachment * currentAttachment = (Attachment*)[context objectWithID:currentAttachmentId];
+        [AppDelegate.instance deleteObject:currentAttachment inContext:context];
+    }];
+}
+
 
 @end

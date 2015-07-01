@@ -746,7 +746,8 @@ NSError * makeSendError(NSString * reason) {
             [AppDelegate.instance showOperationFailedAlert:NSLocalizedString(@"attachment_not_available_message",nil) withTitle:NSLocalizedString(@"attachment_not_available_title",nil) withOKBlock:^{
             }];
             if (![AppDelegate.instance hasManagedObjectBeenDeleted:attachment]) {
-                [AppDelegate.instance deleteObject:attachment];
+                //[AppDelegate.instance deleteObject:attachment];
+                [attachment performSafeDeletion];
             }
             if (completion) completion(makeSendError(@"attachment unavailable"));
             return;

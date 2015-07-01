@@ -482,7 +482,8 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
                         attachment.ownedURL = nil;
                     }
                 }
-                [[AppDelegate instance] deleteObject:attachment];
+                [attachment performSafeDeletion];
+                //[[AppDelegate instance] deleteObject:attachment];
             }
         }
     } else if (cancel) {

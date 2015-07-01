@@ -60,15 +60,16 @@
 #import "HXOAudioPlaybackButtonController.h"
 #import "NSString+FromTimeInterval.h"
 
-#define DEBUG_ATTACHMENT_BUTTONS NO
-#define DEBUG_TABLE_CELLS NO
-#define DEBUG_NOTIFICATIONS NO
-#define DEBUG_APPEAR NO
-#define READ_DEBUG NO
-#define DEBUG_OBSERVERS NO
-#define DEBUG_CELL_HEIGHT_CACHING NO
-#define DEBUG_MULTI_EXPORT NO
-#define DEBUG_ROTATION NO
+#define DEBUG_ATTACHMENT_BUTTONS    NO
+#define DEBUG_TABLE_CELLS           NO
+#define DEBUG_NOTIFICATIONS         NO
+#define DEBUG_APPEAR                NO
+#define READ_DEBUG                  NO
+#define DEBUG_OBSERVERS             NO
+#define DEBUG_CELL_HEIGHT_CACHING   NO
+#define DEBUG_MULTI_EXPORT          NO
+#define DEBUG_ROTATION              NO
+#define DEBUG_ATTACHMENT_STORE      NO
 
 static const NSUInteger kMaxMessageBytes = 10000;
 static const NSTimeInterval kTypingTimerInterval = 3;
@@ -101,6 +102,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 @property  BOOL                                                keyboardShown;
 @property  BOOL                                                pickingAttachment;
+@property  BOOL                                                hasPickedAttachment;
 
 @property (strong) UIBarButtonItem * actionButton;
 
@@ -358,10 +360,11 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     [self scrollToRememberedCellOrToBottomIfNone];
     [self restoreTypedBody];
-    if (!self.pickingAttachment) {
+    if (!self.pickingAttachment && !self.hasPickedAttachment) {
         [self restoreAttachments];
     } else {
         self.pickingAttachment = NO;
+        self.hasPickedAttachment = NO;
     }
     
     [AppDelegate setWhiteFontStatusbarForViewController:self];
@@ -539,11 +542,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 
 -(void)rememberAttachments {
+    if (DEBUG_ATTACHMENT_STORE) NSLog(@"ChatViewController:rememberAttachments");
     
     if (self.currentAttachment != nil) {
         if (_currentPickInfo != nil) {
             if (_currentExportSession != nil) {
                 [_currentExportSession cancelExport];
+                if (DEBUG_ATTACHMENT_STORE) NSLog(@"ChatViewController:rememberAttachments: cancel export");
                 // attachment will be trashed when export session canceling will call finishPickedAttachmentProcessingWithImage
                 return;
             } else {
@@ -552,11 +557,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
         } else {
             // there is a picked and exported attachment to remember
             self.partner.savedAttachment = self.currentAttachment;
+            if (DEBUG_ATTACHMENT_STORE) NSLog(@"ChatViewController:rememberAttachments: saved current attachments");
         }
         self.currentAttachment = nil;
     } else if (self.currentMultiAttachment != nil) {
         NSDictionary * savedAttachmentsDict = [ChatViewController encodeMultiAttachments:self.currentMultiAttachment];
         self.partner.savedAttachments = savedAttachmentsDict;
+        if (DEBUG_ATTACHMENT_STORE) NSLog(@"ChatViewController:rememberAttachments: saved current multi-attachments");
         self.currentMultiAttachment = nil;
     }
     [self decorateAttachmentButton:nil];
@@ -567,16 +574,19 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
 -(void)restoreAttachments {
     
+    if (DEBUG_ATTACHMENT_STORE) NSLog(@"ChatViewController:restoreAttachments, saved = %@, multi = %@", self.partner.savedAttachment, self.partner.savedAttachments);
+    
     if (self.partner.savedAttachment != nil) {
         self.currentAttachment = self.partner.savedAttachment;
         self.partner.savedAttachment = nil;
         [AppDelegate.instance saveDatabase];
+        if (DEBUG_ATTACHMENT_STORE) NSLog(@"ChatViewController:restoreAttachments : restored");
         [self.currentAttachment ensurePreviewImageWithCompletion:^(NSError *theError) {
+            if (DEBUG_ATTACHMENT_STORE) NSLog(@"ChatViewController:restoreAttachments : finishing picking");
             [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:theError];
             if (theError != nil) {
                 NSLog(@"Failed to load preview for saved attachment, trashing %@, error = %@", self.currentAttachment, theError);
             }
-            [self finishPickedAttachmentProcessingWithImage:self.currentAttachment.previewImage withError:theError];
         }];
     } else if (self.partner.savedAttachments != nil) {
         [self decodeMultiAttachments:self.partner.savedAttachments whenFinished:^(NSArray *result) {
@@ -586,16 +596,20 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             [self finishPickedAttachmentProcessingWithImage:preview withError:nil];
         }];
     } else {
+        if (DEBUG_ATTACHMENT_STORE) NSLog(@"ChatViewController:restoreAttachments : decorating attachment button with nil");
         [self decorateAttachmentButton:nil];
     }
 }
 
 
 - (void) viewWillDisappear:(BOOL)animated {
+    if (DEBUG_APPEAR) NSLog(@"ChatViewController:viewWillDisappear");
     
     [self rememberLastVisibleCell];
     [self rememberTypedBody];
-    [self rememberAttachments];
+    if (!self.pickingAttachment) {
+        [self rememberAttachments];
+    }
     
     if (self.throwObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.throwObserver];
@@ -1150,13 +1164,15 @@ nil
                             }];
                         } else {
                             NSLog(@"#ERROR: media export error: contentSize is 0, attachment=%@", attachment);
-                            [AppDelegate.instance deleteObject:attachment];
+                            [attachment performSafeDeletion];
+                            //[AppDelegate.instance deleteObject:attachment];
                             //[self unregisterBackgroundTask];
                             [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                         }
                     } else {
                         NSLog(@"#ERROR: media export failed, error: %@, attachment=%@", error, attachment);
-                        [AppDelegate.instance deleteObject:attachment];
+                        [attachment performSafeDeletion];
+                        //[AppDelegate.instance deleteObject:attachment];
                         //[self unregisterBackgroundTask];
                         [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                     }
@@ -1177,13 +1193,15 @@ nil
                             }];
                         } else {
                             NSLog(@"#ERROR: photo/video export error: contentSize is 0, attachment=%@", attachment);
-                            [AppDelegate.instance deleteObject:attachment];
+                            [attachment performSafeDeletion];
+                            //[AppDelegate.instance deleteObject:attachment];
                             //[self unregisterBackgroundTask];
                             [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                         }
                     } else {
                         NSLog(@"#ERROR: photo/video export failed, error: %@, attachment=%@", theError, attachment);
-                        [AppDelegate.instance deleteObject:attachment];
+                        [attachment performSafeDeletion];
+                        //[AppDelegate.instance deleteObject:attachment];
                         //[self unregisterBackgroundTask];
                         [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                     }
@@ -1527,6 +1545,8 @@ NSError * makeMediaError(NSString * reason) {
         [attachment makeGeoLocationAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
     } else if ([myMediaType isEqualToString:@"data"]) {
         [attachment makeDataAttachment: attachmentInfo[@"com.hoccer.xo.url1"] anOtherURL:attachmentInfo[@"com.hoccer.xo.url2"] withCompletion:completion];
+    } else {
+        NSLog(@"ERROR: didPickPasteboardAttachment: unknown media type: %@", myMediaType);
     }
 }
 
@@ -1999,6 +2019,9 @@ NSError * makeMediaError(NSString * reason) {
         [self.attachmentButton stopSpinning];
 
         if (theError == nil && theImage != nil) {
+            
+            NSLog(@"finishPickedAttachmentProcessingWithImage attachment = %@", self.currentAttachment);
+            
             if (theImage.size.height == 0) {
                 if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage: decorateAttachmentButton with currentAttachment.previewIcon");
                 [self decorateAttachmentButton:self.currentAttachment.previewIcon];
@@ -2007,6 +2030,7 @@ NSError * makeMediaError(NSString * reason) {
                 [self decorateAttachmentButton:theImage];
             }
             self.sendButton.enabled = YES;
+            self.hasPickedAttachment = YES;
         } else {
             if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage: trashCurrentAttachment");
             [self trashCurrentAttachment];
@@ -2026,13 +2050,22 @@ NSError * makeMediaError(NSString * reason) {
                 // NSLog(@"Picking still in progress, can't trash - or can I?");
             }
         }
-        [AppDelegate.instance deleteObject:self.currentAttachment];
+        /*
+        [AppDelegate.instance saveContext];
+        NSManagedObjectID * currentAttachmentId = self.currentAttachment.objectID;
+        [AppDelegate.instance performWithLockingId:@"adoptOrphanedFiles" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+            Attachment * currentAttachment = (Attachment*)[context objectWithID:currentAttachmentId];
+            [AppDelegate.instance deleteObject:currentAttachment inContext:context];
+        }];
+         */
+        [self.currentAttachment performSafeDeletion];
         self.currentAttachment = nil;
     } else if (self.currentMultiAttachment != nil) {
         self.currentMultiAttachment = nil;
     }
     [self decorateAttachmentButton:nil];
     self.pickingAttachment = NO;
+    self.hasPickedAttachment = NO;
     // TODO:
     //_attachmentButton.hidden = NO;
 }

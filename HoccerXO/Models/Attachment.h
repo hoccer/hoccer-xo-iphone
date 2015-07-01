@@ -199,6 +199,8 @@ typedef enum AttachmentStates {
 //- (void)protectFile;
 //- (void)unprotectFile;
 
+- (void)performSafeDeletion;
+
 +(BOOL)deleteFileAtUrl:(NSURL*)myURL;
 
 - (Attachment *) clone;
