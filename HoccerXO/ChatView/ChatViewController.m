@@ -2020,7 +2020,7 @@ NSError * makeMediaError(NSString * reason) {
 
         if (theError == nil && theImage != nil) {
             
-            NSLog(@"finishPickedAttachmentProcessingWithImage attachment = %@", self.currentAttachment);
+            if (DEBUG_ATTACHMENT_BUTTONS)NSLog(@"finishPickedAttachmentProcessingWithImage attachment = %@", self.currentAttachment);
             
             if (theImage.size.height == 0) {
                 if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage: decorateAttachmentButton with currentAttachment.previewIcon");
