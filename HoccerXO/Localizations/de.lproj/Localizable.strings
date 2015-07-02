@@ -362,16 +362,16 @@
 "contact_invited_me_as_friend_title"                  = "Freundschaftseinladung";
 "contact_invited_me_as_friend_message %@"             = "Eine Gruppenbekanntschaft namens ‘%@' hat dich eingeladen, ihr Freund zu werden.";
 
-"contact_accept_friend_failed_message %@"             = "Das Annehmen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_accept_friend_failed_message %@"             = "Das Annehmen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profil des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
 "contact_accept_friend_failed_title"                  = "Freundschaft annehmen fehlgeschlagen";
 
-"contact_refuse_friend_failed_message %@"             = "Das Ablehnen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_refuse_friend_failed_message %@"             = "Das Ablehnen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profil des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
 "contact_refuse_friend_failed_title"                  = "Freundschaft ablehnen fehlgeschlagen";
 
-"contact_invite_friend_failed_message %@"             = "Die Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_invite_friend_failed_message %@"             = "Die Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profil des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
 "contact_invite_friend_failed_title"                  = "Freundschaftseinladung fehlgeschlagen";
 
-"contact_disinvite_friend_failed_message %@"          = "Das Zurückziehen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profile des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
+"contact_disinvite_friend_failed_message %@"          = "Das Zurückziehen der Freundschaftseinladung von '%@' ist fehlgeschlagen. Überprüfe den Einladungsstatus im Profil des Kontakts sowie deine Verbindung und versuche es vielleicht später noch einmal.";
 "contact_disinvite_friend_failed_title"               = "Freundschaft zurückziehen fehlgeschlagen";
 
 "contact_invited_me_as_friend_accept_btn_title"       = "Annehmen";

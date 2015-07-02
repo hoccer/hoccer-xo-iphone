@@ -90,7 +90,7 @@
 // Attachments
 //==============================================================================
 
-"attachment_add_sheet_title"             = "Add Attachement from:";
+"attachment_add_sheet_title"             = "Add Attachment from:";
 //"attachment_src_photo_album_btn_title"   = "Album";
 "attachment_src_media_btn_title"         = "Media";
 "attachment_src_camera_btn_title"        = "Camera";
