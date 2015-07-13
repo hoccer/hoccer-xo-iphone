@@ -1848,7 +1848,7 @@ NSError * makeSendError(NSString * reason) {
 
 -(void)flushOutgoingMessages:(NSArray*)pending {
     if (pending.count == 0) {
-        NSLog(@"fflushOutgoingMessages: finished");
+        NSLog(@"flushOutgoingMessages: finished");
         return;
     }
     HXOMessage * message = pending.firstObject;
@@ -5606,8 +5606,8 @@ NSError * makeSendError(NSString * reason) {
                 NSDictionary * myDict = (NSDictionary*)responseOrError;
                 NSNumber * errorCode = myDict[@"code"];
                 if (errorCode != nil && errorCode.intValue == 0) {
-                    NSLog(@"inDeliveryConfirm : setting delivery state to ‘unknown'");
-                    delivery.state = @"unknown";
+                    NSLog(@"inDeliveryConfirm : setting delivery state to %@", kDeliveryStateUnknown);
+                    delivery.state = kDeliveryStateUnknown;
                 }
             }
         }

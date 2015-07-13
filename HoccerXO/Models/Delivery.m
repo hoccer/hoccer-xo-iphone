@@ -32,6 +32,7 @@ NSString * const kDeliveryStateAborted                      = @"aborted";
 NSString * const kDeliveryStateAbortedAcknowledged          = @"aborteddelivered";
 NSString * const kDeliveryStateFailedAcknowledged           = @"failedAcknowledged";
 NSString * const kDeliveryStateRejectedAcknowledged         = @"rejectedAcknowledged";
+NSString * const kDeliveryStateUnknown                      = @"unknown";
 
 
 NSString * const kDelivery_ATTACHMENT_STATE_NONE                            = @"none";
@@ -115,7 +116,8 @@ NSString * const kDelivery_ATTACHMENT_STATE_DOWNLOAD_ABORTED_ACKNOWLEDGED   = @"
                    kDeliveryStateAborted:@(3),
                    kDeliveryStateAbortedAcknowledged:@(4),
                    kDeliveryStateFailedAcknowledged:@(4),
-                   kDeliveryStateRejectedAcknowledged:@(4)
+                   kDeliveryStateRejectedAcknowledged:@(4),
+                   kDeliveryStateUnknown:@(7)
                    };
     }
     if (state == nil) {

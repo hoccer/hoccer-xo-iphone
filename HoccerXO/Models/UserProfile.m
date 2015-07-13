@@ -492,7 +492,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     if (cryptedJsonData != nil) {
         [[HXOUserDefaults standardUserDefaults] setValue: cryptedJsonData forKey: [self credentialsSettingWithId:myId]];
         [[HXOUserDefaults standardUserDefaults] synchronize];
-        NSLog(@"backed up credentials");
+        NSLog(@"backed up credentials with id %@",myId);
     }
 }
 

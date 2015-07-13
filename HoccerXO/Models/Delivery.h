@@ -29,6 +29,8 @@ FOUNDATION_EXPORT NSString * const kDeliveryStateAborted;
 FOUNDATION_EXPORT NSString * const kDeliveryStateAbortedAcknowledged;
 FOUNDATION_EXPORT NSString * const kDeliveryStateFailedAcknowledged;
 FOUNDATION_EXPORT NSString * const kDeliveryStateRejectedAcknowledged;
+FOUNDATION_EXPORT NSString * const kDeliveryStateUnknown;
+
 
 FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_NONE;
 FOUNDATION_EXPORT NSString * const kDelivery_ATTACHMENT_STATE_NEW;
