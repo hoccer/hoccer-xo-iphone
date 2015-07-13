@@ -1010,6 +1010,11 @@ BOOL sameObjects(id obj1, id obj2) {
                                                                                      Contact * chat = message.contact;
                                                                                      Contact * sender = delivery.sender;
                                                                                      NSString * title;
+                                                                                     
+                                                                                     if (!chat.hasNotificationsEnabled) {
+                                                                                         if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: Message received, but notifications disabled for chat %@",chat.nickName);
+                                                                                         return;
+                                                                                     }
 
                                                                                      if ([chat.clientId isEqualToString:sender.clientId]) {
                                                                                          title = sender.nickNameOrAlias;
