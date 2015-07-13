@@ -2060,7 +2060,8 @@ NSError * makeMediaError(NSString * reason) {
          */
         [self.currentAttachment performSafeDeletion];
         self.currentAttachment = nil;
-    } else if (self.currentMultiAttachment != nil) {
+    }
+    if (self.currentMultiAttachment != nil) {
         self.currentMultiAttachment = nil;
     }
     [self decorateAttachmentButton:nil];
@@ -2108,6 +2109,7 @@ NSError * makeMediaError(NSString * reason) {
                 break;
             case 1:
                 self.pickingAttachment = YES;
+                [self trashCurrentAttachment];
                 [self.attachmentPicker showInView: self.view];
                 // NSLog(@"Pick new attachment");
                 break;
