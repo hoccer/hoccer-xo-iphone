@@ -280,7 +280,7 @@
 "chat_group_clone_nearby"                       = "Permanente Gruppe erstellen";
 
 "chat_worldwide_intro_title"                    = "Weltweit";
-"chat_worldwide_intro_message"                  = "Mit der Weltweit-Funktion kannst du mit zufällig ausgewählten Teilnehmern kommunizieren, die ebenfalls 'Weltweit' aktiviert haben. Mache dich bitte mit den Einstellungen zu diesem Modus vertraut. Wie lange möchstest du nach dem Verlassen der 'Weltweit'-Ansicht noch weltweit erreichbar sein?";
+"chat_worldwide_intro_message"                  = "Mit der Weltweit-Funktion kannst du zufällig mit ausgewählten Teilnehmern kommunizieren, die ebenfalls Weltweit aktiviert haben. Mache dich bitte mit den Einstellungen zu diesem Modus vertraut. Wie lange möchtest du nach Verlassen der Weltweit-Ansicht noch weltweit erreichbar und somit für andere Nutzer sichtbar sein?";
 
 "chat_worldwide_intro_0_min"                    = "Gar nicht";
 "chat_worldwide_intro_30_min"                   = "30 Minuten";
