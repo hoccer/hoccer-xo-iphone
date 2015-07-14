@@ -998,11 +998,12 @@ BOOL sameObjects(id obj1, id obj2) {
     
     [AppDelegate setDefaultAudioSession];
 
+    
     _messageReceivedObserver = [[NSNotificationCenter defaultCenter] addObserverForName:kHXOReceivedNewHXOMessage
                                                                                  object:nil
                                                                                   queue:[NSOperationQueue mainQueue]
                                                                              usingBlock:^(NSNotification *note) {
-                                                                                 if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: Message received");
+                                                                                 if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: Message received observed");
                                                                                  NSDictionary * info = [note userInfo];
                                                                                  HXOMessage * message = (HXOMessage *)info[@"message"];
                                                                                  if (message != nil && self.runningInBackground) {
@@ -1035,10 +1036,19 @@ BOOL sameObjects(id obj1, id obj2) {
                                                                                                                     @"contactId":chat.clientId,
                                                                                                                     @"senderId":sender.clientId};
 
+                                                                                     if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: presenting user notification with text = %@, info = %@",messageText,messageInfo);
                                                                                      [self presentUserNotificationWithTitle:title withText:messageText withInfo:messageInfo];
+                                                                                 } else {
+                                                                                     if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: Message received, but notifications not shown, message =%@, background = %d, appState = %ld",message, self.runningInBackground, (long)[UIApplication sharedApplication].applicationState);
+                                                                                    
                                                                                  }
                                                                              }];
-
+    if (_messageReceivedObserver != nil) {
+        if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: Registered messageReceivedObserver = %@",_messageReceivedObserver);
+    } else {
+        NSLog(@"#ERROR: AppDelegate: Registering messageReceivedObserver failed");
+    }
+    
     NSString * dumpRecordsForEntity = [[HXOUserDefaults standardUserDefaults] valueForKey: @"dumpRecordsForEntity"];
     if (dumpRecordsForEntity.length > 0) {
         [self dumpAllRecordsOfEntityNamed:dumpRecordsForEntity];

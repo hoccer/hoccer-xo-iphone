@@ -1130,6 +1130,7 @@ NSError * makeSendError(NSString * reason) {
             //[self checkTransferQueues];
             
             id userInfo = @{ @"message":message };
+            if (1) NSLog(@"receiveMessage: posting notification: %@", kHXOReceivedNewHXOMessage);
             [[NSNotificationCenter defaultCenter] postNotificationName:kHXOReceivedNewHXOMessage
                                                                 object:self
                                                               userInfo:userInfo
