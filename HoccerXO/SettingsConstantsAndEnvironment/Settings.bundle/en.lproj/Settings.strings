@@ -98,7 +98,7 @@
 "WorldwideTimeToLive"       = "Leave after";
 "WorldwideAutoDownload"     = "Auto-Download Attachments";
 
-"ww_0"                      = "Immediately (not recommended)";
+"ww_0"                      = "Immediately";
 "ww_1"                      = "1 minute";
 "ww_5"                      = "5 minutes";
 "ww_10"                     = "10 minutes";
