@@ -208,7 +208,7 @@
 
 
 "backend_login_temporarily_failed_title"               = "Anmeldung fehlgeschlagen";
-"backend_login_temporarily_failed_continue_question"   = "Die Anmeldung ist aufgrund eines vorübergehenden technischen Problems mit der Verbindung oder dem Server fehlgeschlagen.('%@') Wollen sie es weiter versuchen?";
+"backend_login_temporarily_failed_continue_question"   = "Die Anmeldung ist aufgrund eines vorübergehenden technischen Problems mit der Verbindung oder dem Server fehlgeschlagen.('%@') Wollen sie es weiter versuchen? (Empfohlen)";
 
 //==============================================================================
 // Certificates

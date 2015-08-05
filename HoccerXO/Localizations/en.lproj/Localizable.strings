@@ -210,7 +210,7 @@
 "backend_disabling"      = "disabling connection...";
 
 "backend_login_temporarily_failed_title"               = "Login failed";
-"backend_login_temporarily_failed_continue_question"   = "The Login has failed beacause there is a temporary technical problem with the connection or the server. ('%@') Do you want to keep trying to log in?";
+"backend_login_temporarily_failed_continue_question"   = "The Login has failed beacause there is a temporary technical problem with the connection or the server. ('%@') Do you want to keep trying to log in? (recommended)";
 
 
 //==============================================================================
