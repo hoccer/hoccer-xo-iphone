@@ -11,7 +11,7 @@
 	<key>WorldwideGroupTag</key>
 	<string>*</string>
 	<key>anonymousNotifications</key>
-	<false/>
+	<true/>
 	<key>AccessControlPhotoEnabled</key>
 	<false/>
 	<key>confirmSeenMessages</key>
