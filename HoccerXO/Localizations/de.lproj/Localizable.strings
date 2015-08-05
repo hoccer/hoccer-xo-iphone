@@ -172,14 +172,14 @@
 "audio_attachment_list_footer_add"                 = "hinzufügen";
 
 "audio_attachment_list_count_attachments"          = "%u Dateien";
-"audio_attachment_list_count_attachments (one)"    = "Eine Datei";
+"audio_attachment_list_count_attachments (one)"    = "Datei";
 "audio_attachment_list_count_messages"             = "%u Nachrichten";
 "audio_attachment_list_count_messages (one)"       = "eine Nachricht";
-"audio_attachment_list_confirm_delete_title"       = "%@ löschen? %@";
-"audio_attachment_list_confirm_delete_more_title"  = "%@ und %@ löschen? %@";
+"audio_attachment_list_confirm_delete_title"       = "Wollen sie ausgewählte %@ löschen? %@";
+"audio_attachment_list_confirm_delete_more_title"  = "Wollen sie ausgewählte %@ löschen? Mitgelöscht werden %@. %@";
 
-"audio_attachment_list_count_attachment_duplicates"         = "(einschliesslich %u Duplikate)";
-"audio_attachment_list_count_attachment_duplicates (one)"   = "(einschliesslich eines Duplikats)";
+"audio_attachment_list_count_attachment_duplicates"         = "Zudem werden %u Duplikate der Dateien gelöscht.";
+"audio_attachment_list_count_attachment_duplicates (one)"   = "Ein Duplikat der Datei wird auch gelöscht.";
 
 "audio_attachment_list_remove_from_collection"     = "Aus Sammlung entfernen";
 

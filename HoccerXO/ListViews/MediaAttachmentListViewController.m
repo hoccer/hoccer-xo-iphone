@@ -320,7 +320,8 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
         }
     }
     
-    attachmentCountString = [NSString stringWithFormat:HXOPluralocalizedString(@"audio_attachment_list_count_attachments", attachmentCount, NO), attachmentCount];
+    //attachmentCountString = [NSString stringWithFormat:HXOPluralocalizedString(@"audio_attachment_list_count_attachments", attachmentCount, NO), attachmentCount];
+    attachmentCountString = [NSString stringWithFormat:HXOPluralocalizedString(@"audio_attachment_list_count_attachments", attachments.count, NO), attachments.count];
     
     if (messageCount == 0) {
         actionSheetTitle = [NSString stringWithFormat:NSLocalizedString(@"audio_attachment_list_confirm_delete_title", nil), attachmentCountString, duplicateCountString];
