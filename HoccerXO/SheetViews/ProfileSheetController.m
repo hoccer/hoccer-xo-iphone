@@ -142,10 +142,8 @@
         return self.userProfile.foundCredentialsProviderApp && [super isItemVisible: item];
     } else if ([item isEqual: self.deleteAccountItem]) {
         return self.userProfile.hasActiveAccount && [super isItemVisible: item];
-    } else if ([item isEqual: self.contactCountItem]) {
-        return self.userProfile.isRegistered && [super isItemVisible: item];
-    } else if ([item isEqual: self.groupCountItem]) {
-        return self.userProfile.isRegistered && [super isItemVisible: item];
+    } else if ([item isEqual: self.contactCountItem] || [item isEqual: self.groupCountItem]) {
+        return self.userProfile.isRegistered && !self.userProfile.isFirstRun && [super isItemVisible: item];
     }
     
     return [super isItemVisible: item];

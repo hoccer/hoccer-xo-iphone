@@ -470,6 +470,11 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return active;
 }
 
+- (BOOL) isFirstRun {
+    BOOL isFirstRunFlag = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
+    return isFirstRunFlag;
+}
+
 -(void)backupCredentials {
     [self backupCredentialsWithId: @""];
 }

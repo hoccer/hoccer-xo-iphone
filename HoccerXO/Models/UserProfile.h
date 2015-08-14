@@ -58,6 +58,8 @@ enum {
 
 @property (nonatomic,readonly) BOOL       hasActiveAccount;
 @property                      BOOL       accountJustDeleted;
+@property (nonatomic,readonly) BOOL       isFirstRun;
+
 
 @property (nonatomic, readonly) NSNumber * contactCount;
 @property (nonatomic, readonly) NSNumber * groupCount;
