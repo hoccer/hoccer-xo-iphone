@@ -7328,14 +7328,16 @@ NSError * makeSendError(NSString * reason) {
 
 - (void)connection:(NSURLConnection *)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {
+    if (CHECK_CERTS_DEBUG) NSLog(@"Backend: willSendRequestForAuthenticationChallenge challenge = %@", challenge);
     if ([[[challenge protectionSpace] authenticationMethod] isEqualToString:NSURLAuthenticationMethodServerTrust] && [challenge previousFailureCount] == 0 && [challenge proposedCredential] == nil)
     {
-        if ([self connection:connection authenticationChallenge:challenge] || [HXOBackend allowUntrustedServerCertificate])
-        {
+        if (CHECK_CERTS_DEBUG) NSLog(@"Backend: willSendRequestForAuthenticationChallenge (if 1)");
+        
+        if ([self connection:connection authenticationChallenge:challenge] || [HXOBackend allowUntrustedServerCertificate]) {
+            if (CHECK_CERTS_DEBUG) NSLog(@"Backend: willSendRequestForAuthenticationChallenge (if 2)");
             [[challenge sender] useCredential:[NSURLCredential credentialForTrust:[[challenge protectionSpace] serverTrust]] forAuthenticationChallenge:challenge];
-        }
-        else
-        {
+        } else {
+            if (CHECK_CERTS_DEBUG) NSLog(@"Backend: willSendRequestForAuthenticationChallenge (else 2)");
             [[challenge sender] cancelAuthenticationChallenge: challenge];
             [[challenge sender] performDefaultHandlingForAuthenticationChallenge:challenge];
         }
