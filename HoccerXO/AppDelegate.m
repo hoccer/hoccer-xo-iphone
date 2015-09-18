@@ -186,7 +186,10 @@ typedef void (^ImageHandler)(UIImage* image);
 }
 
 -(BOOL) runningInBackground {
-    return [UIApplication sharedApplication].applicationState == UIApplicationStateBackground;
+    UIApplicationState state = [UIApplication sharedApplication].applicationState;
+    BOOL result =  state == UIApplicationStateBackground;
+    NSLog(@"runningInBackground %d, applicationState = %ld",result, (long)state);
+    return result;
 }
 
 -(NSDictionary*)pushNotificationInfo {
@@ -1215,6 +1218,7 @@ BOOL sameObjects(id obj1, id obj2) {
     // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
 
     NSLog(@"applicationWillEnterForeground");
+    NSLog(@"applicationWillEnterForeground: backend: %@", HXOBackend.instance.stateString);
 
     if (self.chatBackend.isLoggedIn) {
         NSLog(@"applicationWillEnterForeground: still connected, keeping connection open");
@@ -2441,6 +2445,7 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
 
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
     NSLog(@"didReceiveLocalNotification %@", notification.userInfo);
+    NSLog(@"didReceiveLocalNotification: backend state = %@", HXOBackend.instance.stateString);
     self.openNotificationInfo = notification.userInfo;
     if (self.tabBarController != nil) {
         self.tabBarController.selectedIndex = 0;
@@ -2460,6 +2465,9 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
         if (handler != nil) handler(UIBackgroundFetchResultNoData);
         return;
     }
+    
+    NSLog(@"didReceiveRemoteNotification: backend state = %@", HXOBackend.instance.stateString);
+    
     _pushNotificationInfo = userInfo;
     ++_backgroundNotification;
     if (self.environmentMode != ACTIVATION_MODE_NONE) {

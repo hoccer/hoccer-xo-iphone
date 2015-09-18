@@ -207,6 +207,8 @@ typedef void (^CompletionWithError)(NSError* theError);
 
 - (void) sendEnvironmentDestroyWithType:(NSString*)type;
 - (void) sendEnvironmentUpdate;
+- (NSString*) stateString;
+
 
 - (NSDate*) estimatedServerTime;
 

@@ -50,7 +50,7 @@
 #define DELIVERY_TRACE      NO
 #define GLITCH_TRACE        NO
 #define SECTION_TRACE       NO
-#define CONNECTION_TRACE    NO
+#define CONNECTION_TRACE    YES
 #define GROUPKEY_DEBUG      NO
 #define GROUP_DEBUG         NO
 #define RELATIONSHIP_DEBUG  NO
@@ -494,7 +494,11 @@ static NSTimer * _stateNotificationDelayTimer;
     return ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
 }
 
-- (NSString*) stateString: (BackendState) state {
+- (NSString*) stateString {
+    return [self.class stateString:_state];
+}
+
++ (NSString*) stateString: (BackendState) state {
     switch (state) {
         case kBackendStopped:
             return @"backend_stopped";
@@ -527,7 +531,7 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 - (void) setState: (BackendState) state {
-    if (CONNECTION_TRACE) NSLog(@"backend state %@ -> %@", [self stateString: _state], [self stateString: state]);
+    if (CONNECTION_TRACE) NSLog(@"backend state %@ -> %@", [self.class stateString: _state], [self.class stateString: state]);
     BackendState oldState= _state;
     _state = state;
     if (_state == kBackendReady) {
@@ -558,7 +562,7 @@ static NSTimer * _stateNotificationDelayTimer;
     BOOL disabled = NO;
     BOOL reachable = [self.delegate.internetReachabilty isReachable];
     if (reachable) {
-        newInfo = [self stateString: _state];
+        newInfo = [self.class stateString: _state];
         normal = (_state == kBackendReady) ;
         disabled = (_state == kBackendDisabling || _state == kBackendDisabled) ;
         progress = _state > oldState &&
@@ -1619,6 +1623,8 @@ NSError * makeSendError(NSString * reason) {
 }
 
 - (void) start: (BOOL) performRegistration {
+    NSLog(@"Backend:start: state: %@, performRegistration=%d", self.stateString, performRegistration);
+
     if (_state != kBackendStopped) {
         // TODO: this is a quick fix to handle the case when the app is left and immediately entered again
         // We should handle this case more gracefully
@@ -1721,7 +1727,7 @@ NSError * makeSendError(NSString * reason) {
             [self reconnect];
         }
     } else {
-        NSLog(@"checkReconnect: backend in state %@, doing nothing", [self stateString: _state]);
+        NSLog(@"checkReconnect: backend in state %@, doing nothing", [self.class stateString: _state]);
     }
 }
 
