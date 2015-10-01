@@ -17,6 +17,7 @@
 @class CryptoEngine;
 @class Attachment;
 @class Contact;
+@class Preview;
 
 typedef void(^ImageLoaderBlock)(UIImage* theImage,NSError* theError);
 typedef void(^SizeSetterBlock)(int64_t theSize,NSError* theError);
@@ -101,6 +102,7 @@ typedef enum AttachmentStates {
 @property (nonatomic, strong) NSDate   * fileModificationDate;   // lastModifiedDate of attached file
 @property (nonatomic, strong) Contact  * savedByContact;         // contact who selected this attachment when the view was removed
 
+@property (nonatomic, strong) Preview  * previewStore;         // contact who selected this attachment when the view was removed
 // virtual properties
 @property (nonatomic) NSString * attachmentJsonString;
 @property (nonatomic) NSString * attachmentJsonStringCipherText;

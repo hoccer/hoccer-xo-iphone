@@ -23,6 +23,7 @@
 #import "HXOMessage.h"
 #import "Delivery.h"
 #import "Group.h"
+#import "Preview.h"
 
 #import "HXOBackend.h"
 #import "AppDelegate.h"
@@ -192,6 +193,21 @@
     // or [self setPrimitiveDate:[NSDate date]];
     // to avoid triggering KVO notifications
     
+}
+
+-(NSData*)previewImageData {
+    return self.previewStore.imageData;
+}
+-(void)setPreviewImageData:(NSData*)data {
+    if (self.previewStore != nil) {
+        self.previewStore.imageData = data;
+    } else {
+        NSManagedObjectContext * context = AppDelegate.instance.currentObjectContext;
+        Preview *store = [NSEntityDescription insertNewObjectForEntityForName:[[Preview class] entityName] inManagedObjectContext:context];
+        store.attachment = self;
+        self.previewStore = store;
+        store.imageData = data;
+    }
 }
 
 +(NSString*) getStateName:(AttachmentState)state {

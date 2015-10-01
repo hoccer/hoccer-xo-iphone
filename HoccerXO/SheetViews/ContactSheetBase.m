@@ -215,7 +215,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 - (void) prepareForSegue:(UIStoryboardSegue *)segue withItem:(DatasheetItem *)item sender:(id)sender {
     [super prepareForSegue: segue withItem: item sender: sender];
     if ([item isEqual: self.keyItem]) {
-        DatasheetController * keyViewController = segue.destinationViewController;
+        DatasheetController * keyViewController = (DatasheetController *)segue.destinationViewController;
         keyViewController.inspectedObject = self.client;
     } else if ([segue.identifier isEqualToString: @"showAvatar"]) {
         ImageViewController * imageViewController = segue.destinationViewController;

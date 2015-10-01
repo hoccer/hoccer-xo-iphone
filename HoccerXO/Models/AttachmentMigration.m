@@ -25,6 +25,9 @@
 #define DEBUG_MORE_TIMING YES
 #define DEBUG_BASIC_STUFF NO
 
+//#define USE_OBJ_IDS
+
+
 @implementation AttachmentMigration
 
 + (void)adoptOrphanedFile:(NSString*)file inDirectory:(NSURL*)inDirectory {
@@ -142,6 +145,7 @@ static NSString * filenameOf(Attachment * attachment) {
     }];
 }
 
+
 + (void) adoptOrphanedFiles:(NSArray*)newFiles changedFiles:(NSArray*)changedFiles deletedFiles:(NSArray*)deletedFiles withRemovingAttachmentsNotInFiles:(NSArray*)allFiles inDirectory:(NSURL*)inDirectory withAttachments:(NSArray *)attachments inContext:(NSManagedObjectContext *)context
 {
     
@@ -162,11 +166,16 @@ static NSString * filenameOf(Attachment * attachment) {
     unsigned long fileDuplicates = 0;
     unsigned long macDuplicates = 0;
     unsigned long urlDuplicates = 0;
+
     
     // iterate over all attachments, mark duplicates and remember attachments owned by files
     //long long order = 0;
+#ifdef USE_OBJ_IDS
+    for (NSManagedObjectID * attachmentID in attachments) {
+        Attachment * attachment = [context objectWithID:attachmentID];
+#else
     for (Attachment * attachment in attachments) {
-        
+#endif
         //[self makeSmallCloneImages:attachment];
         /*
         ++order;
@@ -182,6 +191,7 @@ static NSString * filenameOf(Attachment * attachment) {
         
         BOOL fileDuplicate = NO;
         BOOL urlDuplicate = NO;
+        Attachment * originalAttachment = nil;
         if ([attachmentURL isFileURL]) {
             
             if (DEBUG_MIGRATION) NSLog(@"Attachment owns file %@ playable %@", attachmentURL, attachment.playable);
@@ -242,6 +252,7 @@ static NSString * filenameOf(Attachment * attachment) {
                     fileDuplicate = YES;
                     if (DEBUG_MIGRATION) NSLog(@"FILE duplicate # %lu", (unsigned long)[referencedFiles countForObject:file]);
                     ++fileDuplicates;
+                    originalAttachment = attachmentsByFile[file];
                 }
             } else {
                 // attachment without file
@@ -260,6 +271,7 @@ static NSString * filenameOf(Attachment * attachment) {
                 if (attachmentsByURL[urlString] == nil) {
                     attachmentsByURL[urlString] = attachment;
                 } else {
+                    originalAttachment = attachmentsByURL[urlString];
                     urlDuplicate = YES;
                     ++urlDuplicates;
                 }
@@ -285,12 +297,14 @@ static NSString * filenameOf(Attachment * attachment) {
                     attachmentsByMAC[hmac] = attachment;
                 } else {
                     if (DEBUG_MIGRATION) NSLog(@"MAC duplicate # %lu (%@)", (unsigned long)[referencedMACS countForObject:hmac], [hmac hexadecimalString]);
+                    originalAttachment = attachmentsByMAC[hmac];
                     macDuplicate = YES;
                     ++macDuplicates;
                 }
             }
         }
         if (fileDuplicate || urlDuplicate || macDuplicate) {
+#if 1
             if (![attachment.duplicate isEqualToString:@"DUPLICATE"]) {
                 NSString * was = attachment.duplicate;
                 attachment.duplicate = @"DUPLICATE";
@@ -299,6 +313,15 @@ static NSString * filenameOf(Attachment * attachment) {
             } else {
                 if (DEBUG_DUPLICATES) NSLog(@"found duplicate attachment for file: %@", [attachmentURL lastPathComponent]);
             }
+#else
+            if (DEBUG_BASIC_STUFF) NSLog(@"Found duplicate attachment for file: %@ (mark is %@) %@ %@ %@", [attachmentURL lastPathComponent], attachment.duplicate, fileDuplicate?@"fileDuplicate":@"", urlDuplicate?@"urlDuplicate":@"", macDuplicate?@"macDuplicate":@"");
+            
+            if (attachment.message != nil) {
+                HXOMessage * message = attachment.message;
+                message.attachment = originalAttachment;
+            }
+            
+#endif
         } else {
             if (![attachment.duplicate isEqualToString:@"ORIGINAL"]) {
                 if (DEBUG_BASIC_STUFF) NSLog(@"unmarking duplicate attachment for file: %@", [attachmentURL lastPathComponent]);
@@ -395,6 +418,57 @@ static NSString * filenameOf(Attachment * attachment) {
         NSEntityDescription *entity = [NSEntityDescription entityForName:[Attachment entityName] inManagedObjectContext:context];
         NSFetchRequest *fetchRequest = [NSFetchRequest new];
         [fetchRequest setEntity:entity];
+
+#ifdef USE_OBJ_IDS
+        NSLog(@"adoptOrphanedFiles: Using NSManagedObjectIDResultType");
+        fetchRequest.resultType = NSManagedObjectIDResultType;
+#else
+        NSLog(@"adoptOrphanedFiles: Not Using NSManagedObjectIDResultType");
+#endif
+
+#define FETCH_ALL_IN_ONE
+#ifdef FETCH_ALL_IN_ONE
+        NSUInteger totalCount = [context countForFetchRequest:fetchRequest error:&myError];
+        if (DEBUG_QUERY) NSLog(@"Executing full fetch request for %lu attachments", (unsigned long)totalCount);
+        
+        NSDate * start = [NSDate new];
+        
+        NSArray * attachments = [context executeFetchRequest:fetchRequest error:&myError];
+        NSDate * stop = [NSDate new];
+        if (myError != nil) {
+            NSLog(@"adoptOrphanedFiles: fetchrequest error = %@", myError);
+        }
+        if (DEBUG_TIMING) NSLog(@"Done fetch request for %lu attachments took %0.3f secs",(unsigned long)attachments.count, [stop timeIntervalSinceDate:start]);
+        
+        if (DEBUG_TIMING) NSLog(@"Start sorting %lu attachments",(unsigned long)attachments.count);
+        
+       start = [NSDate new];
+#ifdef USE_OBJ_IDS
+        NSArray * sortedAttachments = [attachments sortedArrayUsingComparator:^NSComparisonResult(NSManagedObjectID *p1, NSManagedObjectID *p2){
+            //return [p1.orderNumber compare:p2.orderNumber];
+            NSComparisonResult result = [p1.URIRepresentation.lastPathComponent compare:p2.URIRepresentation.lastPathComponent];
+            if (result == NSOrderedSame) {
+                //NSLog(@"same attachment exists twice: %@ : %@", p1.objectID.URIRepresentation, p2.objectID.URIRepresentation);
+            }
+            return result;
+        }];
+#else
+        // sort
+        NSArray * sortedAttachments = [attachments sortedArrayUsingComparator:^NSComparisonResult(Attachment *p1, Attachment *p2){
+            //return [p1.orderNumber compare:p2.orderNumber];
+            NSComparisonResult result = [p1.objectID.URIRepresentation.lastPathComponent compare:p2.objectID.URIRepresentation.lastPathComponent];
+            if (result == NSOrderedSame) {
+                //NSLog(@"same attachment exists twice: %@ : %@", p1.objectID.URIRepresentation, p2.objectID.URIRepresentation);
+            }
+            return result;
+        }];
+#endif
+        stop = [NSDate new];
+        if (DEBUG_TIMING) NSLog(@"Sorting %lu attachments took %0.3f secs",(unsigned long)sortedAttachments.count, [stop timeIntervalSinceDate:start]);
+        NSArray * uniqueSortedAttachments = sortedAttachments;
+
+#else
+        
         //NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"orderNumber" ascending:YES];
         //NSArray *sortDescriptors = @[sortDescriptor];
         
@@ -411,7 +485,6 @@ static NSString * filenameOf(Attachment * attachment) {
         fetchRequest.fetchLimit = 200;
 
         NSDate * loopStart = [NSDate new];
-        
 
         do {
             if (DEBUG_QUERY) NSLog(@"Executing fetch request for %lu attachments from pos %lu", (unsigned long)fetchRequest.fetchLimit, (unsigned long)fetchRequest.fetchOffset);
@@ -457,6 +530,16 @@ static NSString * filenameOf(Attachment * attachment) {
 
         NSDate * start = [NSDate new];
 
+#ifdef USE_OBJ_IDS
+        NSArray * sortedAttachments = [attachments sortedArrayUsingComparator:^NSComparisonResult(NSManagedObjectID *p1, NSManagedObjectID *p2){
+            //return [p1.orderNumber compare:p2.orderNumber];
+            NSComparisonResult result = [p1.URIRepresentation.lastPathComponent compare:p2.URIRepresentation.lastPathComponent];
+            if (result == NSOrderedSame) {
+                //NSLog(@"same attachment exists twice: %@ : %@", p1.objectID.URIRepresentation, p2.objectID.URIRepresentation);
+            }
+            return result;
+        }];
+#else
         // sort
         NSArray * sortedAttachments = [attachments sortedArrayUsingComparator:^NSComparisonResult(Attachment *p1, Attachment *p2){
             //return [p1.orderNumber compare:p2.orderNumber];
@@ -466,12 +549,24 @@ static NSString * filenameOf(Attachment * attachment) {
             }
             return result;
         }];
+#endif
         NSDate * stop = [NSDate new];
         if (DEBUG_TIMING) NSLog(@"Sorting %lu attachments took %0.3f secs",(unsigned long)sortedAttachments.count, [stop timeIntervalSinceDate:start]);
         
         // make unique
         NSString * currentId = nil;
         NSMutableArray * uniqueSortedAttachments = [NSMutableArray new];
+#ifdef USE_OBJ_IDS
+        for (NSManagedObjectID * attachment in sortedAttachments) {
+            NSString * newId = attachment.URIRepresentation.lastPathComponent;
+            if (![newId isEqualToString:currentId]) {
+                [uniqueSortedAttachments addObject:attachment];
+                currentId = newId;
+            } else {
+                if (DEBUG_BASIC_STUFF) NSLog(@"ignoring same attachment %@", newId);
+            }
+        }
+#else
         for (Attachment * attachment in sortedAttachments) {
             NSString * newId = attachment.objectID.URIRepresentation.lastPathComponent;
             if (![newId isEqualToString:currentId]) {
@@ -481,13 +576,33 @@ static NSString * filenameOf(Attachment * attachment) {
                 if (DEBUG_BASIC_STUFF) NSLog(@"ignoring same attachment %@", newId);
             }
         }
+#endif
         NSDate * stop2 = [NSDate new];
         if (DEBUG_TIMING) NSLog(@"Making %lu unique attachments took %0.3f secs",(unsigned long)uniqueSortedAttachments.count, [stop2 timeIntervalSinceDate:stop]);
+#endif
         
         [self adoptOrphanedFiles:newFiles changedFiles:changedFiles deletedFiles:deletedFiles withRemovingAttachmentsNotInFiles:allFiles inDirectory:inDirectory withAttachments:uniqueSortedAttachments inContext:context];
     }];
 }
-
+/*
++ (void)cleanupDuplicateAttachments:(NSArray*)duplicates ofAttachment:(Attachment*)attachment {
+    AppDelegate *delegate = [AppDelegate instance];
+    
+    [delegate performWithLockingId:@"Attachments" inNewBackgroundContext:^(NSManagedObjectContext *context) {
+        
+        // fetch
+        NSError * myError = nil;
+        
+        NSEntityDescription *entity = [NSEntityDescription entityForName:[Attachment entityName] inManagedObjectContext:context];
+        NSFetchRequest *fetchRequest = [NSFetchRequest new];
+        [fetchRequest setEntity:entity];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"mediaType == 'image' AND message.isOutgoingFlag == NO AND message.isReadFlag == YES"]];
+        
+        NSMutableArray * attachments = [NSMutableArray new];
+        
+    }];
+}
+*/
 + (void) determinePlayabilityForAllAudioAttachments {
     AppDelegate *delegate = [AppDelegate instance];
 
