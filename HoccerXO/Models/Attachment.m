@@ -130,6 +130,8 @@
 @dynamic fileModificationDate;
 @dynamic savedByContact;
 
+@dynamic previewStore;
+
 @dynamic attachmentJsonString;
 @dynamic attachmentJsonStringCipherText;
 
