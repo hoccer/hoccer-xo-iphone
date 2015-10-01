@@ -236,6 +236,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (IBAction)avatarPressed:(id)sender {
+    [self.delegate.view endEditing:YES]; // hide keyboard
     if (self.mode == DatasheetModeEdit && [self isItemEnabled: self.avatarItem]) {
         [self editAvatar];
     } else if (self.avatarItem.currentValue) {
