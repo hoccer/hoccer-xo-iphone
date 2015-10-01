@@ -3724,7 +3724,7 @@ enum {
     NSLog(@"destURL=%@", destURL);
 
     if (mediaType == nil) {
-        [AppDelegate mediaTypeOfUTI:mediaType withFileName:fileName];
+        mediaType = [AppDelegate mediaTypeOfUTI:documentType withFileName:fileName];
     }
     NSLog(@"mediaType=%@", mediaType);
 
