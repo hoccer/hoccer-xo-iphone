@@ -804,6 +804,21 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "settings_nav_title" = "Settings";
 
 //==============================================================================
+// Accessibility
+//==============================================================================
+"accessibiltiy_send_message"                    = "Send message";
+"accessibiltiy_select_attachment"               = "Select attachment";
+"accessibiltiy_edit_attachment_selection"       = "Edit attachment selection";
+
+"accessibiltiy_incoming_message"                = "a message received";
+"accessibiltiy_outgoing_message"                = "a message sent";
+
+"accessibiltiy_from"                            = "from";
+"accessibiltiy_to"                              = "to";
+
+"accessibiltiy_status"                          = "status";
+
+//==============================================================================
 // Misc
 //==============================================================================
 "mugshot_made_title"        = "Mugshot(s) available";

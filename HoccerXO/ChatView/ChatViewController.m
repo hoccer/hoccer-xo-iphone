@@ -252,6 +252,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.attachmentButton.frame = CGRectMake(0, 0, 50, s);
     self.attachmentButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     self.attachmentButton.tintColor = [HXOUI theme].tintColor;
+    self.attachmentButton.accessibilityFrame = self.attachmentButton.frame;
+    self.attachmentButton.accessibilityLabel = NSLocalizedString(@"accessibiltiy_select_attachment", nil);
     [self.attachmentButton addTarget: self action:@selector(attachmentPressed:) forControlEvents: UIControlEventTouchUpInside];
     [self.chatbar addSubview: self.attachmentButton];
 
@@ -271,6 +273,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     [self.messageField addObserver: self forKeyPath: @"contentSize" options: 0 context: nil];
     [self.chatbar addSubview: self.messageField];
     self.messageField.text = @"";
+    self.messageField.accessibilityFrame = self.messageField.frame;
+
 
     CGRect frame = CGRectInset(self.messageField.frame, 5, 1); // experimentally found... :-/
     self.messageFieldPlaceholder = [[UILabel alloc] initWithFrame: frame];
@@ -284,6 +288,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     self.sendButton = [UIButton buttonWithType: UIButtonTypeSystem];
     self.sendButton.frame = CGRectMake(CGRectGetMaxX(self.messageField.frame), 0, s, s);
     self.sendButton.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleLeftMargin;
+    self.sendButton.accessibilityLabel = NSLocalizedString(@"accessibiltiy_send_message", nil);
     [self.sendButton setImage: icon forState: UIControlStateNormal];
     [self.sendButton addTarget: self action:@selector(sendPressed:) forControlEvents: UIControlEventTouchUpInside];
     [self.chatbar addSubview: self.sendButton];
@@ -2511,6 +2516,8 @@ NSError * makeMediaError(NSString * reason) {
         // XXX magic numbers
         frame.size.height = MIN(150, MAX( 50 - 2 * kHXOGridSpacing, self.messageField.contentSize.height));
         self.messageField.frame = frame;
+        self.messageField.accessibilityFrame = self.messageField.frame;
+
         self.chatbarHeight.constant = frame.size.height + 2 * kHXOGridSpacing;
         
     } else {
@@ -2677,6 +2684,14 @@ NSError * makeMediaError(NSString * reason) {
     cell.avatar.isInBackground = [self.partner isKindOfClass: [Group class]] && message.isIncoming && ((Contact*)[message.deliveries.anyObject sender]).isBackground;
 
     cell.subtitle.text = [self subtitleForMessage: message];
+    NSString * accessibilityLabel;
+    if (message.isOutgoing) {
+        accessibilityLabel = [NSString stringWithFormat:@"%@ %@ %@",NSLocalizedString(@"accessibiltiy_outgoing_message", nil), NSLocalizedString(@"accessibiltiy_to", nil),message.contact.nickNameOrAlias];
+    } else {
+        accessibilityLabel = [NSString stringWithFormat:@"%@ %@ %@",NSLocalizedString(@"accessibiltiy_incoming_message", nil), NSLocalizedString(@"accessibiltiy_from", nil),message.contact.nickNameOrAlias];
+    }
+    cell.accessibilityLabel = accessibilityLabel;
+    cell.accessibilityValue = message.body;
 
     for (MessageSection * section in cell.sections) {
         if ([section isKindOfClass: [TextSection class]]) {
