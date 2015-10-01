@@ -35,7 +35,17 @@
 }
 
 
+- (instancetype)initWithReuseIdentifier:(NSString *)reuseIdentifier {
+    self = [super initWithReuseIdentifier:reuseIdentifier];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+
 - (void) commonInit {
+    
     self.dateLabel = [[UILabel alloc] initWithFrame:self.bounds];
     self.dateLabel.textAlignment = NSTextAlignmentCenter;
     self.dateLabel.textColor = [UIColor colorWithWhite: 0.33 alpha: 1.0];
