@@ -51,6 +51,12 @@
 
 - (void) viewWillAppear:(BOOL)animated {
     [super viewWillAppear: animated];
+    [UIView setAnimationsEnabled:NO];
+    
+    // Stackoverflow #26357162 to force orientation
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
+    [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
+    
     BOOL isSimple = NO;
     self.passcodeField.keyboardType = isSimple ? UIKeyboardTypeNumberPad : UIKeyboardTypeDefault;
     self.passcodeField.text = @"";
@@ -62,6 +68,14 @@
     if ([PasscodeViewController touchIdEnabled]) {
         [self authenticateUsingTouchId];
     }
+}
+
+- (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}
+
+- (BOOL)shouldAutorotate {
+    return NO;
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
