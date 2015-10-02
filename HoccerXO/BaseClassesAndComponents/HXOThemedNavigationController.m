@@ -18,8 +18,8 @@
     return should;
 }
 
-- (NSUInteger) supportedInterfaceOrientations {
-    NSUInteger supported = [[self.viewControllers lastObject] supportedInterfaceOrientations];
+- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
+    UIInterfaceOrientationMask supported = [[self.viewControllers lastObject] supportedInterfaceOrientations];
     if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:supportedInterfaceOrientations:%lu %@", (unsigned long)supported, self.viewControllers.lastObject);
     return supported;
 }

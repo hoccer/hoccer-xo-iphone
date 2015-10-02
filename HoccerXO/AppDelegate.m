@@ -4232,7 +4232,7 @@ enum {
     }
 }
 
-- (NSUInteger)tabBarControllerSupportedInterfaceOrientations:(UITabBarController *)tabBarController {
+- (UIInterfaceOrientationMask)tabBarControllerSupportedInterfaceOrientations:(UITabBarController *)tabBarController {
     if (DEBUG_ROTATION) NSLog(@"AppDelegate:tabBarControllerSupportedInterfaceOrientations top %@ sel %@", AppDelegate.getTopMostViewController, tabBarController.selectedViewController);
     return tabBarController.selectedViewController.supportedInterfaceOrientations;
 }

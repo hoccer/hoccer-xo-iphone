@@ -623,7 +623,7 @@ const NSUInteger kHXODefaultKeySize    = 2048;
         NSLog(@"Archive transfer openURL returned true");
         return YES;
     } else {
-        [pasteboard setData:nil forPasteboardType:pasteboardType];
+        [pasteboard setData:[NSData new] forPasteboardType:pasteboardType];
         [pasteboard setPersistent:NO];
         NSLog(@"Archive transfer openURL returned false");
         return NO;
@@ -640,12 +640,12 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     if (pasteboard) {
         NSData *data = [pasteboard dataForPasteboardType:pasteboardType];
-        if (data) {
+        if (data && data.length) {
             return data;
         } else {
             NSLog(@"receiveArchive: data type %@ not found on pasteboard named %@", pasteboardType, pasteboardName);
         }
-        [pasteboard setData:nil forPasteboardType:pasteboardType];
+        [pasteboard setData:[NSData new] forPasteboardType:pasteboardType];
         [pasteboard setPersistent:NO];
     } else {
         NSLog(@"receiveArchive: pasteboard with name %@ not found", pasteboardName);

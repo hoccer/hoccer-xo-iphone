@@ -32,7 +32,7 @@
 #pragma mark - Playlist Protocol
 
 - (NSUInteger) count {
-    return [self.dataSource tableView:nil numberOfRowsInSection:0];
+    return [self.dataSource tableView:[UITableView new] numberOfRowsInSection:0];
 }
 
 - (Attachment *) attachmentAtIndex:(NSUInteger)index {

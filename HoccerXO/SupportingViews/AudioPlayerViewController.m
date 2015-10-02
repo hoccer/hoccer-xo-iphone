@@ -113,7 +113,7 @@
     [self.seekSlider removeTarget:self action:@selector(seekTime:) forControlEvents:UIControlEventValueChanged];
 }
 
-- (NSUInteger) supportedInterfaceOrientations {
+- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
     return UIInterfaceOrientationMaskPortrait;
 }
 

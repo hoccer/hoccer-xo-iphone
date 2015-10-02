@@ -1431,7 +1431,7 @@ NSError * makeMediaError(NSString * reason) {
 }
 */
 
--(NSUInteger)supportedInterfaceOrientations{
+-(UIInterfaceOrientationMask)supportedInterfaceOrientations{
     if (DEBUG_ROTATION) NSLog(@"ChatViewController:supportedInterfaceOrientations %@",self.presentedViewController);
 
     // Please note that this call needs to be forwarded by the tabbar controller delegate and the navigation controller

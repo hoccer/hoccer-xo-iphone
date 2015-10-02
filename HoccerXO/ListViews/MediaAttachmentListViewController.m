@@ -309,7 +309,7 @@ static NSArray * mediaTypesForSegment(NSInteger segment) {
     }
     
     unsigned long messageCount = 0;
-    unsigned long attachmentCount = [self.attachmentsToDelete count];
+    //unsigned long attachmentCount = [self.attachmentsToDelete count];
     
     NSString *attachmentCountString = nil;
     NSString *actionSheetTitle = nil;
