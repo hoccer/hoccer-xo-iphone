@@ -73,13 +73,18 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>17281</string>
+	<string>17287</string>
 	<key>HXODefaultEnvironment</key>
 	<string>${HXO_DEFAULT_ENVIRONMENT}</string>
 	<key>HXOTestFlightToken</key>
 	<string>${HXO_TESTFLIGHT_TOKEN}</string>
 	<key>HXOUrlScheme</key>
 	<string>${HXO_URL_SCHEME}</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>hcrimport</string>
+		<string>hcrexport</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
