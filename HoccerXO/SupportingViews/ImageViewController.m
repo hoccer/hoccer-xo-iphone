@@ -10,6 +10,8 @@
 
 #import <QuartzCore/QuartzCore.h>
 
+#define DEBUG_IVC NO
+
 @interface ImageViewController ()
 
 @property (readonly, nonatomic) UIScrollView * scrollView;
@@ -22,6 +24,7 @@
 - (void) loadView {
     // giving the view an initial frame avoids CG singular matrix errors
     self.view = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 23, 23)];
+    if (DEBUG_IVC) NSLog(@"superview = %@", self.view.superview);
 }
 
 - (UIScrollView*) scrollView {
@@ -30,6 +33,7 @@
 
 - (void) viewDidLoad {
     [super viewDidLoad];
+    if (DEBUG_IVC) NSLog(@"superview2 = %@", self.view.superview);
     self.scrollView.delegate = self;
     self.scrollView.backgroundColor = [UIColor blackColor];
 
@@ -60,22 +64,36 @@
     [super viewWillAppear: animated];
 
     [self.navigationController setNavigationBarHidden: YES animated: YES];
+    
+    if (DEBUG_IVC) NSLog(@"superview3 = %@", self.view.superview);
 
     if (self.image) {
         [self updateZoomScale];
     }
 }
 
+- (void) viewDidAppear:(BOOL)animated {
+    if (DEBUG_IVC) NSLog(@"superview3 = %@", self.view.superview);
+    if (DEBUG_IVC) NSLog(@"myview3 = %@", self.view);
+    if (self.image) {
+        [self updateZoomScale];
+    }
+    if (DEBUG_IVC) NSLog(@"myview4 = %@", self.view);
+    
+}
+
 - (void)updateZoomScale {
+    if (DEBUG_IVC) NSLog(@"updateZoomScale");
     // reset the zoom to one - avoids problems with interface orientation changes
     // and frame changes when updating the picture
     self.scrollView.zoomScale = 1;
 
     self.scrollView.contentSize = CGSizeMake(_image.size.width, _image.size.height);
+    
+   if (DEBUG_IVC)  NSLog(@"image/content size = (%f, %f)", _image.size.width, _image.size.height);
 
     self.imageView.frame = CGRectMake(0, 0, _image.size.width, _image.size.height);
     self.imageView.image = _image;
-
 
     CGRect scrollViewFrame = self.scrollView.frame;
     CGFloat scaleWidth = scrollViewFrame.size.width / self.scrollView.contentSize.width;
@@ -84,14 +102,20 @@
     self.scrollView.minimumZoomScale = minScale;
 
     self.scrollView.maximumZoomScale = 1.5;
+    if (DEBUG_IVC) NSLog(@"minscale = %f, maxscale = %f, scale = %f", self.scrollView.minimumZoomScale, self.scrollView.maximumZoomScale, minScale);
     self.scrollView.zoomScale = minScale;
+    
 
     [self centerScrollViewContents];
 }
 
 - (void)centerScrollViewContents {
+   if (DEBUG_IVC)  NSLog(@"centerScrollViewContents");
     CGSize boundsSize = self.scrollView.bounds.size;
     CGRect contentsFrame = self.imageView.frame;
+    if (DEBUG_IVC) NSLog(@"scrollview size = (%f, %f)", self.scrollView.bounds.size.width, self.scrollView.bounds.size.height);
+    
+    if (DEBUG_IVC) NSLog(@"old contentsFrame = (%f, %f) size (%f, %f)", contentsFrame.origin.x, contentsFrame.origin.y, contentsFrame.size.width, contentsFrame.size.height);
 
     if (contentsFrame.size.width < boundsSize.width) {
         contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2;
@@ -106,6 +130,7 @@
     }
 
     self.imageView.frame = contentsFrame;
+    if (DEBUG_IVC) NSLog(@"new contentsFrame = (%f, %f) size (%f, %f)", contentsFrame.origin.x, contentsFrame.origin.y, contentsFrame.size.width, contentsFrame.size.height);
 }
 
 - (void)scrollViewDoubleTapped:(UITapGestureRecognizer*)recognizer {
@@ -147,6 +172,7 @@
 
 - (void)scrollViewDidZoom:(UIScrollView *)scrollView {
     // The scroll view has zoomed, so you need to re-center the contents
+    if (DEBUG_IVC) NSLog(@"scrollViewDidZoom");
     [self centerScrollViewContents];
 }
 
@@ -160,6 +186,7 @@
 
 - (void) setImage:(UIImage *)image {
     _image = image;
+    if (DEBUG_IVC) NSLog(@"setImage size = (%f, %f)", _image.size.width, _image.size.height);
     if (self.view && _image) {
         [self updateZoomScale];
     }
