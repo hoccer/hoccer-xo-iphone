@@ -2940,7 +2940,7 @@
 		63AEE2CC16CA4D0200522F92 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Hoccer GmbH";
 				TargetAttributes = {
 					6302A9B218DA8A9500B2D04F = {
@@ -3742,6 +3742,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -3794,6 +3795,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = Starmeo;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -3835,6 +3837,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -3903,6 +3906,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = Starmeo;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -3941,6 +3945,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -3978,6 +3983,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -4012,6 +4018,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -4032,6 +4039,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -4114,6 +4122,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = "Hoccer XO";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4157,6 +4166,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = "Hoccer XO";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4229,6 +4239,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = "Ströer";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4267,6 +4278,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -4287,6 +4299,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -4339,6 +4352,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = "Ströer";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4380,6 +4394,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -4400,6 +4415,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -4451,6 +4467,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = SIMSme;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4492,6 +4509,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -4560,6 +4578,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = SIMSme;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4598,6 +4617,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -4618,6 +4638,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -4670,6 +4691,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = HOCCme;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4711,6 +4733,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -4779,6 +4802,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = HOCCme;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4817,6 +4841,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -4837,6 +4862,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -4890,6 +4916,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = Hoccer;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4931,6 +4958,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -4999,6 +5027,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = Hoccer;
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -5037,6 +5066,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -5057,6 +5087,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -5110,6 +5141,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = "Hoccer Dev";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -5151,6 +5183,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
@@ -5219,6 +5252,7 @@
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = "Hoccer Dev";
 				PROVISIONING_PROFILE = "";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -5257,6 +5291,7 @@
 				);
 				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
