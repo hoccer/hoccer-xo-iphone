@@ -200,15 +200,21 @@
 -(NSData*)previewImageData {
     return self.previewStore.imageData;
 }
+
 -(void)setPreviewImageData:(NSData*)data {
     if (self.previewStore != nil) {
         self.previewStore.imageData = data;
     } else {
-        NSManagedObjectContext * context = AppDelegate.instance.currentObjectContext;
-        Preview *store = [NSEntityDescription insertNewObjectForEntityForName:[[Preview class] entityName] inManagedObjectContext:context];
-        store.attachment = self;
-        self.previewStore = store;
-        store.imageData = data;
+        NSManagedObjectContext * context = self.managedObjectContext;
+        
+        if (context == nil) {
+            NSLog(@"#ERROR: Attachment:setPreviewImageData: attachment context is nil");
+        } else {
+            Preview *store = [NSEntityDescription insertNewObjectForEntityForName:[[Preview class] entityName] inManagedObjectContext:context];
+            store.attachment = self;
+            self.previewStore = store;
+            store.imageData = data;
+        }
     }
 }
 
