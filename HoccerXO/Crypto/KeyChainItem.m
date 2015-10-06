@@ -36,11 +36,21 @@
                (__bridge id)kSecAttrAccount : account
             }];
 }
+/*
++(NSString*)secErrorString:(OSStatus)secStatus {
+    return (__bridge NSString *) SecCopyErrorMessageString(secStatus, NULL);
+}
+*/
+
++(NSError*) NSFromOSError:(OSStatus)osStatus {
+    return [NSError errorWithDomain:NSOSStatusErrorDomain code:osStatus userInfo:nil];
+}
 
 + (BOOL)saveData:(NSString *)service account:(NSString *)account data:(id)data {
     
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service account:account];
-    SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+    OSStatus secStatus = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
+    NSLog(@"KeyChainAccess:save: deleting possible old data for service %@ account %@ returned error = %d", service, account, (int)secStatus);
     
     keychainQuery[(__bridge id)kSecAttrAccessible] = (__bridge id)kSecAttrAccessibleAfterFirstUnlock;
     @try {
@@ -50,7 +60,7 @@
             
             OSStatus secStatus = SecItemAdd((__bridge CFDictionaryRef)keychainQuery, NULL);
             if (secStatus != noErr) {
-                NSLog(@"KeyChainAccess:save: failed to save data for service %@ account %@, error = %d", service, account, (int)secStatus);
+                NSLog(@"KeyChainAccess:save: failed to save data for service %@ account %@, error = %d %@", service, account, (int)secStatus,[KeyChainItem NSFromOSError:secStatus]);
                 return NO;
             }
         } else {
@@ -91,7 +101,7 @@
     NSMutableDictionary *keychainQuery = [self getKeychainQuery:service account:account];
     OSStatus secStatus = SecItemDelete((__bridge CFDictionaryRef)keychainQuery);
     if (secStatus != noErr) {
-        NSLog(@"KeyChainAccess:save: failed to save data for service %@ account %@, error = %d", service, account, (int)secStatus);
+        NSLog(@"KeyChainAccess:save: failed to delete data for service %@ account %@, error = %d", service, account, (int)secStatus);
         return NO;
     }
     return YES;

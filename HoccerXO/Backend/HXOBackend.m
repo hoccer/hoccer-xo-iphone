@@ -1287,6 +1287,8 @@ NSError * makeSendError(NSString * reason) {
                 [self stopAndRetry];
             }];
             return;
+        } else {
+            [UserProfile.sharedProfile backupCredentials];
         }
 #endif
         

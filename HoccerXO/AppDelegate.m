@@ -984,9 +984,11 @@ BOOL sameObjects(id obj1, id obj2) {
         self.runningNewBuild = YES;
         NSLog(@"Running new build %@ for the first time",buildNumber);
     }
+    /*
     if ([UserProfile sharedProfile].isRegistered && (![UserProfile sharedProfile].foundCredentialsBackup || self.runningNewBuild)) {
         [[UserProfile sharedProfile] backupCredentials];
     }
+     */
         
     [[HXOUserDefaults standardUserDefaults] setValue:buildNumber forKey: [[Environment sharedEnvironment] suffixedString:kHXOlatestBuildRun]];
     

@@ -460,7 +460,13 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 - (BOOL) foundCredentialsBackup {
-    return [self credentialsBackup] != nil;
+    NSData * backup = [self credentialsBackup];
+    if (backup != nil) {
+        NSDictionary * credentials = [self decryptedCredentials:backup withPassphrase:@"Batldfh§$cx%&/()dgsGhajau"];
+        NSLog(@"foundCredentialsBackup: %@", credentials);
+        return credentials != nil;
+    }
+    return NO;
 }
 
 - (BOOL) hasActiveAccount {
