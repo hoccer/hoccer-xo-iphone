@@ -834,12 +834,49 @@ BOOL sameObjects(id obj1, id obj2) {
     localNotif.alertAction = NSLocalizedString(@"open", nil);
     localNotif.soundName = UILocalNotificationDefaultSoundName;
     
+    NSUInteger unreadMessages = [self unreadMessageCount];
+    localNotif.applicationIconBadgeNumber = unreadMessages;
+    
+    localNotif.userInfo = userInfo;
+    
+    [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
+}
+/*
+-(void)presentUserNotificationWithInfo:(NSDictionary*)userInfo {
+    
+    UILocalNotification *localNotif = [[UILocalNotification alloc] init];
+    
+    if (localNotif == nil) {
+        return;
+    }
+
+    NSDictionary *apsInfo = [userInfo objectForKey:@"aps"];
+    
+    NSString * alertMsg = apsInfo[@"alert"];
+
+    NSNumber * badge = apsInfo[@"badge"];
+    NSString * sound = apsInfo[@"sound"];
+    
+    
+    // Set your appending text.
+    NSString *textToAdd = [NSString stringWithFormat:@":%@", alertMsg];
+
+    
+    
+    localNotif.alertBody = theText;
+    if ([localNotif respondsToSelector:@selector(alertTitle)]) {
+        localNotif.alertTitle = theTitle;
+    }
+    localNotif.alertAction = NSLocalizedString(@"open", nil);
+    localNotif.soundName = UILocalNotificationDefaultSoundName;
+    
     //localNotif.applicationIconBadgeNumber = 1;
     
     localNotif.userInfo = userInfo;
     
     [[UIApplication sharedApplication] presentLocalNotificationNow:localNotif];
 }
+*/
 
 + (id) registerKeyboardHidingOnSheetPresentationFor:(UIViewController*)controller {
     id observer = [[NSNotificationCenter defaultCenter] addObserverForName:@"hxoSheetViewShown"
@@ -1011,35 +1048,47 @@ BOOL sameObjects(id obj1, id obj2) {
                                                                                  if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: Message received observed");
                                                                                  NSDictionary * info = [note userInfo];
                                                                                  HXOMessage * message = (HXOMessage *)info[@"message"];
-                                                                                 if (message != nil && self.runningInBackground) {
+                                                                                 
+                                                                                 if (message != nil &&
+                                                                                     self.runningInBackground)
+                                                                                 {
                                                                                      Delivery * delivery = message.deliveries.anyObject;
                                                                                      Contact * chat = message.contact;
                                                                                      Contact * sender = delivery.sender;
-                                                                                     NSString * title;
                                                                                      
                                                                                      if (!chat.hasNotificationsEnabled) {
                                                                                          if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: Message received, but notifications disabled for chat %@",chat.nickName);
                                                                                          return;
                                                                                      }
 
-                                                                                     if ([chat.clientId isEqualToString:sender.clientId]) {
-                                                                                         title = sender.nickNameOrAlias;
+                                                                                     
+                                                                                     NSString * messageText = nil;
+                                                                                     NSString * title = nil;
+                                                                                     NSDictionary * messageInfo = nil;
+                                                                                     
+                                                                                     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOAnonymousNotifications]) {
+                                                                                         messageText = NSLocalizedString(@"message_received_while_stopping", nil);
+                                                                                         title = HXOAppName();
                                                                                      } else {
-                                                                                         title = [NSString stringWithFormat:@"%@->%@",sender.nickNameOrAlias,chat.nickNameOrAlias];
+                                                                                         if ([chat.clientId isEqualToString:sender.clientId]) {
+                                                                                             title = sender.nickNameOrAlias;
+                                                                                         } else {
+                                                                                             title = [NSString stringWithFormat:@"%@->%@",sender.nickNameOrAlias,chat.nickNameOrAlias];
+                                                                                         }
+                                                                                         messageText = message.body;
+                                                                                         if (message.attachment != nil) {
+                                                                                             NSString * typeString = NSLocalizedString(message.attachment.mediaType, nil);
+                                                                                             messageText = [NSString stringWithFormat:@"[%@] %@",typeString,messageText];
+                                                                                         }
+                                                                                         messageText = [NSString stringWithFormat:@"%@:%@",message.contact.nickNameOrAlias,messageText];
+                                                                                         
                                                                                      }
                                                                                      
-                                                                                     NSString * messageText = message.body;
-                                                                                     if (message.attachment != nil) {
-                                                                                         NSString * typeString = NSLocalizedString(message.attachment.mediaType, nil);
-                                                                                         messageText = [NSString stringWithFormat:@"[%@] %@",typeString,messageText];
-                                                                                     }
-                                                                                     messageText = [NSString stringWithFormat:@"%@:%@",message.contact.nickNameOrAlias,messageText];
-                                                                                     
-                                                                                     NSDictionary * messageInfo = @{@"type":@"userMessage",
-                                                                                                                    @"messageId":message.messageId,
-                                                                                                                    @"messageTag":message.messageTag,
-                                                                                                                    @"contactId":chat.clientId,
-                                                                                                                    @"senderId":sender.clientId};
+                                                                                     messageInfo = @{@"type":@"userMessage",
+                                                                                                     @"messageId":message.messageId,
+                                                                                                     @"messageTag":message.messageTag,
+                                                                                                     @"contactId":chat.clientId,
+                                                                                                     @"senderId":sender.clientId};
 
                                                                                      if (TRACE_NOTIFICATIONS) NSLog(@"AppDelegate: presenting user notification with text = %@, info = %@",messageText,messageInfo);
                                                                                      [self presentUserNotificationWithTitle:title withText:messageText withInfo:messageInfo];
@@ -2462,6 +2511,17 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))handler
 {
     NSLog(@"didReceiveRemoteNotification %@", userInfo);
+
+    if(application.applicationState == UIApplicationStateInactive) {
+        NSLog(@"didReceiveRemoteNotification: app state INACTIVE");
+    } else if(application.applicationState == UIApplicationStateActive) {
+        NSLog(@"didReceiveRemoteNotification: app state ACTIVE");
+    } else if(application.applicationState == UIApplicationStateBackground) {
+        NSLog(@"didReceiveRemoteNotification: app state BACKGROUND");
+    } else {
+        NSLog(@"didReceiveRemoteNotification: ERROR: strange app state %ld", (long)application.applicationState);
+    }
+    
     if (!self.runningInBackground) {
         NSLog(@"didReceiveRemoteNotification - not running in background");
         if (handler != nil) handler(UIBackgroundFetchResultNoData);
@@ -2469,6 +2529,16 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     }
     
     NSLog(@"didReceiveRemoteNotification: backend state = %@", HXOBackend.instance.stateString);
+    
+    NSNumber * contentAvailableValue = userInfo[@"aps"][@"content-available"];
+    BOOL contentAvailable = contentAvailableValue != nil && contentAvailableValue.intValue == 1;
+    NSLog(@"didReceiveRemoteNotification: contentAvailableValue=%@, contentAvailable = %d", contentAvailableValue, contentAvailable);
+    
+    if (!contentAvailable) {
+        NSLog(@"didReceiveRemoteNotification - no content available");
+        if (handler != nil) handler(UIBackgroundFetchResultNoData);
+        return;
+    }
     
     _pushNotificationInfo = userInfo;
     ++_backgroundNotification;

@@ -86,6 +86,8 @@
 "apn_new_messages"    = "You have %@ new messages!";
 "apn_one_new_message" = "You have a new message!";
 
+"message_received_while_stopping" = "You received a new message while the app was stopping!";
+
 //==============================================================================
 // Attachments
 //==============================================================================
