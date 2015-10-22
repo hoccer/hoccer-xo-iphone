@@ -54,7 +54,7 @@
     [UIView setAnimationsEnabled:NO];
     
     // Stackoverflow #26357162 to force orientation
-    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationLandscapeRight];
+    NSNumber *value = [NSNumber numberWithInt:UIInterfaceOrientationPortrait];
     [[UIDevice currentDevice] setValue:value forKey:@"orientation"];
     
     BOOL isSimple = NO;
@@ -135,11 +135,13 @@
                                       dispatch_async(dispatch_get_main_queue(), block);
                                   }
                               } else if (success) {
-                                  // all good
-                                  if (self.completionBlock) {
-                                      self.completionBlock();
-                                  }
-                                  [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
+                                  dispatch_async(dispatch_get_main_queue(),^{
+                                      // all good
+                                      if (self.completionBlock) {
+                                          self.completionBlock();
+                                      }
+                                      [self.presentingViewController dismissViewControllerAnimated: YES completion: nil];
+                                  });
                               } else {
                                   alert = [[UIAlertView alloc] initWithTitle:@"Error"
                                                                      message:@"You are not the device owner."
