@@ -1020,7 +1020,7 @@ nil
         if (self.partner.isBlocked) {
             messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_contact_blocked_message", nil)];
         } else if (self.partner.isNearby || self.partner.isWorldwide) {
-            if (!self.partner.isPresent && self.partner.isNearby) {
+            if (self.partner.isNearby && !self.partner.isPresent && !self.partner.isBackground) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_nearby_contact_offline", nil)];
             } else if (self.partner.isSuspendedWorldwideContact) {
                 messageText = [NSString stringWithFormat: NSLocalizedString(@"chat_worldwide_contact_offline", nil)];
