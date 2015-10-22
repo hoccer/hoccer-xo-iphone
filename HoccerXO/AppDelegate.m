@@ -3642,25 +3642,37 @@ enum {
     return ARCHIVE_NOT_INSTALLED_ERROR_NO_ARCHIVE_TO_INSTALL;
 }
 
++ (BOOL) handleAsDataUTI:(NSString*)uti {
+    if ([@"com.adobe.photoshop-image" isEqualToString:uti]) {
+        return YES;
+    }
+    return NO;
+}
+
 
 // TODO: deal with mediatype text
 + (NSString*)mediaTypeOfUTI:(NSString*)documentType withFileName:(NSString*)filename{
     NSString * mediaType = nil;
-    if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeText)) {
-        mediaType=@"text";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeImage)) {
-        mediaType=@"image";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeMovie)) {
-        mediaType=@"video";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVideo)) {
-        mediaType=@"video";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeAudio)) {
-        mediaType=@"audio";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVCard)) {
-        mediaType=@"vcard";
-    } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeURL)) {
-        mediaType=@"text";
-    } else {
+    
+    if (![self handleAsDataUTI:documentType]) {
+        
+        if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeText)) {
+            mediaType=@"text";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeImage)) {
+            mediaType=@"image";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeMovie)) {
+            mediaType=@"video";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVideo)) {
+            mediaType=@"video";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeAudio)) {
+            mediaType=@"audio";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeVCard)) {
+            mediaType=@"vcard";
+        } else if (UTTypeConformsTo((__bridge CFStringRef)(documentType),kUTTypeURL)) {
+            mediaType=@"text";
+        }
+    }
+    if (mediaType == nil) {
         mediaType=@"data";
     }
     
