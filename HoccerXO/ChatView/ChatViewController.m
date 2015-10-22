@@ -365,6 +365,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
     [self scrollToRememberedCellOrToBottomIfNone];
     [self restoreTypedBody];
+    if (DEBUG_APPEAR) NSLog(@"ChatViewController:viewWillAppear: self.pickingAttachment=%d, self.hasPickedAttachment =%d", self.pickingAttachment, self.hasPickedAttachment);
     if (!self.pickingAttachment && !self.hasPickedAttachment) {
         [self restoreAttachments];
     } else {
@@ -565,6 +566,8 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
             if (DEBUG_ATTACHMENT_STORE) NSLog(@"ChatViewController:rememberAttachments: saved current attachments");
         }
         self.currentAttachment = nil;
+        self.hasPickedAttachment = NO;
+
     } else if (self.currentMultiAttachment != nil) {
         NSDictionary * savedAttachmentsDict = [ChatViewController encodeMultiAttachments:self.currentMultiAttachment];
         self.partner.savedAttachments = savedAttachmentsDict;
