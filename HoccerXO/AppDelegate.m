@@ -73,8 +73,8 @@
 #define TRACE_FILE_SEARCH           NO
 #define TRACE_DOCDIR_CHANGES        NO
 #define TRACE_IMAGE_CACHING         NO
-#define TRACE_NOTIFICATIONS         YES
-#define TRACE_MUGSHOTS              YES
+#define TRACE_NOTIFICATIONS         NO
+#define TRACE_MUGSHOTS              NO
 #define TRACE_BACKGROUND_FINALIZER  NO
 #define TRACE_TRAFFIC_MONITOR       NO
 #define DEBUG_ROTATION              NO
@@ -188,7 +188,7 @@ typedef void (^ImageHandler)(UIImage* image);
 -(BOOL) runningInBackground {
     UIApplicationState state = [UIApplication sharedApplication].applicationState;
     BOOL result =  state == UIApplicationStateBackground;
-    NSLog(@"runningInBackground %d, applicationState = %ld",result, (long)state);
+    if (TRACE_BACKGROUND_FINALIZER) NSLog(@"runningInBackground %d, applicationState = %ld",result, (long)state);
     return result;
 }
 

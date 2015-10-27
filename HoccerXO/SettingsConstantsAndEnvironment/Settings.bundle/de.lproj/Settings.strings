@@ -98,6 +98,7 @@
 "WorldwideTitle"            = "Weltweit-Modus";
 "WorldwideTimeToLive"       = "Verlassen nach:";
 "WorldwideAutoDownload"     = "Anhänge automatisch laden";
+"WorldwideHidden"           = "Funktion verbergen";
 
 "ww_0"                      = "Sofort";
 "ww_1"                      = "1 Minute";

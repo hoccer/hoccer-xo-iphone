@@ -349,13 +349,16 @@ static HXOEnvironment *instance;
 }
 
 + (NSString*) worldwideNotificationPreferences {
-    if ([[HXOUserDefaults standardUserDefaults] boolForKey:kHXOWorldwideNotifications]) {
+    if ([[HXOUserDefaults standardUserDefaults] boolForKey:kHXOWorldwideNotifications] && !self.worldwideHidden) {
         return @"enabled";
     } else {
         return @"disabled";
     }
 }
 
++ (BOOL) worldwideHidden {
+    return [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOWorldwideHidden];
+}
 
 
 @end

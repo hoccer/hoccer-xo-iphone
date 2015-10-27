@@ -73,5 +73,7 @@ typedef enum  {
 + (NSNumber*) worldwideTimeToLive;
 + (NSString*) worldwideGroupTag;
 + (NSString*) worldwideNotificationPreferences;
++ (BOOL) worldwideHidden;
+
 
 @end

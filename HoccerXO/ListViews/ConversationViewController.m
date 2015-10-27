@@ -27,6 +27,7 @@
 #import "DatasheetViewController.h"
 
 #import "GroupMembership.h"
+#import "HXOEnvironment.h"
 
 #define TRACE_NOTIFICATIONS NO
 #define FETCHED_RESULTS_DEBUG_PERF NO
@@ -41,6 +42,9 @@
 @property (strong) id messageObserver;
 @property (strong) id loginObserver;
 @property (strong) id openMessageObserver;
+@property (strong) id environmentGroupObserver;
+@property (strong) id worldwideHiddenObserver;
+
 
 @property (strong) NSDate * catchDate;
 @property (strong) HXOMessage * caughtMessage;
@@ -73,6 +77,15 @@
         self.navigationItem.rightBarButtonItem.enabled = NO;
     }
     [HXOEnvironment.sharedInstance addObserver:self forKeyPath:@"groupId" options:0 context:nil];
+    
+    self.worldwideHiddenObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"WorldWideHiddenChanged"
+                                                                                     object:nil
+                                                                                      queue:[NSOperationQueue mainQueue]
+                                                                                 usingBlock:^(NSNotification *note) {
+                                                                                     if (TRACE_NOTIFICATIONS,1) NSLog(@"ConversationView: WorldWideHiddenChanged");
+                                                                                     [self setupTitle];
+                                                                                     [self segmentChanged:self];
+                                                                                 }];
 }
 
 - (id) cellClass {
@@ -85,7 +98,12 @@
 
 - (void) setupTitle {
     if (self.hasGroupContactToggle) {
-        self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"chat_list_nav_title", nil), NSLocalizedString(@"nearby_list_nav_title", nil),NSLocalizedString(@"worldwide_list_nav_title", nil)]];
+        if (HXOEnvironment.worldwideHidden) {
+            self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"chat_list_nav_title", nil), NSLocalizedString(@"nearby_list_nav_title", nil)]];
+
+        } else {
+            self.groupContactsToggle = [[UISegmentedControl alloc] initWithItems: @[NSLocalizedString(@"chat_list_nav_title", nil), NSLocalizedString(@"nearby_list_nav_title", nil),NSLocalizedString(@"worldwide_list_nav_title", nil)]];
+        }
         self.groupContactsToggle.selectedSegmentIndex = 0;
         [self.groupContactsToggle addTarget:self action:@selector(segmentChanged:) forControlEvents: UIControlEventValueChanged];
         self.navigationItem.titleView = self.groupContactsToggle;
@@ -186,7 +204,8 @@
                                                                                  [self configureForMode:self.environmentMode];
                                                                              }
                                                                          }];
-    self.loginObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"environmentGroupChanged"
+    
+    self.environmentGroupObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"environmentGroupChanged"
                                                                            object:nil
                                                                             queue:[NSOperationQueue mainQueue]
                                                                        usingBlock:^(NSNotification *note) {
@@ -211,6 +230,14 @@
     if (self.openMessageObserver != nil) {
         [[NSNotificationCenter defaultCenter] removeObserver:self.openMessageObserver];
     }
+    if (self.environmentGroupObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.environmentGroupObserver];
+    }
+    /*
+    if (self.worldwideHiddenObserver != nil) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self.worldwideHiddenObserver];
+    }
+     */
 
 }
 
@@ -251,7 +278,9 @@
         }
     }
     [self.groupContactsToggle setEnabled:!HXOEnvironment.locationDenied forSegmentAtIndex:1];
-    [self.groupContactsToggle setEnabled:!HXOEnvironment.locationDenied forSegmentAtIndex:2];
+    if (!HXOEnvironment.worldwideHidden) {
+        [self.groupContactsToggle setEnabled:!HXOEnvironment.locationDenied forSegmentAtIndex:2];
+    }
     return result;
 }
 

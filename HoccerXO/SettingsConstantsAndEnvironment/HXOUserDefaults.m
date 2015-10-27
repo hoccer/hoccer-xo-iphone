@@ -68,6 +68,7 @@ NSString * const kHXOWorldwideTimeToLive        = @"WorldwideTimeToLive";
 NSString * const kHXOWorldwideGroupTag          = @"WorldwideGroupTag";
 NSString * const kHXOWorldwideDialogShown       = @"WorldwideDialogShown";
 NSString * const kHXOWorldwideAutoDownload      = @"WorldwideAutoDownload";
+NSString * const kHXOWorldwideHidden            = @"WorldwideHidden";
 
 NSString * const kHXONearbyDialogShown       = @"NearbyDialogShown";
 

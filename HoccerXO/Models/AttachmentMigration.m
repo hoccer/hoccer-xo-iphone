@@ -423,7 +423,7 @@ static NSString * filenameOf(Attachment * attachment) {
         NSLog(@"adoptOrphanedFiles: Using NSManagedObjectIDResultType");
         fetchRequest.resultType = NSManagedObjectIDResultType;
 #else
-        NSLog(@"adoptOrphanedFiles: Not Using NSManagedObjectIDResultType");
+        // NSLog(@"adoptOrphanedFiles: Not Using NSManagedObjectIDResultType");
 #endif
 
 #define FETCH_ALL_IN_ONE

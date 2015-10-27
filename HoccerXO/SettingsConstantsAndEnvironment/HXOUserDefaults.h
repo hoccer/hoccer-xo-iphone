@@ -68,6 +68,7 @@ FOUNDATION_EXPORT NSString * const kHXOWorldwideTimeToLive;
 FOUNDATION_EXPORT NSString * const kHXOWorldwideGroupTag;
 FOUNDATION_EXPORT NSString * const kHXOWorldwideDialogShown;
 FOUNDATION_EXPORT NSString * const kHXOWorldwideAutoDownload;
+FOUNDATION_EXPORT NSString * const kHXOWorldwideHidden;
 
 FOUNDATION_EXPORT NSString * const kHXONearbyDialogShown;
 

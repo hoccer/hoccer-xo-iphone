@@ -50,7 +50,7 @@
 #define DELIVERY_TRACE      NO
 #define GLITCH_TRACE        NO
 #define SECTION_TRACE       NO
-#define CONNECTION_TRACE    YES
+#define CONNECTION_TRACE    NO
 #define GROUPKEY_DEBUG      NO
 #define GROUP_DEBUG         NO
 #define RELATIONSHIP_DEBUG  NO
@@ -296,6 +296,10 @@ static NSTimer * _stateNotificationDelayTimer;
                    forKeyPath:kHXOWorldwideGroupTag
                       options:NSKeyValueObservingOptionNew
                       context:NULL];
+        [defaults addObserver:self
+                   forKeyPath:kHXOWorldwideHidden
+                      options:NSKeyValueObservingOptionNew
+                      context:NULL];
 
         
         
@@ -362,6 +366,11 @@ static NSTimer * _stateNotificationDelayTimer;
                 }
             }
         }
+    }
+    if ([keyPath isEqualToString:kHXOWorldwideHidden]) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"WorldWideHiddenChanged"
+                                                            object:self
+                                                          userInfo:nil];
     }
 }
 
@@ -1134,7 +1143,7 @@ NSError * makeSendError(NSString * reason) {
             //[self checkTransferQueues];
             
             id userInfo = @{ @"message":message };
-            if (1) NSLog(@"receiveMessage: posting notification: %@", kHXOReceivedNewHXOMessage);
+            if (DELIVERY_TRACE) NSLog(@"receiveMessage: posting notification: %@", kHXOReceivedNewHXOMessage);
             [[NSNotificationCenter defaultCenter] postNotificationName:kHXOReceivedNewHXOMessage
                                                                 object:self
                                                               userInfo:userInfo
