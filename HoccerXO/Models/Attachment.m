@@ -1991,6 +1991,12 @@
         self.transferHttpStatusCode = (long)[httpResponse statusCode];
         if (self.transferHttpStatusCode != 200 && self.transferHttpStatusCode != 206 ) {
             if (transferHttpStatusCode >= 400) {
+                if (transferHttpStatusCode == 404) {
+                    int maxRetries = [[[HXOUserDefaults standardUserDefaults] valueForKey:kHXOMaxAttachmentDownloadRetries] intValue];
+                    NSLog(@"Attachment:transferConnection:didReceiveResponse 404, setting retry counter to maxRetries = %d", maxRetries);
+                    self.transferFailures = maxRetries;
+                }
+                
                 self.transferConnection = nil; // make sure we do not get any more data
                 if (CONNECTION_TRACE) {NSLog(@"### did set transferConnection to nil to avoid receiving data");}
                 // NSString * myPath = [[NSURL URLWithString: self.ownedURL] path];
