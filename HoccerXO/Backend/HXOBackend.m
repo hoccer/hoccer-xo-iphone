@@ -3071,7 +3071,8 @@ NSError * makeSendError(NSString * reason) {
 }
 
 -(BOOL)fullSync {
-    return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"fullSync"] boolValue];
+    return NO;
+    // return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"fullSync"] boolValue];
 }
 
 -(void)disableFullSync {
@@ -3079,7 +3080,8 @@ NSError * makeSendError(NSString * reason) {
 }
 
 -(BOOL)quickStart {
-    return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"quickStart"] boolValue];
+    return YES;
+    // return [[[HXOUserDefaults standardUserDefaults] objectForKey:@"quickStart"] boolValue];
 }
 
 - (void) syncGroupsWithForce:(BOOL)forceAll withCompletion:(GenericResultHandler)completion {

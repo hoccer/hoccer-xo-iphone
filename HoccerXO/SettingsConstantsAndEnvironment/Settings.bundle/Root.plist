@@ -366,6 +366,7 @@
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
+        <!--
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
@@ -412,6 +413,7 @@
 			<key>AutocorrectionType</key>
 			<string>NO</string>
 		</dict>
+         -->
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
