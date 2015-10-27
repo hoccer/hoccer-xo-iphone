@@ -87,6 +87,7 @@
 "apn_one_new_message" = "You have a new message!";
 
 "message_received_while_stopping" = "You received a new message while the app was stopping!";
+"error_fetching_message_in_background %@" = "A problem occured while retrieving a new message. (%@)";
 
 //==============================================================================
 // Attachments

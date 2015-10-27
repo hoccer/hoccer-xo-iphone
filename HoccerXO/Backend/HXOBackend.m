@@ -1203,6 +1203,16 @@ NSError * makeSendError(NSString * reason) {
         NSLog(@"Login credentials refused in SRP phase %@ with ‘%@', loginRefusals=%d", phase, errorMessage, _loginRefusals);
         _loginRefusals++;
         if (_loginRefusals >= 3) {
+            if (AppDelegate.instance.runningInBackground) {
+                NSString * errorText = [NSString stringWithFormat:NSLocalizedString(@"error_fetching_message_in_background %@", nil), errorMessage];
+                [AppDelegate.instance presentUserNotificationWithTitle:HXOAppName() withText:errorText withInfo:nil];
+                if (self.delegate.processingBackgroundNotification) {
+                    [self.delegate finishBackgroundNotificationProcessing];
+                } else {
+                    [self stop];
+                }
+                return;
+            }
             [AppDelegate.instance showInvalidCredentialsWithInfo:errorMessage withContinueHandler:^{
             }];
             [self disable];
@@ -1213,6 +1223,16 @@ NSError * makeSendError(NSString * reason) {
         _loginFailures++;
         if (_loginFailures >= 3) {
             NSLog(@"Login SRP phase 1 failed %d times", _loginFailures);
+            if (AppDelegate.instance.runningInBackground) {
+                NSString * errorText = [NSString stringWithFormat:NSLocalizedString(@"error_fetching_message_in_background %@", nil), errorMessage];
+                [AppDelegate.instance presentUserNotificationWithTitle:HXOAppName() withText:errorText withInfo:nil];
+                if (self.delegate.processingBackgroundNotification) {
+                    [self.delegate finishBackgroundNotificationProcessing];
+                } else {
+                    [self stop];
+                }
+                return;
+            }
             [AppDelegate.instance showLoginFailedWithInfo:errorMessage withContinueHandler:^{
                 _loginFailures = 0;
                 [self stopAndRetry];
@@ -1228,7 +1248,13 @@ NSError * makeSendError(NSString * reason) {
     [self setState: kBackendAuthenticating];
     NSString * A = [[UserProfile sharedProfile] startSrpAuthentication];
     [self srpPhase1WithClientId: [UserProfile sharedProfile].clientId A: A andHandler:^(NSString * challenge, NSDictionary * errorReturned) {
-        if (challenge == nil) {
+
+#ifdef SIMULATE_BACKGROUND_LOGIN_ERROR
+        if (challenge == nil || AppDelegate.instance.runningInBackground) {
+            errorReturned = @{ @"message": @"test error" };
+#else
+            if (challenge == nil) {
+#endif
             [self handleLoginError:errorReturned inPhase:@"1"];
         } else {
             NSError * error;

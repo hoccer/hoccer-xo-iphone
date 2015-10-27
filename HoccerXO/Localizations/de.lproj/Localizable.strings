@@ -84,6 +84,7 @@
 "apn_one_new_message" = "Du hast eine neue Nachricht!";
 
 "message_received_while_stopping" = "Du hast eine neue Nachricht erhalten während die App dabei war anzuhalten!";
+"error_fetching_message_in_background %@" = "Es ist ein Problem beim Laden einer neuen Nachricht aufgetreten. (%@)";
 
 
 //==============================================================================

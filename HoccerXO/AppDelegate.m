@@ -2564,29 +2564,44 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     _backgroundFetchHandler = handler;
 }
 
+
 -(void)finishBackgroundNotificationProcessing {
     NSLog(@"finishBackgroundNotificationProcessing run %ld",_backgroundNotification);
- 
+    
     if (_backgroundFetchHandler == nil) {
         NSLog(@"#WARNING: finishBackgroundNotificationProcessing: no _backgroundFetchHandler, doing nothing");
         return;
     }
-
+    
+    if (!self.runningInBackground) {
+        // we have switched to foreground
+        NSLog(@"finishBackgroundNotificationProcessing, running in foreground %ld",_backgroundNotification);
+        void (^backgroundFetchHandler)(UIBackgroundFetchResult result) = _backgroundFetchHandler;
+        _backgroundFetchHandler = nil;
+        if (backgroundFetchHandler) {
+            backgroundFetchHandler(UIBackgroundFetchResultNewData);
+        }
+        _backgroundNotificationReady = _backgroundNotification;
+        return;
+    }
+    
+    
     [self saveDatabaseNow];
     [self setLastActiveDate];
     
-    void (^backgroundFetchHandler)(UIBackgroundFetchResult result) = _backgroundFetchHandler;
-    _backgroundFetchHandler = nil;
     _backgroundNotificationReady = _backgroundNotification;
     
     NSUInteger unreadMessages = [self unreadMessageCount];
     [UIApplication sharedApplication].applicationIconBadgeNumber = unreadMessages;
     
     _backgroundTask = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        NSLog(@"finishBackgroundNotificationProcessing, running expiration handler %ld",_backgroundNotification);
         [self.chatBackend stop];
         [[UIApplication sharedApplication] endBackgroundTask:_backgroundTask];
         _backgroundTask = UIBackgroundTaskInvalid;
         NSLog(@"finishBackgroundNotificationProcessing, finishing other background tasks %ld",_backgroundNotification);
+        void (^backgroundFetchHandler)(UIBackgroundFetchResult result) = _backgroundFetchHandler;
+        _backgroundFetchHandler = nil;
         if (backgroundFetchHandler) {
             backgroundFetchHandler(UIBackgroundFetchResultNewData);
         }
@@ -2601,6 +2616,8 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
             [self setBackgroundFinalizer:^{
                 NSLog(@"Executing background finalizer for notification processing");
                 [weakSelf.chatBackend stop];
+                void (^backgroundFetchHandler)(UIBackgroundFetchResult result) = AppDelegate.instance->_backgroundFetchHandler;
+                AppDelegate.instance->_backgroundFetchHandler = nil;
                 if (backgroundFetchHandler) {
                     NSLog(@"finishBackgroundNotificationProcessing, finishing notification background task %ld",backgroundNotification);
                     backgroundFetchHandler(UIBackgroundFetchResultNewData);
