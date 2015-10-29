@@ -340,8 +340,12 @@ static HXOEnvironment *instance;
 }
 
 + (NSNumber*) worldwideTimeToLive {
-    return [NSNumber numberWithUnsignedLong:[[[HXOUserDefaults standardUserDefaults]
-                                              valueForKey: kHXOWorldwideTimeToLive] unsignedLongValue] * 1000];
+    if (!self.worldwideHidden) {
+        return [NSNumber numberWithUnsignedLong:[[[HXOUserDefaults standardUserDefaults]
+                                                  valueForKey: kHXOWorldwideTimeToLive] unsignedLongValue] * 1000];
+    } else {
+        return [NSNumber numberWithUnsignedLong:0];
+    }
 }
 
 + (NSString*) worldwideGroupTag {

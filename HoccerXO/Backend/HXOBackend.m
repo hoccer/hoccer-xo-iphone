@@ -371,6 +371,10 @@ static NSTimer * _stateNotificationDelayTimer;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"WorldWideHiddenChanged"
                                                             object:self
                                                           userInfo:nil];
+        if (self.isLoggedIn) {
+            [self releaseEnvironmentType:kGroupTypeWorldwide usingTTL:HXOEnvironment.worldwideTimeToLive withNotificationPreference:HXOEnvironment.worldwideNotificationPreferences withHandler:^(BOOL ok) {
+            }];
+        }
     }
 }
 
