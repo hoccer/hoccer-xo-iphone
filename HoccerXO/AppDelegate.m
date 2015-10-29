@@ -3730,9 +3730,26 @@ enum {
 }
 
 + (BOOL) handleAsDataUTI:(NSString*)uti {
-    if ([@"com.adobe.photoshop-image" isEqualToString:uti]) {
+    NSArray * dataUTIs = @[@"com.adobe.photoshop-image",
+                           @"com.adobe.illustrator.ai-image",
+                           @"com.microsoft.windows-media-wmv",
+                           @"com.microsoft.windows-media-wmp",
+                           @"com.microsoft.windows-media-wma",
+                           @"com.microsoft.windows-media-wmx",
+                           @"com.microsoft.windows-media-wvx",
+                           @"com.microsoft.windows-media-wax",
+                           @"com.truevision.tga-image",
+                           @"com.ilm.openexr-image",
+                           @"com.kodak.flashpix.image",
+                           @"com.digidesign.sd2-audio",
+                           @"com.real.realmedia",
+                           @"com.real.realaudio"
+                           ];
+    
+    if ([dataUTIs containsObject:uti]) {
         return YES;
     }
+    
     return NO;
 }
 
