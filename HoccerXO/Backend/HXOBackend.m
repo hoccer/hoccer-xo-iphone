@@ -1712,7 +1712,7 @@ NSError * makeSendError(NSString * reason) {
         if (_state != kBackendDisabling) {
             [self setState: kBackendStopping];
         }
-        NSLog(@"Backend:stop: closing connection");
+        NSLog(@"#INFO: Backend:stop: closing connection");
         [_serverConnection close];
         [self clearWaitingAttachmentTransfers];
     }
@@ -1721,7 +1721,7 @@ NSError * makeSendError(NSString * reason) {
 - (void) stopAndRetry {
     if (_state != kBackendDisabled && _state != kBackendDisabling) {
         [self setState: kBackendStopped];
-        NSLog(@"Backend:stopAndRetry: closing connection");
+        NSLog(@"#INFO: Backend:stopAndRetry: closing connection");
         [_serverConnection close];
     }
 }
@@ -6959,7 +6959,7 @@ NSError * makeSendError(NSString * reason) {
 }
 
 - (void) webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    if (CONNECTION_TRACE,YES) NSLog(@"webSocket didCloseWithCode %d reason: %@ clean: %d", (int)code, reason, wasClean);
+    if (CONNECTION_TRACE,YES) NSLog(@"#INFO: webSocket didCloseWithCode: %d reason: '%@' clean: %d", (int)code, reason, wasClean);
     _uncleanConnectionShutdown = code != 0 || [_serverConnection numberOfOpenRequests] !=0 || [_serverConnection numberOfFlushedRequests] != 0;
     if (CONNECTION_TRACE) NSLog(@"webSocket didCloseWithCode _uncleanConnectionShutdown = %d, openRequests = %d, flushedRequests = %d", _uncleanConnectionShutdown, [_serverConnection numberOfOpenRequests], [_serverConnection numberOfFlushedRequests]);
     
