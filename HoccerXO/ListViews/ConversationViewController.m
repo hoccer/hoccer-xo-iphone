@@ -442,15 +442,25 @@
 
 - (void) addPredicates: (NSMutableArray*) predicates {
     if (self.environmentMode == ACTIVATION_MODE_NEARBY) {
+        NSString * myNearbyGroupId = HXOEnvironment.sharedInstance.groupId;
+        if (myNearbyGroupId == nil) {
+            myNearbyGroupId = @"no-environment-group";
+        }
         [predicates addObject: [NSPredicate predicateWithFormat:
                                 @"(type == 'Contact' AND \
-                                SUBQUERY(groupMemberships, $member, $member.group.groupType == 'nearby' AND $member.group.groupState =='exists').@count > 0 ) \
+                                    SUBQUERY(groupMemberships, $member, \
+                                        $member.group.clientId == %@ AND \
+                                        $member.state == 'joined' AND \
+                                        $member.group.groupType == 'nearby' AND \
+                                        $member.group.groupState =='exists').@count > 0 ) \
                                 OR \
                                 (type == 'Group' AND \
                                 (myGroupMembership.state == 'joined' AND \
                                 myGroupMembership.group.groupType == 'nearby' AND \
                                 myGroupMembership.group.groupState =='exists' AND\
-                                SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'nearbyMember').@count > 1 ))"]];
+                                SUBQUERY(myGroupMembership.group.members, $member, $member.role == 'nearbyMember').@count > 1 ))",
+                                myNearbyGroupId]];
+        
     } else if (self.environmentMode == ACTIVATION_MODE_WORLDWIDE) {
         NSString * myWorldWideGroupId = HXOEnvironment.sharedInstance.groupId;
         if (myWorldWideGroupId == nil) {
