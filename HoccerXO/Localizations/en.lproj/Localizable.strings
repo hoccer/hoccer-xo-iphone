@@ -282,7 +282,7 @@
 "chat_group_clone_nearby"                       = "Create permanent group";
 
 "chat_worldwide_intro_title"                    = "Worldwide";
-"chat_worldwide_intro_message"                  = "In Worldwide mode you can chat with random users worldwide who have also activated Worldwide mode. Please take a look at the available settings for Worldwide. How long do you want to keep Worldwide activated and therefore visible for others after leaving the Worldwide view?";
+"chat_worldwide_intro_message"                  = "In Worldwide mode you can chat with up to 10 random users worldwide who have also activated Worldwide mode. Please take a look at the available settings for Worldwide. How long do you want to keep Worldwide activated and therefore visible for others after leaving the Worldwide view?";
 
 "chat_worldwide_intro_0_min"                    = "Deactivate immediately";
 "chat_worldwide_intro_30_min"                   = "after 30 minutes";
