@@ -5848,6 +5848,10 @@ NSError * makeSendError(NSString * reason) {
 
 
 - (void) callAttachmentStateChangeMethod:(NSString *)method withFileId:(NSString*) fileId withhandler:(StringResultHandler)handler{
+    if (fileId == nil) {
+        if (handler) handler(@"nil fileId", NO);
+        return;
+    }
     
     [_serverConnection invoke: method withParams: @[fileId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
@@ -5862,6 +5866,14 @@ NSError * makeSendError(NSString * reason) {
 
 - (void) callAttachmentStateChangeMethod:(NSString *)method withFileId:(NSString*) fileId forReceiver:(NSString*)receiverId withhandler:(StringResultHandler)handler{
     
+    if (fileId == nil) {
+        if (handler) handler(@"nil fileId", NO);
+        return;
+    }
+    if (receiverId == nil) {
+        if (handler) handler(@"nil receiverId", NO);
+        return;
+    }
     [_serverConnection invoke: method withParams: @[fileId, receiverId] onResponse: ^(id responseOrError, BOOL success) {
         if (success) {
             // NSLog(@"%@() got result: %@", method, responseOrError);
