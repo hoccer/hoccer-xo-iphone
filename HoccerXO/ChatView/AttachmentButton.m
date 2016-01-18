@@ -23,6 +23,8 @@ static NSString * kSpinnerAnim = @"spinnerAnim";
 
 @end
 
+#define DEBUG_SPINNER NO
+
 @implementation AttachmentButton
 
 - (id) initWithFrame:(CGRect)frame {
@@ -67,7 +69,9 @@ static NSString * kSpinnerAnim = @"spinnerAnim";
 }
 
 - (void) startSpinning {
+    if (DEBUG_SPINNER) NSLog(@"AttachmentButton:startSpinning");
     if ( ! [self.spinnerLayer animationForKey: kSpinnerAnim]) {
+        if (DEBUG_SPINNER) NSLog(@"AttachmentButton:startSpinning: animation not running, starting");
         CABasicAnimation * spinner = [CABasicAnimation animationWithKeyPath:@"transform.rotation.z"];
         spinner.cumulative = YES;
         spinner.toValue = @(2 * M_PI);
@@ -79,6 +83,7 @@ static NSString * kSpinnerAnim = @"spinnerAnim";
 }
 
 - (void) stopSpinning {
+    if (DEBUG_SPINNER) NSLog(@"AttachmentButton:stopSpinning");
     [self.spinnerLayer removeAnimationForKey: kSpinnerAnim];
     [self configure];
 }
@@ -108,6 +113,7 @@ static NSString * kSpinnerAnim = @"spinnerAnim";
 }
 
 - (void) configure {
+    if (DEBUG_SPINNER) NSLog(@"AttachmentButton:configure");
     UIColor * strokeColor = self.isEnabled ? self.tintColor : [UIColor blackColor];
     self.iconLayer.strokeColor      = 
     self.spinnerLayer.strokeColor   =
@@ -115,6 +121,7 @@ static NSString * kSpinnerAnim = @"spinnerAnim";
     self.layer.opacity = self.isEnabled ? 1 : kDisabledAlpha;
 
     if ([self.spinnerLayer animationForKey: kSpinnerAnim]) {
+        if (DEBUG_SPINNER) NSLog(@"AttachmentButton:configure for spinning");
         self.spinnerLayer.opacity       = 1;
         self.circleLayer.opacity        =
         self.previewImageLayer.opacity  =

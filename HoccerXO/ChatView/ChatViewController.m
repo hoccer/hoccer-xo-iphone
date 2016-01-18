@@ -103,6 +103,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 @property  BOOL                                                keyboardShown;
 @property  BOOL                                                pickingAttachment;
 @property  BOOL                                                hasPickedAttachment;
+@property  BOOL                                                startAttachmentSpinnerWhenViewAppears; // Fuck you, Apple!
 
 @property (strong) UIBarButtonItem * actionButton;
 
@@ -412,6 +413,13 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
                                              }
                                          }
                                      }];
+
+    if (self.startAttachmentSpinnerWhenViewAppears) {
+        // Due to some "optizations" introduced in iOS9, animations will not run when started earlier
+        [self.attachmentButton startSpinning];
+        self.startAttachmentSpinnerWhenViewAppears = NO;
+    }
+
 }
 
 - (NSMutableDictionary*) messageItems {
@@ -2010,12 +2018,13 @@ NSError * makeMediaError(NSString * reason) {
 }
 
 - (void) startPickedAttachmentProcessingForObject:(id)info {
-    // NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
+    NSLog(@"startPickedAttachmentProcessingForObject:%@",_currentPickInfo);
     if (_currentAttachment != nil) {
         [self trashCurrentAttachment];
     }
     _currentPickInfo = info;
-    [self.attachmentButton startSpinning];
+    //[self.attachmentButton startSpinning]; // will be started in viewWillAppear to fix bug in iOS9
+    self.startAttachmentSpinnerWhenViewAppears = YES;
     self.sendButton.enabled = NO; // wait for attachment ready
 }
 
