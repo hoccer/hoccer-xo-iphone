@@ -2033,6 +2033,7 @@ NSError * makeMediaError(NSString * reason) {
         if (DEBUG_ATTACHMENT_BUTTONS) NSLog(@"finishPickedAttachmentProcessingWithImage:%@ previewIcon:%@ withError:%@",theImage, self.currentAttachment.previewIcon, theError);
         _currentPickInfo = nil;
 
+        self.startAttachmentSpinnerWhenViewAppears = NO;
         [self.attachmentButton stopSpinning];
 
         if (theError == nil && theImage != nil) {
