@@ -2829,7 +2829,7 @@ NSError * makeSendError(NSString * reason) {
     
     NSNumber * newTimeStamp = thePresence[@"timestamp"];
     if (newTimeStamp != nil) {
-        NSLog(@"WARNING: presenceModified receiced timestamp for contact id = %@", myContact.clientId);
+        NSLog(@"WARNING: presenceModified received timestamp for contact id = %@", myContact.clientId);
         myContact.presenceLastUpdatedMillis = newTimeStamp;
         
     }
