@@ -15,6 +15,7 @@ FOUNDATION_EXPORT NSString * const kHXOrunningNewBuild;
 
 FOUNDATION_EXPORT NSString * const kHXOlastActiveDate;
 FOUNDATION_EXPORT NSString * const kHXOlastDeactivationDate;
+FOUNDATION_EXPORT NSString * const kHXOlastLogOffDate;
 
 FOUNDATION_EXPORT NSString * const kHXOAPNDeviceToken;
 

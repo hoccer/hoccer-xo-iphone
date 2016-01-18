@@ -14,6 +14,8 @@ NSString * const kHXOlatestBuildRun        = @"latestBuildRun";
 NSString * const kHXOrunningNewBuild       = @"runningNewBuild";
 NSString * const kHXOlastActiveDate        = @"lastActiveDate";
 NSString * const kHXOlastDeactivationDate  = @"lastDeactivationDate";
+NSString * const kHXOlastLogOffDate        = @"lastLogOffDate";
+
 NSString * const kHXOAPNDeviceToken        = @"apnDeviceToken";
 
 NSString * const kHXOAvatar                = @"avatar";

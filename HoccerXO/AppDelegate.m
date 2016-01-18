@@ -153,6 +153,7 @@ typedef void (^ImageHandler)(UIImage* image);
 @property BOOL interactionSending;
 @property BOOL interactionRemoveFileFlag;
 @property (nonatomic, readonly) BOOL isPasscodeRequired;
+@property (nonatomic) BOOL isLoggedOn; // will be set to true when no passcode required or passcode entered
 
 @end
 
@@ -976,7 +977,6 @@ BOOL sameObjects(id obj1, id obj2) {
     
     application.applicationSupportsShakeToEdit = NO;
     
-    
     if (![self applicationTemporaryDocumentsDirectory]) {
         return NO;
     }
@@ -1124,6 +1124,10 @@ BOOL sameObjects(id obj1, id obj2) {
     
     if (passcodeRequired && !isFirstRun) {
         [self performSelectorOnMainThread: @selector(requestUserAuthentication:) withObject: self waitUntilDone: NO];
+    } else {
+        if (!self.runningInBackground) {
+            self.isLoggedOn = YES;
+        }
     }
 
     [self setLastActiveDate];
@@ -1151,6 +1155,11 @@ BOOL sameObjects(id obj1, id obj2) {
 - (void) setLastDeactivationDate {
     NSDate * now = [NSDate date];
     [[HXOUserDefaults standardUserDefaults] setValue:now forKey: [[Environment sharedEnvironment] suffixedString:kHXOlastDeactivationDate]];
+}
+
+- (void) setLastLogOffDate {
+    NSDate * now = [NSDate date];
+    [[HXOUserDefaults standardUserDefaults] setValue:now forKey: [[Environment sharedEnvironment] suffixedString:kHXOlastLogOffDate]];
 }
 
 + (void) setDefaultAudioSession {
@@ -1260,6 +1269,10 @@ BOOL sameObjects(id obj1, id obj2) {
     if (self.environmentMode != ACTIVATION_MODE_NONE) {
         [self suspendEnvironmentMode]; // for resuming nearby or worldwide mode, the Conversations- or ChatView are responsible; the must do it after login
     }
+    if (self.isLoggedOn) {
+        [self setLastLogOffDate];
+        self.isLoggedOn = NO;
+    }
     
     [self updateUnreadMessageCountAndStop];
 }
@@ -1278,12 +1291,14 @@ BOOL sameObjects(id obj1, id obj2) {
         if (self.environmentMode != ACTIVATION_MODE_NONE) {
             [self configureForMode:self.environmentMode];
         }
+        self.isLoggedOn = YES;
     } else {
         if (self.isPasscodeRequired) {
             [self.chatBackend disable];
             [self requestUserAuthentication: nil];
         } else {
             [self tryMakeMugShot];
+            self.isLoggedOn = YES;
             [self.chatBackend start: NO];
         }
     }
@@ -4388,7 +4403,8 @@ enum {
     BOOL isEnabled = [PasscodeViewController passcodeEnabled];
     BOOL isExpired = NO;
     if (isEnabled) {
-        NSDate * lastTime = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlastActiveDate]];
+        //NSDate * lastTime = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlastActiveDate]];
+        NSDate * lastTime = [[HXOUserDefaults standardUserDefaults] valueForKey:[[Environment sharedEnvironment] suffixedString:kHXOlastLogOffDate]];
         NSTimeInterval dt = [[NSDate date] timeIntervalSinceDate: lastTime];
         isExpired = !lastTime || dt > [PasscodeViewController passcodeTimeout];
     }
@@ -4399,6 +4415,7 @@ enum {
     UIStoryboard *storyboard = self.window.rootViewController.storyboard;
     PasscodeViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"PasscodeDialog"];
     vc.completionBlock = ^() {
+        self.isLoggedOn = YES;
         [self.chatBackend enable];
         [self.chatBackend start: ![UserProfile sharedProfile].isRegistered];
     };
