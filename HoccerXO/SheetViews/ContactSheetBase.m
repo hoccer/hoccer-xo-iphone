@@ -288,7 +288,14 @@ static const NSUInteger kHXOMaxNameLength = 25;
     dispatch_async(dispatch_get_main_queue(), ^{
         UIImagePickerController * picker = [[UIImagePickerController alloc] init];
         picker.sourceType = source;
-        picker.allowsEditing = YES;
+        // workaround for broken picker on iPad in iOS9, remove when fixed
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad &&
+            picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
+        {
+            picker.allowsEditing = NO;
+        } else {
+            picker.allowsEditing = YES;
+        }
         picker.delegate = self;
         [self.delegate presentViewController: picker animated: YES completion: nil];
     });
@@ -300,7 +307,15 @@ static const NSUInteger kHXOMaxNameLength = 25;
             UIImageWriteToSavedPhotosAlbum(info[UIImagePickerControllerOriginalImage], nil, nil, nil);
         }
 
-        UIImage * image = info[UIImagePickerControllerEditedImage];
+        UIImage * image;
+        // workaround for broken picker on iPad in iOS9, remove when fixed
+        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad &&
+            picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
+        {
+            image = info[UIImagePickerControllerOriginalImage];
+        } else {
+            image = info[UIImagePickerControllerEditedImage];
+        }
 
         // TODO: proper size handling
         CGFloat scale;
