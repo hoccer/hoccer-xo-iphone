@@ -146,16 +146,16 @@
 			<key>Title</key>
 			<string>WorldwideTitle</string>
 		</dict>
-        <dict>
-            <key>DefaultValue</key>
-            <false/>
-            <key>Key</key>
-            <string>WorldwideHidden</string>
-            <key>Title</key>
-            <string>WorldwideHidden</string>
-            <key>Type</key>
-            <string>PSToggleSwitchSpecifier</string>
-        </dict>
+		<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>WorldwideHidden</string>
+			<key>Title</key>
+			<string>WorldwideHidden</string>
+			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+		</dict>
 		<dict>
 			<key>Type</key>
 			<string>PSMultiValueSpecifier</string>
@@ -376,54 +376,6 @@
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
-        <!--
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>FooterText</key>
-			<string>support_tag_explanation</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>report_crashes</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Key</key>
-			<string>reportCrashes</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>full_sync_title</string>
-			<key>Key</key>
-			<string>fullSync</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Quickstart</string>
-			<key>Key</key>
-			<string>quickStart</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>support_tag</string>
-			<key>Key</key>
-			<string>supportTag</string>
-			<key>AutocorrectionType</key>
-			<string>NO</string>
-		</dict>
-         -->
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
