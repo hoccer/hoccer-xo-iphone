@@ -1582,6 +1582,7 @@
     if (self.transferPaused == nil && self.state >= kAttachmentTransfering && self.state <= kAttachmentWantsTransfer) {
         if (_transferConnection != nil) {
             [_transferConnection cancel];
+            [self unregisterBackgroundTask];
             _transferConnection = nil;
         }
         NSLog(@"pausedTransfer transfer, cipherTransferSize=%@, cipheredSize=%@",self.cipherTransferSize,self.cipheredSize);
