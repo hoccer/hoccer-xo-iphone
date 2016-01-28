@@ -5532,6 +5532,14 @@ NSError * makeSendError(NSString * reason) {
                                 expandedGroupDeliveries++;
                             }
                         }
+                        if (expandedGroupDeliveries == 0) {
+                            NSLog(@"### Warning: message not delivered to any member because group is empty, aborting message");
+                            delivery.state = kDeliveryStateAborted;
+                            if (message.attachment != nil) {
+                                message.attachment.transferAborted = [NSDate new];
+                            }
+                            return;
+                        }
                         if (expandedGroupDeliveries == updatedDeliveryDicts.count) {
                             // handle "good" return from group delivery
                             Group * group = nil;
