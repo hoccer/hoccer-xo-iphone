@@ -456,7 +456,12 @@
 - (void) importCredentialsPressed: (UIViewController*) sender {
     HXOStringEntryCompletion passphraseCompletion = ^(NSString *passphrase) {
         if (passphrase != nil) {
+#define DEBUG_PRINT_CREDENTIALS_NOT
+#ifdef DEBUG_PRINT_CREDENTIALS
+            int result = [[UserProfile sharedProfile] readAndShowCredentialsWithPassphrase:passphrase withForce:NO];
+#else
             int result = [[UserProfile sharedProfile] importCredentialsWithPassphrase:passphrase withForce:NO];
+#endif
             switch (result) {
                 case 1:
                     [[UserProfile sharedProfile] verfierChangePlease];

@@ -81,6 +81,8 @@ enum {
 - (int) importCredentialsWithPassphrase:(NSString*)passphrase withForce:(BOOL)force;
 - (void) exportCredentialsWithPassphrase:(NSString*)passphrase;
 
+- (int) readAndShowCredentialsWithPassphrase:(NSString*)passphrase withForce:(BOOL)force;
+
 - (BOOL)foundCredentialsBackup;
 - (void)backupCredentials;
 - (void)backupCredentialsWithId:(NSString*)myId;

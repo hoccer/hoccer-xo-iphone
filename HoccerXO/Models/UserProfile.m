@@ -340,6 +340,27 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 }
 
 
+// Function to recover lost verifiers, not used in normal app
+- (NSString*) computeVerifier: (NSDictionary*) credentials {
+
+    NSString * clientId = credentials[kHXOClientId];
+    NSString * passwordHex = credentials[kHXOPassword];
+    NSString * password = [NSString stringWithData:[NSData dataWithHexadecimalString:passwordHex] usingEncoding:NSUTF8StringEncoding];
+    NSData * salt = [NSData dataWithHexadecimalString:credentials[kHXOSalt]];
+    
+    SRPParameters * params = [self srpParameters];
+    id<SRPDigest> digest = [self srpDigest];
+    //NSData * salt = [SRP saltForDigest: digest];
+    SRPVerifierGenerator * verifierGenerator = [[SRPVerifierGenerator alloc] initWithDigest: digest N: params.N g: params.g];
+    NSData * verifier = [verifierGenerator generateVerifierWithSalt: salt username: clientId password: password];
+    
+    NSLog(@"client: %@", clientId);
+    NSLog(@"password: %@", password);
+    NSLog(@"salt: %@", [salt hexadecimalString]);
+    NSLog(@"verifier: %@", [verifier hexadecimalString]);
+
+    return [verifier hexadecimalString];
+}
 
 /*
 -  (NSDictionary *) extractCredentials {
@@ -763,6 +784,15 @@ const NSUInteger kHXODefaultKeySize    = 2048;
     return [self importCredentials:credentials withForce:force];
 }
 
+- (int) readAndShowCredentialsWithPassphrase:(NSString*)passphrase withForce:(BOOL)force{
+    NSDictionary * credentials = [self loadCredentialsWithPassphrase:passphrase];
+    if (credentials != nil) {
+        [self computeVerifier:credentials];
+        return -9;
+    }
+    return -1;
+}
+
 - (int)importCredentialsJson:(NSData*)jsonData withForce:(BOOL)force{
     NSDictionary * credentials = [self parseCredentials:jsonData];
     return [self importCredentials:credentials withForce:force];
@@ -797,7 +827,12 @@ const NSUInteger kHXODefaultKeySize    = 2048;
 
 - (NSString*) startSrpAuthentication {
     _srpClient = nil;
-    return [[self.srpClient generateCredentialsWithSalt: [NSData dataWithHexadecimalString: self.salt] username: self.clientId password: self.password] hexadecimalString];
+    return [[self.srpClient
+             generateCredentialsWithSalt: [NSData dataWithHexadecimalString: self.salt]
+             username: self.clientId
+             password: self.password
+             ]
+            hexadecimalString];
 }
 
 - (NSString*) processSrpChallenge: (NSString*) challenge error: (NSError**) error {
