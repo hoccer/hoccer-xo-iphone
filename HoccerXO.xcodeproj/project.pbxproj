@@ -303,6 +303,8 @@
 		E93CFA0F1BBDC109006CE5E0 /* Preview+CoreDataProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = E93CFA0C1BBDC109006CE5E0 /* Preview+CoreDataProperties.m */; };
 		E93CFA101BBDC109006CE5E0 /* Preview.m in Sources */ = {isa = PBXBuildFile; fileRef = E93CFA0E1BBDC109006CE5E0 /* Preview.m */; };
 		E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */; };
+		E9480D391CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der in Resources */ = {isa = PBXBuildFile; fileRef = E9480D371CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der */; };
+		E9480D3A1CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der in Resources */ = {isa = PBXBuildFile; fileRef = E9480D381CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der */; };
 		E95089231B00D54700CA3952 /* KeyChainItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E95089221B00D54700CA3952 /* KeyChainItem.m */; };
 		E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = E951759818DE420200EFD1C6 /* HXOEnvironment.m */; };
 		E951760D1913EB6100EFD1C6 /* CatchDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176031913EB6100EFD1C6 /* CatchDetector.m */; };
@@ -1112,6 +1114,8 @@
 		E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableArray+QueueAdditions.m"; sourceTree = "<group>"; };
 		E93ED64F17A33CE10072FD2C /* HoccerXO-21.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-21.xcdatamodel"; sourceTree = "<group>"; };
 		E94108F119472C4B00E95A50 /* HoccerXO-40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-40.xcdatamodel"; sourceTree = "<group>"; };
+		E9480D371CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "filecache-2016.talk.hoccer.de.der"; sourceTree = "<group>"; };
+		E9480D381CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "talkserver-2016.talk.hoccer.de.der"; sourceTree = "<group>"; };
 		E94DD2D117D7818E00486C55 /* HoccerXO-22.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-22.xcdatamodel"; sourceTree = "<group>"; };
 		E95089101AFE345000CA3952 /* Hoccer 51.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Hoccer 51.xcdatamodel"; sourceTree = "<group>"; };
 		E950891F1AFE4AA700CA3952 /* Hoccer 52.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Hoccer 52.xcdatamodel"; sourceTree = "<group>"; };
@@ -1958,6 +1962,8 @@
 		6390949D1738751800DF889B /* Certificates */ = {
 			isa = PBXGroup;
 			children = (
+				E9480D371CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der */,
+				E9480D381CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der */,
 				E9DFD2391922749800CC1202 /* filecache.talk.hoccer.de.der */,
 				E9DFD23A1922749800CC1202 /* talkserver.talk.hoccer.de.der */,
 				6382545017503531000347CD /* server_production.der */,
@@ -3165,6 +3171,7 @@
 				E99886F517282C950089A510 /* throw_sound.wav in Resources */,
 				63DEC02019B0A720003804E8 /* AlbumArtPlaceholderLarge.png in Resources */,
 				63DEC02C19B0A720003804E8 /* JGAlbumViewController.xib in Resources */,
+				E9480D391CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der in Resources */,
 				63D670EF193634C700CBF1C3 /* placeholder-nearby@2x.png in Resources */,
 				1FE9FA581AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings in Resources */,
 				E96A3DD21AF2A6C50099325D /* placeholder-world.png in Resources */,
@@ -3185,6 +3192,7 @@
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
 				63B1C9EC1843FA3800B75CD8 /* cnt-contact@2x.png in Resources */,
 				E9546CA81B42A642007FE754 /* webinterface_IE.rtf in Resources */,
+				E9480D3A1CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
 				63DEC02319B0A720003804E8 /* Albums@2x.png in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
