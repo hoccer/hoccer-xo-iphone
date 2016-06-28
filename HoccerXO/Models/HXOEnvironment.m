@@ -361,7 +361,11 @@ static HXOEnvironment *instance;
 }
 
 + (BOOL) worldwideHidden {
+#ifdef HOCCER_HELIOS
+    return YES;
+#else
     return [[HXOUserDefaults standardUserDefaults] boolForKey: kHXOWorldwideHidden];
+#endif
 }
 
 

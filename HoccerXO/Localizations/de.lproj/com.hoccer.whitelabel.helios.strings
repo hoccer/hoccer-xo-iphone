@@ -1,0 +1,39 @@
+"about_prosa" = "Über HELIOS Messenger\n\nDurch den HELIOS Messenger können Patienten des HELIOS Klinikums Schwelm sowie niedergelassene Ärzte sicher und schnell mit den behandelnden Klinikärzten in Kontakt treten.\n\nDer Service richtet sich an Patienten sowie an Haus- oder Fachärzte.\n\nDas HELIOS Klinikum Schwelm bietet so einen einzigartigen Kommunikationsservice unabhängig von Sprechzeiten und Örtlichkeiten an.\n\nVorteile:\n\n·       Schneller ärztlicher Kontakt ohne Ortwechsel bzw. Sprechzeiten\n\n·       Persönliche Betreuung\n\n·       Direkter Kontakt zum richtigen Ansprechpartner\n\n·       Bequeme und sichere Handhabung";
+
+"server_nav_title" = "HELIOS-Box";
+"server_user" = "helios";
+
+"invite_mail_body" = "Guten Tag\n\n, ich möchte mit Ihnen in der App „%@“ in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: %@\n\n";
+
+"invite_sms_text" = "Ich möchte mit Ihnen in der HELIOS Messaging App in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: %@\n%@";
+
+//==============================================================================
+// Color Scheme
+//==============================================================================
+
+// red: f10002
+// blue: 202968
+// grey: e3e3e3
+// gold: dbbc6b
+
+//Grün #3AAA35
+//Grau #C2C2C2
+//Highlight #F9B000
+//Dunkles Grau #909090
+
+"tint_color" = "#F9B000";
+"navigation_bar_tint_color" = "#3AAA35";
+"navigation_bar_text_color" = "#3AAA35";
+"tab_bar_selected_text_color" = "#3AAA35";
+"cell_accessory_color" = "#3AAA35";
+"table_placeholder_image_color" =  "#3AAA35";
+
+"message_background_color_incoming" = "#e3e3e3";
+"message_background_color_success" = "#3AAA35";
+"message_background_color_in_progress" = "#3AAA35";
+"message_background_color_failed" = "#BD3935";
+
+"message_text_color_incoming" = "#000000";
+"message_text_color_success" = "#C2C2C2";
+"message_text_color_in_progress" = "#C2C2C2";
+"message_text_color_failed" = "#ffffff";
