@@ -50,13 +50,13 @@
 			<string>filecache.talk.hoccer.de</string>
 			<string>server_production</string>
 		</array>
-        <key>helios</key>
-        <array>
-            <string>talkserver.talk.hoccer.de</string>
-            <string>filecache.talk.hoccer.de</string>
-            <string>server_production</string>
-        </array>
-    </dict>
+		<key>helios</key>
+		<array>
+			<string>talkserver.talk.hoccer.de</string>
+			<string>filecache.talk.hoccer.de</string>
+			<string>server_production</string>
+		</array>
+	</dict>
 	<key>talkServer</key>
 	<dict>
 		<key>development</key>
@@ -71,8 +71,8 @@
 		<string>wss://talkserver.talk.hoccer.de</string>
 		<key>starmeo</key>
 		<string>wss://talkserver.talk.hoccer.de</string>
-        <key>helios</key>
-        <string>wss://talkserver.talk.hoccer.de</string>
+		<key>helios</key>
+		<string>wss://talkserver.talk.hoccer.de</string>
 	</dict>
 	<key>inviteServer</key>
 	<dict>
@@ -88,8 +88,8 @@
 		<string>https://hoccme.hoccer.com</string>
 		<key>starmeo</key>
 		<string>https://starmeo.hoccer.com</string>
-        <key>helios</key>
-        <string>https://invite.hoccer.com</string>
+		<key>helios</key>
+		<string>https://helios.hoccer.com</string>
 	</dict>
 </dict>
 </plist>

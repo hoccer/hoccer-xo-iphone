@@ -5460,6 +5460,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = "HOCCER_HELIOS=1";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -5493,7 +5494,7 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = "com.hoccer.whitelabel.helios\n";
+				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
 				HXO_DEFAULT_ENVIRONMENT = helios;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = helios;

@@ -24,6 +24,21 @@ NSString* HXOLocalizedString(NSString* key, NSString* comment, ...) {
     return string;
 }
 
+// look in variant bundle first, then in general localization
+NSString* HXOLabelledFullyLocalizedString(NSString* key, NSString* comment, ...) {
+    va_list args;
+    va_start(args, comment);
+    
+    NSString* bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
+    NSString * format = NSLocalizedStringFromTable(key, bundleName, comment);
+    if (format == nil) {
+        format = NSLocalizedString(key, comment);
+    }
+    
+    NSString * localizedString = [[NSString alloc] initWithFormat:format arguments:args];
+    return localizedString;
+}
+
 NSString* HXOLabelledLocalizedString(NSString* key, NSString* comment, ...) {
     va_list args;
     va_start(args, comment);

@@ -1,11 +1,14 @@
-"about_prosa" = "Über HELIOS Messenger\n\nDurch den HELIOS Messenger können Patienten des HELIOS Klinikums Schwelm sowie niedergelassene Ärzte sicher und schnell mit den behandelnden Klinikärzten in Kontakt treten.\n\nDer Service richtet sich an Patienten sowie an Haus- oder Fachärzte.\n\nDas HELIOS Klinikum Schwelm bietet so einen einzigartigen Kommunikationsservice unabhängig von Sprechzeiten und Örtlichkeiten an.\n\nVorteile:\n\n·       Schneller ärztlicher Kontakt ohne Ortwechsel bzw. Sprechzeiten\n\n·       Persönliche Betreuung\n\n·       Direkter Kontakt zum richtigen Ansprechpartner\n\n·       Bequeme und sichere Handhabung";
+"about_prosa" = "Über HELIOS Messenger\n\nDurch den HELIOS Messenger können Patienten des HELIOS Klinikums Schwelm sowie niedergelassene Ärzte sicher und schnell mit den behandelnden Klinikärzten in Kontakt treten.\n\nDer Service richtet sich an Patienten sowie an Haus- oder Fachärzte.\n\nDas HELIOS Klinikum Schwelm bietet so einen einzigartigen Kommunikationsservice unabhängig von Sprechzeiten und Örtlichkeiten an.\n\nVorteile:\n· Schneller ärztlicher Kontakt ohne Ortwechsel bzw. Sprechzeiten\n· Persönliche Betreuung\n· Direkter Kontakt zum richtigen Ansprechpartner\n· Bequeme und sichere Handhabung";
 
 "server_nav_title" = "HELIOS-Box";
 "server_user" = "helios";
 
-"invite_mail_body" = "Guten Tag\n\n, ich möchte mit Ihnen in der App „%@“ in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: %@\n\n";
+"invite_mail_body" = "Guten Tag\n, ich möchte mit Ihnen in der App „%@“ in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: \n%@\n";
 
 "invite_sms_text" = "Ich möchte mit Ihnen in der HELIOS Messaging App in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: %@\n%@";
+
+"hoccer_tutorial_url" = "http://faq.hoccer.com/helios/de/tutorial";
+"hoccer_faq_url" = "http://faq.hoccer.com/helios/de";
 
 //==============================================================================
 // Color Scheme
@@ -34,6 +37,6 @@
 "message_background_color_failed" = "#BD3935";
 
 "message_text_color_incoming" = "#000000";
-"message_text_color_success" = "#C2C2C2";
-"message_text_color_in_progress" = "#C2C2C2";
+"message_text_color_success" = "#ffffff";
+"message_text_color_in_progress" = "#ffffff";
 "message_text_color_failed" = "#ffffff";

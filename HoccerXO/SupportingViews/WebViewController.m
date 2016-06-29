@@ -12,6 +12,7 @@
 
 #import "RNCachingURLProtocol.h"
 #import "HXOBackend.h"
+#import "HXOLocalization.h"
 
 #define DEBUG_WEBVIEW NO
 
@@ -61,7 +62,8 @@
 - (void) viewWillAppear:(BOOL)animated  {
     [super viewWillAppear: animated];
     
-    NSString * myLocalizedUrlString = NSLocalizedString(self.homeUrl,"@webview");
+    NSString * myLocalizedUrlString = HXOLabelledFullyLocalizedString(self.homeUrl,@"webview");
+
     if (DEBUG_WEBVIEW) NSLog(@"webview url: %@, localized url: %@", self.homeUrl, myLocalizedUrlString);
     
     if (![[self.webView.request.URL absoluteString] isEqualToString:myLocalizedUrlString] ) {
@@ -82,7 +84,7 @@
     [NSURLProtocol registerClass:[RNCachingURLProtocol class]];
 #endif
     
-    NSString * myLocalizedUrlString = NSLocalizedString(self.homeUrl,"@webview");
+    NSString * myLocalizedUrlString = HXOLabelledFullyLocalizedString(self.homeUrl,@"webview");
     //NSLog(@"webview 2 url: '%@', localized url: '%@'", self.homeUrl, myLocalizedUrlString);
     NSURL *url = [NSURL URLWithString:myLocalizedUrlString];
     //NSLog(@"webview 2 requestURL=%@", url);
