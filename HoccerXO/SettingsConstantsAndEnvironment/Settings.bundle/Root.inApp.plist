@@ -168,6 +168,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
+        <!--
 		<dict>
 			<key>DefaultValue</key>
 			<false/>
@@ -232,6 +233,7 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
+         -->
 		<dict>
 			<key>Title</key>
 			<string>Sound</string>

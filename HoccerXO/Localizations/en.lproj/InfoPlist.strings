@@ -1,10 +1,10 @@
 /* Localized versions of Info.plist keys */
 
+/*
 "NSLocationWhenInUseUsageDescription" = "To chat with people nearby or in worldwide mode or to send placemarks, access to your location is required.";
+ */
 
-/* FOR_HELIOS
 "NSLocationWhenInUseUsageDescription" = "To chat with people nearby or to send placemarks, access to your location is required.";
-*/
 /*
 "CFBundleDisplayName" = "XOX (Hoccer)";
 "CFBundleName" = "XOX (Hoccer)";
