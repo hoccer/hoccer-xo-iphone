@@ -5385,7 +5385,7 @@
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
 				HXO_DEFAULT_ENVIRONMENT = helios;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
-				HXO_URL_SCHEME = helios;
+				HXO_URL_SCHEME = heli;
 				HXO_URL_SCHEME_ID = "com.hoccer.whitelabel.helios\n";
 				HXO_XFER_URL_SCHEME = xferdisabled;
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
@@ -5497,7 +5497,7 @@
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
 				HXO_DEFAULT_ENVIRONMENT = helios;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
-				HXO_URL_SCHEME = helios;
+				HXO_URL_SCHEME = heli;
 				HXO_URL_SCHEME_ID = "com.hoccer.whitelabel.helios\n";
 				HXO_XFER_URL_SCHEME = xferdisabled;
 				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
