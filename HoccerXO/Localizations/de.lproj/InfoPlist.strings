@@ -2,6 +2,9 @@
 
 "NSLocationWhenInUseUsageDescription" = "Um mit Leuten in der Nähe oder im Weltweit-Modus zu chatten oder um Ortsmarken zu verschicken wird dein Standort benötigt.";
 
+/* FOR_HELIOS
+"NSLocationWhenInUseUsageDescription" = "Um mit Leuten in der Nähe zu chatten oder um Ortsmarken zu verschicken wird dein Standort benötigt.";
+*/
 /*
 "CFBundleDisplayName" = "XOX (Hoccer)";
 "CFBundleName" = "XOX (Hoccer)";
