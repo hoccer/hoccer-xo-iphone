@@ -1,4 +1,4 @@
-"about_prosa" = "Über HELIOS Messenger\n\nDurch den HELIOS Messenger können Patienten des HELIOS Klinikums Schwelm sowie niedergelassene Ärzte sicher und schnell mit den behandelnden Klinikärzten in Kontakt treten.\n\nDer Service richtet sich an Patienten sowie an Haus- oder Fachärzte.\n\nDas HELIOS Klinikum Schwelm bietet so einen einzigartigen Kommunikationsservice unabhängig von Sprechzeiten und Örtlichkeiten an.\n\nVorteile:\n· Schneller ärztlicher Kontakt ohne Ortwechsel bzw. Sprechzeiten\n· Persönliche Betreuung\n· Direkter Kontakt zum richtigen Ansprechpartner\n· Bequeme und sichere Handhabung";
+"about_prosa" = "About HELIOS Messenger\n\nWith the HELIOS Messenger patients of the HELIOS Klinikum in Schwelm as well as external M.D.s can communicate securely and in privacy with hospital staff.\n\nThis Service is primarily for patients and doctors.\n\nThe HELIOS Klinikum Schwelm offers this unique communication service independently from visiting and consultation hours.\n\nAdvantages:\n· Fast and easy online contact outside of consultation hours\n· Personal care\n· Direct line of communication to the right contact person\n· Easy and safe handling";
 
 "server_nav_title" = "HELIOS-Box";
 "server_user" = "helios";
@@ -7,8 +7,17 @@
 
 "invite_sms_text" = "I am using the %@ app and would like to add you as contact. Please download the app and accept my connection request:\n%@";
 
-"hoccer_tutorial_url" = "http://faq.hoccer.com/helios/tutorial";
-"hoccer_faq_url" = "http://faq.hoccer.com/helios";
+"hoccer_tutorial_url" = "http://faq.hoccer.com/helios/en/tutorial";
+"hoccer_faq_url" = "http://faq.hoccer.com/helios/en/";
+
+"contact_list_placeholder"                      = "[Invite friends](http://faq.hoccer.com/helios/en/tutorial/#invite) to chat with.";
+"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://faq.hoccer.com/helios/en/tutorial/#nearby)…";
+"contact_list_placeholder_worldwide"            = "Waiting for others [worldwide](http://faq.hoccer.com/helios/en/tutorial/#worldwide)…";
+"group_list_placeholder"                = "Create [groups](http://faq.hoccer.com/helios/en/tutorial/#groups) to chat with many friends at once.";
+
+"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://faq.hoccer.com/helios/en/tutorial/#verify) of your friends. Ask them for their key ids and compare.";
+"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://faq.hoccer.com/helios/en/tutorial/#verify).";
+
 
 //==============================================================================
 // Color Scheme

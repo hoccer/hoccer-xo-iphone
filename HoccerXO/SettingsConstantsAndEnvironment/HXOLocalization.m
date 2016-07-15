@@ -56,7 +56,7 @@ NSString* HXOLabelledLocalizedString(NSString* key, NSString* comment, ...) {
 NSAttributedString * HXOLocalizedStringWithLinks(NSString * key, NSString * comment) {
     NSError * error;
     NSRegularExpression * regex = [NSRegularExpression regularExpressionWithPattern: @"\\[([^\\]]+)\\]\\(([^)]+)\\)" options: 0 error: &error];
-    NSMutableString * text =  [NSMutableString stringWithString: NSLocalizedString(key, comment)];
+    NSMutableString * text =  [NSMutableString stringWithString: HXOLabelledFullyLocalizedString(key, comment)];
     NSArray *results = [regex matchesInString: text options:kNilOptions range:NSMakeRange(0, text.length)];
     NSInteger offset = 0;
     NSMutableArray * linkRanges = [NSMutableArray array];
