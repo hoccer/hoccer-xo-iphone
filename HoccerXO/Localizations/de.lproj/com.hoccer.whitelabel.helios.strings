@@ -3,7 +3,7 @@
 "server_nav_title" = "HELIOS-Box";
 "server_user" = "helios";
 
-"invite_mail_body" = "Guten Tag\n, ich möchte mit Ihnen in der App „%@“ in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: \n%@\n";
+"invite_mail_body" = "Guten Tag,\nich möchte mit Ihnen in der App „%@“ in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: \n%@\n";
 
 "invite_sms_text" = "Ich möchte mit Ihnen in der HELIOS Messaging App in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: %@\n%@";
 
