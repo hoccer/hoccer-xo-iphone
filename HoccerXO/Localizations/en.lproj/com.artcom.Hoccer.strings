@@ -26,3 +26,11 @@
 "message_text_color_success" = "#ffffff";
 "message_text_color_in_progress" = "#ffffff";
 "message_text_color_failed" = "#ffffff";
+
+//==============================================================================
+// place_holder
+//==============================================================================
+
+"contact_list_placeholder"                      = "[Invite friends](http://faq.hoccer.com/tutorial-xo/#invite) to chat with.";
+"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://faq.hoccer.com/tutorial-xo/#nearby)…";
+"contact_list_placeholder_worldwide"            = "Waiting for others [worldwide](http://faq.hoccer.com/tutorial-xo/#worldwide)…";

@@ -4,7 +4,15 @@
 "NSLocationWhenInUseUsageDescription" = "Um mit Leuten in der Nähe oder im Weltweit-Modus zu chatten oder um Ortsmarken zu verschicken wird dein Standort benötigt.";
 */
 
-"NSLocationWhenInUseUsageDescription" = "Um mit Leuten in der Nähe zu chatten oder um Ortsmarken zu verschicken wird dein Standort benötigt.";
+"NSAppleMusicUsageDescription"="um Informationen aus der Bibliothek versenden zu können";
+"NSCameraUsageDescription"="um Photos und Filme aufnehmen und zu versenden und Einladungscodes zu scannen";
+"NSContactsUsageDescription"="um Kontakte versenden und speichern zu können";
+"NSLocationUsageDescription"="um mit Leuten in der Nähe zu chatten oder um Ortsmarken zu verschicken";
+"NSMicrophoneUsageDescription"="um Audioaufnahmen zu machen und zu versenden";
+"NSMotionUsageDescription"="um Gesten im Nahebei-Modus zum Senden und Empfangen zu nutzen";
+"NSPhotoLibraryUsageDescription"="um Photos versenden zu können";
+
+"NSLocationWhenInUseUsageDescription" = "um mit Leuten in der Nähe zu chatten oder um Ortsmarken zu verschicken wird dein Standort benötigt.";
 /*
 "CFBundleDisplayName" = "XOX (Hoccer)";
 "CFBundleName" = "XOX (Hoccer)";

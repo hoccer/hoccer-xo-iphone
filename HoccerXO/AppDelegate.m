@@ -940,6 +940,9 @@ BOOL sameObjects(id obj1, id obj2) {
         NSLog(@"initialized _fileEntities with %ld values", (unsigned long)_fileEntities.count);
     }
 
+    [[HXOUserDefaults standardUserDefaults] setBool: @YES forKey: kHXOWorldwideHidden];
+    
+    
 #ifdef DEBUG
 //#define DEFINE_OTHER_SERVERS
 #endif
