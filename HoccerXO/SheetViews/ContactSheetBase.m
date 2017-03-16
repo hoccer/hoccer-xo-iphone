@@ -19,6 +19,7 @@
 #import "UIImage+ImageEffects.h"
 #import "ContactListViewController.h"
 #import "ContactCell.h"
+#import "HXOLocalization.h"
 
 #define DEBUG_PERF NO
 
@@ -286,18 +287,28 @@ static const NSUInteger kHXOMaxNameLength = 25;
 
 - (void) pickAvatarFromSource: (UIImagePickerControllerSourceType) source {
     dispatch_async(dispatch_get_main_queue(), ^{
-        UIImagePickerController * picker = [[UIImagePickerController alloc] init];
-        picker.sourceType = source;
-        // workaround for broken picker on iPad in iOS9, remove when fixed
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad &&
-            picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
-        {
-            picker.allowsEditing = NO;
+        AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType: AVMediaTypeVideo];
+        if (authStatus == AVAuthorizationStatusDenied && source == UIImagePickerControllerSourceTypeCamera) {
+            UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
+                                                             message: HXOLocalizedString(@"permission_denied_camera", nil, HXOAppName())
+                                                     completionBlock: ^(NSUInteger btn, UIAlertView* alert) { }
+                                                   cancelButtonTitle:NSLocalizedString(@"ok", nil)
+                                                   otherButtonTitles: nil];
+            [alert show];
         } else {
-            picker.allowsEditing = YES;
+            UIImagePickerController * picker = [[UIImagePickerController alloc] init];
+            picker.sourceType = source;
+            // workaround for broken picker on iPad in iOS9, remove when fixed
+            if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad &&
+                picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
+            {
+                picker.allowsEditing = NO;
+            } else {
+                picker.allowsEditing = YES;
+            }
+            picker.delegate = self;
+            [self.delegate presentViewController: picker animated: YES completion: nil];
         }
-        picker.delegate = self;
-        [self.delegate presentViewController: picker animated: YES completion: nil];
     });
 }
 

@@ -735,6 +735,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "permission_denied_addressbook_message"         = "Grant address book access to %@ in System Settings→Privacy→Contacts to allow contact selection.";
 "permission_denied_camera_qr_scanner"           = "To scan QR codes grant camera access to %@ in System Settings→Privacy→Camera";
 "permission_denied_camera_attachment"           = "To directly attach snapshots grant camera access to %@ in System Settings→Privacy→Camera";
+"permission_denied_camera"           = "To use the camera grant access to %@ in System Settings→Privacy→Camera";
 
 //==============================================================================
 // Profile
