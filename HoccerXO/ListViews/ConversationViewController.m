@@ -349,6 +349,9 @@
                                                      message: NSLocalizedString(message, nil)
                                              completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
                                                  [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXONearbyDialogShown]];
+                                                 if (HXOEnvironment.locationDenied) {
+                                                     [self updateSegmentDisabling];
+                                                 }
                                              }
                                            cancelButtonTitle: nil
                                            otherButtonTitles: NSLocalizedString(@"ok", nil),nil];
