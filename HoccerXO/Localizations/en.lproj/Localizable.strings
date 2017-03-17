@@ -732,6 +732,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "permission_denied_title"                       = "Access Denied";
 "permission_denied_microphone_message"          = "Grant microphone access to %@ in System Settings→Privacy→Microphone if you want to record audio.";
 "permission_denied_location_nearby_message"     = "Grant location access to %@ in System Settings→Privacy→Location Services to chat with people nearby or in worldwide mode.";
+"permission_denied_location"                    = "To send your location as an attachment grant access to %@ in System Settings→Privacy→Location Services.";
 "permission_denied_addressbook_message"         = "Grant address book access to %@ in System Settings→Privacy→Contacts to allow contact selection.";
 "permission_denied_camera_qr_scanner"           = "To scan QR codes grant camera access to %@ in System Settings→Privacy→Camera";
 "permission_denied_camera_attachment"           = "To directly attach snapshots grant camera access to %@ in System Settings→Privacy→Camera";

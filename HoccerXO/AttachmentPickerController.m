@@ -16,6 +16,8 @@
 #import "AppDelegate.h"
 #import "Attachment.h"
 
+#import "UIAlertView+BlockExtensions.h"
+
 #import <MediaPlayer/MPMediaItemCollection.h>
 #import <MobileCoreServices/UTType.h>
 #import <MobileCoreServices/UTCoreTypes.h>
@@ -135,8 +137,8 @@
         item.type = AttachmentPickerTypeAdressBookVcard;
         [_supportedItems addObject: item];
     }
-    if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeGeoLocation] &&
-        [CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied)
+    if ([self delegateWantsAttachmentsOfType: AttachmentPickerTypeGeoLocation]/* &&
+        [CLLocationManager authorizationStatus] != kCLAuthorizationStatusDenied*/)
     {
         AttachmentPickerItem * item = [[AttachmentPickerItem alloc] init];
         item.localizedButtonTitle = NSLocalizedString(@"attachment_src_map_btn_title", nil);
@@ -568,7 +570,16 @@
     return _modalLocationPickerHelper;
 }
 - (void) pickGeoLocation {
-    [_viewController presentViewController: self.modalLocationPickerHelper animated: YES completion: nil];
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusDenied) {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"permission_denied_title", nil)
+                                                         message: HXOLocalizedString(@"permission_denied_location", nil, HXOAppName())
+                                                 completionBlock: ^(NSUInteger buttonIndex, UIAlertView* alertView) { }
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
+    } else {
+        [_viewController presentViewController: self.modalLocationPickerHelper animated: YES completion: nil];
+    }
 }
 
 - (void) locationPicker:(GeoLocationPicker *)picker didPickLocation:(MKPointAnnotation*)placemark preview:(UIImage *)preview {
