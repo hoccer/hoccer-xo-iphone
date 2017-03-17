@@ -1200,11 +1200,12 @@ nil
                 if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: calling exportALAsset");
                 //[self registerBackgroundTask];
                 [self exportALAsset:asset intoAttachment:attachment onCompletion:^(NSError *theError) {
-                    if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: exportALAsset returned with error %@", theError);
+                    if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: exportALAsset returned, error = %@", theError);
                     if (theError == nil) {
                         if (attachment.contentSize > 0) {
                             [self.chatBackend sendMessage:@"" toContactOrGroup:contact toGroupMemberOnly:nil withAttachment:attachment withCompletion:^(NSError *theError) {
-                                //[self unregisterBackgroundTask];
+                                if (DEBUG_MULTI_EXPORT) NSLog(@"exportAndSendMultiAttachmentsToContactOrGroup: sendMessage returned, error = %@", theError);
+                               //[self unregisterBackgroundTask];
                                 [self exportAndSendMultiAttachmentsToContactOrGroup:contact];
                             }];
                         } else {
@@ -2333,8 +2334,11 @@ NSError * makeMediaError(NSString * reason) {
         NSArray *sortDescriptors = @[sortDescriptor];
 
         [fetchRequest setSortDescriptors:sortDescriptors];
-
+#ifdef CACHE_MESSAGES
         _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:AppDelegate.instance.mainObjectContext sectionNameKeyPath: @"timeSection" cacheName: [NSString stringWithFormat: @"Messages-%@", partner.objectID]];
+#else
+        _fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:AppDelegate.instance.mainObjectContext sectionNameKeyPath: @"timeSection" cacheName: nil];
+#endif
         _fetchedResultsController.delegate = self;
 
         resultsControllers[partner.objectID] = _fetchedResultsController;
