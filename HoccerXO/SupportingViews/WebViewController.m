@@ -79,22 +79,6 @@
     [HXOBackend broadcastConnectionInfo];
 }
 
-
-
-- (BOOL) shouldAutorotate {
-    return NO;
-}
-
-- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
-    return UIInterfaceOrientationMaskPortrait;
-}
-
-- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
-    return UIInterfaceOrientationPortrait;
-}
-
-
-
 - (void) startFirstLoading {
     [self.activityIndicator startAnimating];
     self.loadingOverlay.hidden = false;
