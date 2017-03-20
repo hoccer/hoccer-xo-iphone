@@ -39,8 +39,6 @@
 
     self.backButton = [[UIBarButtonItem alloc] initWithTitle: @"<" style: UIBarButtonItemStylePlain target: self action: @selector(back:)];
     self.forwardButton = [[UIBarButtonItem alloc] initWithTitle: @">" style: UIBarButtonItemStylePlain target: self action: @selector(forward:)];
-    self.navigationItem.leftBarButtonItems = @[self.backButton, self.forwardButton];
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action: @selector(done:)];
     self.forwardButton.enabled = self.webView.canGoForward;
     self.backButton.enabled = self.webView.canGoBack;
     
@@ -65,13 +63,37 @@
     NSString * myLocalizedUrlString = HXOLabelledFullyLocalizedString(self.homeUrl,@"webview");
 
     if (DEBUG_WEBVIEW) NSLog(@"webview url: %@, localized url: %@", self.homeUrl, myLocalizedUrlString);
-    
+
+
+    self.navigationItem.rightBarButtonItems = @[self.forwardButton, self.backButton];
+    if (self.presentingViewController) {
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemDone target: self action: @selector(done:)];
+    } else {
+        self.navigationItem.leftBarButtonItem = nil;
+    }
+
     if (![[self.webView.request.URL absoluteString] isEqualToString:myLocalizedUrlString] ) {
         // in case the user has navigated somewhere else
         [self startFirstLoading];
     }
     [HXOBackend broadcastConnectionInfo];
 }
+
+
+
+- (BOOL) shouldAutorotate {
+    return NO;
+}
+
+- (UIInterfaceOrientationMask) supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
+- (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
+    return UIInterfaceOrientationPortrait;
+}
+
+
 
 - (void) startFirstLoading {
     [self.activityIndicator startAnimating];

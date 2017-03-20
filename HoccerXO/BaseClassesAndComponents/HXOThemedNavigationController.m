@@ -19,15 +19,26 @@
 }
 
 - (UIInterfaceOrientationMask) supportedInterfaceOrientations {
-    UIInterfaceOrientationMask supported = [[self.viewControllers lastObject] supportedInterfaceOrientations];
-    if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:supportedInterfaceOrientations:%lu %@", (unsigned long)supported, self.viewControllers.lastObject);
-    return supported;
+    UIViewController * vc = [self.viewControllers lastObject];
+    if (vc) {
+
+        UIInterfaceOrientationMask supported = [[self.viewControllers lastObject] supportedInterfaceOrientations];
+        if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:supportedInterfaceOrientations:%lu %@", (unsigned long)supported, self.viewControllers.lastObject);
+        return supported;
+    } else {
+        return UIInterfaceOrientationMaskPortrait;
+    }
 }
 
 - (UIInterfaceOrientation) preferredInterfaceOrientationForPresentation {
-    UIInterfaceOrientation preferred = [[self.viewControllers lastObject] preferredInterfaceOrientationForPresentation];
-    if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:preferredInterfaceOrientationForPresentation:%lu %@", (long)preferred, self.viewControllers.lastObject);
-    return preferred;
+    UIViewController * vc = [self.viewControllers lastObject];
+    if (vc) {
+        UIInterfaceOrientation preferred = [vc preferredInterfaceOrientationForPresentation];
+        if (DEBUG_ROTATION) NSLog(@"HXOThemedNavigationController:preferredInterfaceOrientationForPresentation:%lu %@", (long)preferred, self.viewControllers.lastObject);
+        return preferred;
+    } else {
+        return UIInterfaceOrientationPortrait;
+    }
 }
 
 @end
