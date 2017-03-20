@@ -120,6 +120,7 @@ static const NSTimeInterval kResponseTimeout = 30;
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
+    [self flushOpenRequests];
     [self.delegate webSocketDidFailWithError: error];
 }
 

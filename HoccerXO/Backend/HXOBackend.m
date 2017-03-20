@@ -716,7 +716,7 @@ static NSTimer * _stateNotificationDelayTimer;
                 if (completion) completion(nil);
                 //* [AppDelegate.instance saveContext];
             } else {
-                if (completion) completion(makeSendError(@"outDeliveryRequest failed"));
+                if (completion) completion(makeSendError(@"outDeliveryRequest failed(3)"));
             }
         }];
     } else {
@@ -849,13 +849,18 @@ NSError * makeSendError(NSString * reason) {
             } else {
                 // TODO: come uo with something better than retrying
 #if 0
-                NSLog(@"ERROR: Could not get attachment urls, retrying");
+                NSLog(@"#ERROR: Could not get attachment urls, retrying");
                 dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, 5.0 * NSEC_PER_SEC);
                 dispatch_after(popTime, dispatch_get_main_queue(), ^(void) {
                     [self createUrlsForTransferOfAttachmentOfMessage:message withCompletion:completion];
                 });
 #else
-                NSLog(@"ERROR: Could not get attachment urls, will send on next sync");
+                NSLog(@"#ERROR: Could not get attachment urls, will send on next sync");
+                NSString *errMsg = @"Could not get attachment urls";
+                NSDictionary *info = [NSDictionary dictionaryWithObject:errMsg forKey:NSLocalizedDescriptionKey];
+
+                NSError * error = [NSError errorWithDomain:@"HXOBackend" code:444 userInfo:info];
+                completion(error);
 #endif
                 //[NSTimer scheduledTimerWithTimeInterval:5.0 target:self selector:@selector(retryCreateUrlsForTransferOfAttachment:) userInfo:message repeats:NO];
             }
@@ -5632,7 +5637,7 @@ NSError * makeSendError(NSString * reason) {
                 }];
             }];
         } else {
-            NSLog(@"deliveryRequest failed: %@", responseOrError);
+            NSLog(@"outDeliveryRequest failed(2): %@", responseOrError);
             completion(NO);
         }
     }];
