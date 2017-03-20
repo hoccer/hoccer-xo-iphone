@@ -1,0 +1,53 @@
+"about_prosa" = "HOCCER - Der Messenger\n\n Hoccer ist \"Der Messenger\" für anonyme, einfache und sichere Datenübertragung ohne Registrierungsprozess. Weder die Angabe der Mobilnummer noch der Mailadresse ist notwendig um mit Freunden oder Gruppen zu kommunizieren. Wir legen größten Wert auf Sicherheit, Datenschutz und Privatsphäre. Dank modernster Verschlüsselungs- und Übertragungstechnologien, setzt Hoccer neue Standards in der mobilen Datenübertragung und definiert Privatsphäre im Messaging-Sektor neu. Hoccer ermöglicht einen einfachen und unbegrenzten Datenaustausch zwischen Smartphones und Tablets ohne vorherige Eingabe von vertraulichen Nutzerdaten.\n\nPatente:\nU.S. Patent No. 9,008,579\nU.S. Patent No. 9,369,442\nAU Patent No. 2012311701";
+
+"server_nav_title" = "UNIHELD-Box";
+"server_user" = "uniheld";
+
+"invite_mail_body" = "Guten Tag,\nich möchte mit Ihnen in der App „%@“ in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: \n%@\n";
+
+"invite_sms_text" = "Ich möchte mit Ihnen in der UNIHELD Messaging App in Kontakt treten. Jetzt herunterladen und mich als Kontakt hinzufügen: %@\n%@";
+
+"hoccer_tutorial_url" = "http://faq.uniheld.com/tutorial/";
+"hoccer_faq_url" = "http://faq.uniheld.com/";
+
+"contact_list_placeholder"                            = "[Lade Freunde ein](http://faq.uniheld.com/tutorial/#freunde-einladen) sicher mit dir zu chatten.";
+"contact_list_placeholder_nearby"                     = "Warte auf Kontake [in der Nähe](http://faq.uniheld.com/tutorial/#in-der-naehe)…";
+"contact_list_placeholder_worldwide"                  = "Warte auf Kontake [weltweit](http://faq.uniheld.com/tutorial/#weltweit)…";
+"group_list_placeholder"                = "Lege [Gruppen](http://faq.uniheld.com/tutorial/#gruppen) an um mit vielen Freunden gleichzeitig zu chatten.";
+
+"key_fingerprint_info"                           = "Für ein Extra an Sicherheit [verifiziere die Schlüssel](http://faq.uniheld.com/tutorial/#verifizierung) deiner Freunde. Frage sie nach ihrer Schlüssel Id und vergleiche.";
+"key_fingerprint_yours_info"                     = "Die Schlüssel Id ist der Fingerabdruck deines Schlüssels. Zeige sie Freunden, die deinen [Schlüssel verifizieren](http://faq.uniheld.com/tutorial/#verifizierung) wollen.";
+
+
+
+//==============================================================================
+// Color Scheme
+//==============================================================================
+
+// red: f10002
+// blue: 202968
+// grey: e3e3e3
+// gold: dbbc6b
+
+//Grün #3AAA35
+//Grau #C2C2C2
+//Highlight #F9B000
+//Dunkles Grau #909090
+/*
+"tint_color" = "#F9B000";
+"navigation_bar_tint_color" = "#3AAA35";
+"navigation_bar_text_color" = "#3AAA35";
+"tab_bar_selected_text_color" = "#3AAA35";
+"cell_accessory_color" = "#3AAA35";
+"table_placeholder_image_color" =  "#3AAA35";
+
+"message_background_color_incoming" = "#e3e3e3";
+"message_background_color_success" = "#3AAA35";
+"message_background_color_in_progress" = "#3AAA35";
+"message_background_color_failed" = "#BD3935";
+
+"message_text_color_incoming" = "#000000";
+"message_text_color_success" = "#ffffff";
+"message_text_color_in_progress" = "#ffffff";
+"message_text_color_failed" = "#ffffff";
+*/
