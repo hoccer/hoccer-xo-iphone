@@ -14,11 +14,18 @@
 #import "ContactListViewController.h"
 #import "tab_profile.h"
 
+#define UNIHELD_SHOW_STUDENT_ID
+
 @interface ProfileSheetController ()
 
 @property (nonatomic, readonly) UserProfile      * userProfile;
 
 @property (nonatomic, readonly) DatasheetSection * credentialsSection;
+
+#ifdef UNIHELD_SHOW_STUDENT_ID
+@property (nonatomic, readonly) DatasheetSection * studentIdSection;
+@property (nonatomic, readonly) DatasheetItem * studentIdItem;
+#endif
 
 @end
 
@@ -41,6 +48,9 @@
 @synthesize deleteAccountItem = _deleteAccountItem;
 
 @synthesize destructiveSection = _destructiveSection;
+
+@synthesize studentIdSection = _studentIdSection;
+@synthesize studentIdItem = _studentIdItem;
 
 - (void) commonInit {
     [super commonInit];
@@ -130,8 +140,44 @@
 
 - (void) addUtilitySections:(NSMutableArray *)sections {
     [super addUtilitySections: sections];
+#ifdef UNIHELD_SHOW_STUDENT_ID
+    [sections addObject: self.studentIdSection];
+#endif
     [sections addObject: self.credentialsSection];
 }
+
+#ifdef UNIHELD_SHOW_STUDENT_ID
+- (DatasheetSection*) studentIdSection {
+    if ( ! _studentIdSection) {
+        _studentIdSection = [DatasheetSection datasheetSectionWithIdentifier: @"uniheld_student_id_section"];
+        _studentIdSection.items = @[self.studentIdItem];
+    }
+    return _studentIdSection;
+}
+
+- (DatasheetItem*) studentIdItem {
+    if(!_studentIdItem) {
+        _studentIdItem = [self itemWithIdentifier: @"uniheld_student_id_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _studentIdItem.target = self;
+        _studentIdItem.enabledMask =  DatasheetModeView | DatasheetModeEdit;
+        _studentIdItem.accessoryStyle = DatasheetAccessoryDisclosure;
+        //_studentIdItem.segueIdentifier = @"showStudentId";
+        _studentIdItem.action = @selector(studentIdPressed:);
+
+    }
+    return _studentIdItem;
+}
+
+- (IBAction) studentIdPressed:(id)sender {
+    NSLog(@"pressed student id");
+    if (self.mode == DatasheetModeEdit && [self isItemEnabled: self.avatarItem]) {
+        //[self editAvatar];
+    } else if (self.avatarItem.currentValue) {
+        [(id)self.delegate performSegueWithIdentifier: @"showStudentId" sender: self];
+    }
+}
+
+#endif
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
     if ([item isEqual: self.importCredentialsItem]) {
@@ -612,4 +658,8 @@
         [super prepareForSegue: segue withItem: item sender: sender];
     }
 }
+
+#ifdef UNIHELD_SHOW_STUDENT_ID
+#endif
+
 @end

@@ -221,6 +221,9 @@ static const NSUInteger kHXOMaxNameLength = 25;
     } else if ([segue.identifier isEqualToString: @"showAvatar"]) {
         ImageViewController * imageViewController = segue.destinationViewController;
         imageViewController.image = self.avatarItem.currentValue;
+    } else if ([segue.identifier isEqualToString: @"showStudentId"]) {
+        ImageViewController * imageViewController = segue.destinationViewController;
+        imageViewController.image = self.avatarItem.currentValue;
     }
 }
 
