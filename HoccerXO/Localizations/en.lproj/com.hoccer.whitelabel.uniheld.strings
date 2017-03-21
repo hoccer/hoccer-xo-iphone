@@ -20,6 +20,15 @@
 "key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://faq.uniheld.com/en/tutorial/#verify).";
 
 
+"uniheld_benefit_title" = "Benefits";
+"uniheld_benefit_url" = "https://google.com";
+
+"uniheld_student_id_btn_title" = "Student Id";
+"uniheld_student_id_no_image_alert_title" = "No Student Id";
+"uniheld_student_id_no_image_alert_message" = "Edit your profile to add a photo of your student id.";
+"uniheld_student_id_image_option_sheet_title"="Pick Student Id from";
+"uniheld_student_id_image_option_delete_btn_title"= "Delete Id";
+
 //==============================================================================
 // Color Scheme
 //==============================================================================

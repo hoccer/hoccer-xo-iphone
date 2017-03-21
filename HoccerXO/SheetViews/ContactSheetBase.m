@@ -297,12 +297,12 @@ libraryOptionTitle: (NSString*) libraryOptionTitle
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
         [handlers addObject: ^(){ [self pickImageFromSource: UIImagePickerControllerSourceTypePhotoLibrary]; }];
-        [buttons addObject: NSLocalizedString(libraryOptionTitle,nil)];
+        [buttons addObject: HXOLocalizedString(libraryOptionTitle,nil, HXOAppName())];
     }
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
         [handlers addObject: ^(){ [self pickImageFromSource: UIImagePickerControllerSourceTypeCamera]; }];
-        [buttons addObject: NSLocalizedString(cameraOptionTitle,nil)];
+        [buttons addObject: HXOLocalizedString(cameraOptionTitle,nil, HXOAppName())];
     }
 
     [handlers addObject: ^(){ /* canceled */ }];
@@ -312,10 +312,10 @@ libraryOptionTitle: (NSString*) libraryOptionTitle
         ((void(^)())handlers[buttonIndex])();
     };
 
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(title, nil)
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: HXOLabelledLocalizedString(title, nil)
                                         completionBlock: completion
                                       cancelButtonTitle: NSLocalizedString(@"cancel", nil)
-                                 destructiveButtonTitle: hasImage ? NSLocalizedString(deleteTitle, nil) : nil
+                                 destructiveButtonTitle: hasImage ? HXOLabelledLocalizedString(deleteTitle, nil) : nil
                                   otherButtonTitleArray: buttons];
     [sheet showInView: self.delegate.view];
 

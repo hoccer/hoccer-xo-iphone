@@ -14,8 +14,8 @@
 #import "ContactListViewController.h"
 #import "tab_profile.h"
 #import "ImageViewController.h"
+#import "HXOLocalization.h"
 
-#define UNIHELD_SHOW_STUDENT_ID
 
 @interface ProfileSheetController ()
 
@@ -23,7 +23,7 @@
 
 @property (nonatomic, readonly) DatasheetSection * credentialsSection;
 
-#ifdef UNIHELD_SHOW_STUDENT_ID
+#if HOCCER_UNIHELD
 @property (nonatomic, readonly) DatasheetSection * studentIdSection;
 @property (nonatomic, readonly) DatasheetItem * studentIdItem;
 #endif
@@ -141,13 +141,13 @@
 
 - (void) addUtilitySections:(NSMutableArray *)sections {
     [super addUtilitySections: sections];
-#ifdef UNIHELD_SHOW_STUDENT_ID
+#if HOCCER_UNIHELD
     [sections addObject: self.studentIdSection];
 #endif
     [sections addObject: self.credentialsSection];
 }
 
-#ifdef UNIHELD_SHOW_STUDENT_ID
+#if HOCCER_UNIHELD
 - (DatasheetSection*) studentIdSection {
     if ( ! _studentIdSection) {
         _studentIdSection = [DatasheetSection datasheetSectionWithIdentifier: @"uniheld_student_id_section"];
@@ -176,8 +176,8 @@
     } else if ([self studentIdImage]) {
         [(id)self.delegate performSegueWithIdentifier: @"showStudentId" sender: self];
     } else {
-        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"uniheld_student_id_no_image_alert_title", nil)
-                                                         message: NSLocalizedString(@"uniheld_student_id_no_image_alert_message", nil)
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: HXOLabelledLocalizedString(@"uniheld_student_id_no_image_alert_title", nil)
+                                                         message: HXOLabelledLocalizedString(@"uniheld_student_id_no_image_alert_message", nil)
                                                  completionBlock: ^(NSUInteger buttonIndex, UIAlertView * alertView) {}
                                                cancelButtonTitle: NSLocalizedString(@"ok", nil)
                                                otherButtonTitles: nil];

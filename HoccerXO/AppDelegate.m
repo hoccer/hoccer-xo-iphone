@@ -80,9 +80,6 @@
 #define TRACE_TRAFFIC_MONITOR       NO
 #define DEBUG_ROTATION              NO
 
-#define HXO_SHOW_UNIHELD_BENEFIT_TAB
-
-
 NSString * const kHXOTransferCredentialsURLImportScheme = @"hcrimport";
 NSString * const kHXOTransferCredentialsURLCredentialsHost = @"credentials";
 NSString * const kHXOTransferCredentialsURLArchiveHost = @"archive";
@@ -1127,15 +1124,12 @@ BOOL sameObjects(id obj1, id obj2) {
     NSAssert([self.window.rootViewController isKindOfClass:[UITabBarController class]], @"Expecting UITabBarController");
     ((UITabBarController *)self.window.rootViewController).delegate = self;
     self.tabBarController = (UITabBarController*)self.window.rootViewController;
-#ifdef HXO_SHOW_UNIHELD_BENEFIT_TAB
+#if HOCCER_UNIHELD
     UIStoryboard *storyboard = self.window.rootViewController.storyboard;
     UINavigationController * nc = (UINavigationController*)[storyboard instantiateViewControllerWithIdentifier:@"webViewController"];
     WebViewController * benefitTab = (WebViewController*)nc.viewControllers.firstObject;
-    benefitTab.title = NSLocalizedString(@"uniheld_benefit_title", nil);
-    benefitTab.homeUrl =
-        @"http://google.com"
-        //NSLocalizedString(@"uniheld_benefit_url", nil)
-        ;
+    benefitTab.title = HXOLabelledLocalizedString(@"uniheld_benefit_title", nil);
+    benefitTab.homeUrl = HXOLabelledLocalizedString(@"uniheld_benefit_url", nil);
     NSMutableArray * tabs = [NSMutableArray arrayWithArray: self.tabBarController.viewControllers];
     [tabs addObject: benefitTab];
     self.tabBarController.viewControllers = tabs;

@@ -18,6 +18,16 @@
 "key_fingerprint_info"                           = "Für ein Extra an Sicherheit [verifiziere die Schlüssel](http://faq.uniheld.com/tutorial/#verifizierung) deiner Freunde. Frage sie nach ihrer Schlüssel Id und vergleiche.";
 "key_fingerprint_yours_info"                     = "Die Schlüssel Id ist der Fingerabdruck deines Schlüssels. Zeige sie Freunden, die deinen [Schlüssel verifizieren](http://faq.uniheld.com/tutorial/#verifizierung) wollen.";
 
+"uniheld_benefit_title" = "Vorteile";
+"uniheld_benefit_url" = "https://google.com";
+"uniheld_student_id_btn_title" = "Studentenausweis";
+"uniheld_student_id_no_image_alert_title" = "Kein Ausweis hinterlegt";
+"uniheld_student_id_no_image_alert_message" = "Editiere dein Profil um ein Bild deines Ausweises zu hinterlegen.";
+"uniheld_student_id_image_option_sheet_title"="Studenten Ausweis";
+"uniheld_student_id_image_option_delete_btn_title"= "Ausweis löschen";
+
+
+
 
 
 //==============================================================================
