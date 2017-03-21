@@ -1,0 +1,79 @@
+"about_prosa" = "HOCCER - The Messenger\n\nHoccer is \"The Messenger\" for fast, easy and secure file transfer between smartphones and tablets, with unlimited data exchange without any setup or exchange of any personal data and the possibility of gesture controlled anonymous communication. Security, data protection and the protection of privacy are of extreme importance to us. Hoccer sets new standards in mobile data transmission and puts mobile privacy to a new level, due to latest encryption and transmission technologies. No registration needed, no need of mobile number or mailadress to add friends.\n\nProprietary notices:\nU.S. Patent No. 9,008,579\nU.S. Patent No. 9,369,442\nAU Patent No. 2012311701";
+
+
+"server_nav_title" = "UNIHELD-Box";
+"server_user" = "uniheld";
+
+"invite_mail_body" = "Good Day!\nI am using the %@ app and would like to add you as contact. Please download the app and accept my connection request:\n%@";
+
+"invite_sms_text" = "I am using the %@ app and would like to add you as contact. Please download the app and accept my connection request:\n%@";
+
+"hoccer_tutorial_url" = "http://faq.uniheld.com/en/tutorial";
+"hoccer_faq_url" = "http://faq.uniheld.com/en/";
+
+"contact_list_placeholder"                      = "[Invite friends](http://faq.uniheld.com/en/tutorial/#invite) to chat with.";
+"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://faq.uniheld.com/en/tutorial/#nearby)…";
+"contact_list_placeholder_worldwide"            = "Waiting for others [worldwide](http://faq.uniheld.com/en/tutorial/#worldwide)…";
+"group_list_placeholder"                = "Create [groups](http://faq.uniheld.com/en/tutorial/#groups) to chat with many friends at once.";
+
+"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://faq.uniheld.com/en/tutorial/#verify) of your friends. Ask them for their key ids and compare.";
+"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://faq.uniheld.com/en/tutorial/#verify).";
+
+
+//==============================================================================
+// Color Scheme
+//==============================================================================
+
+// red: f10002
+// blue: 202968
+// grey: e3e3e3
+// gold: dbbc6b
+
+//Grün #3AAA35
+//Grau #C2C2C2
+//Highlight #F9B000
+//Dunkles Grau #909090
+
+
+//Green: #38C723
+//Black (bar): #000000
+//Background: #FFFFFF
+//Grey (Message bubble): #DFDFDF
+
+"tint_color" = "#38C723"; // green
+"navigation_bar_tint_color" = "#3AAA35";
+"navigation_bar_text_color" = "#3AAA35";
+"tab_bar_selected_text_color" = "#3AAA35";
+"cell_accessory_color" = "#3AAA35";
+"table_placeholder_image_color" =  "#3AAA35";
+
+"message_background_color_incoming" = "#38C723";
+"message_background_color_success" = "#DFDFDF"; // gray
+"message_background_color_in_progress" = "#3AAA35";
+"message_background_color_failed" = "#BD3935";
+
+"message_text_color_incoming" = "#ffffff";
+"message_text_color_success" = "#000000";
+"message_text_color_in_progress" = "#000000";
+"message_text_color_failed" = "#000000";
+
+/*
+"tint_color" = "#F9B000";
+"navigation_bar_tint_color" = "#3AAA35";
+"navigation_bar_text_color" = "#3AAA35";
+"tab_bar_selected_text_color" = "#3AAA35";
+"cell_accessory_color" = "#3AAA35";
+"table_placeholder_image_color" =  "#3AAA35";
+
+"message_background_color_incoming" = "#e3e3e3";
+"message_background_color_success" = "#3AAA35";
+"message_background_color_in_progress" = "#3AAA35";
+"message_background_color_failed" = "#BD3935";
+
+"message_text_color_incoming" = "#000000";
+"message_text_color_success" = "#ffffff";
+"message_text_color_in_progress" = "#ffffff";
+"message_text_color_failed" = "#ffffff";
+ */
+
+

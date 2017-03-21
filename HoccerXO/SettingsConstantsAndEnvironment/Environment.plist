@@ -11,6 +11,7 @@
 		<string>hoccme</string>
 		<string>starmeo</string>
 		<string>helios</string>
+		<string>uniheld</string>
 	</array>
 	<key>certificateFiles</key>
 	<dict>
@@ -56,6 +57,12 @@
 			<string>filecache.talk.hoccer.de</string>
 			<string>server_production</string>
 		</array>
+		<key>uniheld</key>
+		<array>
+			<string>talkserver.talk.hoccer.de</string>
+			<string>filecache.talk.hoccer.de</string>
+			<string>server_production</string>
+		</array>
 	</dict>
 	<key>talkServer</key>
 	<dict>
@@ -72,6 +79,8 @@
 		<key>starmeo</key>
 		<string>wss://talkserver.talk.hoccer.de</string>
 		<key>helios</key>
+		<string>wss://talkserver.talk.hoccer.de</string>
+		<key>uniheld</key>
 		<string>wss://talkserver.talk.hoccer.de</string>
 	</dict>
 	<key>inviteServer</key>
@@ -90,6 +99,8 @@
 		<string>https://starmeo.hoccer.com</string>
 		<key>helios</key>
 		<string>https://helios.hoccer.com</string>
+		<key>uniheld</key>
+		<string>https://uniheld.hoccer.com</string>
 	</dict>
 </dict>
 </plist>
