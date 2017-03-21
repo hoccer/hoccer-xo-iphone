@@ -13,6 +13,7 @@
 #import "ModalTaskHUD.h"
 #import "ContactListViewController.h"
 #import "tab_profile.h"
+#import "ImageViewController.h"
 
 #define UNIHELD_SHOW_STUDENT_ID
 
@@ -170,11 +171,43 @@
 
 - (IBAction) studentIdPressed:(id)sender {
     NSLog(@"pressed student id");
-    if (self.mode == DatasheetModeEdit && [self isItemEnabled: self.avatarItem]) {
-        //[self editAvatar];
-    } else if (self.avatarItem.currentValue) {
+    if (self.mode == DatasheetModeEdit && [self isItemEnabled: self.studentIdItem]) {
+        [self editStudentId];
+    } else if ([self studentIdImage]) {
         [(id)self.delegate performSegueWithIdentifier: @"showStudentId" sender: self];
+    } else {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"uniheld_student_id_no_image_alert_title", nil)
+                                                         message: NSLocalizedString(@"uniheld_student_id_no_image_alert_message", nil)
+                                                 completionBlock: ^(NSUInteger buttonIndex, UIAlertView * alertView) {}
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
     }
+}
+
+- (void) editStudentId {
+    [self editImage: [self studentIdImage]
+   optionSheetTitle: @"uniheld_student_id_image_option_sheet_title"
+ libraryOptionTitle: @"profile_avatar_option_album_btn_title"
+  cameraOptionTitle: @"attachment_src_camera_btn_title"
+        deleteTitle: @"uniheld_student_id_image_option_delete_btn_title"
+       imageHandler: ^(UIImage* image) {
+           [[NSUserDefaults standardUserDefaults] setObject:UIImagePNGRepresentation(image)
+                                                     forKey: @"UniheldStudentIdImage"];
+       }
+      deleteHandler: ^(){ [self deleteStudentIdImage]; }];
+}
+
+- (UIImage*) studentIdImage {
+    NSData* imageData = [[NSUserDefaults standardUserDefaults] objectForKey: @"UniheldStudentIdImage"];
+    if (imageData) {
+        return [UIImage imageWithData: imageData];
+    }
+    return nil;
+}
+
+- (void) deleteStudentIdImage {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"UniheldStudentIdImage"];
 }
 
 #endif
@@ -654,12 +687,12 @@
         } else {
             NSLog(@"Kaputt: Unhandled segue item");
         }
+    } else if ([segue.identifier isEqualToString: @"showStudentId"]) {
+        ImageViewController * imageViewController = segue.destinationViewController;
+        imageViewController.image = [self studentIdImage];
     } else {
         [super prepareForSegue: segue withItem: item sender: sender];
     }
 }
-
-#ifdef UNIHELD_SHOW_STUDENT_ID
-#endif
 
 @end

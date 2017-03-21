@@ -31,6 +31,12 @@
 @property (nonatomic, readonly) DatasheetItem       * relationshipItem;
 
 - (void) addUtilitySections: (NSMutableArray*) sections;
-
+- (void) editImage: (UIImage*) currentImage
+  optionSheetTitle: (NSString*) title
+libraryOptionTitle: (NSString*) libraryOptionTitle
+ cameraOptionTitle: (NSString*) cameraOptionTitle
+       deleteTitle: (NSString*) deleteTitle
+      imageHandler: (void(^)(UIImage*)) imageHandler
+     deleteHandler: (void(^)()) deleteHandler;
 
 @end

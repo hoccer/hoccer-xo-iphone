@@ -28,7 +28,7 @@ static const NSUInteger kHXOMaxNameLength = 25;
 @interface ContactSheetBase ()
 
 @property (nonatomic, assign)   BOOL avatarModified;
-
+@property (nonatomic, copy)     void(^didPickImageHandler)(UIImage*);
 @end
 
 @implementation ContactSheetBase
@@ -221,9 +221,6 @@ static const NSUInteger kHXOMaxNameLength = 25;
     } else if ([segue.identifier isEqualToString: @"showAvatar"]) {
         ImageViewController * imageViewController = segue.destinationViewController;
         imageViewController.image = self.avatarItem.currentValue;
-    } else if ([segue.identifier isEqualToString: @"showStudentId"]) {
-        ImageViewController * imageViewController = segue.destinationViewController;
-        imageViewController.image = self.avatarItem.currentValue;
     }
 }
 
@@ -249,37 +246,27 @@ static const NSUInteger kHXOMaxNameLength = 25;
 }
 
 - (void) editAvatar {
-    NSMutableArray * buttons = [NSMutableArray array];
-    NSMutableArray * handlers = [NSMutableArray array];
+    [self editImage: _avatarItem.currentValue
+   optionSheetTitle: @"profile_avatar_option_sheet_title"
+ libraryOptionTitle: @"profile_avatar_option_album_btn_title"
+  cameraOptionTitle: @"attachment_src_camera_btn_title"
+        deleteTitle: @"profile_avatar_option_delete_btn_title"
+       imageHandler: ^(UIImage* image) {
+           // TODO: proper size handling
+           CGFloat scale;
+           if (image.size.height > image.size.width) {
+               scale = 128.0 / image.size.width;
+           } else {
+               scale = 128.0 / image.size.height;
+           }
+           CGSize size = CGSizeMake(image.size.width * scale, image.size.height * scale);
+           UIImage * scaledAvatar = [image imageScaledToSize: size];
 
-    BOOL hasAvatar = _avatarItem.currentValue != nil;
-
-    if (hasAvatar) {
-        [handlers addObject: ^(){ [self deleteAvatar]; }];
-    }
-
-    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
-        [handlers addObject: ^(){ [self pickAvatarFromSource: UIImagePickerControllerSourceTypePhotoLibrary]; }];
-        [buttons addObject: NSLocalizedString(@"profile_avatar_option_album_btn_title",nil)];
-    }
-
-    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
-        [handlers addObject: ^(){ [self pickAvatarFromSource: UIImagePickerControllerSourceTypeCamera]; }];
-        [buttons addObject: NSLocalizedString(@"attachment_src_camera_btn_title",nil)];
-    }
-
-    [handlers addObject: ^(){ /* canceled */ }];
-
-    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * sheet) {
-        ((void(^)())handlers[buttonIndex])();
-    };
-
-    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(@"profile_avatar_option_sheet_title", nil)
-                                        completionBlock: completion
-                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
-                                 destructiveButtonTitle: hasAvatar ? NSLocalizedString(@"profile_avatar_option_delete_btn_title", nil) : nil
-                                      otherButtonTitleArray: buttons];
-    [sheet showInView: self.delegate.view];
+           self.avatarItem.currentValue = scaledAvatar;
+           [self didChangeValueForItem: self.avatarItem];
+           self.avatarModified = YES;
+       }
+      deleteHandler: ^(){ [self deleteAvatar]; }];
 }
 
 - (void) deleteAvatar {
@@ -288,7 +275,54 @@ static const NSUInteger kHXOMaxNameLength = 25;
     self.avatarModified = YES;
 }
 
-- (void) pickAvatarFromSource: (UIImagePickerControllerSourceType) source {
+
+#pragma mark - Image Handling
+
+- (void) editImage: (UIImage*) currentImage
+  optionSheetTitle: (NSString*) title
+libraryOptionTitle: (NSString*) libraryOptionTitle
+ cameraOptionTitle: (NSString*) cameraOptionTitle
+       deleteTitle: (NSString*) deleteTitle
+     imageHandler: (void(^)(UIImage*)) imageHandler
+     deleteHandler: (void(^)()) deleteHandler
+{
+    NSMutableArray * buttons = [NSMutableArray array];
+    NSMutableArray * handlers = [NSMutableArray array];
+
+    BOOL hasImage = currentImage != nil;
+
+    if (hasImage) {
+        [handlers addObject: deleteHandler];
+    }
+
+    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
+        [handlers addObject: ^(){ [self pickImageFromSource: UIImagePickerControllerSourceTypePhotoLibrary]; }];
+        [buttons addObject: NSLocalizedString(libraryOptionTitle,nil)];
+    }
+
+    if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
+        [handlers addObject: ^(){ [self pickImageFromSource: UIImagePickerControllerSourceTypeCamera]; }];
+        [buttons addObject: NSLocalizedString(cameraOptionTitle,nil)];
+    }
+
+    [handlers addObject: ^(){ /* canceled */ }];
+
+    HXOActionSheetCompletionBlock completion = ^(NSUInteger buttonIndex, UIActionSheet * sheet) {
+        self.didPickImageHandler = imageHandler;
+        ((void(^)())handlers[buttonIndex])();
+    };
+
+    UIActionSheet * sheet = [HXOUI actionSheetWithTitle: NSLocalizedString(title, nil)
+                                        completionBlock: completion
+                                      cancelButtonTitle: NSLocalizedString(@"cancel", nil)
+                                 destructiveButtonTitle: hasImage ? NSLocalizedString(deleteTitle, nil) : nil
+                                  otherButtonTitleArray: buttons];
+    [sheet showInView: self.delegate.view];
+
+}
+
+
+- (void) pickImageFromSource: (UIImagePickerControllerSourceType) source {
     dispatch_async(dispatch_get_main_queue(), ^{
         AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType: AVMediaTypeVideo];
         if (authStatus == AVAuthorizationStatusDenied && source == UIImagePickerControllerSourceTypeCamera) {
@@ -330,20 +364,12 @@ static const NSUInteger kHXOMaxNameLength = 25;
         } else {
             image = info[UIImagePickerControllerEditedImage];
         }
-
-        // TODO: proper size handling
-        CGFloat scale;
-        if (image.size.height > image.size.width) {
-            scale = 128.0 / image.size.width;
+        if (self.didPickImageHandler) {
+            self.didPickImageHandler(image);
+            self.didPickImageHandler = nil;
         } else {
-            scale = 128.0 / image.size.height;
+            NSLog(@"ERROR: No image handler");
         }
-        CGSize size = CGSizeMake(image.size.width * scale, image.size.height * scale);
-        UIImage * scaledAvatar = [image imageScaledToSize: size];
-
-        self.avatarItem.currentValue = scaledAvatar;
-        [self didChangeValueForItem: self.avatarItem];
-        self.avatarModified = YES;
     }
     [self.delegate dismissViewControllerAnimated: YES completion: nil];
 }
