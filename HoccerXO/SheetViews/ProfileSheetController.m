@@ -50,8 +50,10 @@
 
 @synthesize destructiveSection = _destructiveSection;
 
+#if HOCCER_UNIHELD
 @synthesize studentIdSection = _studentIdSection;
 @synthesize studentIdItem = _studentIdItem;
+#endif
 
 - (void) commonInit {
     [super commonInit];
@@ -687,9 +689,11 @@
         } else {
             NSLog(@"Kaputt: Unhandled segue item");
         }
+#if HOCCER_UNIHELD
     } else if ([segue.identifier isEqualToString: @"showStudentId"]) {
         ImageViewController * imageViewController = segue.destinationViewController;
         imageViewController.image = [self studentIdImage];
+#endif
     } else {
         [super prepareForSegue: segue withItem: item sender: sender];
     }
