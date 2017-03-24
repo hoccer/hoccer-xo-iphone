@@ -164,7 +164,6 @@
         _studentIdItem.target = self;
         _studentIdItem.enabledMask =  DatasheetModeView | DatasheetModeEdit;
         _studentIdItem.accessoryStyle = DatasheetAccessoryDisclosure;
-        //_studentIdItem.segueIdentifier = @"showStudentId";
         _studentIdItem.action = @selector(studentIdPressed:);
 
     }

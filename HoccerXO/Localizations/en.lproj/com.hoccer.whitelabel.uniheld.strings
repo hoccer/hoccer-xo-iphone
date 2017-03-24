@@ -19,10 +19,10 @@
 "key_fingerprint_info"                           = "Improve security by [verifying the keys](http://faq.uniheld.com/en/tutorial/#verify) of your friends. Ask them for their key ids and compare.";
 "key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://faq.uniheld.com/en/tutorial/#verify).";
 
+"chat_list_tab_title" = "Chats";
 
 "uniheld_benefit_title" = "Benefits";
-"uniheld_benefit_url" = "https://google.com";
-
+"uniheld_benefit_url" = "https://uniheld.campusbenefits.de";
 "uniheld_student_id_btn_title" = "Student Id";
 "uniheld_student_id_no_image_alert_title" = "No Student Id";
 "uniheld_student_id_no_image_alert_message" = "Edit your profile to add a photo of your student id.";

@@ -18,8 +18,10 @@
 "key_fingerprint_info"                           = "Für ein Extra an Sicherheit [verifiziere die Schlüssel](http://faq.uniheld.com/tutorial/#verifizierung) deiner Freunde. Frage sie nach ihrer Schlüssel Id und vergleiche.";
 "key_fingerprint_yours_info"                     = "Die Schlüssel Id ist der Fingerabdruck deines Schlüssels. Zeige sie Freunden, die deinen [Schlüssel verifizieren](http://faq.uniheld.com/tutorial/#verifizierung) wollen.";
 
-"uniheld_benefit_title" = "Vorteile";
-"uniheld_benefit_url" = "https://google.com";
+"chat_list_tab_title" = "Schnacken";
+
+"uniheld_benefit_title" = "Gönnung";
+"uniheld_benefit_url" = "https://uniheld.campusbenefits.de";
 "uniheld_student_id_btn_title" = "Studentenausweis";
 "uniheld_student_id_no_image_alert_title" = "Kein Ausweis hinterlegt";
 "uniheld_student_id_no_image_alert_message" = "Editiere dein Profil um ein Bild deines Ausweises zu hinterlegen.";
@@ -43,21 +45,20 @@
 //Grau #C2C2C2
 //Highlight #F9B000
 //Dunkles Grau #909090
-/*
-"tint_color" = "#F9B000";
+
+"tint_color" = "#38C723"; // green
 "navigation_bar_tint_color" = "#3AAA35";
 "navigation_bar_text_color" = "#3AAA35";
 "tab_bar_selected_text_color" = "#3AAA35";
 "cell_accessory_color" = "#3AAA35";
 "table_placeholder_image_color" =  "#3AAA35";
 
-"message_background_color_incoming" = "#e3e3e3";
-"message_background_color_success" = "#3AAA35";
+"message_background_color_incoming" = "#38C723";
+"message_background_color_success" = "#DFDFDF"; // gray
 "message_background_color_in_progress" = "#3AAA35";
 "message_background_color_failed" = "#BD3935";
 
-"message_text_color_incoming" = "#000000";
-"message_text_color_success" = "#ffffff";
-"message_text_color_in_progress" = "#ffffff";
-"message_text_color_failed" = "#ffffff";
-*/
+"message_text_color_incoming" = "#ffffff";
+"message_text_color_success" = "#000000";
+"message_text_color_in_progress" = "#000000";
+"message_text_color_failed" = "#000000";

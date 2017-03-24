@@ -1126,12 +1126,12 @@ BOOL sameObjects(id obj1, id obj2) {
     self.tabBarController = (UITabBarController*)self.window.rootViewController;
 #if HOCCER_UNIHELD
     UIStoryboard *storyboard = self.window.rootViewController.storyboard;
-    UINavigationController * nc = (UINavigationController*)[storyboard instantiateViewControllerWithIdentifier:@"webViewController"];
-    WebViewController * benefitTab = (WebViewController*)nc.viewControllers.firstObject;
+    UINavigationController * navi = (UINavigationController*)[storyboard instantiateViewControllerWithIdentifier:@"webViewController"];
+    WebViewController * benefitTab = (WebViewController*)navi.viewControllers.firstObject;
     benefitTab.title = HXOLabelledLocalizedString(@"uniheld_benefit_title", nil);
     benefitTab.homeUrl = HXOLabelledLocalizedString(@"uniheld_benefit_url", nil);
     NSMutableArray * tabs = [NSMutableArray arrayWithArray: self.tabBarController.viewControllers];
-    [tabs addObject: benefitTab];
+    [tabs insertObject: navi atIndex: 0];
     self.tabBarController.viewControllers = tabs;
 #endif
     

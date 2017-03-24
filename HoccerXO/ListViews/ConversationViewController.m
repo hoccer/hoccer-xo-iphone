@@ -66,7 +66,7 @@
     [super awakeFromNib];
 
     self.tabBarItem.image = [[[tab_chats alloc] init] image];
-    self.tabBarItem.title = NSLocalizedString(@"chat_list_nav_title", nil);
+    self.tabBarItem.title = HXOLabelledLocalizedString(@"chat_list_tab_title", nil);
 }
 
 - (void)viewDidLoad {
