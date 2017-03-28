@@ -942,9 +942,11 @@ BOOL sameObjects(id obj1, id obj2) {
     } else {
         NSLog(@"initialized _fileEntities with %ld values", (unsigned long)_fileEntities.count);
     }
-
-    [[HXOUserDefaults standardUserDefaults] setBool: @YES forKey: kHXOWorldwideHidden];
-    
+#ifdef HOCCER_DEV
+    [[HXOUserDefaults standardUserDefaults] setObject: [NSNumber numberWithBool:NO] forKey: kHXOWorldwideHidden];
+#else
+    [[HXOUserDefaults standardUserDefaults] setObject: [NSNumber numberWithBool:YES] forKey: kHXOWorldwideHidden];
+#endif
     
 #ifdef DEBUG
 //#define DEFINE_OTHER_SERVERS

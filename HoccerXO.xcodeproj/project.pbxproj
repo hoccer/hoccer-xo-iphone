@@ -5311,8 +5311,8 @@
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				DEVELOPMENT_TEAM = SK64A5FJ3Z;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
@@ -5339,7 +5339,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = "Hoccer Dev";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "2670c49a-6618-48fa-8791-3c616ed2b469";
+				PROVISIONING_PROFILE_SPECIFIER = "Hoccer XO Dev Distribution";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
