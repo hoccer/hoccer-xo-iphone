@@ -824,6 +824,13 @@ bool almostEqual(CGFloat a, CGFloat b) {
 }
 
 - (UIImage*) placeholderImage {
+#ifdef HOCCER_UNIHELD_DISABLED
+    NSString * name = self.inGroupMode ? @"group_" : @"chats_";
+    UIImage* background = [AppDelegate loadBackgroundImage: name];
+    if (background != nil) {
+        return background;
+    }
+#endif
     return [UIImage imageNamed: self.inGroupMode ? @"placeholder-group" : @"placeholder-chats"];
 }
 

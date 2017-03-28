@@ -4693,9 +4693,19 @@ enum {
     });
 }
 
++ (UIImage *)loadBackgroundImage:(NSString *)name {
+    CGRect screenBounds = [[UIScreen mainScreen] bounds];
+    CGFloat screenScale = [[UIScreen mainScreen] scale];
+    CGSize screenSize = CGSizeMake(screenBounds.size.width * screenScale, screenBounds.size.height * screenScale);
+    
+    NSString *imageName = [NSString stringWithFormat:@"%@%dx%d", name, (int)screenSize.width, (int)screenSize.height];
+    NSLog(@"Loading image %@", imageName);
+    UIImage *image = [UIImage imageNamed:imageName];
+    NSLog(@"image = %@", image);
+    return image;
+}
+
 @end
-
-
 
 
 #ifdef DEBUG_RESPONDER
