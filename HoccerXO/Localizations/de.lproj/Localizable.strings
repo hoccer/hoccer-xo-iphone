@@ -226,6 +226,7 @@
 //==============================================================================
 
 "chat_list_nav_title"                           = "Chats";
+"chat_list_tab_title"                           = "Chats";
 "nearby_list_nav_title"                         = "In der Nähe";
 "worldwide_list_nav_title"                      = "Weltweit";
 

@@ -45,8 +45,8 @@ NSString* HXOLabelledLocalizedString(NSString* key, NSString* comment, ...) {
     
     NSString* bundleName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"];
     NSString * format = NSLocalizedStringFromTable(key, bundleName, comment);
-    if (format == nil) {
-        NSLog(@"#ERROR: HXOLabelledLocalizedString: no label found for key '%@' in bundle '%@'", key, bundleName);
+    if ([key isEqualToString: format]) {
+        format = NSLocalizedString(key, comment);
     }
 
     NSString * localizedString = [[NSString alloc] initWithFormat:format arguments:args];

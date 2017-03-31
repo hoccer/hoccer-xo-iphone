@@ -13,12 +13,20 @@
 #import "ModalTaskHUD.h"
 #import "ContactListViewController.h"
 #import "tab_profile.h"
+#import "ImageViewController.h"
+#import "HXOLocalization.h"
+
 
 @interface ProfileSheetController ()
 
 @property (nonatomic, readonly) UserProfile      * userProfile;
 
 @property (nonatomic, readonly) DatasheetSection * credentialsSection;
+
+#if HOCCER_UNIHELD
+@property (nonatomic, readonly) DatasheetSection * studentIdSection;
+@property (nonatomic, readonly) DatasheetItem * studentIdItem;
+#endif
 
 @end
 
@@ -41,6 +49,11 @@
 @synthesize deleteAccountItem = _deleteAccountItem;
 
 @synthesize destructiveSection = _destructiveSection;
+
+#if HOCCER_UNIHELD
+@synthesize studentIdSection = _studentIdSection;
+@synthesize studentIdItem = _studentIdItem;
+#endif
 
 - (void) commonInit {
     [super commonInit];
@@ -130,8 +143,75 @@
 
 - (void) addUtilitySections:(NSMutableArray *)sections {
     [super addUtilitySections: sections];
+#if HOCCER_UNIHELD
+    [sections addObject: self.studentIdSection];
+#endif
     [sections addObject: self.credentialsSection];
 }
+
+#if HOCCER_UNIHELD
+- (DatasheetSection*) studentIdSection {
+    if ( ! _studentIdSection) {
+        _studentIdSection = [DatasheetSection datasheetSectionWithIdentifier: @"uniheld_student_id_section"];
+        _studentIdSection.items = @[self.studentIdItem];
+    }
+    return _studentIdSection;
+}
+
+- (DatasheetItem*) studentIdItem {
+    if(!_studentIdItem) {
+        _studentIdItem = [self itemWithIdentifier: @"uniheld_student_id_btn_title" cellIdentifier: @"DatasheetActionCell"];
+        _studentIdItem.target = self;
+        _studentIdItem.enabledMask =  DatasheetModeView | DatasheetModeEdit;
+        _studentIdItem.accessoryStyle = DatasheetAccessoryDisclosure;
+        _studentIdItem.action = @selector(studentIdPressed:);
+
+    }
+    return _studentIdItem;
+}
+
+- (IBAction) studentIdPressed:(id)sender {
+    NSLog(@"pressed student id");
+    if (self.mode == DatasheetModeEdit && [self isItemEnabled: self.studentIdItem]) {
+        [self editStudentId];
+    } else if ([self studentIdImage]) {
+        [(id)self.delegate performSegueWithIdentifier: @"showStudentId" sender: self];
+    } else {
+        UIAlertView * alert = [[UIAlertView alloc] initWithTitle: HXOLabelledLocalizedString(@"uniheld_student_id_no_image_alert_title", nil)
+                                                         message: HXOLabelledLocalizedString(@"uniheld_student_id_no_image_alert_message", nil)
+                                                 completionBlock: ^(NSUInteger buttonIndex, UIAlertView * alertView) {}
+                                               cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                               otherButtonTitles: nil];
+        [alert show];
+    }
+}
+
+- (void) editStudentId {
+    [self editImage: [self studentIdImage]
+   optionSheetTitle: @"uniheld_student_id_image_option_sheet_title"
+ libraryOptionTitle: @"profile_avatar_option_album_btn_title"
+  cameraOptionTitle: @"attachment_src_camera_btn_title"
+        deleteTitle: @"uniheld_student_id_image_option_delete_btn_title"
+       imageHandler: ^(UIImage* image) {
+           [[NSUserDefaults standardUserDefaults] setObject:UIImagePNGRepresentation(image)
+                                                     forKey: @"UniheldStudentIdImage"];
+       }
+      deleteHandler: ^(){ [self deleteStudentIdImage]; }];
+}
+
+- (UIImage*) studentIdImage {
+    NSData* imageData = [[NSUserDefaults standardUserDefaults] objectForKey: @"UniheldStudentIdImage"];
+    if (imageData) {
+        return [UIImage imageWithData: imageData];
+    }
+    return nil;
+}
+
+- (void) deleteStudentIdImage {
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey: @"UniheldStudentIdImage"];
+}
+
+#endif
 
 - (BOOL) isItemVisible:(DatasheetItem *)item {
     if ([item isEqual: self.importCredentialsItem]) {
@@ -608,8 +688,14 @@
         } else {
             NSLog(@"Kaputt: Unhandled segue item");
         }
+#if HOCCER_UNIHELD
+    } else if ([segue.identifier isEqualToString: @"showStudentId"]) {
+        ImageViewController * imageViewController = segue.destinationViewController;
+        imageViewController.image = [self studentIdImage];
+#endif
     } else {
         [super prepareForSegue: segue withItem: item sender: sender];
     }
 }
+
 @end
