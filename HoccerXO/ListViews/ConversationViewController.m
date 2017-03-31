@@ -78,6 +78,8 @@
     }
     [HXOEnvironment.sharedInstance addObserver:self forKeyPath:@"groupId" options:0 context:nil];
     
+    [self setupTitle];
+
     self.worldwideHiddenObserver = [[NSNotificationCenter defaultCenter] addObserverForName:@"WorldWideHiddenChanged"
                                                                                      object:nil
                                                                                       queue:[NSOperationQueue mainQueue]
