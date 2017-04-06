@@ -328,7 +328,6 @@
 		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
 		E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */; };
 		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
-		E980A8D31E9679FD00C2C8A6 /* placeholder-groups@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E980A8C41E9679FD00C2C8A6 /* placeholder-groups@2x.png */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
 		E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = E980E27418648D80004AF79D /* UIResponder+Debug.m */; };
 		E98769751A100DD70068CA33 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98769741A100DD70068CA33 /* ImageIO.framework */; };
@@ -366,6 +365,7 @@
 		E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EB17282C950089A510 /* sweep_in_sound.wav */; };
 		E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EC17282C950089A510 /* sweep_out_sound.wav */; };
 		E99886F517282C950089A510 /* throw_sound.wav in Resources */ = {isa = PBXBuildFile; fileRef = E99886EE17282C950089A510 /* throw_sound.wav */; };
+		E99A1BAC1E96995E00A65FA1 /* tab_benefits.m in Sources */ = {isa = PBXBuildFile; fileRef = E99A1BAB1E96995E00A65FA1 /* tab_benefits.m */; };
 		E9A619DE17DF6E3700D4CFC3 /* CopyableUITextField.m in Sources */ = {isa = PBXBuildFile; fileRef = E9A619DD17DF6E3700D4CFC3 /* CopyableUITextField.m */; };
 		E9A85D9C184FD1AD00EB9B68 /* chatbar-attachment-icon-contact.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A85D90184FD1AC00EB9B68 /* chatbar-attachment-icon-contact.png */; };
 		E9A85D9D184FD1AD00EB9B68 /* chatbar-attachment-icon-contact@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E9A85D91184FD1AC00EB9B68 /* chatbar-attachment-icon-contact@2x.png */; };
@@ -1268,6 +1268,8 @@
 		E99886EB17282C950089A510 /* sweep_in_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_in_sound.wav; sourceTree = "<group>"; };
 		E99886EC17282C950089A510 /* sweep_out_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = sweep_out_sound.wav; sourceTree = "<group>"; };
 		E99886EE17282C950089A510 /* throw_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = throw_sound.wav; sourceTree = "<group>"; };
+		E99A1BAA1E96995E00A65FA1 /* tab_benefits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tab_benefits.h; sourceTree = "<group>"; };
+		E99A1BAB1E96995E00A65FA1 /* tab_benefits.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tab_benefits.m; sourceTree = "<group>"; };
 		E99F365C1DCE0257007F34A9 /* Hoccer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hoccer.entitlements; sourceTree = "<group>"; };
 		E9A2EDFD19316840003A8464 /* HoccerXO-38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-38.xcdatamodel"; sourceTree = "<group>"; };
 		E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = InAppSettingsKit.xcodeproj; path = InAppSettingsKit/InAppSettingsKit.xcodeproj; sourceTree = "<group>"; };
@@ -2370,6 +2372,8 @@
 				63B7900218D4E546003A9125 /* tab_settings.m */,
 				63E9B00A18F3156C00EFF829 /* tab_settings.pcvd */,
 				63E9B00B18F3156C00EFF829 /* tab_settings.svg */,
+				E99A1BAA1E96995E00A65FA1 /* tab_benefits.h */,
+				E99A1BAB1E96995E00A65FA1 /* tab_benefits.m */,
 			);
 			name = "Tab Bar";
 			path = TabBar;
@@ -3240,7 +3244,6 @@
 				E9480D3A1CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
 				63DEC02319B0A720003804E8 /* Albums@2x.png in Resources */,
-				E980A8D31E9679FD00C2C8A6 /* placeholder-groups@2x.png in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
 				C5E8E4151A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings in Resources */,
 				6382545117503531000347CD /* server_production.der in Resources */,
@@ -3609,6 +3612,7 @@
 				C5C35A03196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m in Sources */,
 				E9D67C52175C22DE007FE4AA /* UIActionSheet+BlockExtensions.m in Sources */,
 				E9D67C53175C22DE007FE4AA /* UIAlertView+BlockExtensions.m in Sources */,
+				E99A1BAC1E96995E00A65FA1 /* tab_benefits.m in Sources */,
 				E9E92F6F18733D01007B8042 /* HTTPConnection.m in Sources */,
 				6318FB621999057000D018A8 /* ALAsset+accessibilityLabel.m in Sources */,
 				E9BFAADC1ACC5E67004DC0D9 /* GCDWebServerRequest.m in Sources */,
@@ -5807,6 +5811,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = "HOCCER_UNIHELD=1";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;

@@ -32,6 +32,10 @@
 #import "PasscodeViewController.h"
 #import "WebViewController.h"
 
+#if HOCCER_UNIHELD
+#import "tab_benefits.h"
+#endif
+
 #import "Delivery.h" //DEBUG
 
 #import "OpenSSLCrypto.h"
@@ -1132,6 +1136,11 @@ BOOL sameObjects(id obj1, id obj2) {
     WebViewController * benefitTab = (WebViewController*)navi.viewControllers.firstObject;
     benefitTab.title = HXOLabelledLocalizedString(@"uniheld_benefit_title", nil);
     benefitTab.homeUrl = HXOLabelledLocalizedString(@"uniheld_benefit_url", nil);
+    //benefitTab.tabBarItem.image = [UIImage imageNamed:@"placeholder-benefits.png"];
+    
+    benefitTab.tabBarItem.image = [[[tab_benefits alloc] init] image];
+
+
     NSMutableArray * tabs = [NSMutableArray arrayWithArray: self.tabBarController.viewControllers];
     [tabs insertObject: navi atIndex: 0];
     self.tabBarController.viewControllers = tabs;
