@@ -831,7 +831,7 @@ bool almostEqual(CGFloat a, CGFloat b) {
         return background;
     }
 #endif
-    return [UIImage imageNamed: self.inGroupMode ? @"placeholder-group" : @"placeholder-chats"];
+    return [UIImage imageNamed: self.inGroupMode ? @"placeholder-groups" : @"placeholder-chats"];
 }
 
 - (SEL) placeholderAction {

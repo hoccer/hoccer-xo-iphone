@@ -328,7 +328,6 @@
 		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
 		E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */; };
 		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
-		E980A8CF1E9679FD00C2C8A6 /* placeholder-group.png in Resources */ = {isa = PBXBuildFile; fileRef = E980A8C01E9679FD00C2C8A6 /* placeholder-group.png */; };
 		E980A8D31E9679FD00C2C8A6 /* placeholder-groups@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E980A8C41E9679FD00C2C8A6 /* placeholder-groups@2x.png */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
 		E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = E980E27418648D80004AF79D /* UIResponder+Debug.m */; };
@@ -1192,9 +1191,6 @@
 		E980A8BD1E9679FD00C2C8A6 /* placeholder-chats.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats.png"; sourceTree = "<group>"; };
 		E980A8BE1E9679FD00C2C8A6 /* placeholder-chats@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats@2x.png"; sourceTree = "<group>"; };
 		E980A8BF1E9679FD00C2C8A6 /* placeholder-chats@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats@3x.png"; sourceTree = "<group>"; };
-		E980A8C01E9679FD00C2C8A6 /* placeholder-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-group.png"; sourceTree = "<group>"; };
-		E980A8C11E9679FD00C2C8A6 /* placeholder-group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-group@2x.png"; sourceTree = "<group>"; };
-		E980A8C21E9679FD00C2C8A6 /* placeholder-group@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-group@3x.png"; sourceTree = "<group>"; };
 		E980A8C31E9679FD00C2C8A6 /* placeholder-groups.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups.png"; sourceTree = "<group>"; };
 		E980A8C41E9679FD00C2C8A6 /* placeholder-groups@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups@2x.png"; sourceTree = "<group>"; };
 		E980A8C51E9679FD00C2C8A6 /* placeholder-groups@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups@3x.png"; sourceTree = "<group>"; };
@@ -2548,9 +2544,6 @@
 				E980A8BD1E9679FD00C2C8A6 /* placeholder-chats.png */,
 				E980A8BE1E9679FD00C2C8A6 /* placeholder-chats@2x.png */,
 				E980A8BF1E9679FD00C2C8A6 /* placeholder-chats@3x.png */,
-				E980A8C01E9679FD00C2C8A6 /* placeholder-group.png */,
-				E980A8C11E9679FD00C2C8A6 /* placeholder-group@2x.png */,
-				E980A8C21E9679FD00C2C8A6 /* placeholder-group@3x.png */,
 				E980A8C31E9679FD00C2C8A6 /* placeholder-groups.png */,
 				E980A8C41E9679FD00C2C8A6 /* placeholder-groups@2x.png */,
 				E980A8C51E9679FD00C2C8A6 /* placeholder-groups@3x.png */,
@@ -3266,7 +3259,6 @@
 				C5EB3CCC1A824EFC00E236F6 /* com.artcom.Hoccer.strings in Resources */,
 				63DEC02519B0A720003804E8 /* Artists@2x.png in Resources */,
 				E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */,
-				E980A8CF1E9679FD00C2C8A6 /* placeholder-group.png in Resources */,
 				E9DFD23B1922749800CC1202 /* filecache.talk.hoccer.de.der in Resources */,
 				63B1C9E81843E4FD00B75CD8 /* cnt-video@2x.png in Resources */,
 				63B1C9E41843E4FD00B75CD8 /* cnt-photo@2x.png in Resources */,
