@@ -39,7 +39,6 @@
 		630FD45218BCCCA7000D8C55 /* HXOUI.m in Sources */ = {isa = PBXBuildFile; fileRef = 630FD45118BCCCA7000D8C55 /* HXOUI.m */; };
 		631070EB1730106900D3936F /* new_message.aif in Resources */ = {isa = PBXBuildFile; fileRef = 631070EA1730106900D3936F /* new_message.aif */; };
 		631083581A793EC8009D75FB /* HTTPServerController.m in Sources */ = {isa = PBXBuildFile; fileRef = 631083571A793EC8009D75FB /* HTTPServerController.m */; };
-		6310C42119390E870029706A /* placeholder-groups@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6310C42019390E870029706A /* placeholder-groups@2x.png */; };
 		631254CA16EC198E009A6584 /* JsonRpcWebSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 631254C916EC198E009A6584 /* JsonRpcWebSocket.m */; };
 		63126C30170E46F800A6804A /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63126C2F170E46F800A6804A /* MessageUI.framework */; };
 		631457AA16EF96B500AA8EB9 /* Attachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 631457A916EF96B500AA8EB9 /* Attachment.m */; };
@@ -81,18 +80,6 @@
 		634010F6191AAA44007A2C67 /* avatar_location.m in Sources */ = {isa = PBXBuildFile; fileRef = 634010F5191AAA44007A2C67 /* avatar_location.m */; };
 		6343B4E516CD604700B3A29E /* MessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6343B4E416CD604700B3A29E /* MessageCell.m */; };
 		634BE1BE185C9B2B00B2DF05 /* UpDownLoadControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */; };
-		634E89A81E96561E00452FD1 /* placeholder-benefits.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E899C1E96561E00452FD1 /* placeholder-benefits.png */; };
-		634E89A91E96561E00452FD1 /* placeholder-benefits@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E899D1E96561E00452FD1 /* placeholder-benefits@2.png */; };
-		634E89AA1E96561E00452FD1 /* placeholder-benefits@3.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E899E1E96561E00452FD1 /* placeholder-benefits@3.png */; };
-		634E89AB1E96561E00452FD1 /* placeholder-chats.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E899F1E96561E00452FD1 /* placeholder-chats.png */; };
-		634E89AC1E96561E00452FD1 /* placeholder-chats@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E89A01E96561E00452FD1 /* placeholder-chats@2.png */; };
-		634E89AD1E96561E00452FD1 /* placeholder-chats@3.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E89A11E96561E00452FD1 /* placeholder-chats@3.png */; };
-		634E89AE1E96561E00452FD1 /* placeholder-groups.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E89A21E96561E00452FD1 /* placeholder-groups.png */; };
-		634E89AF1E96561E00452FD1 /* placeholder-groups@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E89A31E96561E00452FD1 /* placeholder-groups@2.png */; };
-		634E89B01E96561E00452FD1 /* placeholder-groups@3.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E89A41E96561E00452FD1 /* placeholder-groups@3.png */; };
-		634E89B11E96561E00452FD1 /* placeholder-nearby.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E89A51E96561E00452FD1 /* placeholder-nearby.png */; };
-		634E89B21E96561E00452FD1 /* placeholder-nearby@2.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E89A61E96561E00452FD1 /* placeholder-nearby@2.png */; };
-		634E89B31E96561E00452FD1 /* placeholder-nearby@3.png in Resources */ = {isa = PBXBuildFile; fileRef = 634E89A71E96561E00452FD1 /* placeholder-nearby@3.png */; };
 		635127981ABAF24800FA0C2B /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 635127971ABAF24800FA0C2B /* TutorialViewController.m */; };
 		635127B01ABB65FD00FA0C2B /* webdav_mac.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 635127B21ABB65FD00FA0C2B /* webdav_mac.rtf */; };
 		635127B61ABB6FFD00FA0C2B /* webdav_win8.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 635127B81ABB6FFD00FA0C2B /* webdav_win8.rtf */; };
@@ -198,8 +185,6 @@
 		63CED3E018F9A24F0095110B /* KeyStatusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CED3DF18F9A24F0095110B /* KeyStatusCell.m */; };
 		63CED3E318F9D86E0095110B /* SetupViewControllers.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CED3E218F9D86E0095110B /* SetupViewControllers.m */; };
 		63D4916C16CAA26A00FD395F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63D4916B16CAA26A00FD395F /* QuartzCore.framework */; };
-		63D670EE193634C700CBF1C3 /* placeholder-chats@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63D670EC193634C700CBF1C3 /* placeholder-chats@2x.png */; };
-		63D670EF193634C700CBF1C3 /* placeholder-nearby@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 63D670ED193634C700CBF1C3 /* placeholder-nearby@2x.png */; };
 		63D8EE131722EB89000F9E53 /* UserProfile.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE121722EB89000F9E53 /* UserProfile.m */; };
 		63D8EE1617230050000F9E53 /* NSString+RandomString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D8EE1517230050000F9E53 /* NSString+RandomString.m */; };
 		63DC01511713976B00609513 /* ImageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DC01501713976B00609513 /* ImageViewController.m */; };
@@ -331,16 +316,6 @@
 		E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E95A75A118D24C060027AE3E /* OpenSSLCrypto.m */; };
 		E95A75A818D257FD0027AE3E /* fmemopen.c in Sources */ = {isa = PBXBuildFile; fileRef = E95A75A618D257FD0027AE3E /* fmemopen.c */; };
 		E96A3DB71AF29DC60099325D /* avatar_worldwide.m in Sources */ = {isa = PBXBuildFile; fileRef = E96A3DB51AF29DC60099325D /* avatar_worldwide.m */; };
-		E96A3DD01AF2A6C50099325D /* placeholder-world@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DC61AF2A6C50099325D /* placeholder-world@3x.png */; };
-		E96A3DD11AF2A6C50099325D /* placeholder-world@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DC71AF2A6C50099325D /* placeholder-world@2x.png */; };
-		E96A3DD21AF2A6C50099325D /* placeholder-world.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DC81AF2A6C50099325D /* placeholder-world.png */; };
-		E96A3DD31AF2A6C50099325D /* placeholder-nearby@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DC91AF2A6C50099325D /* placeholder-nearby@3x.png */; };
-		E96A3DD41AF2A6C50099325D /* placeholder-nearby.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DCA1AF2A6C50099325D /* placeholder-nearby.png */; };
-		E96A3DD51AF2A6C50099325D /* placeholder-group@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DCB1AF2A6C50099325D /* placeholder-group@3x.png */; };
-		E96A3DD61AF2A6C50099325D /* placeholder-group@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DCC1AF2A6C50099325D /* placeholder-group@2x.png */; };
-		E96A3DD71AF2A6C50099325D /* placeholder-group.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DCD1AF2A6C50099325D /* placeholder-group.png */; };
-		E96A3DD81AF2A6C50099325D /* placeholder-chats@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DCE1AF2A6C50099325D /* placeholder-chats@3x.png */; };
-		E96A3DD91AF2A6C50099325D /* placeholder-chats.png in Resources */ = {isa = PBXBuildFile; fileRef = E96A3DCF1AF2A6C50099325D /* placeholder-chats.png */; };
 		E96CB012171217D3005F8FFA /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96CB011171217D3005F8FFA /* AVFoundation.framework */; };
 		E96CB01817137D38005F8FFA /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E96CB01717137D37005F8FFA /* CoreMedia.framework */; };
 		E96CB029171457F9005F8FFA /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB022171457F9005F8FFA /* Crypto.m */; };
@@ -353,6 +328,8 @@
 		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
 		E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */; };
 		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
+		E980A8CF1E9679FD00C2C8A6 /* placeholder-group.png in Resources */ = {isa = PBXBuildFile; fileRef = E980A8C01E9679FD00C2C8A6 /* placeholder-group.png */; };
+		E980A8D31E9679FD00C2C8A6 /* placeholder-groups@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E980A8C41E9679FD00C2C8A6 /* placeholder-groups@2x.png */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
 		E980E27518648D80004AF79D /* UIResponder+Debug.m in Sources */ = {isa = PBXBuildFile; fileRef = E980E27418648D80004AF79D /* UIResponder+Debug.m */; };
 		E98769751A100DD70068CA33 /* ImageIO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E98769741A100DD70068CA33 /* ImageIO.framework */; };
@@ -623,7 +600,6 @@
 		631070EA1730106900D3936F /* new_message.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = new_message.aif; sourceTree = "<group>"; };
 		631083561A793EC8009D75FB /* HTTPServerController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HTTPServerController.h; sourceTree = "<group>"; };
 		631083571A793EC8009D75FB /* HTTPServerController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HTTPServerController.m; sourceTree = "<group>"; };
-		6310C42019390E870029706A /* placeholder-groups@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups@2x.png"; sourceTree = "<group>"; };
 		631254C816EC198E009A6584 /* JsonRpcWebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JsonRpcWebSocket.h; sourceTree = "<group>"; };
 		631254C916EC198E009A6584 /* JsonRpcWebSocket.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JsonRpcWebSocket.m; sourceTree = "<group>"; };
 		63126C2F170E46F800A6804A /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -889,8 +865,6 @@
 		63CED3E118F9D86E0095110B /* SetupViewControllers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SetupViewControllers.h; sourceTree = "<group>"; };
 		63CED3E218F9D86E0095110B /* SetupViewControllers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SetupViewControllers.m; sourceTree = "<group>"; };
 		63D4916B16CAA26A00FD395F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		63D670EC193634C700CBF1C3 /* placeholder-chats@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats@2x.png"; sourceTree = "<group>"; };
-		63D670ED193634C700CBF1C3 /* placeholder-nearby@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-nearby@2x.png"; sourceTree = "<group>"; };
 		63D8EE111722EB89000F9E53 /* UserProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UserProfile.h; sourceTree = "<group>"; };
 		63D8EE121722EB89000F9E53 /* UserProfile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UserProfile.m; sourceTree = "<group>"; };
 		63D8EE1417230050000F9E53 /* NSString+RandomString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+RandomString.h"; sourceTree = "<group>"; };
@@ -1191,16 +1165,6 @@
 		E96961631A1D402A0083478D /* Hoccer 48.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Hoccer 48.xcdatamodel"; sourceTree = "<group>"; };
 		E96A3DB51AF29DC60099325D /* avatar_worldwide.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = avatar_worldwide.m; sourceTree = "<group>"; };
 		E96A3DB61AF29DC60099325D /* avatar_worldwide.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avatar_worldwide.h; sourceTree = "<group>"; };
-		E96A3DC61AF2A6C50099325D /* placeholder-world@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-world@3x.png"; sourceTree = "<group>"; };
-		E96A3DC71AF2A6C50099325D /* placeholder-world@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-world@2x.png"; sourceTree = "<group>"; };
-		E96A3DC81AF2A6C50099325D /* placeholder-world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-world.png"; sourceTree = "<group>"; };
-		E96A3DC91AF2A6C50099325D /* placeholder-nearby@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-nearby@3x.png"; sourceTree = "<group>"; };
-		E96A3DCA1AF2A6C50099325D /* placeholder-nearby.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-nearby.png"; sourceTree = "<group>"; };
-		E96A3DCB1AF2A6C50099325D /* placeholder-group@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-group@3x.png"; sourceTree = "<group>"; };
-		E96A3DCC1AF2A6C50099325D /* placeholder-group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-group@2x.png"; sourceTree = "<group>"; };
-		E96A3DCD1AF2A6C50099325D /* placeholder-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-group.png"; sourceTree = "<group>"; };
-		E96A3DCE1AF2A6C50099325D /* placeholder-chats@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats@3x.png"; sourceTree = "<group>"; };
-		E96A3DCF1AF2A6C50099325D /* placeholder-chats.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats.png"; sourceTree = "<group>"; };
 		E96CB011171217D3005F8FFA /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		E96CB01717137D37005F8FFA /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		E96CB021171457F9005F8FFA /* Crypto.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Crypto.h; sourceTree = "<group>"; };
@@ -1225,6 +1189,21 @@
 		E975619A178080A8000B6381 /* HoccerXO-20.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-20.xcdatamodel"; sourceTree = "<group>"; };
 		E97D34C418DA0931009E7FCB /* HoccerXO-30.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-30.xcdatamodel"; sourceTree = "<group>"; };
 		E97D34D518DA13FE009E7FCB /* HoccerXO-31.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-31.xcdatamodel"; sourceTree = "<group>"; };
+		E980A8BD1E9679FD00C2C8A6 /* placeholder-chats.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats.png"; sourceTree = "<group>"; };
+		E980A8BE1E9679FD00C2C8A6 /* placeholder-chats@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats@2x.png"; sourceTree = "<group>"; };
+		E980A8BF1E9679FD00C2C8A6 /* placeholder-chats@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats@3x.png"; sourceTree = "<group>"; };
+		E980A8C01E9679FD00C2C8A6 /* placeholder-group.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-group.png"; sourceTree = "<group>"; };
+		E980A8C11E9679FD00C2C8A6 /* placeholder-group@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-group@2x.png"; sourceTree = "<group>"; };
+		E980A8C21E9679FD00C2C8A6 /* placeholder-group@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-group@3x.png"; sourceTree = "<group>"; };
+		E980A8C31E9679FD00C2C8A6 /* placeholder-groups.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups.png"; sourceTree = "<group>"; };
+		E980A8C41E9679FD00C2C8A6 /* placeholder-groups@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups@2x.png"; sourceTree = "<group>"; };
+		E980A8C51E9679FD00C2C8A6 /* placeholder-groups@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups@3x.png"; sourceTree = "<group>"; };
+		E980A8C61E9679FD00C2C8A6 /* placeholder-nearby.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-nearby.png"; sourceTree = "<group>"; };
+		E980A8C71E9679FD00C2C8A6 /* placeholder-nearby@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-nearby@2x.png"; sourceTree = "<group>"; };
+		E980A8C81E9679FD00C2C8A6 /* placeholder-nearby@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-nearby@3x.png"; sourceTree = "<group>"; };
+		E980A8C91E9679FD00C2C8A6 /* placeholder-world.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-world.png"; sourceTree = "<group>"; };
+		E980A8CA1E9679FD00C2C8A6 /* placeholder-world@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-world@2x.png"; sourceTree = "<group>"; };
+		E980A8CB1E9679FD00C2C8A6 /* placeholder-world@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-world@3x.png"; sourceTree = "<group>"; };
 		E980D445171EF8950060C1B5 /* CryptingInputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CryptingInputStream.h; sourceTree = "<group>"; };
 		E980D446171EF8950060C1B5 /* CryptingInputStream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptingInputStream.m; sourceTree = "<group>"; };
 		E980E27318648D80004AF79D /* UIResponder+Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIResponder+Debug.h"; sourceTree = "<group>"; };
@@ -1820,6 +1799,7 @@
 		634E898C1E9655C900452FD1 /* WhiteLabel */ = {
 			isa = PBXGroup;
 			children = (
+				E980A8BC1E9679FD00C2C8A6 /* Default */,
 				634E899B1E9655FB00452FD1 /* Uniheld */,
 			);
 			path = WhiteLabel;
@@ -1848,16 +1828,6 @@
 			isa = PBXGroup;
 			children = (
 				634E898C1E9655C900452FD1 /* WhiteLabel */,
-				E96A3DC61AF2A6C50099325D /* placeholder-world@3x.png */,
-				E96A3DC71AF2A6C50099325D /* placeholder-world@2x.png */,
-				E96A3DC81AF2A6C50099325D /* placeholder-world.png */,
-				E96A3DC91AF2A6C50099325D /* placeholder-nearby@3x.png */,
-				E96A3DCA1AF2A6C50099325D /* placeholder-nearby.png */,
-				E96A3DCB1AF2A6C50099325D /* placeholder-group@3x.png */,
-				E96A3DCC1AF2A6C50099325D /* placeholder-group@2x.png */,
-				E96A3DCD1AF2A6C50099325D /* placeholder-group.png */,
-				E96A3DCE1AF2A6C50099325D /* placeholder-chats@3x.png */,
-				E96A3DCF1AF2A6C50099325D /* placeholder-chats.png */,
 				C576EBDE1934CCB100C0D254 /* AudioPlayer */,
 				63E9AFF218F3137E00EFF829 /* Avatar */,
 				6381FEB91745536B001D16E0 /* ChatView */,
@@ -1866,9 +1836,6 @@
 				63E9AFFB18F314AB00EFF829 /* disclosure_arrow.svg */,
 				63E9AFFE18F314AB00EFF829 /* ghost_busters_sign.h */,
 				63E9AFFF18F314AB00EFF829 /* ghost_busters_sign.m */,
-				63D670EC193634C700CBF1C3 /* placeholder-chats@2x.png */,
-				6310C42019390E870029706A /* placeholder-groups@2x.png */,
-				63D670ED193634C700CBF1C3 /* placeholder-nearby@2x.png */,
 				6AC25EF7193FAB0800ED5E61 /* Nav Bar */,
 				E99886E717282C950089A510 /* Sounds */,
 				63E9B00318F3151B00EFF829 /* Tab Bar */,
@@ -2575,6 +2542,28 @@
 			path = Crypto;
 			sourceTree = "<group>";
 		};
+		E980A8BC1E9679FD00C2C8A6 /* Default */ = {
+			isa = PBXGroup;
+			children = (
+				E980A8BD1E9679FD00C2C8A6 /* placeholder-chats.png */,
+				E980A8BE1E9679FD00C2C8A6 /* placeholder-chats@2x.png */,
+				E980A8BF1E9679FD00C2C8A6 /* placeholder-chats@3x.png */,
+				E980A8C01E9679FD00C2C8A6 /* placeholder-group.png */,
+				E980A8C11E9679FD00C2C8A6 /* placeholder-group@2x.png */,
+				E980A8C21E9679FD00C2C8A6 /* placeholder-group@3x.png */,
+				E980A8C31E9679FD00C2C8A6 /* placeholder-groups.png */,
+				E980A8C41E9679FD00C2C8A6 /* placeholder-groups@2x.png */,
+				E980A8C51E9679FD00C2C8A6 /* placeholder-groups@3x.png */,
+				E980A8C61E9679FD00C2C8A6 /* placeholder-nearby.png */,
+				E980A8C71E9679FD00C2C8A6 /* placeholder-nearby@2x.png */,
+				E980A8C81E9679FD00C2C8A6 /* placeholder-nearby@3x.png */,
+				E980A8C91E9679FD00C2C8A6 /* placeholder-world.png */,
+				E980A8CA1E9679FD00C2C8A6 /* placeholder-world@2x.png */,
+				E980A8CB1E9679FD00C2C8A6 /* placeholder-world@3x.png */,
+			);
+			path = Default;
+			sourceTree = "<group>";
+		};
 		E991E4F51A0D11F300015BEE /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -2992,6 +2981,7 @@
 				6330492317019ED60045E64E /* Increment Build Number */,
 				633049241701A02B0045E64E /* Increment Patch Level When Archiving */,
 				631A96FA18AB9E84003363F5 /* Inject Debug Settings Pane */,
+				E980A8701E9657E100C2C8A6 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -3183,18 +3173,13 @@
 				63B1C9DD1843E4FD00B75CD8 /* cnt-download.png in Resources */,
 				63DEC02D19B0A720003804E8 /* JGMediaQueryViewController.xib in Resources */,
 				63B1C9E01843E4FD00B75CD8 /* cnt-location@2x.png in Resources */,
-				63D670EE193634C700CBF1C3 /* placeholder-chats@2x.png in Resources */,
 				63C0F82A1AD5A9FB00709B0C /* webinterface.rtf in Resources */,
-				E96A3DD61AF2A6C50099325D /* placeholder-group@2x.png in Resources */,
-				E96A3DD31AF2A6C50099325D /* placeholder-nearby@3x.png in Resources */,
 				635127C51ABB70F100FA0C2B /* webdav_winxp.rtf in Resources */,
 				E9A85DA2184FD1AD00EB9B68 /* chatbar-attachment-icon-photo.png in Resources */,
-				6310C42119390E870029706A /* placeholder-groups@2x.png in Resources */,
 				E9A85DA7184FD1AD00EB9B68 /* chatbar-attachment-icon-video@2x.png in Resources */,
 				63B1C9DE1843E4FD00B75CD8 /* cnt-download@2x.png in Resources */,
 				63DEC02719B0A720003804E8 /* Playlists@2x.png in Resources */,
 				C576EC341934CCB200C0D254 /* fullscreen-button-play.png in Resources */,
-				634E89B31E96561E00452FD1 /* placeholder-nearby@3.png in Resources */,
 				E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */,
 				E9F86CAE1E804927004AFE8E /* com.hoccer.whitelabel.uniheld.strings in Resources */,
 				63B1C9E71843E4FD00B75CD8 /* cnt-video.png in Resources */,
@@ -3218,15 +3203,11 @@
 				C576EC361934CCB200C0D254 /* fullscreen-icon-volume-down.png in Resources */,
 				636D400B171081AB00304EDF /* Environment.plist in Resources */,
 				E9A85DA4184FD1AD00EB9B68 /* chatbar-attachment-icon-record.png in Resources */,
-				E96A3DD01AF2A6C50099325D /* placeholder-world@3x.png in Resources */,
 				63B1C9E31843E4FD00B75CD8 /* cnt-photo.png in Resources */,
-				634E89AA1E96561E00452FD1 /* placeholder-benefits@3.png in Resources */,
 				63B1C9E21843E4FD00B75CD8 /* cnt-music@2x.png in Resources */,
 				63DEC02619B0A720003804E8 /* Playlists.png in Resources */,
 				C576EC631934CCB200C0D254 /* slider-track.png in Resources */,
 				C576EC381934CCB200C0D254 /* fullscreen-icon-volume-up.png in Resources */,
-				634E89AF1E96561E00452FD1 /* placeholder-groups@2.png in Resources */,
-				634E89B21E96561E00452FD1 /* placeholder-nearby@2.png in Resources */,
 				C576EC2E1934CCB200C0D254 /* fullscreen-button-back.png in Resources */,
 				635127BC1ABB706D00FA0C2B /* webdav_win7.rtf in Resources */,
 				C5EB3CD81A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings in Resources */,
@@ -3236,40 +3217,28 @@
 				63DEC02119B0A720003804E8 /* AlbumArtPlaceholderLarge@2x.png in Resources */,
 				C576EC371934CCB200C0D254 /* fullscreen-icon-volume-down@2x.png in Resources */,
 				E99886EF17282C950089A510 /* catch_sound.wav in Resources */,
-				E96A3DD81AF2A6C50099325D /* placeholder-chats@3x.png in Resources */,
 				E99886F217282C950089A510 /* sweep_in_sound.wav in Resources */,
 				C576EC351934CCB200C0D254 /* fullscreen-button-play@2x.png in Resources */,
-				634E89AE1E96561E00452FD1 /* placeholder-groups.png in Resources */,
-				E96A3DD41AF2A6C50099325D /* placeholder-nearby.png in Resources */,
 				E99886F317282C950089A510 /* sweep_out_sound.wav in Resources */,
 				63DEC02B19B0A720003804E8 /* JGAlbumTrackTableViewCell.xib in Resources */,
 				C576EC2F1934CCB200C0D254 /* fullscreen-button-back@2x.png in Resources */,
-				634E89AB1E96561E00452FD1 /* placeholder-chats.png in Resources */,
 				C576EC611934CCB200C0D254 /* slider-thumb.png in Resources */,
 				E99886F517282C950089A510 /* throw_sound.wav in Resources */,
-				634E89B01E96561E00452FD1 /* placeholder-groups@3.png in Resources */,
 				63DEC02019B0A720003804E8 /* AlbumArtPlaceholderLarge.png in Resources */,
 				63DEC02C19B0A720003804E8 /* JGAlbumViewController.xib in Resources */,
 				E9480D391CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der in Resources */,
-				63D670EF193634C700CBF1C3 /* placeholder-nearby@2x.png in Resources */,
 				1FE9FA581AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings in Resources */,
-				E96A3DD21AF2A6C50099325D /* placeholder-world.png in Resources */,
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
 				631070EB1730106900D3936F /* new_message.aif in Resources */,
-				634E89AD1E96561E00452FD1 /* placeholder-chats@3.png in Resources */,
 				63DEC02419B0A720003804E8 /* Artists.png in Resources */,
-				634E89A81E96561E00452FD1 /* placeholder-benefits.png in Resources */,
 				63B1C9E61843E4FD00B75CD8 /* cnt-record@2x.png in Resources */,
 				E9D1145B1732CFE800737EF7 /* VcardPreview.xib in Resources */,
-				634E89A91E96561E00452FD1 /* placeholder-benefits@2.png in Resources */,
 				63DEC02819B0A720003804E8 /* Songs.png in Resources */,
 				63B1C9E11843E4FD00B75CD8 /* cnt-music.png in Resources */,
-				634E89AC1E96561E00452FD1 /* placeholder-chats@2.png in Resources */,
 				C576EC391934CCB200C0D254 /* fullscreen-icon-volume-up@2x.png in Resources */,
 				639094A11738751800DF889B /* server_development.der in Resources */,
 				C576EC301934CCB200C0D254 /* fullscreen-button-forward.png in Resources */,
 				C576EC281934CCB200C0D254 /* button-pause.png in Resources */,
-				E96A3DD51AF2A6C50099325D /* placeholder-group@3x.png in Resources */,
 				E9A85D9E184FD1AD00EB9B68 /* chatbar-attachment-icon-location.png in Resources */,
 				C576EC2D1934CCB200C0D254 /* cover-art-fallback@2x.png in Resources */,
 				E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */,
@@ -3278,6 +3247,7 @@
 				E9480D3A1CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der in Resources */,
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
 				63DEC02319B0A720003804E8 /* Albums@2x.png in Resources */,
+				E980A8D31E9679FD00C2C8A6 /* placeholder-groups@2x.png in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
 				C5E8E4151A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings in Resources */,
 				6382545117503531000347CD /* server_production.der in Resources */,
@@ -3286,23 +3256,20 @@
 				63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */,
 				E991E6721A0E975000015BEE /* Documentation.html in Resources */,
 				C5E8E3CB1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings in Resources */,
-				E96A3DD11AF2A6C50099325D /* placeholder-world@2x.png in Resources */,
 				C576EC331934CCB200C0D254 /* fullscreen-button-pause@2x.png in Resources */,
 				E9A85DA1184FD1AD00EB9B68 /* chatbar-attachment-icon-music@2x.png in Resources */,
 				635127B61ABB6FFD00FA0C2B /* webdav_win8.rtf in Resources */,
-				E96A3DD71AF2A6C50099325D /* placeholder-group.png in Resources */,
 				E9DFD23C1922749800CC1202 /* talkserver.talk.hoccer.de.der in Resources */,
 				63DEC01F19B0A720003804E8 /* AlbumArtPlaceholder@2x.png in Resources */,
-				634E89B11E96561E00452FD1 /* placeholder-nearby.png in Resources */,
 				C576EC311934CCB200C0D254 /* fullscreen-button-forward@2x.png in Resources */,
 				C576EC2A1934CCB200C0D254 /* button-play.png in Resources */,
 				C5EB3CCC1A824EFC00E236F6 /* com.artcom.Hoccer.strings in Resources */,
 				63DEC02519B0A720003804E8 /* Artists@2x.png in Resources */,
 				E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */,
+				E980A8CF1E9679FD00C2C8A6 /* placeholder-group.png in Resources */,
 				E9DFD23B1922749800CC1202 /* filecache.talk.hoccer.de.der in Resources */,
 				63B1C9E81843E4FD00B75CD8 /* cnt-video@2x.png in Resources */,
 				63B1C9E41843E4FD00B75CD8 /* cnt-photo@2x.png in Resources */,
-				E96A3DD91AF2A6C50099325D /* placeholder-chats.png in Resources */,
 				63DEC02219B0A720003804E8 /* Albums.png in Resources */,
 				E9A85DA6184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png in Resources */,
 				E991E6F01A0E975000015BEE /* README.txt in Resources */,
@@ -3356,6 +3323,19 @@
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
 			shellScript = "# xcode-version-bump.sh\n# @desc Auto-increment the version number (only) when a project is archived for export.\n# @usage\n# 1. Select: your Target in Xcode\n# 2. Select: Build Phases Tab\n# 3. Select: Add Build Phase -> Add Run Script\n# 4. Paste code below in to new \"Run Script\" section\n# 5. Check the checkbox \"Run script only when installing\"\n# 6. Drag the \"Run Script\" below \"Link Binaries With Libraries\"\n# 7. Insure your starting version number is in SemVer format (e.g. 1.0.0)\n\n# This splits a two-decimal version string, such as \"0.45.123\", allowing us to increment the third position.\nVERSIONNUM=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nNEWSUBVERSION=`echo $VERSIONNUM | awk -F \".\" '{print $3}'`\nNEWSUBVERSION=$(($NEWSUBVERSION + 1))\nNEWVERSIONSTRING=`echo $VERSIONNUM | awk -F \".\" '{print $1 \".\" $2 \".'$NEWSUBVERSION'\" }'`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString $NEWVERSIONSTRING\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+		E980A8701E9657E100C2C8A6 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "/usr/libexec/PlistBuddy -c 'Print HXOExtraAssetsDefault' \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Info.plist\"\nITEM=`echo -n \"Print ${HXO_EXTRA_ASSETS}\"`\necho $ITEM\necho /usr/libexec/PlistBuddy -c \"${ITEM}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Info.plist\"\n# mkdir -p \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/model/\"\n/usr/libexec/PlistBuddy -c \"${ITEM}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Info.plist\" | grep Assets | sed -e 's/^[ \\t]*//'| awk -v SRC_DIR=\"${PROJECT_DIR}/HoccerXO\" -v DST_DIR=\"\\'${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/\\'\" -v SQ=\"\\'\" '{ printf(\"SRC_DIR=\"SQ\"\"SRC_DIR\"/%s/\"SQ\" \"DST_DIR\"\\n\",$0);}'\n/usr/libexec/PlistBuddy -c \"${ITEM}\" \"${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/Info.plist\" | grep Assets | sed -e 's/^[ \\t]*//'| awk -v SRC_DIR=\"${PROJECT_DIR}/HoccerXO\" -v DST_DIR=\"\\'${BUILT_PRODUCTS_DIR}/${PRODUCT_NAME}.app/\\'\" -v SQ=\"\\'\" '{ printf(SQ\"\"SRC_DIR\"/%s/\"SQ\" \"DST_DIR\"\\n\",$0);}'| xargs -n 2 rsync -av -v --exclude=\".*\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -3896,6 +3876,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
 				HXO_DEFAULT_ENVIRONMENT = starmeo;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = starmeo;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.starmeo;
@@ -4009,6 +3990,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
 				HXO_DEFAULT_ENVIRONMENT = starmeo;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = starmeo;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.starmeo;
@@ -4228,6 +4210,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "26645843-f312-456c-8954-444e435d4ad2";
 				HXO_URL_SCHEME = hxo;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
@@ -4275,6 +4258,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "26645843-f312-456c-8954-444e435d4ad2";
 				HXO_URL_SCHEME = hxo;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
@@ -4351,6 +4335,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.stroeer;
 				HXO_DEFAULT_ENVIRONMENT = stroeer;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
 				HXO_URL_SCHEME = strm;
 				HXO_URL_SCHEME_ID = com.stroeer.messenger;
@@ -4467,6 +4452,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.stroeer;
 				HXO_DEFAULT_ENVIRONMENT = stroeer;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
 				HXO_URL_SCHEME = strmd;
 				HXO_URL_SCHEME_ID = "com.stroeer.messenger-dev";
@@ -4586,6 +4572,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
 				HXO_DEFAULT_ENVIRONMENT = simsme;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
 				HXO_URL_SCHEME = hcrsms;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.simsme;
@@ -4699,6 +4686,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
 				HXO_DEFAULT_ENVIRONMENT = simsme;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
 				HXO_URL_SCHEME = hcrsms;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.simsme;
@@ -4815,6 +4803,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.hoccme;
 				HXO_DEFAULT_ENVIRONMENT = hoccme;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "7a1da194-19ba-47fe-a32e-6d9b3dd8ec3d";
 				HXO_URL_SCHEME = hoccme;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.hoccme;
@@ -4928,6 +4917,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.hoccme;
 				HXO_DEFAULT_ENVIRONMENT = hoccme;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "7a1da194-19ba-47fe-a32e-6d9b3dd8ec3d";
 				HXO_URL_SCHEME = hoccme;
 				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.hoccme;
@@ -5045,6 +5035,7 @@
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = hcr;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccer;
@@ -5159,6 +5150,7 @@
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = hcr;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccer;
@@ -5277,6 +5269,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 				HXO_URL_SCHEME = hxod;
 				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
@@ -5391,6 +5384,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 				HXO_URL_SCHEME = hxod;
 				HXO_URL_SCHEME_ID = "com.hoccer.hoccerxo-dev";
@@ -5509,6 +5503,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
 				HXO_DEFAULT_ENVIRONMENT = helios;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = heli;
 				HXO_URL_SCHEME_ID = "com.hoccer.whitelabel.helios\n";
@@ -5624,6 +5619,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
 				HXO_DEFAULT_ENVIRONMENT = helios;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = heli;
 				HXO_URL_SCHEME_ID = "com.hoccer.whitelabel.helios\n";
@@ -5741,6 +5737,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = uniheld;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccer;
@@ -5855,6 +5852,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
+				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = uniheld;
 				HXO_URL_SCHEME_ID = com.hoccer.hoccer;

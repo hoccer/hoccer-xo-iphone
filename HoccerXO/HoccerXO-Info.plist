@@ -73,9 +73,19 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>17627</string>
+	<string>17640</string>
 	<key>HXODefaultEnvironment</key>
 	<string>${HXO_DEFAULT_ENVIRONMENT}</string>
+	<key>HXOExtraAssets</key>
+	<string>$(HXO_EXTRA_ASSETS)</string>
+	<key>HXOExtraAssetsDefault</key>
+	<array>
+		<string>Assets/WhiteLabel/Default</string>
+	</array>
+	<key>HXOExtraAssetsUniheld</key>
+	<array>
+		<string>Assets/WhiteLabel/Uniheld</string>
+	</array>
 	<key>HXOTestFlightToken</key>
 	<string>${HXO_TESTFLIGHT_TOKEN}</string>
 	<key>HXOUrlScheme</key>
