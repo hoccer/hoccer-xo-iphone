@@ -213,6 +213,7 @@
 		63DEC02B19B0A720003804E8 /* JGAlbumTrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01119B0A720003804E8 /* JGAlbumTrackTableViewCell.xib */; };
 		63DEC02C19B0A720003804E8 /* JGAlbumViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01219B0A720003804E8 /* JGAlbumViewController.xib */; };
 		63DEC02D19B0A720003804E8 /* JGMediaQueryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 63DEC01319B0A720003804E8 /* JGMediaQueryViewController.xib */; };
+		63DFF4741EA9014E00FC6E11 /* StudentIdViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DFF4731EA9014E00FC6E11 /* StudentIdViewController.m */; };
 		63E091CD1A77B58B0029DAE2 /* DatasheetSwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E091CC1A77B58B0029DAE2 /* DatasheetSwitchCell.m */; };
 		63E091DE1A77B7BA0029DAE2 /* ServerSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E091DD1A77B7BA0029DAE2 /* ServerSheetController.m */; };
 		63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
@@ -907,6 +908,8 @@
 		63DEC01219B0A720003804E8 /* JGAlbumViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JGAlbumViewController.xib; sourceTree = "<group>"; };
 		63DEC01319B0A720003804E8 /* JGMediaQueryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = JGMediaQueryViewController.xib; sourceTree = "<group>"; };
 		63DEC01419B0A720003804E8 /* README.markdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.markdown; sourceTree = "<group>"; };
+		63DFF4721EA9014E00FC6E11 /* StudentIdViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StudentIdViewController.h; sourceTree = "<group>"; };
+		63DFF4731EA9014E00FC6E11 /* StudentIdViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StudentIdViewController.m; sourceTree = "<group>"; };
 		63E091CB1A77B58B0029DAE2 /* DatasheetSwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatasheetSwitchCell.h; sourceTree = "<group>"; };
 		63E091CC1A77B58B0029DAE2 /* DatasheetSwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetSwitchCell.m; sourceTree = "<group>"; };
 		63E091DC1A77B7BA0029DAE2 /* ServerSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServerSheetController.h; sourceTree = "<group>"; };
@@ -2041,6 +2044,8 @@
 				635127971ABAF24800FA0C2B /* TutorialViewController.m */,
 				63AE45451704945C0099F0CB /* WebViewController.h */,
 				63AE45461704945C0099F0CB /* WebViewController.m */,
+				63DFF4721EA9014E00FC6E11 /* StudentIdViewController.h */,
+				63DFF4731EA9014E00FC6E11 /* StudentIdViewController.m */,
 			);
 			name = "Supporting Views";
 			path = SupportingViews;
@@ -3579,6 +3584,7 @@
 				C51B1148194858EC00FBCD2B /* NSArray+RemoveObject.m in Sources */,
 				C576EBCC1934CC6100C0D254 /* NSMutableArray+Shuffle.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
+				63DFF4741EA9014E00FC6E11 /* StudentIdViewController.m in Sources */,
 				63DEC01919B0A720003804E8 /* JGMediaQueryViewController.m in Sources */,
 				C576EC401934CCB200C0D254 /* player_button_repeat_all.m in Sources */,
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,

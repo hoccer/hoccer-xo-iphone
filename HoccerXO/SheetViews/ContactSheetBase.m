@@ -266,7 +266,8 @@ static const NSUInteger kHXOMaxNameLength = 25;
            [self didChangeValueForItem: self.avatarItem];
            self.avatarModified = YES;
        }
-      deleteHandler: ^(){ [self deleteAvatar]; }];
+      deleteHandler: ^(){ [self deleteAvatar]; }
+       allowEditing: YES];
 }
 
 - (void) deleteAvatar {
@@ -285,6 +286,7 @@ libraryOptionTitle: (NSString*) libraryOptionTitle
        deleteTitle: (NSString*) deleteTitle
      imageHandler: (void(^)(UIImage*)) imageHandler
      deleteHandler: (void(^)()) deleteHandler
+      allowEditing: (BOOL) allowEditing
 {
     NSMutableArray * buttons = [NSMutableArray array];
     NSMutableArray * handlers = [NSMutableArray array];
@@ -296,12 +298,14 @@ libraryOptionTitle: (NSString*) libraryOptionTitle
     }
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypePhotoLibrary]) {
-        [handlers addObject: ^(){ [self pickImageFromSource: UIImagePickerControllerSourceTypePhotoLibrary]; }];
+        [handlers addObject: ^(){ [self pickImageFromSource: UIImagePickerControllerSourceTypePhotoLibrary
+                                               allowEditing: allowEditing]; }];
         [buttons addObject: HXOLocalizedString(libraryOptionTitle,nil, HXOAppName())];
     }
 
     if ([UIImagePickerController isSourceTypeAvailable: UIImagePickerControllerSourceTypeCamera]) {
-        [handlers addObject: ^(){ [self pickImageFromSource: UIImagePickerControllerSourceTypeCamera]; }];
+        [handlers addObject: ^(){ [self pickImageFromSource: UIImagePickerControllerSourceTypeCamera
+                                               allowEditing: allowEditing]; }];
         [buttons addObject: HXOLocalizedString(cameraOptionTitle,nil, HXOAppName())];
     }
 
@@ -322,7 +326,7 @@ libraryOptionTitle: (NSString*) libraryOptionTitle
 }
 
 
-- (void) pickImageFromSource: (UIImagePickerControllerSourceType) source {
+- (void) pickImageFromSource: (UIImagePickerControllerSourceType) source allowEditing:(BOOL) allowEditing{
     dispatch_async(dispatch_get_main_queue(), ^{
         AVAuthorizationStatus authStatus = [AVCaptureDevice authorizationStatusForMediaType: AVMediaTypeVideo];
         if (authStatus == AVAuthorizationStatusDenied && source == UIImagePickerControllerSourceTypeCamera) {
@@ -341,7 +345,7 @@ libraryOptionTitle: (NSString*) libraryOptionTitle
             {
                 picker.allowsEditing = NO;
             } else {
-                picker.allowsEditing = YES;
+                picker.allowsEditing = allowEditing;
             }
             picker.delegate = self;
             [self.delegate presentViewController: picker animated: YES completion: nil];
@@ -356,13 +360,10 @@ libraryOptionTitle: (NSString*) libraryOptionTitle
         }
 
         UIImage * image;
-        // workaround for broken picker on iPad in iOS9, remove when fixed
-        if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPad &&
-            picker.sourceType == UIImagePickerControllerSourceTypePhotoLibrary)
-        {
-            image = info[UIImagePickerControllerOriginalImage];
-        } else {
+        if (picker.allowsEditing) {
             image = info[UIImagePickerControllerEditedImage];
+        } else {
+            image = info[UIImagePickerControllerOriginalImage];
         }
         if (self.didPickImageHandler) {
             self.didPickImageHandler(image);

@@ -28,6 +28,9 @@
 "uniheld_student_id_no_image_alert_message" = "Edit your profile to add a photo of your student id.";
 "uniheld_student_id_image_option_sheet_title"="Pick Student Id from";
 "uniheld_student_id_image_option_delete_btn_title"= "Delete Id";
+"uniheld_student_id_title" = "Student Id";
+"uniheld_student_id_info_url" = "http://faq.uniheld.com/2017/02/21/the-uniheld-student-id/";
+
 
 //==============================================================================
 // Color Scheme

@@ -15,6 +15,7 @@
 #import "tab_profile.h"
 #import "ImageViewController.h"
 #import "HXOLocalization.h"
+#import "StudentIdViewController.h"
 
 
 @interface ProfileSheetController ()
@@ -171,7 +172,7 @@
 }
 
 - (IBAction) studentIdPressed:(id)sender {
-    NSLog(@"pressed student id");
+    //NSLog(@"pressed student id");
     if (self.mode == DatasheetModeEdit && [self isItemEnabled: self.studentIdItem]) {
         [self editStudentId];
     } else if ([self studentIdImage]) {
@@ -193,16 +194,33 @@
   cameraOptionTitle: @"attachment_src_camera_btn_title"
         deleteTitle: @"uniheld_student_id_image_option_delete_btn_title"
        imageHandler: ^(UIImage* image) {
-           [[NSUserDefaults standardUserDefaults] setObject:UIImagePNGRepresentation(image)
+           if (image.imageOrientation != UIImageOrientationUp) {;
+               UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+               [image drawInRect:(CGRect){0, 0, image.size}];
+               image = UIGraphicsGetImageFromCurrentImageContext();
+               UIGraphicsEndImageContext();
+           }
+           [[NSUserDefaults standardUserDefaults] setObject: UIImagePNGRepresentation(image)
                                                      forKey: @"UniheldStudentIdImage"];
        }
-      deleteHandler: ^(){ [self deleteStudentIdImage]; }];
+      deleteHandler: ^(){ [self deleteStudentIdImage]; }
+       allowEditing: NO];
 }
 
 - (UIImage*) studentIdImage {
     NSData* imageData = [[NSUserDefaults standardUserDefaults] objectForKey: @"UniheldStudentIdImage"];
     if (imageData) {
-        return [UIImage imageWithData: imageData];
+
+        UIImage * image = [UIImage imageWithData: imageData];
+        /*
+        if (image.imageOrientation == UIImageOrientationUp) return image;
+
+        UIGraphicsBeginImageContextWithOptions(image.size, NO, image.scale);
+        [image drawInRect:(CGRect){0, 0, image.size}];
+        image = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+*/
+        return image;
     }
     return nil;
 }
@@ -690,8 +708,8 @@
         }
 #if HOCCER_UNIHELD
     } else if ([segue.identifier isEqualToString: @"showStudentId"]) {
-        ImageViewController * imageViewController = segue.destinationViewController;
-        imageViewController.image = [self studentIdImage];
+        StudentIdViewController * vc = segue.destinationViewController;
+        vc.image = [self studentIdImage];
 #endif
     } else {
         [super prepareForSegue: segue withItem: item sender: sender];

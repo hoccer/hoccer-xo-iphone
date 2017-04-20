@@ -37,6 +37,7 @@ libraryOptionTitle: (NSString*) libraryOptionTitle
  cameraOptionTitle: (NSString*) cameraOptionTitle
        deleteTitle: (NSString*) deleteTitle
       imageHandler: (void(^)(UIImage*)) imageHandler
-     deleteHandler: (void(^)()) deleteHandler;
+     deleteHandler: (void(^)()) deleteHandler
+      allowEditing: (BOOL) allowEditing;
 
 @end

@@ -27,7 +27,8 @@
 "uniheld_student_id_no_image_alert_message" = "Editiere dein Profil um ein Bild deines Ausweises zu hinterlegen.";
 "uniheld_student_id_image_option_sheet_title"="Studenten Ausweis";
 "uniheld_student_id_image_option_delete_btn_title"= "Ausweis löschen";
-
+"uniheld_student_id_title" = "Ausweis";
+"uniheld_student_id_info_url" = "http://faq.uniheld.com/de/2017/02/21/der-uniheld-studentenausweis/";
 
 
 

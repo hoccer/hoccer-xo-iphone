@@ -62,12 +62,59 @@
             </objects>
             <point key="canvasLocation" x="-356" y="-2015"/>
         </scene>
+        <!--Student ID View-->
+        <scene sceneID="LtV-eK-qk0">
+            <objects>
+                <viewController hidesBottomBarWhenPushed="YES" id="sY1-dR-63h" userLabel="Student ID View" customClass="StudentIdViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="RUr-HV-ukE"/>
+                        <viewControllerLayoutGuide type="bottom" id="6Fd-LZ-vi1"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Ejs-G7-X8r">
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="V5t-Cm-uQ6">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="f4L-qD-WaU">
+                                <rect key="frame" x="0.0" y="501" width="150" height="102"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="102" id="GTW-Wm-nPA"/>
+                                    <constraint firstAttribute="width" constant="150" id="VsZ-m7-Nkh"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="V5t-Cm-uQ6" secondAttribute="trailing" id="7fo-TT-9yc"/>
+                            <constraint firstAttribute="bottom" secondItem="V5t-Cm-uQ6" secondAttribute="bottom" id="RyX-EO-xat"/>
+                            <constraint firstItem="f4L-qD-WaU" firstAttribute="leading" secondItem="Ejs-G7-X8r" secondAttribute="leading" id="WQx-Cc-CzU"/>
+                            <constraint firstAttribute="bottom" secondItem="f4L-qD-WaU" secondAttribute="bottom" id="XyB-mF-Wtc"/>
+                            <constraint firstItem="V5t-Cm-uQ6" firstAttribute="top" secondItem="Ejs-G7-X8r" secondAttribute="top" id="ieM-uR-Hru"/>
+                            <constraint firstItem="V5t-Cm-uQ6" firstAttribute="leading" secondItem="Ejs-G7-X8r" secondAttribute="leading" id="pNg-NS-hnD"/>
+                        </constraints>
+                    </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <navigationItem key="navigationItem" id="cLX-ze-21t">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="SON-vf-WP6"/>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="bannerView" destination="f4L-qD-WaU" id="q4p-xz-EfW"/>
+                        <outlet property="imageView" destination="V5t-Cm-uQ6" id="tOW-2Z-GAk"/>
+                        <segue destination="Eb7-MP-Pri" kind="push" identifier="showStudentIdInfo" id="zLD-wN-e2y"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jfH-Vd-NsD" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1731.5" y="1772.5"/>
+        </scene>
         <!--Chats-->
         <scene sceneID="11">
             <objects>
                 <navigationController id="3" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Chats" id="rtu-HQ-rkp"/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="4">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" id="4">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -126,7 +173,7 @@
                         <segue destination="5Ky-Yp-WG8" kind="push" identifier="showKey" id="3XQ-ea-QwO"/>
                         <segue destination="jBj-li-dGc" kind="push" identifier="showAvatar" id="KXG-tu-Cv6"/>
                         <segue destination="Aez-fu-qAl" kind="push" identifier="ShowContacts" id="FuA-82-8A3"/>
-                        <segue destination="jBj-li-dGc" kind="push" identifier="showStudentId" id="SOM-L9-lMb"/>
+                        <segue destination="sY1-dR-63h" kind="push" identifier="showStudentId" id="sUP-yE-DLQ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tdN-gv-zxy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -222,7 +269,7 @@
         <scene sceneID="2Eb-au-ibP">
             <objects>
                 <navigationController definesPresentationContext="YES" id="tNj-Of-x8v" userLabel="Custom Key Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="UCv-Z3-t2Q">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="UCv-Z3-t2Q">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -722,7 +769,7 @@
         <scene sceneID="TWo-z6-Pkp">
             <objects>
                 <navigationController definesPresentationContext="YES" id="CPN-um-qcX" userLabel="Add To Collection Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cjk-K4-55l">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cjk-K4-55l">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -783,7 +830,7 @@
         <scene sceneID="MpI-0Y-HX1">
             <objects>
                 <navigationController storyboardIdentifier="webViewController" definesPresentationContext="YES" id="Xae-pO-reE" userLabel="Web View Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="vS0-oV-bEa">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="vS0-oV-bEa">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -911,7 +958,7 @@
                         <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oDn-ba-OW5">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oDn-ba-OW5">
                                 <rect key="frame" x="0.0" y="-8" width="320" height="512"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
@@ -992,7 +1039,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="cUQ-wS-0VX" userLabel="Media Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Media" id="dRm-Zp-puv"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Fbf-Xb-aYg">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Fbf-Xb-aYg">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1009,7 +1056,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="ndO-Hb-TaY" userLabel="Contacts Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Contacts" id="93c-hp-8Jv"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="B5K-80-wga">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="B5K-80-wga">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1026,7 +1073,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="dNK-Pr-I05" userLabel="Profile Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" id="Yft-kE-KJs"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wrH-DR-hdJ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="wrH-DR-hdJ">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1043,7 +1090,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="TcE-yq-ikP" userLabel="Settings Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Settings" id="fSA-6P-YP2"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6dU-Bk-nuX">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="6dU-Bk-nuX">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1059,7 +1106,7 @@
         <scene sceneID="qHY-n4-1jX">
             <objects>
                 <navigationController storyboardIdentifier="ModalGeoLocationViewController" title="Modal Map View Helper" definesPresentationContext="YES" id="ISl-ar-14M" userLabel="Geo Location Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YuO-st-Z2w">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="YuO-st-Z2w">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
@@ -1083,7 +1130,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="Ppk-FJ-Nem" customClass="SetupViewController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="CBe-Iv-Q7g"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6ec-2q-6KO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="6ec-2q-6KO">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1123,7 +1170,7 @@
             <objects>
                 <navigationController storyboardIdentifier="unusedServerNavigation" id="fb2-9g-9x6" userLabel="Server Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Server UI" id="0XA-DL-LQL"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KYL-Jc-u0e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="KYL-Jc-u0e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1257,14 +1304,15 @@
         <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="57k-z7-2Ln"/>
+        <segue reference="Jku-Va-0fi"/>
+        <segue reference="KXG-tu-Cv6"/>
+        <segue reference="3XQ-ea-QwO"/>
+        <segue reference="FuA-82-8A3"/>
+        <segue reference="zLD-wN-e2y"/>
         <segue reference="4Tx-uH-B8w"/>
         <segue reference="yj0-Vd-HPq"/>
         <segue reference="UJI-wH-YH7"/>
-        <segue reference="Jku-Va-0fi"/>
-        <segue reference="FuA-82-8A3"/>
-        <segue reference="3XQ-ea-QwO"/>
-        <segue reference="SOM-L9-lMb"/>
-        <segue reference="57k-z7-2Ln"/>
         <segue reference="8jZ-4R-eDF"/>
         <segue reference="thl-MY-iCZ"/>
     </inferredMetricsTieBreakers>
