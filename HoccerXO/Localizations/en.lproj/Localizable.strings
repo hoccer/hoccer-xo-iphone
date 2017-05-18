@@ -444,9 +444,9 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "credentials_and_database_not_deleted_message" = "Try restoring from backup or import saved credentials";
 
 "credentials_invalid_title"                    = "Credentials not accepted";
-"credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') It might also indicate tampering or a non-existent acount on the server. You can transfer credentials from other devices under 'Profile→Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+"credentials_invalid_delete_question"          = "The server has refused your login credentials. ('%@') It might also indicate tampering or a non-existent acount on the server. You can transfer credentials from other devices under 'Profile → Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
-"credentials_invalid_changed_delete_question"  = "The server has refused your login credentials ('%@'). This happened probably because they are in use on another device or app. It might also indicate tampering. You can transfer credentials under 'Profile→Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
+"credentials_invalid_changed_delete_question"  = "The server has refused your login credentials ('%@'). This happened probably because they are in use on another device or app. It might also indicate tampering. You can transfer credentials under 'Profile → Edit'. You can also start a fresh account. Do you want to delete your login credentials and all your chat data on the device and start a fresh account?";
 
 "credentials_invalid_account_deleted_question"  = "Your account has been deleted. ('%@') Do you want to delete your chat data on the device and start a fresh account?";
 
@@ -481,7 +481,7 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 "credentials_fetch_confirm_btn_title"           = "Fetch Credentials Only";
 
 "credentials_verifier_changed_title"           = "Login Transfer Successful";
-"credentials_verifier_changed_message"         = "Imported login credentials have been successfully transfered to this app. You can no longer use them in the app or device where they originated. You can however transfer them from this app using functions in Profile→Edit.";
+"credentials_verifier_changed_message"         = "Imported login credentials have been successfully transfered to this app. You can no longer use them in the app or device where they originated. You can however transfer them from this app using functions in Profile → Edit.";
 
 //==============================================================================
 // Account
@@ -731,13 +731,13 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 //==============================================================================
 
 "permission_denied_title"                       = "Access Denied";
-"permission_denied_microphone_message"          = "Grant microphone access to %@ in System Settings→Privacy→Microphone if you want to record audio.";
-"permission_denied_location_nearby_message"     = "Grant location access to %@ in System Settings→Privacy→Location Services to chat with people nearby or in worldwide mode.";
-"permission_denied_location"                    = "To send your location as an attachment grant access to %@ in System Settings→Privacy→Location Services.";
-"permission_denied_addressbook_message"         = "Grant address book access to %@ in System Settings→Privacy→Contacts to allow contact selection.";
-"permission_denied_camera_qr_scanner"           = "To scan QR codes grant camera access to %@ in System Settings→Privacy→Camera";
-"permission_denied_camera_attachment"           = "To directly attach snapshots grant camera access to %@ in System Settings→Privacy→Camera";
-"permission_denied_camera"           = "To use the camera grant access to %@ in System Settings→Privacy→Camera";
+"permission_denied_microphone_message"          = "Grant microphone access to %@ in System Settings → Privacy → Microphone if you want to record audio.";
+"permission_denied_location_nearby_message"     = "Grant location access to %@ in System Settings → Privacy → Location Services to chat with people nearby or in worldwide mode.";
+"permission_denied_location"                    = "To send your location as an attachment grant access to %@ in System Settings → Privacy → Location Services.";
+"permission_denied_addressbook_message"         = "Grant address book access to %@ in System Settings → Privacy → Contacts to allow contact selection.";
+"permission_denied_camera_qr_scanner"           = "To scan QR codes grant camera access to %@ in System Settings → Privacy → Camera";
+"permission_denied_camera_attachment"           = "To directly attach snapshots grant camera access to %@ in System Settings → Privacy → Camera";
+"permission_denied_camera"           = "To use the camera grant access to %@ in System Settings → Privacy → Camera";
 
 //==============================================================================
 // Profile

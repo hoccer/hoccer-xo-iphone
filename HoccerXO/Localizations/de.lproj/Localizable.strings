@@ -448,9 +448,9 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "credentials_and_database_deleted_message"     = "Zugangsdaten und Datenbank wurden gelöscht. Starte die App neu.";
 
 "credentials_invalid_title"                    = "Zugangsdaten zurückgewiesen";
-"credentials_invalid_delete_question"          = "Der Server hat deine Zugangsdaten nicht akzeptiert. ('%@') Du kannst Zugangsdaten in einer unter 'Profil→Bearbeiten' im- und exportieren. Du kannst auch einen neuen Zugang anlegen. Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
+"credentials_invalid_delete_question"          = "Der Server hat deine Zugangsdaten nicht akzeptiert. ('%@') Du kannst Zugangsdaten in einer unter 'Profil → Bearbeiten' im- und exportieren. Du kannst auch einen neuen Zugang anlegen. Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
 
-"credentials_invalid_changed_delete_question"  = "Der Server hat deine Zugangsdaten nicht akzeptiert. ('%@') Vermutlich nutzt du den Zugang auf einem anderen Gerät oder in einer anderen App. Du kannst Zugangsdaten in einer unter 'Profil→Bearbeiten' im- und exportieren. Du kannst auch einen neuen Zugang anlegen. Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
+"credentials_invalid_changed_delete_question"  = "Der Server hat deine Zugangsdaten nicht akzeptiert. ('%@') Vermutlich nutzt du den Zugang auf einem anderen Gerät oder in einer anderen App. Du kannst Zugangsdaten in einer unter 'Profil → Bearbeiten' im- und exportieren. Du kannst auch einen neuen Zugang anlegen. Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
 
 "credentials_invalid_account_deleted_question"          = "Dein Zugang wurde gelöscht. ('%@') Willst du deine Zugangsdaten und alle Chats auf dem Gerät löschen und einen neuen Zugang erstellen?";
 
@@ -485,7 +485,7 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 "credentials_fetch_confirm_btn_title"           = "Nur Zugangsdaten holen";
 
 "credentials_verifier_changed_title"           = "Login erfolgreich übernommen";
-"credentials_verifier_changed_message"         = "Die importierten Login-Daten wurden erfolgreich in diese App übernommen. Sie können nicht mehr länger in der App oder auf dem Gerät genutzt werden, von wo sie stammen.. Sie können aber jederzeit über Funktionen in Profil→Bearbeiten auf andere Hoccer Apps übertragen werden.";
+"credentials_verifier_changed_message"         = "Die importierten Login-Daten wurden erfolgreich in diese App übernommen. Sie können nicht mehr länger in der App oder auf dem Gerät genutzt werden, von wo sie stammen.. Sie können aber jederzeit über Funktionen in Profil → Bearbeiten auf andere Hoccer Apps übertragen werden.";
 
 //==============================================================================
 // Account
@@ -747,13 +747,13 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 
 
 "permission_denied_title"                       = "Zugriff verweigert";
-"permission_denied_microphone_message"          = "Um Sprache aufzunehmen, erlaube %@ in System Einstellungen→Datenschutz→Mikrofon den Zugriff.";
-"permission_denied_location_nearby_message"     = "Um mit Leuten in der Nähe oder im Weltweit-Modus zu chatten, erlaube %@ in System Einstellungen→Datenschutz→Ortungsdienste den Zugriff.";
-"permission_denied_location"                    = "Um deine Position zu verschicken, erlaube %@ in System Einstellungen→Datenschutz→Ortungsdienste den Zugriff.";
+"permission_denied_microphone_message"          = "Um Sprache aufzunehmen, erlaube %@ in System Einstellungen → Datenschutz → Mikrofon den Zugriff.";
+"permission_denied_location_nearby_message"     = "Um mit Leuten in der Nähe oder im Weltweit-Modus zu chatten, erlaube %@ in System Einstellungen → Datenschutz → Ortungsdienste den Zugriff.";
+"permission_denied_location"                    = "Um deine Position zu verschicken, erlaube %@ in System Einstellungen → Datenschutz → Ortungsdienste den Zugriff.";
 "permission_denied_addressbook_message"         = "Um Kontakte auszuwählen, erlaube %@ in System Einstellungen→Datenschutz→Kontakte den Zugriff auf dein Adressbuch.";
-"permission_denied_camera_qr_scanner"           = "Um QR-Codes zu scannen erlaube %@ in System Einstellungen→Datenschutz→Kamera den Zugang.";
-"permission_denied_camera_attachment"           = "Um Kameraaufnahmen zu versenden, erlaube %@ in System Einstellungen→Datenschutz→Kamera den Zugang.";
-"permission_denied_camera"           = "Um die Kamera zu benutzen, erlaube %@ in System Einstellungen→Datenschutz→Kamera den Zugang.";
+"permission_denied_camera_qr_scanner"           = "Um QR-Codes zu scannen erlaube %@ in System Einstellungen → Datenschutz → Kamera den Zugang.";
+"permission_denied_camera_attachment"           = "Um Kameraaufnahmen zu versenden, erlaube %@ in System Einstellungen → Datenschutz → Kamera den Zugang.";
+"permission_denied_camera"           = "Um die Kamera zu benutzen, erlaube %@ in System Einstellungen → Datenschutz → Kamera den Zugang.";
 
 //==============================================================================
 // Profile
