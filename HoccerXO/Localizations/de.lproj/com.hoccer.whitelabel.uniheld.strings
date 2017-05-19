@@ -1,4 +1,4 @@
-"about_prosa" = "HOCCER - Der Messenger\n\n Hoccer ist \"Der Messenger\" für anonyme, einfache und sichere Datenübertragung ohne Registrierungsprozess. Weder die Angabe der Mobilnummer noch der Mailadresse ist notwendig um mit Freunden oder Gruppen zu kommunizieren. Wir legen größten Wert auf Sicherheit, Datenschutz und Privatsphäre. Dank modernster Verschlüsselungs- und Übertragungstechnologien, setzt Hoccer neue Standards in der mobilen Datenübertragung und definiert Privatsphäre im Messaging-Sektor neu. Hoccer ermöglicht einen einfachen und unbegrenzten Datenaustausch zwischen Smartphones und Tablets ohne vorherige Eingabe von vertraulichen Nutzerdaten.\n\nPatente:\nU.S. Patent No. 9,008,579\nU.S. Patent No. 9,369,442\nAU Patent No. 2012311701";
+"about_prosa" = "\nMit UNIHELD bleibst Du immer Up-to-date! Die besten Angebote, die geilsten Partys und Benefits Deiner Stadt, das und vieles mehr, immer mit dabei, in Deiner Hosentasche!";
 
 "server_nav_title" = "UNIHELD-Box";
 "server_user" = "uniheld";
@@ -24,10 +24,11 @@
 "uniheld_benefit_url" = "https://uniheld.campusbenefits.de";
 "uniheld_student_id_btn_title" = "Studentenausweis";
 "uniheld_student_id_no_image_alert_title" = "Kein Ausweis hinterlegt";
-"uniheld_student_id_no_image_alert_message" = "Editiere dein Profil um ein Bild deines Ausweises zu hinterlegen.";
-"uniheld_student_id_image_option_sheet_title"="Studenten Ausweis";
+"uniheld_student_id_no_image_alert_message" = "Bearbeite dein Profil, um ein Bild deines Ausweises zu hinterlegen.";
+"uniheld_student_id_image_option_sheet_title"="Studentenausweis";
 "uniheld_student_id_image_option_delete_btn_title"= "Ausweis löschen";
-
+"uniheld_student_id_title" = "Ausweis";
+"uniheld_student_id_info_url" = "http://faq.uniheld.com/de/2017/02/21/der-uniheld-studentenausweis/";
 
 
 

@@ -7,12 +7,12 @@
 "NSAppleMusicUsageDescription"="to send media information from your library";
 "NSCameraUsageDescription"="to record and send images and movies and scan invite codes";
 "NSContactsUsageDescription"="to send and receive contacts";
-"NSLocationUsageDescription"="to chat with people nearby or to send placemarks";
+"NSLocationUsageDescription"="Access to your location is required to chat with people nearby or to send placemarks";
 "NSMicrophoneUsageDescription"="to record and send audio attachments";
 "NSMotionUsageDescription"="to use gestures to throw and catch messages in nearby mode";
-"NSPhotoLibraryUsageDescription"="to send photos from your photo library";
+"NSPhotoLibraryUsageDescription"="to select and send photos from your photo library";
 
-"NSLocationWhenInUseUsageDescription" = "to chat with people nearby or to send placemarks, access to your location is required.";
+"NSLocationWhenInUseUsageDescription" = "Access to your location is required to chat with people nearby or to send placemarks";
 
 
 /*
