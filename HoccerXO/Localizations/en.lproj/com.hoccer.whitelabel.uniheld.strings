@@ -8,16 +8,16 @@
 
 "invite_sms_text" = "Hey dude, download now the new UNIHELD App. Just register, verify as a student and get awesome student benefits:\n%@";
 
-"hoccer_tutorial_url" = "http://faq.uniheld.com/en/tutorial";
-"hoccer_faq_url" = "http://faq.uniheld.com/en/";
+"hoccer_tutorial_url" = "http://faq.uniheld.com/tutorial";
+"hoccer_faq_url" = "http://faq.uniheld.com/";
 
-"contact_list_placeholder"                      = "[Invite friends](http://faq.uniheld.com/en/tutorial/#invite) to chat with.";
-"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://faq.uniheld.com/en/tutorial/#nearby)…";
-"contact_list_placeholder_worldwide"            = "Waiting for others [worldwide](http://faq.uniheld.com/en/tutorial/#worldwide)…";
-"group_list_placeholder"                = "Create [groups](http://faq.uniheld.com/en/tutorial/#groups) to chat with many friends at once.";
+"contact_list_placeholder"                      = "[Invite friends](http://faq.uniheld.com/tutorial/#invite) to chat with.";
+"contact_list_placeholder_nearby"               = "Waiting for others [nearby](http://faq.uniheld.com/tutorial/#nearby)…";
+"contact_list_placeholder_worldwide"            = "Waiting for others [worldwide](http://faq.uniheld.com/tutorial/#worldwide)…";
+"group_list_placeholder"                = "Create [groups](http://faq.uniheld.com/tutorial/#groups) to chat with many friends at once.";
 
-"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://faq.uniheld.com/en/tutorial/#verify) of your friends. Ask them for their key ids and compare.";
-"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://faq.uniheld.com/en/tutorial/#verify).";
+"key_fingerprint_info"                           = "Improve security by [verifying the keys](http://faq.uniheld.com/tutorial/#verify) of your friends. Ask them for their key ids and compare.";
+"key_fingerprint_yours_info"                     = "The key id is your keys fingerprint. Show it to friends asking to [verify your key](http://faq.uniheld.com/tutorial/#verify).";
 
 "chat_list_tab_title" = "Chats";
 
