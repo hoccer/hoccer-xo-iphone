@@ -59,14 +59,15 @@
 "cell_accessory_color" = "#3AAA35";
 "table_placeholder_image_color" =  "#3AAA35";
 
-"message_background_color_incoming" = "#38C723";
-"message_background_color_success" = "#DFDFDF"; // gray
-"message_background_color_in_progress" = "#3AAA35";
+"message_background_color_incoming" = "#dfdfdf";
+"message_background_color_in_progress" = "#dfdfdf";
+"message_background_color_success" = "#3AAA35"; // dark green
+
 "message_background_color_failed" = "#BD3935";
 
-"message_text_color_incoming" = "#ffffff";
-"message_text_color_success" = "#000000";
-"message_text_color_in_progress" = "#000000";
+"message_text_color_incoming" = "#000000";
+"message_text_color_success" = "#ffffff";
+"message_text_color_in_progress" = "#ffffff";
 "message_text_color_failed" = "#000000";
 
 /*

@@ -47,6 +47,12 @@
 //Highlight #F9B000
 //Dunkles Grau #909090
 
+
+//Green: #38C723
+//Black (bar): #000000
+//Background: #FFFFFF
+//Grey (Message bubble): #DFDFDF
+
 "tint_color" = "#38C723"; // green
 "navigation_bar_tint_color" = "#3AAA35";
 "navigation_bar_text_color" = "#3AAA35";
@@ -54,12 +60,32 @@
 "cell_accessory_color" = "#3AAA35";
 "table_placeholder_image_color" =  "#3AAA35";
 
-"message_background_color_incoming" = "#38C723";
-"message_background_color_success" = "#DFDFDF"; // gray
-"message_background_color_in_progress" = "#3AAA35";
+"message_background_color_incoming" = "#dfdfdf";
+"message_background_color_in_progress" = "#dfdfdf";
+"message_background_color_success" = "#3AAA35"; // dark green
+
 "message_background_color_failed" = "#BD3935";
 
-"message_text_color_incoming" = "#ffffff";
-"message_text_color_success" = "#000000";
-"message_text_color_in_progress" = "#000000";
+"message_text_color_incoming" = "#000000";
+"message_text_color_success" = "#ffffff";
+"message_text_color_in_progress" = "#ffffff";
 "message_text_color_failed" = "#000000";
+
+/*
+ "tint_color" = "#F9B000";
+ "navigation_bar_tint_color" = "#3AAA35";
+ "navigation_bar_text_color" = "#3AAA35";
+ "tab_bar_selected_text_color" = "#3AAA35";
+ "cell_accessory_color" = "#3AAA35";
+ "table_placeholder_image_color" =  "#3AAA35";
+
+ "message_background_color_incoming" = "#e3e3e3";
+ "message_background_color_success" = "#3AAA35";
+ "message_background_color_in_progress" = "#3AAA35";
+ "message_background_color_failed" = "#BD3935";
+
+ "message_text_color_incoming" = "#000000";
+ "message_text_color_success" = "#ffffff";
+ "message_text_color_in_progress" = "#ffffff";
+ "message_text_color_failed" = "#ffffff";
+ */
