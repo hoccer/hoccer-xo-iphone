@@ -5334,7 +5334,9 @@ NSError * makeSendError(NSString * reason) {
                              @"clientVersion"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"],
                              @"clientBuildNumber"  : [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"],
                              @"clientLanguage" : NSLocalizedString(@"language_code", nil),
-                             @"supportTag"     : supportTag
+                             @"supportTag"     : supportTag,
+                             //@"environment"    : [Environment sharedEnvironment].currentEnvironment
+                             @"environment"    : [Environment sharedEnvironment].apnsEnvironment
                              };
     
     NSMutableDictionary *params = [NSMutableDictionary dictionaryWithDictionary:initParams];

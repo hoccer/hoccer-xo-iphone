@@ -26,6 +26,9 @@
 
 @property (nonatomic, readonly) NSString * inviteUrlScheme;
 
+@property (nonatomic, readonly) NSString * apnsEnvironment;
+
+
 - (NSString*) suffixedString: (NSString*) string;
 
 @end
