@@ -3897,7 +3897,7 @@ ready:;
                                  @"-------------------------------------\n"
                                   "Sender Id: %@\n"
                                   "Body: %@\n"
-                                  "Hash: %@\n"
+                                  "MAC: %@\n"
                                   "-------------------------------------\n",
                                  message.senderId, message.body, hash];
     NSString * body = HXOLabelledLocalizedString(@"abuse_mail_body", nil, message_report, nil);
