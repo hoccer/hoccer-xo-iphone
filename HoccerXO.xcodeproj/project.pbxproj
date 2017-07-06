@@ -303,6 +303,12 @@
 		E93ED64617A302070072FD2C /* NSMutableArray+QueueAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = E93ED64517A302070072FD2C /* NSMutableArray+QueueAdditions.m */; };
 		E9480D391CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der in Resources */ = {isa = PBXBuildFile; fileRef = E9480D371CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der */; };
 		E9480D3A1CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der in Resources */ = {isa = PBXBuildFile; fileRef = E9480D381CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der */; };
+		E9480F071EE061840047F77E /* TCMobileProvision.m in Sources */ = {isa = PBXBuildFile; fileRef = E9480F061EE061840047F77E /* TCMobileProvision.m */; };
+		E9480F0E1EE0682F0047F77E /* DTASN1BitString.m in Sources */ = {isa = PBXBuildFile; fileRef = E9480F091EE0682F0047F77E /* DTASN1BitString.m */; };
+		E9480F0F1EE0682F0047F77E /* DTASN1Parser.m in Sources */ = {isa = PBXBuildFile; fileRef = E9480F0B1EE0682F0047F77E /* DTASN1Parser.m */; };
+		E9480F101EE0682F0047F77E /* DTASN1Serialization.m in Sources */ = {isa = PBXBuildFile; fileRef = E9480F0D1EE0682F0047F77E /* DTASN1Serialization.m */; };
+		E9480F141EE068D70047F77E /* DTBase64Coding.m in Sources */ = {isa = PBXBuildFile; fileRef = E9480F121EE068D70047F77E /* DTBase64Coding.m */; };
+		E9480F171EE069490047F77E /* DTLog.m in Sources */ = {isa = PBXBuildFile; fileRef = E9480F161EE069490047F77E /* DTLog.m */; };
 		E95089231B00D54700CA3952 /* KeyChainItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E95089221B00D54700CA3952 /* KeyChainItem.m */; };
 		E951759918DE420200EFD1C6 /* HXOEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = E951759818DE420200EFD1C6 /* HXOEnvironment.m */; };
 		E951760D1913EB6100EFD1C6 /* CatchDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176031913EB6100EFD1C6 /* CatchDetector.m */; };
@@ -675,17 +681,9 @@
 		634BE1BC185C9B2B00B2DF05 /* UpDownLoadControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UpDownLoadControl.h; sourceTree = "<group>"; };
 		634BE1BD185C9B2B00B2DF05 /* UpDownLoadControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UpDownLoadControl.m; sourceTree = "<group>"; };
 		634E899C1E96561E00452FD1 /* placeholder-benefits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-benefits.png"; sourceTree = "<group>"; };
-		634E899D1E96561E00452FD1 /* placeholder-benefits@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-benefits@2.png"; sourceTree = "<group>"; };
-		634E899E1E96561E00452FD1 /* placeholder-benefits@3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-benefits@3.png"; sourceTree = "<group>"; };
 		634E899F1E96561E00452FD1 /* placeholder-chats.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats.png"; sourceTree = "<group>"; };
-		634E89A01E96561E00452FD1 /* placeholder-chats@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats@2.png"; sourceTree = "<group>"; };
-		634E89A11E96561E00452FD1 /* placeholder-chats@3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-chats@3.png"; sourceTree = "<group>"; };
 		634E89A21E96561E00452FD1 /* placeholder-groups.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups.png"; sourceTree = "<group>"; };
-		634E89A31E96561E00452FD1 /* placeholder-groups@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups@2.png"; sourceTree = "<group>"; };
-		634E89A41E96561E00452FD1 /* placeholder-groups@3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-groups@3.png"; sourceTree = "<group>"; };
 		634E89A51E96561E00452FD1 /* placeholder-nearby.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-nearby.png"; sourceTree = "<group>"; };
-		634E89A61E96561E00452FD1 /* placeholder-nearby@2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-nearby@2.png"; sourceTree = "<group>"; };
-		634E89A71E96561E00452FD1 /* placeholder-nearby@3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "placeholder-nearby@3.png"; sourceTree = "<group>"; };
 		635127961ABAF24800FA0C2B /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TutorialViewController.h; sourceTree = "<group>"; };
 		635127971ABAF24800FA0C2B /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TutorialViewController.m; sourceTree = "<group>"; };
 		635127B11ABB65FD00FA0C2B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/webdav_mac.rtf; sourceTree = "<group>"; };
@@ -1118,6 +1116,21 @@
 		E94108F119472C4B00E95A50 /* HoccerXO-40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-40.xcdatamodel"; sourceTree = "<group>"; };
 		E9480D371CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "filecache-2016.talk.hoccer.de.der"; sourceTree = "<group>"; };
 		E9480D381CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "talkserver-2016.talk.hoccer.de.der"; sourceTree = "<group>"; };
+		E9480EF41EE0598C0047F77E /* Hoccer-production.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "Hoccer-production.entitlements"; sourceTree = "<group>"; };
+		E9480F031EE05A890047F77E /* Hoccer-development.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "Hoccer-development.entitlements"; sourceTree = "<group>"; };
+		E9480F051EE061840047F77E /* TCMobileProvision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCMobileProvision.h; sourceTree = "<group>"; };
+		E9480F061EE061840047F77E /* TCMobileProvision.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCMobileProvision.m; sourceTree = "<group>"; };
+		E9480F081EE0682F0047F77E /* DTASN1BitString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTASN1BitString.h; sourceTree = "<group>"; };
+		E9480F091EE0682F0047F77E /* DTASN1BitString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTASN1BitString.m; sourceTree = "<group>"; };
+		E9480F0A1EE0682F0047F77E /* DTASN1Parser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTASN1Parser.h; sourceTree = "<group>"; };
+		E9480F0B1EE0682F0047F77E /* DTASN1Parser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTASN1Parser.m; sourceTree = "<group>"; };
+		E9480F0C1EE0682F0047F77E /* DTASN1Serialization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTASN1Serialization.h; sourceTree = "<group>"; };
+		E9480F0D1EE0682F0047F77E /* DTASN1Serialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTASN1Serialization.m; sourceTree = "<group>"; };
+		E9480F111EE068D70047F77E /* DTBase64Coding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTBase64Coding.h; sourceTree = "<group>"; };
+		E9480F121EE068D70047F77E /* DTBase64Coding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTBase64Coding.m; sourceTree = "<group>"; };
+		E9480F131EE068D70047F77E /* DTWeakSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTWeakSupport.h; sourceTree = "<group>"; };
+		E9480F151EE069490047F77E /* DTLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTLog.h; sourceTree = "<group>"; };
+		E9480F161EE069490047F77E /* DTLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTLog.m; sourceTree = "<group>"; };
 		E94DD2D117D7818E00486C55 /* HoccerXO-22.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-22.xcdatamodel"; sourceTree = "<group>"; };
 		E95089101AFE345000CA3952 /* Hoccer 51.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Hoccer 51.xcdatamodel"; sourceTree = "<group>"; };
 		E950891F1AFE4AA700CA3952 /* Hoccer 52.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Hoccer 52.xcdatamodel"; sourceTree = "<group>"; };
@@ -1273,7 +1286,6 @@
 		E99886EE17282C950089A510 /* throw_sound.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = throw_sound.wav; sourceTree = "<group>"; };
 		E99A1BAA1E96995E00A65FA1 /* tab_benefits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tab_benefits.h; sourceTree = "<group>"; };
 		E99A1BAB1E96995E00A65FA1 /* tab_benefits.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = tab_benefits.m; sourceTree = "<group>"; };
-		E99F365C1DCE0257007F34A9 /* Hoccer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Hoccer.entitlements; sourceTree = "<group>"; };
 		E9A2EDFD19316840003A8464 /* HoccerXO-38.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-38.xcdatamodel"; sourceTree = "<group>"; };
 		E9A41DD91764F45D006E76B2 /* InAppSettingsKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = InAppSettingsKit.xcodeproj; path = InAppSettingsKit/InAppSettingsKit.xcodeproj; sourceTree = "<group>"; };
 		E9A619DC17DF6E3700D4CFC3 /* CopyableUITextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CopyableUITextField.h; sourceTree = "<group>"; };
@@ -1810,17 +1822,9 @@
 			isa = PBXGroup;
 			children = (
 				634E899C1E96561E00452FD1 /* placeholder-benefits.png */,
-				634E899D1E96561E00452FD1 /* placeholder-benefits@2.png */,
-				634E899E1E96561E00452FD1 /* placeholder-benefits@3.png */,
 				634E899F1E96561E00452FD1 /* placeholder-chats.png */,
-				634E89A01E96561E00452FD1 /* placeholder-chats@2.png */,
-				634E89A11E96561E00452FD1 /* placeholder-chats@3.png */,
 				634E89A21E96561E00452FD1 /* placeholder-groups.png */,
-				634E89A31E96561E00452FD1 /* placeholder-groups@2.png */,
-				634E89A41E96561E00452FD1 /* placeholder-groups@3.png */,
 				634E89A51E96561E00452FD1 /* placeholder-nearby.png */,
-				634E89A61E96561E00452FD1 /* placeholder-nearby@2.png */,
-				634E89A71E96561E00452FD1 /* placeholder-nearby@3.png */,
 			);
 			path = Uniheld;
 			sourceTree = "<group>";
@@ -2149,7 +2153,8 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXGroup;
 			children = (
-				E99F365C1DCE0257007F34A9 /* Hoccer.entitlements */,
+				E9480F031EE05A890047F77E /* Hoccer-development.entitlements */,
+				E9480EF41EE0598C0047F77E /* Hoccer-production.entitlements */,
 				E99886B91725CB3E0089A510 /* Adressbook */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
@@ -2237,6 +2242,7 @@
 		63C413A116E8F9E5004E1F6D /* 3rdParty */ = {
 			isa = PBXGroup;
 			children = (
+				E9480F041EE061840047F77E /* TCMobileProvision */,
 				E9BFA7711ACC5E64004DC0D9 /* GCDWebServer */,
 				E991E5301A0E974D00015BEE /* CocoaAsyncSocket */,
 				E9E92F2018733B15007B8042 /* CocoaHttpServer */,
@@ -2492,6 +2498,26 @@
 				C576EC271934CCB200C0D254 /* slider-track.png */,
 			);
 			path = AudioPlayer;
+			sourceTree = "<group>";
+		};
+		E9480F041EE061840047F77E /* TCMobileProvision */ = {
+			isa = PBXGroup;
+			children = (
+				E9480F151EE069490047F77E /* DTLog.h */,
+				E9480F161EE069490047F77E /* DTLog.m */,
+				E9480F111EE068D70047F77E /* DTBase64Coding.h */,
+				E9480F121EE068D70047F77E /* DTBase64Coding.m */,
+				E9480F131EE068D70047F77E /* DTWeakSupport.h */,
+				E9480F081EE0682F0047F77E /* DTASN1BitString.h */,
+				E9480F091EE0682F0047F77E /* DTASN1BitString.m */,
+				E9480F0A1EE0682F0047F77E /* DTASN1Parser.h */,
+				E9480F0B1EE0682F0047F77E /* DTASN1Parser.m */,
+				E9480F0C1EE0682F0047F77E /* DTASN1Serialization.h */,
+				E9480F0D1EE0682F0047F77E /* DTASN1Serialization.m */,
+				E9480F051EE061840047F77E /* TCMobileProvision.h */,
+				E9480F061EE061840047F77E /* TCMobileProvision.m */,
+			);
+			path = TCMobileProvision;
 			sourceTree = "<group>";
 		};
 		E95176011913EB6100EFD1C6 /* GesturesInterpreter */ = {
@@ -3014,7 +3040,7 @@
 								enabled = 1;
 							};
 							com.apple.Push = {
-								enabled = 1;
+								enabled = 0;
 							};
 						};
 					};
@@ -3367,6 +3393,7 @@
 				63C178C618BF79A100F29BC4 /* UIColor+HexUtilities.m in Sources */,
 				63AEE2FF16CA4D0300522F92 /* ChatViewController.m in Sources */,
 				63AEE30816CA566B00522F92 /* Contact.m in Sources */,
+				E9480F101EE0682F0047F77E /* DTASN1Serialization.m in Sources */,
 				E991E6ED1A0E975000015BEE /* DDContextFilterLogFormatter.m in Sources */,
 				63AEE30B16CA6B1900522F92 /* HXOMessage.m in Sources */,
 				6318FB651999057000D018A8 /* ALAssetsGroup+isEqual.m in Sources */,
@@ -3495,8 +3522,10 @@
 				C5C359FF196EC72F00D835F3 /* HXOArrayPlaylist.m in Sources */,
 				63CB3E8918D4A909006BB511 /* VectorArt.m in Sources */,
 				63C1356D1716A4AB00969B0B /* Invite.m in Sources */,
+				E9480F171EE069490047F77E /* DTLog.m in Sources */,
 				63793C0C18D5024800BB6951 /* paper_dart.m in Sources */,
 				E9E92F961875D41E007B8042 /* TypedHTTPDataResponse.m in Sources */,
+				E9480F0F1EE0682F0047F77E /* DTASN1Parser.m in Sources */,
 				E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */,
 				E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */,
 				63B78FFA18D4D6C1003A9125 /* tab_chats.m in Sources */,
@@ -3511,6 +3540,7 @@
 				E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */,
 				6318FB631999057000D018A8 /* ALAsset+assetType.m in Sources */,
 				63DEC01619B0A720003804E8 /* JGAlbumViewController.m in Sources */,
+				E9480F0E1EE0682F0047F77E /* DTASN1BitString.m in Sources */,
 				63E0B2171721FF75006058C6 /* KeychainItemWrapper.m in Sources */,
 				E9BFAAE11ACC5E67004DC0D9 /* GCDWebServerURLEncodedFormRequest.m in Sources */,
 				E9DBE3E31865C0A000880252 /* CryptoJSON.m in Sources */,
@@ -3585,7 +3615,9 @@
 				C576EBCC1934CC6100C0D254 /* NSMutableArray+Shuffle.m in Sources */,
 				639094BE1739828700DF889B /* GeoLocationPicker.m in Sources */,
 				63DFF4741EA9014E00FC6E11 /* StudentIdViewController.m in Sources */,
+				E9480F141EE068D70047F77E /* DTBase64Coding.m in Sources */,
 				63DEC01919B0A720003804E8 /* JGMediaQueryViewController.m in Sources */,
+				E9480F071EE061840047F77E /* TCMobileProvision.m in Sources */,
 				C576EC401934CCB200C0D254 /* player_button_repeat_all.m in Sources */,
 				63BD7D8E174422D500118A7F /* Group.m in Sources */,
 				63C1E88C18EB2B450066D5C6 /* ProfileSheetController.m in Sources */,
@@ -3863,7 +3895,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Starmeo";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Starmeo";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -3977,7 +4009,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Starmeo";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Starmeo";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -4197,7 +4229,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-XO";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -4245,7 +4277,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-XO";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -4322,7 +4354,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Stroeer";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Stroeer";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -4439,7 +4471,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Stroeer";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Stroeer";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -4559,7 +4591,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Simsme";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Simsme";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -4672,7 +4704,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Simsme";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Simsme";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -4790,7 +4822,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Hoccme";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Hoccme";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -4904,7 +4936,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Hoccme";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Hoccme";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -5022,7 +5054,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5137,7 +5169,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5256,7 +5288,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-ClassicDev";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5371,7 +5403,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-ClassicDev";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5490,7 +5522,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Helios";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Helios";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5606,7 +5638,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Helios";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Helios";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = "";
@@ -5724,7 +5756,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Uniheld";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Uniheld";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5840,7 +5872,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Uniheld";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Uniheld";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;

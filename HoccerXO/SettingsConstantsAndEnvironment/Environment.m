@@ -9,6 +9,7 @@
 #import "Environment.h"
 
 #import "HXOUserDefaults.h"
+#import "TCMobileProvision.h"
 
 static Environment * sharedEnvironment = nil;
 
@@ -79,6 +80,7 @@ NSString * const kValidEnvironments = @"_validEnvironments";
             _currentEnvironment = defaultEnvironment;
         }
         NSLog(@"defaultEnvironment=%@, overrideEnvironment=%@, using environment %@",defaultEnvironment, overrideEnvironment,_currentEnvironment);
+        NSLog(@"apnsEnvironment=%@", self.apnsEnvironment);
         
         if ([self.validEnvironments indexOfObject: _currentEnvironment] == NSNotFound) {
             NSLog(@"FATAL: environment '%@' is unknown", _currentEnvironment);
@@ -86,6 +88,21 @@ NSString * const kValidEnvironments = @"_validEnvironments";
         }
     }
     return _currentEnvironment;
+}
+
+@synthesize apnsEnvironment = _apnsEnvironment;
+
+- (NSString*) apnsEnvironment {
+    if (_apnsEnvironment == nil) {
+        
+        NSString *mobileprovisionPath = [[[NSBundle mainBundle] bundlePath]
+                                         stringByAppendingPathComponent:@"embedded.mobileprovision"];
+        TCMobileProvision *mobileprovision = [[TCMobileProvision alloc] initWithData:[NSData dataWithContentsOfFile:mobileprovisionPath]];
+        NSDictionary *entitlements = mobileprovision.dict[@"Entitlements"];
+        _apnsEnvironment = entitlements[@"aps-environment"];
+    }
+    return _apnsEnvironment;
+    // BOOL production = entitlements && apsEnvironment && [apsEnvironment isEqualToString:@"production"];
 }
 
 @synthesize validEnvironments = _validEnvironments;
