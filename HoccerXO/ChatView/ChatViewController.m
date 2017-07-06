@@ -57,6 +57,7 @@
 #import "AttachmentButton.h"
 #import "GroupInStatuNascendi.h"
 #import "HXOPluralocalization.h"
+#import "HXOLocalization.h"
 #import "HXOAudioPlaybackButtonController.h"
 #import "NSString+FromTimeInterval.h"
 
@@ -305,14 +306,23 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
     
 }
 
-- (UIMenuController *)setupLongPressMenu {
+- (UIMenuController *)setupLongPressMenu: (UITableViewCell*) theCell {
     UIMenuController *menuController = [UIMenuController sharedMenuController];
     UIMenuItem *mySaveMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"save", nil) action:@selector(saveMessage:)];
     UIMenuItem *myDeleteMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"delete", nil) action:@selector(deleteMessage:)];
     UIMenuItem *myResendMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"chat_resend_menu_item", nil) action:@selector(resendMessage:)];
     UIMenuItem *myOpenWithMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"chat_open_with_menu_item", nil) action:@selector(openWithMessage:)];
     UIMenuItem *myShareMessageMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"chat_share_menu_item", nil) action:@selector(shareMessage:)];
-    [menuController setMenuItems:@[myShareMessageMenuItem,myOpenWithMessageMenuItem,myDeleteMessageMenuItem,myResendMessageMenuItem/*, myForwardMessageMenuItem*/,mySaveMenuItem]];
+
+    NSMutableArray * items = [NSMutableArray arrayWithObjects: myShareMessageMenuItem,myOpenWithMessageMenuItem,myDeleteMessageMenuItem,myResendMessageMenuItem/*, myForwardMessageMenuItem*/,mySaveMenuItem, nil];
+
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+
+    if ([self abuseAddress] && ! message.isOutgoing) {
+        UIMenuItem *myReportAbuseMenuItem = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"abuse_menu_item", nil) action:@selector(reportAbuse:)];
+        [items addObject: myReportAbuseMenuItem];
+    }
+    [menuController setMenuItems: items];
     [menuController update];
     return menuController;
 }
@@ -330,7 +340,7 @@ typedef void(^AttachmentImageCompletion)(Attachment*, AttachmentSection*);
 
             [myCell becomeFirstResponder];
             
-            UIMenuController * menu = [self setupLongPressMenu];
+            UIMenuController * menu = [self setupLongPressMenu: myCell];
             [menu setTargetRect:[self.tableView rectForRowAtIndexPath:indexPath] inView:self.tableView];
             [menu setMenuVisible:YES animated:YES];
             //NSLog(@"ChatViewController:handleLongPress:setMenuVisible");
@@ -3301,7 +3311,9 @@ ready:;
     if (action == @selector(openWithMessage:)) { return available; }
     
     if (action == @selector(shareMessage:)) { return available; }
-    
+
+    if (action == @selector(reportAbuse:)) { return available; }
+
     if (action == @selector(saveMessage:)) {
         if (available) {
             Attachment * myAttachment = message.attachment;
@@ -3848,5 +3860,69 @@ ready:;
         [AppDelegate.instance beginInspecting:self.inspectedObject withInspector:self];
     }
 }
+
+#pragma - Abuse Reporting
+
+- (NSString*) abuseAddress {
+    NSString * abuse_address_key = @"abuse_address";
+    NSString * address = HXOLabelledLocalizedString(abuse_address_key, nil, nil);
+    return [address isEqualToString: abuse_address_key] ? nil : address;
+}
+
+
+- (void) messageCell:(MessageCell *)theCell reportAbuse:(id)sender {
+    NSLog(@"reportAbuse");
+    if (! [MFMailComposeViewController canSendMail])
+    {
+        UIAlertView * alert =
+        [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"abuse_no_mail_title", nil)
+                                   message: NSLocalizedString(@"abuse_no_mail_message", nil)
+                                  delegate: nil
+                         cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                         otherButtonTitles: nil];
+        [alert show];
+        return;
+    }
+
+    MFMailComposeViewController * mailView = [[MFMailComposeViewController alloc] init];
+    mailView.mailComposeDelegate = self;
+
+    [mailView setSubject:  HXOLocalizedString(@"abuse_mail_subject", nil, HXOAppName(), nil)];
+    [mailView setToRecipients: @[[self abuseAddress]]];
+
+    HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    NSString * message_report = [NSString stringWithFormat:
+                                 @"-------------------------------------\n"
+                                  "Sender Id: %@\n"
+                                  "Body: %@\n"
+                                  "-------------------------------------\n",
+                                 message.senderId, message.body];
+    NSString * body = HXOLabelledLocalizedString(@"abuse_mail_body", nil, message_report, nil);
+    [mailView setMessageBody: body isHTML: NO];
+
+
+    [self presentViewController: mailView animated: YES completion: nil];
+}
+
+- (void)mailComposeController:(MFMailComposeViewController*)controller
+          didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error {
+
+    switch (result) {
+        case MFMailComposeResultCancelled:
+        case MFMailComposeResultSaved:
+        case MFMailComposeResultSent:
+            break;
+        case MFMailComposeResultFailed:
+            [[[UIAlertView alloc] initWithTitle: error.localizedDescription
+                                        message: error.localizedFailureReason
+                                       delegate: nil
+                              cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                              otherButtonTitles: nil] show];
+            NSLog(@"mailComposeControllerr:didFinishWithResult MFMailComposeResultFailed");
+            break;
+    }
+    [controller.presentingViewController dismissViewControllerAnimated: YES completion: nil];
+}
+
 
 @end

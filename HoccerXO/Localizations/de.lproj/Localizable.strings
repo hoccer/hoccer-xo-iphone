@@ -68,6 +68,17 @@
 "about_nav_title"         = "Über %@";
 
 //==============================================================================
+// Abuse
+//==============================================================================
+
+//"abuse_address"         = "abuse@hoccer.com";
+"abuse_menu_item"       = "Missbrauch melden...";
+"abuse_no_mail_title"   = "Mail Einrichten";
+"abuse_no_mail_message" = "Mail wird benötigt um Missbrauch zu melden.";
+"abuse_mail_subject"    = "%@ Missbrauch";
+"abuse_mail_body"       = "Hallo,\nich habe folgende Nachricht erhalten:\n\n%@\n\n";
+
+//==============================================================================
 // Access Control
 //==============================================================================
 
@@ -296,8 +307,6 @@
 
 "chat_nearby_intro_title"                       = "In der Nähe";
 "chat_nearby_intro_message"                     = "In der Ansicht 'In der Nähe' kannst du sofort mit Leuten in deiner unmittelbaren Umgebung (100m) chatten, die ebenfalls den in der Nähe-Modus aktiviert haben. Teile jede beliebige Datei mit der Nahebei-Gruppe oder einzelnen Kontakten in deiner Nähe, ohne dich vorher mit Ihnen angefreundet zu haben. Der in der Nähe-Modus wird automatisch deaktiviert mit Verlassen der Ansicht.";
-
-
 
 //==============================================================================
 // Collection

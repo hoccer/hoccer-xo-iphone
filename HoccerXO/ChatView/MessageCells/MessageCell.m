@@ -217,6 +217,12 @@
     }
 }
 
+-(void) reportAbuse:(id)sender {
+    if (self.delegate != nil) {
+        return [self.delegate messageCell:self reportAbuse:sender];
+    }
+}
+
 @end
 
 

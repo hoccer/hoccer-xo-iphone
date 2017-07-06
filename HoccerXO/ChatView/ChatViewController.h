@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
+
 #import "Contact.h"
 #import "AttachmentPickerController.h"
 #import "MessageCell.h"
@@ -26,7 +28,7 @@ typedef void (^ArrayCompletionBlock)(NSArray * result);
 <
 UISplitViewControllerDelegate, AttachmentPickerControllerDelegate, UIActionSheetDelegate,
 UITextViewDelegate, NSFetchedResultsControllerDelegate, MessageViewControllerDelegate,
- HXOHyperLabelDelegate, AttachmentUIDelegate, AttachmentPresenterDelegate
+ HXOHyperLabelDelegate, AttachmentUIDelegate, AttachmentPresenterDelegate, MFMailComposeViewControllerDelegate
 >
 {
     NSMutableDictionary        *resultsControllers;
