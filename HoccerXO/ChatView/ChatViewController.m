@@ -60,6 +60,7 @@
 #import "HXOLocalization.h"
 #import "HXOAudioPlaybackButtonController.h"
 #import "NSString+FromTimeInterval.h"
+#import "NSData+CommonCrypto.h"
 
 #define DEBUG_ATTACHMENT_BUTTONS    NO
 #define DEBUG_TABLE_CELLS           NO
@@ -3891,15 +3892,16 @@ ready:;
     [mailView setToRecipients: @[[self abuseAddress]]];
 
     HXOMessage * message = [self.fetchedResultsController objectAtIndexPath: [self.tableView indexPathForCell:theCell]];
+    NSString * hash = [[[message.body dataUsingEncoding: NSUTF8StringEncoding] SHA256Hash] asBase64EncodedString];
     NSString * message_report = [NSString stringWithFormat:
                                  @"-------------------------------------\n"
                                   "Sender Id: %@\n"
                                   "Body: %@\n"
+                                  "Hash: %@\n"
                                   "-------------------------------------\n",
-                                 message.senderId, message.body];
+                                 message.senderId, message.body, hash];
     NSString * body = HXOLabelledLocalizedString(@"abuse_mail_body", nil, message_report, nil);
     [mailView setMessageBody: body isHTML: NO];
-
 
     [self presentViewController: mailView animated: YES completion: nil];
 }
