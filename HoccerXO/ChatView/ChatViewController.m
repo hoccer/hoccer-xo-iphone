@@ -3895,11 +3895,15 @@ ready:;
     NSString * hash = [[[message.body dataUsingEncoding: NSUTF8StringEncoding] SHA256Hash] asBase64EncodedString];
     NSString * message_report = [NSString stringWithFormat:
                                  @"-------------------------------------\n"
+                                  "Your Id: %@\n"
                                   "Sender Id: %@\n"
                                   "Body: %@\n"
                                   "MAC: %@\n"
                                   "-------------------------------------\n",
-                                 message.senderId, message.body, hash];
+                                 [UserProfile sharedProfile].clientId,
+                                 message.senderId,
+                                 message.body,
+                                 hash];
     NSString * body = HXOLabelledLocalizedString(@"abuse_mail_body", nil, message_report, nil);
     [mailView setMessageBody: body isHTML: NO];
 
