@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="15G1212" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="YW5-Fa-tl0">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="YW5-Fa-tl0">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -114,7 +114,7 @@
             <objects>
                 <navigationController id="3" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Chats" id="rtu-HQ-rkp"/>
-                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" id="4">
+                    <navigationBar key="navigationBar" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="4">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -269,7 +269,7 @@
         <scene sceneID="2Eb-au-ibP">
             <objects>
                 <navigationController definesPresentationContext="YES" id="tNj-Of-x8v" userLabel="Custom Key Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="UCv-Z3-t2Q">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="UCv-Z3-t2Q">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -769,7 +769,7 @@
         <scene sceneID="TWo-z6-Pkp">
             <objects>
                 <navigationController definesPresentationContext="YES" id="CPN-um-qcX" userLabel="Add To Collection Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="cjk-K4-55l">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="cjk-K4-55l">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -830,7 +830,7 @@
         <scene sceneID="MpI-0Y-HX1">
             <objects>
                 <navigationController storyboardIdentifier="webViewController" definesPresentationContext="YES" id="Xae-pO-reE" userLabel="Web View Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="vS0-oV-bEa">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="vS0-oV-bEa">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1039,7 +1039,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="cUQ-wS-0VX" userLabel="Media Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Media" id="dRm-Zp-puv"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="Fbf-Xb-aYg">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="Fbf-Xb-aYg">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1056,7 +1056,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="ndO-Hb-TaY" userLabel="Contacts Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Contacts" id="93c-hp-8Jv"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="B5K-80-wga">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="B5K-80-wga">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1073,7 +1073,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="dNK-Pr-I05" userLabel="Profile Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Profile" id="Yft-kE-KJs"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="wrH-DR-hdJ">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wrH-DR-hdJ">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1090,7 +1090,7 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="TcE-yq-ikP" userLabel="Settings Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Settings" id="fSA-6P-YP2"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="6dU-Bk-nuX">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6dU-Bk-nuX">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1106,7 +1106,7 @@
         <scene sceneID="qHY-n4-1jX">
             <objects>
                 <navigationController storyboardIdentifier="ModalGeoLocationViewController" title="Modal Map View Helper" definesPresentationContext="YES" id="ISl-ar-14M" userLabel="Geo Location Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="YuO-st-Z2w">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="YuO-st-Z2w">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <textAttributes key="titleTextAttributes">
@@ -1130,17 +1130,76 @@
             <objects>
                 <navigationController definesPresentationContext="YES" id="Ppk-FJ-Nem" customClass="SetupViewController" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="CBe-Iv-Q7g"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="6ec-2q-6KO">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="6ec-2q-6KO">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
                         <segue destination="Gwa-aq-CE8" kind="relationship" relationship="rootViewController" id="NNl-EZ-WW3"/>
+                        <segue destination="fPP-2l-v8Z" kind="push" id="5vp-LM-71Y"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cSp-3o-2sE" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-370" y="3922"/>
+            <point key="canvasLocation" x="-673" y="3800"/>
+        </scene>
+        <!--Eula View Controller-->
+        <scene sceneID="X8x-Ml-aZX">
+            <objects>
+                <viewController storyboardIdentifier="accept_eula" id="fPP-2l-v8Z" customClass="EulaViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="EIM-s2-0G8"/>
+                        <viewControllerLayoutGuide type="bottom" id="Pts-yS-Gqb"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="7wL-Gk-T7X">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" editable="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FEE-e4-2jy">
+                                <rect key="frame" x="16" y="64" width="343" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <attributedString key="attributedText">
+                                    <fragment>
+                                        <string key="content">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                        <attributes>
+                                            <font key="NSFont" metaFont="system" size="14"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="FEE-e4-2jy" firstAttribute="top" secondItem="EIM-s2-0G8" secondAttribute="bottom" id="25w-ly-pdR"/>
+                            <constraint firstItem="FEE-e4-2jy" firstAttribute="leading" secondItem="7wL-Gk-T7X" secondAttribute="leadingMargin" id="PYP-iA-vtn"/>
+                            <constraint firstItem="Pts-yS-Gqb" firstAttribute="top" secondItem="FEE-e4-2jy" secondAttribute="bottom" id="X4q-Qr-Rbf"/>
+                            <constraint firstItem="FEE-e4-2jy" firstAttribute="trailing" secondItem="7wL-Gk-T7X" secondAttribute="trailingMargin" id="zVn-up-cc6"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="yJQ-wj-ABg">
+                        <barButtonItem key="leftBarButtonItem" title="Decline" id="YoY-dH-IUP">
+                            <connections>
+                                <action selector="decline:" destination="fPP-2l-v8Z" id="3FD-NA-Rkt"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="Accept" id="btR-rH-His">
+                            <connections>
+                                <action selector="accept:" destination="fPP-2l-v8Z" id="H5K-sd-Fgn"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="acceptButton" destination="btR-rH-His" id="gUC-wK-Jgi"/>
+                        <outlet property="declineButton" destination="YoY-dH-IUP" id="sw8-XH-NeQ"/>
+                        <outlet property="textView" destination="FEE-e4-2jy" id="sW1-an-Tp8"/>
+                        <segue destination="fld-i4-0Qb" kind="push" identifier="cleanup_credentials" id="2dR-KO-Sfn"/>
+                        <segue destination="Gwa-aq-CE8" kind="push" identifier="setup_profile" id="9rO-u5-LXc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Akl-FM-n6J" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-215.5" y="4246.5"/>
         </scene>
         <!--Credentials Sheet-->
         <scene sceneID="9Ao-JS-PbJ">
@@ -1155,6 +1214,7 @@
                             <outlet property="delegate" destination="fld-i4-0Qb" id="QUL-VS-cm5"/>
                         </connections>
                     </tableView>
+                    <navigationItem key="navigationItem" id="lv2-vO-L3p"/>
                     <connections>
                         <outlet property="dataSheetController" destination="dkh-x2-CyS" id="FOA-0h-apw"/>
                         <segue destination="Gwa-aq-CE8" kind="push" identifier="showProfileSetup" id="thl-MY-iCZ"/>
@@ -1163,14 +1223,14 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rxm-rk-W0f" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="dkh-x2-CyS" customClass="CredentialsSheet"/>
             </objects>
-            <point key="canvasLocation" x="187" y="4313"/>
+            <point key="canvasLocation" x="260" y="4594"/>
         </scene>
         <!--Server Navigation-->
         <scene sceneID="e7s-zS-Vya">
             <objects>
                 <navigationController storyboardIdentifier="unusedServerNavigation" id="fb2-9g-9x6" userLabel="Server Navigation" customClass="HXOThemedNavigationController" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Server UI" id="0XA-DL-LQL"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="KYL-Jc-u0e">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="KYL-Jc-u0e">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1245,7 +1305,7 @@
         <!--Profile Setup Sheet-->
         <scene sceneID="ew4-Wx-QhJ">
             <objects>
-                <tableViewController id="Gwa-aq-CE8" userLabel="Profile Setup Sheet" customClass="DatasheetViewController" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="setup_profile" id="Gwa-aq-CE8" userLabel="Profile Setup Sheet" customClass="DatasheetViewController" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="o9q-V6-Ali">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1263,7 +1323,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tri-wa-xr4" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <customObject id="Omk-bz-QtG" customClass="ProfileSetupSheet"/>
             </objects>
-            <point key="canvasLocation" x="625" y="3922"/>
+            <point key="canvasLocation" x="665" y="3800"/>
         </scene>
         <!--inAppSettingsViewController-->
         <scene sceneID="dgD-Nx-SfZ">
@@ -1304,16 +1364,16 @@
         <simulatedScreenMetrics key="destination" type="retina4_7.fullscreen"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="57k-z7-2Ln"/>
         <segue reference="Jku-Va-0fi"/>
-        <segue reference="KXG-tu-Cv6"/>
-        <segue reference="3XQ-ea-QwO"/>
-        <segue reference="FuA-82-8A3"/>
-        <segue reference="zLD-wN-e2y"/>
-        <segue reference="4Tx-uH-B8w"/>
         <segue reference="yj0-Vd-HPq"/>
         <segue reference="UJI-wH-YH7"/>
+        <segue reference="4Tx-uH-B8w"/>
+        <segue reference="9rO-u5-LXc"/>
+        <segue reference="FuA-82-8A3"/>
+        <segue reference="3XQ-ea-QwO"/>
+        <segue reference="KXG-tu-Cv6"/>
+        <segue reference="zLD-wN-e2y"/>
         <segue reference="8jZ-4R-eDF"/>
-        <segue reference="thl-MY-iCZ"/>
+        <segue reference="r9n-Tc-8eU"/>
     </inferredMetricsTieBreakers>
 </document>

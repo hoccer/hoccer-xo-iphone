@@ -220,6 +220,7 @@
 		63E5698C196353B0007E06BF /* HXOPluralocalization.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E5698B196353B0007E06BF /* HXOPluralocalization.m */; };
 		63E9B00118F314AB00EFF829 /* disclosure_arrow.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9AFFD18F314AB00EFF829 /* disclosure_arrow.m */; };
 		63E9B00218F314AB00EFF829 /* ghost_busters_sign.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E9AFFF18F314AB00EFF829 /* ghost_busters_sign.m */; };
+		63E9EFCB1F0F21DC0068547D /* eula-com.hoccer.whitelabel.uniheld.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 63E9EFCD1F0F21DC0068547D /* eula-com.hoccer.whitelabel.uniheld.rtf */; };
 		63EB5DA218F1FFEB00E9A4E1 /* CopyableLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */; };
 		63FE105418EFA726008630DE /* AttachmentButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 63FE105318EFA726008630DE /* AttachmentButton.m */; };
 		6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A568B8A18BA8F0400584A04 /* Images.xcassets */; };
@@ -936,6 +937,8 @@
 		63E9B00C18F315BA00EFF829 /* paper_clip.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = paper_clip.svg; sourceTree = "<group>"; };
 		63E9B00D18F315BA00EFF829 /* paper_dart.pcvd */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = paper_dart.pcvd; sourceTree = "<group>"; };
 		63E9B00E18F315BA00EFF829 /* paper_dart.svg */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = paper_dart.svg; sourceTree = "<group>"; };
+		63E9EFCC1F0F21DC0068547D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = de; path = "de.lproj/eula-com.hoccer.whitelabel.uniheld.rtf"; sourceTree = "<group>"; };
+		63E9EFCE1F0F21E60068547D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = "en.lproj/eula-com.hoccer.whitelabel.uniheld.rtf"; sourceTree = "<group>"; };
 		63EB5DA018F1FFEB00E9A4E1 /* CopyableLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CopyableLabel.h; sourceTree = "<group>"; };
 		63EB5DA118F1FFEB00E9A4E1 /* CopyableLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CopyableLabel.m; sourceTree = "<group>"; };
 		63F3B56B19D1BE1E00357C2C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -2084,6 +2087,7 @@
 				635127C71ABB70F100FA0C2B /* webdav_winxp.rtf */,
 				63C0F82C1AD5A9FB00709B0C /* webinterface.rtf */,
 				E9546CA61B42A642007FE754 /* webinterface_IE.rtf */,
+				63E9EFCD1F0F21DC0068547D /* eula-com.hoccer.whitelabel.uniheld.rtf */,
 			);
 			path = Localizations;
 			sourceTree = "<group>";
@@ -3210,6 +3214,7 @@
 				C576EC341934CCB200C0D254 /* fullscreen-button-play.png in Resources */,
 				E92FAEC3186DF49800D72D79 /* chatbar-attachment-icon-data.png in Resources */,
 				E9F86CAE1E804927004AFE8E /* com.hoccer.whitelabel.uniheld.strings in Resources */,
+				63E9EFCB1F0F21DC0068547D /* eula-com.hoccer.whitelabel.uniheld.rtf in Resources */,
 				63B1C9E71843E4FD00B75CD8 /* cnt-video.png in Resources */,
 				635127B01ABB65FD00FA0C2B /* webdav_mac.rtf in Resources */,
 				E9A85D9F184FD1AD00EB9B68 /* chatbar-attachment-icon-location@2x.png in Resources */,
@@ -3778,6 +3783,15 @@
 			name = webinterface.rtf;
 			sourceTree = "<group>";
 		};
+		63E9EFCD1F0F21DC0068547D /* eula-com.hoccer.whitelabel.uniheld.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				63E9EFCC1F0F21DC0068547D /* de */,
+				63E9EFCE1F0F21E60068547D /* en */,
+			);
+			name = "eula-com.hoccer.whitelabel.uniheld.rtf";
+			sourceTree = "<group>";
+		};
 		C5E8E3CD1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3910,6 +3924,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
 				HXO_DEFAULT_ENVIRONMENT = starmeo;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = starmeo;
@@ -4024,6 +4039,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
 				HXO_DEFAULT_ENVIRONMENT = starmeo;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = starmeo;
@@ -4244,6 +4260,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "26645843-f312-456c-8954-444e435d4ad2";
 				HXO_URL_SCHEME = hxo;
@@ -4292,6 +4309,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "26645843-f312-456c-8954-444e435d4ad2";
 				HXO_URL_SCHEME = hxo;
@@ -4369,6 +4387,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.stroeer;
 				HXO_DEFAULT_ENVIRONMENT = stroeer;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
 				HXO_URL_SCHEME = strm;
@@ -4486,6 +4505,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.stroeer;
 				HXO_DEFAULT_ENVIRONMENT = stroeer;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
 				HXO_URL_SCHEME = strmd;
@@ -4606,6 +4626,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
 				HXO_DEFAULT_ENVIRONMENT = simsme;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
 				HXO_URL_SCHEME = hcrsms;
@@ -4720,6 +4741,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
 				HXO_DEFAULT_ENVIRONMENT = simsme;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
 				HXO_URL_SCHEME = hcrsms;
@@ -4837,6 +4859,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.hoccme;
 				HXO_DEFAULT_ENVIRONMENT = hoccme;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "7a1da194-19ba-47fe-a32e-6d9b3dd8ec3d";
 				HXO_URL_SCHEME = hoccme;
@@ -4951,6 +4974,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.hoccme;
 				HXO_DEFAULT_ENVIRONMENT = hoccme;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "7a1da194-19ba-47fe-a32e-6d9b3dd8ec3d";
 				HXO_URL_SCHEME = hoccme;
@@ -5069,6 +5093,7 @@
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = hcr;
@@ -5184,6 +5209,7 @@
 				);
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = hcr;
@@ -5303,6 +5329,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 				HXO_URL_SCHEME = hxod;
@@ -5418,6 +5445,7 @@
 				);
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "c5ada956-43ec-4e9e-86e5-0a3bd3d9e20b";
 				HXO_URL_SCHEME = hxod;
@@ -5537,6 +5565,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
 				HXO_DEFAULT_ENVIRONMENT = helios;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = heli;
@@ -5653,6 +5682,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
 				HXO_DEFAULT_ENVIRONMENT = helios;
+				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = heli;
@@ -5771,6 +5801,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
+				HXO_EULA_VERSION = 0;
 				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = uniheld;
@@ -5887,6 +5918,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
+				HXO_EULA_VERSION = 1;
 				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = uniheld;
