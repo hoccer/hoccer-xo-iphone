@@ -573,10 +573,10 @@ Du kannst von Hoccer XO entweder alle Daten, oder nur die Zugangsdaten übernehm
 // Eula
 //==============================================================================
 
-"eula_accept_button_title" = "Akzeptieren";
+"eula_accept_button_title"  = "Akzeptieren";
 "eula_decline_button_title" = "Ablehnen";
-"eula_declined_title" = "Eula abgelehnt";
-"eula_declined_message" = "%@ beendet sich jetzt.";
+"eula_declined_title"       = "Eula abgelehnt";
+"eula_declined_message"     = "%@ beendet sich jetzt.";
 
 
 //==============================================================================

@@ -559,10 +559,10 @@ You can transfer all your data from Hoccer XO including all chat histories, or t
 // Eula
 //==============================================================================
 
-"eula_accept_button_title" = "Accept";
+"eula_accept_button_title"  = "Accept";
 "eula_decline_button_title" = "Decline";
-"eula_declined_title" = "Eula declined";
-"eula_declined_message" = "%@ will quit now.";
+"eula_declined_title"       = "Eula declined";
+"eula_declined_message"     = "%@ will quit now.";
 
 //==============================================================================
 // Geolocations
