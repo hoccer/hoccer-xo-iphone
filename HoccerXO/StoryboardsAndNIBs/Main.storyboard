@@ -1143,7 +1143,7 @@
             </objects>
             <point key="canvasLocation" x="-673" y="3800"/>
         </scene>
-        <!--Eula View Controller-->
+        <!--EULA-->
         <scene sceneID="X8x-Ml-aZX">
             <objects>
                 <viewController storyboardIdentifier="accept_eula" id="fPP-2l-v8Z" customClass="EulaViewController" sceneMemberID="viewController">
@@ -1177,7 +1177,7 @@
                             <constraint firstItem="FEE-e4-2jy" firstAttribute="trailing" secondItem="7wL-Gk-T7X" secondAttribute="trailingMargin" id="zVn-up-cc6"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="yJQ-wj-ABg">
+                    <navigationItem key="navigationItem" title="EULA" id="yJQ-wj-ABg">
                         <barButtonItem key="leftBarButtonItem" title="Decline" id="YoY-dH-IUP">
                             <connections>
                                 <action selector="decline:" destination="fPP-2l-v8Z" id="3FD-NA-Rkt"/>
