@@ -16,10 +16,18 @@
 #import "AppDelegate.h"
 #import "Environment.h"
 #import "HXOUserDefaults.h"
+#import "AppDelegate.h"
 
 @interface SetupViewController ()
 @end
 
+
+@interface EulaViewController : UIViewController
+@property (nonatomic, weak) IBOutlet UITextView * textView;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem * acceptButton;
+@property (nonatomic, weak) IBOutlet UIBarButtonItem * declineButton;
+@property NSString * nextSegue;
+@end
 
 @interface CredentialsSheet : DatasheetController
 
@@ -44,11 +52,20 @@
 @implementation SetupViewController
 
 - (void) viewDidLoad {
+    BOOL showEula = [(AppDelegate*)[UIApplication sharedApplication].delegate needsEulaAcceptance];
+
+    // Note(@agnat): This is utterly broken. somethingWithCredentials is always true.
     BOOL somethingWithCredentials = [UserProfile sharedProfile].isRegistered || [UserProfile sharedProfile].foundCredentialsFile || [UserProfile sharedProfile].foundCredentialsBackup || (![UserProfile sharedProfile].isRegistered && [UserProfile sharedProfile].foundCredentialsProviderApp);
 
-    //NSLog(@"reg = %d, credf= %d, backup= %d, provider=%d", [UserProfile sharedProfile].isRegistered,[UserProfile sharedProfile].foundCredentialsFile,[UserProfile sharedProfile].foundCredentialsBackup, [UserProfile sharedProfile].foundCredentialsProviderApp);
-    
-    if (somethingWithCredentials) {
+    NSLog(@"reg = %d, credf= %d, backup= %d, provider=%d", [UserProfile sharedProfile].isRegistered,[UserProfile sharedProfile].foundCredentialsFile,[UserProfile sharedProfile].foundCredentialsBackup, [UserProfile sharedProfile].foundCredentialsProviderApp);
+
+    //somethingWithCredentials = NO;
+
+    if (showEula) {
+        EulaViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier: @"accept_eula"];
+        vc.nextSegue = somethingWithCredentials ? @"cleanup_credentials" : @"setup_profile";
+        [self setViewControllers: @[vc]];
+    } else if (somethingWithCredentials) {
         DatasheetViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier: @"cleanup_credentials"];
         [self setViewControllers: @[vc]];
     } else {
@@ -277,6 +294,40 @@
     [((AppDelegate *)[[UIApplication sharedApplication] delegate]) setupDone: self.performRegistration  || ![UserProfile sharedProfile].isRegistered];
     [[HXOUserDefaults standardUserDefaults] setBool: YES forKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
     [((UIViewController*)self.delegate).navigationController dismissViewControllerAnimated: YES completion: nil];
+}
+
+@end
+
+@implementation EulaViewController
+
+- (void) viewDidLoad {
+    NSURL * eulaURL = [(AppDelegate*)[UIApplication sharedApplication].delegate eulaURL];
+
+    NSError * error = nil;
+    self.textView.attributedText = [[NSAttributedString alloc] initWithURL: eulaURL
+                                                                   options: @{}
+                                                        documentAttributes: nil
+                                                                     error: &error];
+
+    self.acceptButton.title = NSLocalizedString(@"eula_accept_button_title", nil);
+    self.declineButton.title = NSLocalizedString(@"eula_decline_button_title", nil);
+}
+
+- (IBAction) accept: (id) sender {
+    NSString * acceptedVersion = [(AppDelegate*)[UIApplication sharedApplication].delegate eulaVersion];
+    [[NSUserDefaults standardUserDefaults] setValue: acceptedVersion forKey: @"AcceptedEulaVersion"];
+    [self performSegueWithIdentifier: self.nextSegue sender: self];
+}
+
+- (IBAction) decline: (id) sender {
+    UIAlertView * alert = [[UIAlertView alloc] initWithTitle: NSLocalizedString(@"eula_declined_title", nil)
+                                                     message: HXOLocalizedString(@"eula_declined_message", nil, HXOAppName(), nil)
+                                             completionBlock:^(NSUInteger buttonIndex, UIAlertView *alertView) {
+                                                 exit(0);
+                                             }
+                                           cancelButtonTitle: NSLocalizedString(@"ok", nil)
+                                           otherButtonTitles: nil];
+    [alert show];
 }
 
 @end

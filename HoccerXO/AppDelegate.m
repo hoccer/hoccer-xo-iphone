@@ -1002,9 +1002,10 @@ BOOL sameObjects(id obj1, id obj2) {
 
     [[HXOUI theme] setupTheming];
 
-    BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]];
+    BOOL showEula = [self needsEulaAcceptance];
+    BOOL isFirstRun = ! [[HXOUserDefaults standardUserDefaults] boolForKey: [[Environment sharedEnvironment] suffixedString:kHXOFirstRunDone]] || showEula;
 
-    NSLog(@"isFirstRun:%d, isRegistered:%d", isFirstRun, [UserProfile sharedProfile].isRegistered);
+    NSLog(@"isFirstRun:%d, isRegistered:%d, eula version: %@ accepted eula: %@", isFirstRun, [UserProfile sharedProfile].isRegistered, [self eulaVersion], [self acceptedEulaVersion]);
     
     BOOL passcodeRequired = self.isPasscodeRequired;
     
@@ -2140,6 +2141,22 @@ NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * co
     return prefURL;
 }
 
+- (BOOL) needsEulaAcceptance {
+    return [self eulaURL] && ! [[self eulaVersion] isEqualToString: [self acceptedEulaVersion]];
+}
+- (NSURL*)eulaURL {
+    NSString * bundleId = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+    NSString * eulaName = [NSString stringWithFormat: @"eula-%@", bundleId];
+    return [[NSBundle mainBundle] URLForResource: eulaName withExtension:@"rtf"];
+}
+
+- (NSString*) eulaVersion {
+    return [[[NSBundle mainBundle] infoDictionary] objectForKey:@"HXOEulaVersion"];
+}
+
+- (NSString*) acceptedEulaVersion {
+    return [[NSUserDefaults standardUserDefaults] stringForKey: @"AcceptedEulaVersion"];
+}
 - (NSURL *)cacheFileURL:(NSString*)cacheName {
     NSString * fileName = [NSString stringWithFormat: @"%@.%@", [[Environment sharedEnvironment] suffixedString: cacheName],@"hcache"];
     NSURL *fileURL = [[self applicationLibraryDirectory] URLByAppendingPathComponent: fileName];

@@ -73,9 +73,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>17737</string>
+	<string>17776</string>
 	<key>HXODefaultEnvironment</key>
 	<string>${HXO_DEFAULT_ENVIRONMENT}</string>
+	<key>HXOEulaVersion</key>
+	<string>${HXO_EULA_VERSION}</string>
 	<key>HXOExtraAssets</key>
 	<string>$(HXO_EXTRA_ASSETS)</string>
 	<key>HXOExtraAssetsDefault</key>

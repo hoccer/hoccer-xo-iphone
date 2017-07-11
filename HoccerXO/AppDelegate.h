@@ -224,5 +224,9 @@ extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectConte
 -(void)makeSnapShot:(void (^)(UIImage * image))handler;
 -(void)tryMakeMugShot;
 
+- (BOOL) needsEulaAcceptance;
+- (NSURL*)eulaURL;
+- (NSString*) eulaVersion;
+- (NSString*) acceptedEulaVersion;
 
 @end

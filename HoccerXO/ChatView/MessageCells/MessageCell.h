@@ -32,6 +32,7 @@
 //- (void) messageCell:(MessageCell *)cell forwardMessage:(id)sender;
 - (void) messageCell:(MessageCell *)cell openWithMessage:(id)sender;
 - (void) messageCell:(MessageCell *)cell shareMessage:(id)sender;
+- (void) messageCell:(MessageCell *)cell reportAbuse:(id)sender;
 - (void) messageCellDidPressAvatar:(MessageCell *)cell;
 @end
 
