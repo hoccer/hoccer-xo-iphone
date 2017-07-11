@@ -64,7 +64,7 @@
 "tutorial_button_title" = "Tutorial";
 "faq_button_title"      = "FAQ";
 "server_button_title"   = "Webserver (Attachment Access)";
-
+"eula_button_title"     = "EULA";
 
 "full_sync_title"="Next Connect Full Sync";
 

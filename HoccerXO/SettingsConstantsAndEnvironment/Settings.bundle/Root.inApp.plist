@@ -44,6 +44,14 @@
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>IASKButtonSpecifier</string>
+			<key>Title</key>
+			<string>eula_button_title</string>
+			<key>Key</key>
+			<string>show_eula</string>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 			<key>Title</key>
 			<string>Media</string>
@@ -168,72 +176,6 @@
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
 		</dict>
-        <!--
-		<dict>
-			<key>DefaultValue</key>
-			<false/>
-			<key>Key</key>
-			<string>WorldwideNotifications</string>
-			<key>Title</key>
-			<string>WorldwideNotifications</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>WorldwideTitle</string>
-		</dict>
-        <dict>
-            <key>DefaultValue</key>
-            <true/>
-            <key>Key</key>
-            <string>WorldwideHidden</string>
-            <key>Title</key>
-            <string>WorldwideHidden</string>
-            <key>Type</key>
-            <string>PSToggleSwitchSpecifier</string>
-        </dict>
-		<dict>
-			<key>Type</key>
-			<string>PSMultiValueSpecifier</string>
-			<key>Title</key>
-			<string>WorldwideTimeToLive</string>
-			<key>Key</key>
-			<string>WorldwideTimeToLive</string>
-			<key>DefaultValue</key>
-			<integer>0</integer>
-			<key>Titles</key>
-			<array>
-				<string>ww_0</string>
-				<string>ww_30</string>
-				<string>ww_1h</string>
-				<string>ww_6h</string>
-				<string>ww_12h</string>
-				<string>ww_24h</string>
-			</array>
-			<key>Values</key>
-			<array>
-				<integer>0</integer>
-				<integer>1800</integer>
-				<integer>3600</integer>
-				<integer>21600</integer>
-				<integer>43200</integer>
-				<integer>86400</integer>
-			</array>
-		</dict>
-		<dict>
-			<key>DefaultValue</key>
-			<false/>
-			<key>Key</key>
-			<string>WorldwideAutoDownload</string>
-			<key>Title</key>
-			<string>WorldwideAutoDownload</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-		</dict>
-         -->
 		<dict>
 			<key>Title</key>
 			<string>Sound</string>
@@ -416,54 +358,6 @@
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
-        <!--
-		<dict>
-			<key>Type</key>
-			<string>PSGroupSpecifier</string>
-			<key>FooterText</key>
-			<string>support_tag_explanation</string>
-		</dict>
-		<dict>
-			<key>Title</key>
-			<string>report_crashes</string>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Key</key>
-			<string>reportCrashes</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>full_sync_title</string>
-			<key>Key</key>
-			<string>fullSync</string>
-			<key>DefaultValue</key>
-			<false/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Quickstart</string>
-			<key>Key</key>
-			<string>quickStart</string>
-			<key>DefaultValue</key>
-			<true/>
-		</dict>
-		<dict>
-			<key>Type</key>
-			<string>PSTextFieldSpecifier</string>
-			<key>Title</key>
-			<string>support_tag</string>
-			<key>Key</key>
-			<string>supportTag</string>
-			<key>AutocorrectionType</key>
-			<string>NO</string>
-		</dict>
-         -->
 		<dict>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>

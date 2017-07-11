@@ -64,6 +64,7 @@
 "tutorial_button_title" = "Anleitung";
 "faq_button_title"      = "FAQ";
 "server_button_title"   = "Webserver (Zugriff auf Anhänge)";
+"eula_button_title"     = "EULA";
 
 "confirm_seen_messages" = "Lesebestätigung senden";
 

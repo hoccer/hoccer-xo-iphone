@@ -22,13 +22,6 @@
 @end
 
 
-@interface EulaViewController : UIViewController
-@property (nonatomic, weak) IBOutlet UITextView * textView;
-@property (nonatomic, weak) IBOutlet UIBarButtonItem * acceptButton;
-@property (nonatomic, weak) IBOutlet UIBarButtonItem * declineButton;
-@property NSString * nextSegue;
-@end
-
 @interface CredentialsSheet : DatasheetController
 
 @property (nonatomic, strong) DatasheetSection * section;
@@ -64,6 +57,7 @@
     if (showEula) {
         EulaViewController* vc = [self.storyboard instantiateViewControllerWithIdentifier: @"accept_eula"];
         vc.nextSegue = somethingWithCredentials ? @"cleanup_credentials" : @"setup_profile";
+        vc.accept = YES;
         [self setViewControllers: @[vc]];
     } else if (somethingWithCredentials) {
         DatasheetViewController * vc = [self.storyboard instantiateViewControllerWithIdentifier: @"cleanup_credentials"];
@@ -309,8 +303,28 @@
                                                         documentAttributes: nil
                                                                      error: &error];
 
-    self.acceptButton.title = NSLocalizedString(@"eula_accept_button_title", nil);
-    self.declineButton.title = NSLocalizedString(@"eula_decline_button_title", nil);
+    //self.acceptButton.title = NSLocalizedString(@"eula_accept_button_title", nil);
+    //self.declineButton.title = NSLocalizedString(@"eula_decline_button_title", nil);
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+    [super viewWillAppear: animated];
+
+    if (self.accept) {
+        self.navigationItem.leftBarButtonItem =
+        [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"eula_decline_button_title", nil)
+                                         style: UIBarButtonItemStylePlain
+                                        target: self
+                                        action:@selector(decline:)];
+        self.navigationItem.rightBarButtonItem =
+            [[UIBarButtonItem alloc] initWithTitle: NSLocalizedString(@"eula_accept_button_title", nil)
+                                             style: UIBarButtonItemStylePlain
+                                            target: self
+                                            action:@selector(accept:)];
+    } else {
+        self.navigationItem.leftBarButtonItem = nil;
+        self.navigationItem.rightBarButtonItem = nil;
+    }
 }
 
 - (IBAction) accept: (id) sender {

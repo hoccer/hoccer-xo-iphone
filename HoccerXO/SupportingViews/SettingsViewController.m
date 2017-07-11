@@ -15,6 +15,7 @@
 #import "UserProfile.h"
 #import "DatasheetViewController.h"
 #import "WebViewController.h"
+#import "SetupViewControllers.h"
 
 #import "tab_settings.h"
 
@@ -56,6 +57,8 @@
 - (void) prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([segue.identifier isEqualToString: @"showURL"]) {
         ((WebViewController*)((UINavigationController*)segue.destinationViewController).viewControllers[0]).homeUrl = sender;
+    } else if ([segue.identifier isEqualToString: @"show_eula"]) {
+        ((EulaViewController*)segue.destinationViewController).accept = NO;
     }
 }
 

@@ -11,3 +11,10 @@
 @interface SetupViewController : HXOThemedNavigationController
 
 @end
+
+@interface EulaViewController : UIViewController
+@property (nonatomic, weak) IBOutlet UITextView * textView;
+@property NSString * nextSegue;
+@property BOOL accept;
+@end
+
