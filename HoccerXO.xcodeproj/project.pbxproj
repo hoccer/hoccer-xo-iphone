@@ -5801,7 +5801,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
-				HXO_EULA_VERSION = 0;
+				HXO_EULA_VERSION = 1.0;
 				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = uniheld;
@@ -5918,7 +5918,7 @@
 				);
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
-				HXO_EULA_VERSION = 0;
+				HXO_EULA_VERSION = 1.0;
 				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
 				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
 				HXO_URL_SCHEME = uniheld;
