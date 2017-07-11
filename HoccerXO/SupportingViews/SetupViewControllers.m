@@ -302,9 +302,6 @@
                                                                    options: @{}
                                                         documentAttributes: nil
                                                                      error: &error];
-
-    //self.acceptButton.title = NSLocalizedString(@"eula_accept_button_title", nil);
-    //self.declineButton.title = NSLocalizedString(@"eula_decline_button_title", nil);
 }
 
 - (void) viewWillAppear:(BOOL)animated {
