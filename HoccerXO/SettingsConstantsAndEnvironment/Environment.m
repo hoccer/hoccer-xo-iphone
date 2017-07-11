@@ -101,7 +101,10 @@ NSString * const kValidEnvironments = @"_validEnvironments";
         NSDictionary *entitlements = mobileprovision.dict[@"Entitlements"];
         _apnsEnvironment = entitlements[@"aps-environment"];
     }
-    return _apnsEnvironment;
+    if (_apnsEnvironment) {
+        return _apnsEnvironment;
+    }
+    return @"unknown";
     // BOOL production = entitlements && apsEnvironment && [apsEnvironment isEqualToString:@"production"];
 }
 
