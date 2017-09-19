@@ -24,7 +24,7 @@
 "chat_list_tab_title" = "Chats";
 
 "uniheld_benefit_title" = "Benefits";
-"uniheld_benefit_url" = "https://uniheld.campusbenefits.de";
+"uniheld_benefit_url" = "http://benefits.uniheld.com/";
 "uniheld_student_id_btn_title" = "Student Id";
 "uniheld_student_id_no_image_alert_title" = "No Student ID saved";
 "uniheld_student_id_no_image_alert_message" = "Edit your profile to add a photo of your student id.";
