@@ -91,6 +91,10 @@ CGPoint _correctContentOffset;
     self.tabBarItem.title = NSLocalizedString(@"contact_list_nav_title", nil);
 
     [self setupTitle];
+
+    if (@available(iOS 11.0, *)) {
+        self.tableView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+    }
 }
 
 #ifdef SEARCHBAR_SCROLLING_IN_HACK
@@ -260,7 +264,7 @@ CGPoint _correctContentOffset;
     UIEdgeInsets oldInsets = self.tableView.contentInset;
     
     if (newInsets.bottom != oldInsets.bottom || newInsets.left != oldInsets.left || newInsets.right != oldInsets.right || newInsets.top != oldInsets.top) {
-        self.tableView.contentInset = UIEdgeInsetsMake(visibleTop, 0, tabBarHeight, 0);
+        self.tableView.contentInset = newInsets;
     }
     
     return searchBarHiddenPos;
