@@ -16,6 +16,7 @@
 #import "DatasheetViewController.h"
 #import "WebViewController.h"
 #import "SetupViewControllers.h"
+#import "AppDelegate.h"
 
 #import "tab_settings.h"
 
@@ -32,10 +33,18 @@
     self.delegate = self;
     LAContext * ctx = [[LAContext alloc] init];
     NSError * error;
+    NSMutableSet * hiddenKeys = [NSMutableSet set];
     if (![ctx canEvaluatePolicy: LAPolicyDeviceOwnerAuthenticationWithBiometrics error: &error])
     {
-        self.hiddenKeys = [NSSet setWithObject: @"AccessControlTouchIdEnabled"];
+        [hiddenKeys addObject: @"AccessControlTouchIdEnabled"];
     }
+
+    // Hide EULA button if no EULA URL is set
+    NSURL * eulaURL = [(AppDelegate*)[UIApplication sharedApplication].delegate eulaURL];
+    if (!eulaURL) {
+        [hiddenKeys addObject: @"show_eula"];
+    }
+    self.hiddenKeys = hiddenKeys;
 }
 
 - (void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {}
