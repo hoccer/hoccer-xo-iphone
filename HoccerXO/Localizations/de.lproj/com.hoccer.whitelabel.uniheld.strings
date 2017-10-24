@@ -23,7 +23,7 @@
 "chat_list_tab_title" = "Schnacken";
 
 "uniheld_benefit_title" = "Gönnung";
-"uniheld_benefit_url" = "http://benefits.uniheld.com/";
+"uniheld_benefit_url" = "https://benefits.uniheld.com/";
 "uniheld_student_id_btn_title" = "Studentenausweis";
 "uniheld_student_id_no_image_alert_title" = "Kein Ausweis hinterlegt";
 "uniheld_student_id_no_image_alert_message" = "Bearbeite dein Profil, um ein Bild deines Ausweises zu hinterlegen.";
