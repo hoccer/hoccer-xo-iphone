@@ -129,6 +129,12 @@
       "idiom" : "ipad",
       "filename" : "uniheld_Icon-App-83.5x83.5@2x.png",
       "scale" : "2x"
+    },
+    {
+      "size" : "1024x1024",
+      "idiom" : "ios-marketing",
+      "filename" : "uniheld_iTunesArtwork@2x_1024px.png",
+      "scale" : "1x"
     }
   ],
   "info" : {
