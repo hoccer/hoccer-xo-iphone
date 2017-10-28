@@ -295,6 +295,14 @@
 		C5EB3CCC1A824EFC00E236F6 /* com.artcom.Hoccer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */; };
 		C5EB3CD21A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */; };
 		C5EB3CD81A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */; };
+		E90B68ED1FA4ACB500F3EF68 /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB022171457F9005F8FFA /* Crypto.m */; };
+		E90B68EF1FA4ACBD00F3EF68 /* CryptoJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DBE3E21865C0A000880252 /* CryptoJSON.m */; };
+		E90B68F01FA4ACC100F3EF68 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
+		E90B68F11FA4ACC500F3EF68 /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */; };
+		E90B68F31FA4ACCD00F3EF68 /* KeyChainItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E95089221B00D54700CA3952 /* KeyChainItem.m */; };
+		E90B68F81FA4CA1800F3EF68 /* TinyCCRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */; };
+		E90B68F91FA4D09600F3EF68 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03317145AC0005F8FFA /* NSData+Base64.m */; };
+		E90B68FA1FA4D21600F3EF68 /* NSData+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE454C1705ADAF0099F0CB /* NSData+HexString.m */; };
 		E925624F1B1F77BE0002E33F /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E925624E1B1F77BE0002E33F /* QuickLook.framework */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
@@ -321,6 +329,7 @@
 		E95176111913EB6100EFD1C6 /* ThrowDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = E951760C1913EB6100EFD1C6 /* ThrowDetector.m */; };
 		E95176141913ECCB00EFD1C6 /* NSObject+DelegateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176131913ECCB00EFD1C6 /* NSObject+DelegateHelper.m */; };
 		E9546CA81B42A642007FE754 /* webinterface_IE.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E9546CA61B42A642007FE754 /* webinterface_IE.rtf */; };
+		E9552D4A1FA4F96B006A1AD9 /* NSString+StringWithData.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB02E17145979005F8FFA /* NSString+StringWithData.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
 		E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */; };
 		E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E95A75A118D24C060027AE3E /* OpenSSLCrypto.m */; };
@@ -1126,6 +1135,9 @@
 		C5EB3CD51A824FF000E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.stroeer.strings; sourceTree = "<group>"; };
 		C5EB3CD91A82646800E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
 		C5EB3CDB1A82646A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
+		E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TinyCCRSA.m; sourceTree = "<group>"; };
+		E90B68F61FA4C32100F3EF68 /* TinyCCRSA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TinyCCRSA.h; sourceTree = "<group>"; };
+		E90B68FB1FA4D80B00F3EF68 /* HoccerNSE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HoccerNSE.entitlements; sourceTree = "<group>"; };
 		E925624E1B1F77BE0002E33F /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
 		E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-42.xcdatamodel"; sourceTree = "<group>"; };
@@ -1900,6 +1912,7 @@
 		6368FAB11FA2231A00B7A7E0 /* HoccerNSE */ = {
 			isa = PBXGroup;
 			children = (
+				E90B68FB1FA4D80B00F3EF68 /* HoccerNSE.entitlements */,
 				6368FAB21FA2231A00B7A7E0 /* NotificationService.h */,
 				6368FAB31FA2231A00B7A7E0 /* NotificationService.m */,
 				6368FAB51FA2231A00B7A7E0 /* Info.plist */,
@@ -2600,6 +2613,8 @@
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				E90B68F61FA4C32100F3EF68 /* TinyCCRSA.h */,
+				E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */,
 				E96CB027171457F9005F8FFA /* CCRSA.h */,
 				E96CB028171457F9005F8FFA /* CCRSA.m */,
 				E980D445171EF8950060C1B5 /* CryptingInputStream.h */,
@@ -3105,6 +3120,11 @@
 						CreatedOnToolsVersion = 9.0.1;
 						DevelopmentTeam = SK64A5FJ3Z;
 						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
 					};
 					63AEE2D316CA4D0200522F92 = {
 						DevelopmentTeam = SK64A5FJ3Z;
@@ -3465,7 +3485,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E90B68F81FA4CA1800F3EF68 /* TinyCCRSA.m in Sources */,
+				E90B68F11FA4ACC500F3EF68 /* NSData+CommonCrypto.m in Sources */,
+				E90B68ED1FA4ACB500F3EF68 /* Crypto.m in Sources */,
+				E90B68F31FA4ACCD00F3EF68 /* KeyChainItem.m in Sources */,
+				E90B68FA1FA4D21600F3EF68 /* NSData+HexString.m in Sources */,
+				E90B68EF1FA4ACBD00F3EF68 /* CryptoJSON.m in Sources */,
+				E90B68F91FA4D09600F3EF68 /* NSData+Base64.m in Sources */,
 				6368FAB41FA2231A00B7A7E0 /* NotificationService.m in Sources */,
+				E9552D4A1FA4F96B006A1AD9 /* NSString+StringWithData.m in Sources */,
+				E90B68F01FA4ACC100F3EF68 /* KeychainItemWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4285,6 +4314,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4302,9 +4332,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4336,6 +4368,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4353,9 +4386,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4386,6 +4421,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4403,9 +4439,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4437,6 +4475,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4454,9 +4493,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4488,6 +4529,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4505,9 +4547,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4539,6 +4583,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4556,9 +4601,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4590,6 +4637,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4607,9 +4655,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.hoccme;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4641,6 +4691,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4658,9 +4709,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.stroeer;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4692,6 +4745,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4709,9 +4763,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4744,6 +4800,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4759,9 +4816,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4793,6 +4852,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4808,9 +4868,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4842,6 +4904,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4857,9 +4920,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4891,6 +4956,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4906,9 +4972,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4940,6 +5008,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4955,9 +5024,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -4989,6 +5060,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -5004,9 +5076,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -5038,6 +5112,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -5053,9 +5128,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.hoccme;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -5087,6 +5164,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -5102,9 +5180,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = com.hoccer.whitelabel.stroeer;
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
@@ -5136,6 +5216,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -5151,9 +5232,11 @@
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
 				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				INFOPLIST_FILE = HoccerNSE/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";

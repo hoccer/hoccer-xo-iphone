@@ -6263,7 +6263,8 @@ NSError * makeSendError(NSString * reason) {
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOAnonymousNotifications]) {
         [self setApnsMode:@"default"];
     } else {
-        [self setApnsMode:@"background"];
+        //[self setApnsMode:@"background"];
+        [self setApnsMode:@"direct"];
     }
 }
 

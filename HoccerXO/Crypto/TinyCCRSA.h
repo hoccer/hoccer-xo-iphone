@@ -1,27 +1,26 @@
 //
-//  RSA.h
-//  Hoccer
+//  TinyCCRSA.h
+//  HoccerXO
 //
-//  Created by Robert Palmer on 23.06.11.
-//  Copyright 2011 Hoccer GmbH. All rights reserved.
+//  Created by Pavel Mayer on 28.10.17.
+//  Copyright © 2017 Hoccer GmbH. All rights reserved.
 //
+
+#ifndef TinyCCRSA_h
+#define TinyCCRSA_h
 
 #import <Foundation/Foundation.h>
 
-// TODO: split this up: I have the feeling half of the key managment belongs to Contact,
-//       the other half to UserProfile. En- and decryption don't need members and should
-//       be class methods.
-
-@interface CCRSA : NSObject {
+@interface TinyCCRSA : NSObject {
     NSData *publicTag;
     NSData *privateTag;
     NSData *publicPeerTag;
 }
 
-+ (CCRSA*)sharedInstance;
++ (TinyCCRSA*)sharedInstance;
 
 - (BOOL)hasKeyPair;
-- (BOOL)generateKeyPairKeysWithBits:(NSNumber *) bits;
+//- (BOOL)generateKeyPairKeysWithBits:(NSNumber *) bits;
 - (BOOL)deleteKeyPairKeys;
 - (BOOL)cloneKeyPairKeys;
 - (BOOL)deleteAllRSAKeys;
@@ -35,7 +34,7 @@
 - (NSData *)getPrivateKeyBits;
 - (SecKeyRef)getPrivateKeyRefForPublicKeyIdString:(NSString*) publicKeyIdString;
 - (SecKeyRef)getPrivateKeyRefForPublicKeyId:(NSData*) publicKeyId;
-    
+
 - (BOOL)addPrivateKeyBits:(NSData*)privateKeyBits;
 - (BOOL)addPrivateKeyBits:(NSData*)privateKeyBits withTag:(NSData*)privateTag;
 
@@ -66,9 +65,9 @@
 
 - (void)getCertificate;
 
-- (NSData *) publicTagForPeer:(NSString *) peerName;
-
 - (NSDictionary*) findKeyPairs;
+
+- (NSData *) publicTagForPeer:(NSString *) peerName;
 
 + (NSString*)makeSSHFormattedPublicKey:(NSData *)publicKeyBits;
 + (NSString*)makeX509FormattedPublicKey:(NSData *)publicKeyBits;
@@ -87,3 +86,6 @@
 + (BOOL) verifySignature:(NSData *)signature forHash:(NSData *)hash withPublicKey:(SecKeyRef)publicKey;
 
 @end
+
+
+#endif /* TinyCCRSA_h */
