@@ -18,8 +18,7 @@
 @interface NotificationService ()
 
 @property (nonatomic, strong) void (^contentHandler)(UNNotificationContent *contentToDeliver);
-@property (nonatomic, strong) UNMutableNotificationContent *bestAttemptContent;
-
+@property (nonatomic, strong) UNNotificationContent * originalContent;
 @end
 
 
@@ -47,20 +46,12 @@ NSData * decipherKey(NSData * keyCipherdata, NSString* keyId, NSString* saltStri
     return theClearTextKey;
 }
 
-@implementation NotificationService
-
-
-- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
-    self.contentHandler = contentHandler;
-    self.bestAttemptContent = [request.content mutableCopy];
-    
-    NSDictionary *userInfo = request.content.userInfo;
+NSString *
+decryptMessage(NSDictionary* userInfo) {
     NSString * keyCiphertext = userInfo[@"keyCiphertext"];
     NSString * keyId = userInfo[@"keyId"];
     NSString * body = userInfo[@"body"];
-    NSString * sender = userInfo[@"sender"];
     NSString * salt = [userInfo objectForKey:@"salt"];
-    NSString * group = [userInfo objectForKey:@"group"];
 
     NSLog(@"keyCiphertext=%@, keyId=%@",keyCiphertext,keyId);
     NSData * keyCipherData = [NSData dataWithBase64EncodedString:keyCiphertext];
@@ -68,29 +59,74 @@ NSData * decipherKey(NSData * keyCipherdata, NSString* keyId, NSString* saltStri
     NSData * bodyData = [NSData dataWithBase64EncodedString:body];
     NSLog(@"bodyData=%@",bodyData.hexadecimalString);
     NSLog(@"theAESKey=%@",theAESKey.hexadecimalString);
-    
+
     NSData * bodyDecrypted = [bodyData decryptedAES256DataUsingKey:theAESKey error:nil];
     NSLog(@"bodyDecrypted=%@",bodyDecrypted.hexadecimalString);
 
     NSString * bodyCleartext = [NSString stringWithData:bodyDecrypted usingEncoding:NSUTF8StringEncoding];
     NSLog(@"bodyCleartext=%@",bodyCleartext);
+    return bodyCleartext;
+}
 
-    if (group == nil) {
-        self.bestAttemptContent.title = sender; // TODO: look up nickname for sender
-    } else {
-        self.bestAttemptContent.title = [NSString stringWithFormat:@"%@:%@", group, sender]; // TODO: look up nickname for sender
+@implementation NotificationService
+
+
+- (void)didReceiveNotificationRequest:(UNNotificationRequest *)request withContentHandler:(void (^)(UNNotificationContent * _Nonnull))contentHandler {
+    self.contentHandler = contentHandler;
+    self.originalContent = request.content;
+
+    UNMutableNotificationContent * decryptedContent = [self.originalContent mutableCopy];
+    NSDictionary *userInfo = request.content.userInfo;
+    NSString * sender = userInfo[@"sender"];
+    NSString * group = [userInfo objectForKey:@"group"];
+    NSUserDefaults * sharedData = [[NSUserDefaults alloc] initWithSuiteName: [self appGroupId]];
+
+    if (group) {
+        group = [sharedData objectForKey: [NSString stringWithFormat: @"nickName.group.%@", group]];
+        if (group == nil) {
+            return [self failGracefully];
+        }
     }
-    self.bestAttemptContent.body = bodyCleartext;
-    // Modify the notification content here...
-    self.bestAttemptContent.title = [NSString stringWithFormat:@"%@ [modified]", self.bestAttemptContent.title];
+
+    sender = [sharedData objectForKey: [NSString stringWithFormat: @"nickName.contact.%@", sender]];
+    if (sender == nil) {
+        return [self failGracefully];
+    }
+
+    decryptedContent.title = group != nil ? [NSString stringWithFormat: @"%@: %@", group, sender] : sender;
+
+    decryptedContent.body = decryptMessage(userInfo);
+    if (decryptedContent.body == nil) {
+        return [self failGracefully];
+    }
+
+
+    // Debugging: Tag what we have as [modified]...
+    // decryptedContent.title = [NSString stringWithFormat:@"[modified] %@", decryptedContent.title];
     
-    self.contentHandler(self.bestAttemptContent);
+    self.contentHandler(decryptedContent);
+}
+
+- (void) failGracefully {
+    self.contentHandler(self.originalContent);
 }
 
 - (void)serviceExtensionTimeWillExpire {
     // Called just before the extension will be terminated by the system.
     // Use this as an opportunity to deliver your "best attempt" at modified content, otherwise the original push payload will be used.
-    self.contentHandler(self.bestAttemptContent);
+    [self failGracefully];
+}
+
+- (NSString*) appGroupId {
+    NSString * groupIdSetting = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"HXOAppGroupId"];
+    if (groupIdSetting != nil) {
+        return groupIdSetting;
+    }
+    NSString * bundleId = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+    NSMutableArray * slugs = [NSMutableArray arrayWithArray: [bundleId componentsSeparatedByString: @"."]];
+    [slugs removeLastObject];
+    [slugs insertObject: @"group" atIndex: 0];
+    return [slugs componentsJoinedByString: @"."];
 }
 
 @end

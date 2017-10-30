@@ -177,6 +177,7 @@
 		63C178C318BF57A600F29BC4 /* UIColor+HSBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C178C218BF57A600F29BC4 /* UIColor+HSBUtilities.m */; };
 		63C178C618BF79A100F29BC4 /* UIColor+HexUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C178C518BF79A100F29BC4 /* UIColor+HexUtilities.m */; };
 		63C1E88C18EB2B450066D5C6 /* ProfileSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */; };
+		63C2ACF01FA7B9F800DAD4B2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63AE455B1705EE820099F0CB /* Localizable.strings */; };
 		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
 		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
 		63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B816E8FD15004E1F6D /* Security.framework */; };
@@ -3121,6 +3122,9 @@
 						DevelopmentTeam = SK64A5FJ3Z;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.Keychain = {
 								enabled = 1;
 							};
@@ -3130,6 +3134,9 @@
 						DevelopmentTeam = SK64A5FJ3Z;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.Keychain = {
 								enabled = 1;
 							};
@@ -3292,6 +3299,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				63C2ACF01FA7B9F800DAD4B2 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4319,7 +4327,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SK64A5FJ3Z;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -4772,7 +4780,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "4aaead92-5e3f-4e37-b748-bda0688426d5";
+				PROVISIONING_PROFILE = "d69841c5-0355-433c-a6bc-d38b3b36547f";
 				PROVISIONING_PROFILE_SPECIFIER = "Hoccer Classic NSE Dev";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6184,7 +6192,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = Hoccer;
-				PROVISIONING_PROFILE = "c727b716-98e2-485a-8fea-88648459d6a5";
+				PROVISIONING_PROFILE = "f16202ac-91e5-45cd-a2d3-cacf285ef3bf";
 				PROVISIONING_PROFILE_SPECIFIER = "Hoccer Classic Development";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -6420,7 +6428,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = "Hoccer Dev";
-				PROVISIONING_PROFILE = "9f5dafa0-b115-4151-b44e-0687570c4f26";
+				PROVISIONING_PROFILE = "a0b92446-9b4a-46cf-9ec1-da35562f29d3";
 				PROVISIONING_PROFILE_SPECIFIER = "Hoccer XO Dev Development";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
