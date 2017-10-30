@@ -81,8 +81,9 @@ decryptMessage(NSDictionary* userInfo) {
             }
             if ([json isKindOfClass: [NSDictionary class]]) {
                 // successfully suparsed attachment dictionary
-                NSString * mediaType = json[@"mediaType"];
-                bodyCleartext = [NSString stringWithFormat:@"%@ <%@>",bodyCleartext, mediaType]; // TODO: localize mediaType
+                NSString * i18nKey = [NSString stringWithFormat: @"attachment_type_%@", json[@"mediaType"]];
+                NSString * mediaType = NSLocalizedString(i18nKey, nil);
+                bodyCleartext = [NSString stringWithFormat:@"%@ [%@]",bodyCleartext, mediaType];
                 NSLog(@"bodyCleartext=%@",bodyCleartext);
             } else {
                 NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", attachmentCleartext);
