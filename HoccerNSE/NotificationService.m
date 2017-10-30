@@ -108,7 +108,13 @@ decryptMessage(NSDictionary* userInfo) {
 }
 
 - (void) failGracefully {
-    self.contentHandler(self.originalContent);
+    UNMutableNotificationContent * content = [self.originalContent mutableCopy];
+    content.title = @"";
+    content.body = NSLocalizedString(@"apn_one_new_message", nil);
+    if (content.badge != nil && content.badge.intValue != 1) {
+        content.body = [NSString stringWithFormat: NSLocalizedString(@"apn_new_messages", nil), content.badge];
+    }
+    self.contentHandler(content);
 }
 
 - (void)serviceExtensionTimeWillExpire {
