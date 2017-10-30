@@ -73,7 +73,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>17901</string>
+	<string>17904</string>
 	<key>HXODefaultEnvironment</key>
 	<string>${HXO_DEFAULT_ENVIRONMENT}</string>
 	<key>HXOEulaVersion</key>
@@ -120,6 +120,8 @@
 	<string>to record and send audio attachments</string>
 	<key>NSMotionUsageDescription</key>
 	<string>to use gestures to throw and catch messages in nearby mode</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>to store received photos and movies</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>to send photos from your photo library</string>
 	<key>UIBackgroundModes</key>

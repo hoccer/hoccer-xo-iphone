@@ -11,7 +11,7 @@
 "NSMicrophoneUsageDescription"="to record and send audio attachments";
 "NSMotionUsageDescription"="to use gestures to throw and catch messages in nearby mode";
 "NSPhotoLibraryUsageDescription"="to select and send photos from your photo library";
-
+"NSPhotoLibraryAddUsageDescription"="to store received photos and movies in your library";
 "NSLocationWhenInUseUsageDescription" = "Access to your location is required to chat with people nearby or to send placemarks";
 
 

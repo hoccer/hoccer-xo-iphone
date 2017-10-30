@@ -52,6 +52,7 @@ decryptMessage(NSDictionary* userInfo) {
     NSString * keyId = userInfo[@"keyId"];
     NSString * body = userInfo[@"body"];
     NSString * salt = [userInfo objectForKey:@"salt"];
+    NSString * attachment = [userInfo objectForKey:@"attachment"];
 
     NSLog(@"keyCiphertext=%@, keyId=%@",keyCiphertext,keyId);
     NSData * keyCipherData = [NSData dataWithBase64EncodedString:keyCiphertext];
@@ -65,6 +66,31 @@ decryptMessage(NSDictionary* userInfo) {
 
     NSString * bodyCleartext = [NSString stringWithData:bodyDecrypted usingEncoding:NSUTF8StringEncoding];
     NSLog(@"bodyCleartext=%@",bodyCleartext);
+    
+    if (attachment != nil) {
+        NSLog(@"attachment=%@",attachment);
+        NSData * attachmentData = [NSData dataWithBase64EncodedString:attachment];
+        NSData * attachmentDecrypted = [attachmentData decryptedAES256DataUsingKey:theAESKey error:nil];
+        NSString * attachmentCleartext = [NSString stringWithData:attachmentDecrypted usingEncoding:NSUTF8StringEncoding];
+        NSLog(@"attachmentCleartext=%@",attachmentCleartext);
+       NSError * error;
+        @try {
+            id json = [NSJSONSerialization JSONObjectWithData: [attachmentCleartext dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
+            if (json == nil) {
+                NSLog(@"ERROR: JSON parse error: %@ on string %@", error.userInfo[@"NSDebugDescription"], attachmentCleartext);
+            }
+            if ([json isKindOfClass: [NSDictionary class]]) {
+                // successfully suparsed attachment dictionary
+                NSString * mediaType = json[@"mediaType"];
+                bodyCleartext = [NSString stringWithFormat:@"%@ <%@>",bodyCleartext, mediaType]; // TODO: localize mediaType
+                NSLog(@"bodyCleartext=%@",bodyCleartext);
+            } else {
+                NSLog(@"ERROR: attachment json not encoded as dictionary, json string = %@", attachmentCleartext);
+            }
+        } @catch (NSException * ex) {
+            NSLog(@"ERROR: parsing json, jsonData = %@, ex=%@", attachmentCleartext, ex);
+        }
+    }
     return bodyCleartext;
 }
 
