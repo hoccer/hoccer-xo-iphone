@@ -1090,7 +1090,8 @@ BOOL sameObjects(id obj1, id obj2) {
                                                                                          }
                                                                                          messageText = message.body;
                                                                                          if (message.attachment != nil) {
-                                                                                             NSString * typeString = NSLocalizedString(message.attachment.mediaType, nil);
+                                                                                             NSString * typeStringName = [NSString stringWithFormat:@"attachment_type_%@",message.attachment.mediaType];
+                                                                                             NSString * typeString = NSLocalizedString(typeStringName, nil);
                                                                                              messageText = [NSString stringWithFormat:@"[%@] %@",typeString,messageText];
                                                                                          }
                                                                                          messageText = [NSString stringWithFormat:@"%@:%@",message.contact.nickNameOrAlias,messageText];
