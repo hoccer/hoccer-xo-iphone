@@ -4620,7 +4620,7 @@
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "Hoccer Dev";
+				PRODUCT_NAME = "Hoccer Blue";
 				PROVISIONING_PROFILE = "b645c491-d75d-4a3a-9016-72f2db45ad1e";
 				PROVISIONING_PROFILE_SPECIFIER = "HoccerBlue Development";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
@@ -4736,7 +4736,7 @@
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "Hoccer Dev";
+				PRODUCT_NAME = "Hoccer Blue";
 				PROVISIONING_PROFILE = "78816709-3511-44de-b1ea-47d5a90c0b1b";
 				PROVISIONING_PROFILE_SPECIFIER = HoccerBlue;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
