@@ -4577,7 +4577,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_ = "";
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -4626,7 +4625,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_ = "";
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -4712,7 +4710,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_ = "";
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -4829,7 +4826,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_ = "";
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -4950,7 +4946,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_ = "";
 				HXO_DEFAULT_ENVIRONMENT = development;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -5067,7 +5062,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_ = "";
 				HXO_DEFAULT_ENVIRONMENT = development;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -5188,7 +5182,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_ = "";
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
 				HXO_EULA_VERSION = 1.0;
 				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
@@ -5306,7 +5299,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_ = "";
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
 				HXO_EULA_VERSION = 1.0;
 				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
