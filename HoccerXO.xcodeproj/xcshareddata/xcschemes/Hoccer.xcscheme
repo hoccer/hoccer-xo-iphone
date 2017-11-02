@@ -23,9 +23,10 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "DebugDev"
+      buildConfiguration = "DebugClassic"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
@@ -62,9 +63,10 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "DebugDev"
+      buildConfiguration = "DebugClassic"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -135,10 +137,6 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-dumpRecordsForEntity Delivery"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
             argument = "-attachmentVerbosity trace"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -167,7 +165,11 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-environment production"
+            argument = "-environment development"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-dumpRecordsForEntity Group"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
@@ -175,11 +177,6 @@
          <EnvironmentVariable
             key = "MallocCheckHeapEach"
             value = "1"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
-            key = "NSZombieEnabled"
-            value = "YES"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -201,12 +198,12 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LocationScenarioReference
-         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
-         referenceType = "1">
+         identifier = "../../Choriner.gpx"
+         referenceType = "0">
       </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "ReleaseDev"
+      buildConfiguration = "ReleaseClassic"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -223,10 +220,10 @@
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "DebugDev">
+      buildConfiguration = "DebugClassic">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "ReleaseDev"
+      buildConfiguration = "ReleaseClassic"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

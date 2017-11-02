@@ -23,9 +23,10 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "DebugClassic"
+      buildConfiguration = "HoccerBlue Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
@@ -62,9 +63,10 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "DebugClassic"
+      buildConfiguration = "HoccerBlue Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -135,6 +137,10 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "-dumpRecordsForEntity Delivery"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "-attachmentVerbosity trace"
             isEnabled = "NO">
          </CommandLineArgument>
@@ -163,11 +169,7 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "-environment development"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "-dumpRecordsForEntity Group"
+            argument = "-environment production"
             isEnabled = "NO">
          </CommandLineArgument>
       </CommandLineArguments>
@@ -175,6 +177,11 @@
          <EnvironmentVariable
             key = "MallocCheckHeapEach"
             value = "1"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "NSZombieEnabled"
+            value = "YES"
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
@@ -196,12 +203,12 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LocationScenarioReference
-         identifier = "../../Choriner.gpx"
-         referenceType = "0">
+         identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
+         referenceType = "1">
       </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "ReleaseClassic"
+      buildConfiguration = "HoccerBlue Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -218,10 +225,10 @@
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "DebugClassic">
+      buildConfiguration = "HoccerBlue Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "ReleaseClassic"
+      buildConfiguration = "HoccerBlue Release"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
