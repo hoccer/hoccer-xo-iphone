@@ -690,6 +690,8 @@
 		631FE50C19195EB10073E980 /* ModalTaskHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalTaskHUD.m; sourceTree = "<group>"; };
 		631FE5181919A3B60073E980 /* HXOActivityIndicatorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOActivityIndicatorView.h; sourceTree = "<group>"; };
 		631FE5191919A3B60073E980 /* HXOActivityIndicatorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOActivityIndicatorView.m; sourceTree = "<group>"; };
+		6320842C1FAA988800FC0408 /* com.hoccer.whitelabel.uniheld.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = com.hoccer.whitelabel.uniheld.entitlements; sourceTree = "<group>"; };
+		6320842D1FAA98F200FC0408 /* com.hoccer.Hoccer-XO-Dev.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "com.hoccer.Hoccer-XO-Dev.entitlements"; sourceTree = "<group>"; };
 		6324C03C18BE09AE00E4BD82 /* SubViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SubViewController.h; sourceTree = "<group>"; };
 		6324C03D18BE09AE00E4BD82 /* SubViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SubViewController.m; sourceTree = "<group>"; };
 		632502A21865FC2600543D80 /* DateSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateSectionHeaderView.h; sourceTree = "<group>"; };
@@ -1138,7 +1140,7 @@
 		C5EB3CDB1A82646A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
 		E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TinyCCRSA.m; sourceTree = "<group>"; };
 		E90B68F61FA4C32100F3EF68 /* TinyCCRSA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TinyCCRSA.h; sourceTree = "<group>"; };
-		E90B68FB1FA4D80B00F3EF68 /* HoccerNSE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HoccerNSE.entitlements; sourceTree = "<group>"; };
+		E90B68FB1FA4D80B00F3EF68 /* com.hoccer.Hoccer-XO.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "com.hoccer.Hoccer-XO.entitlements"; sourceTree = "<group>"; };
 		E925624E1B1F77BE0002E33F /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
 		E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-42.xcdatamodel"; sourceTree = "<group>"; };
@@ -1913,7 +1915,9 @@
 		6368FAB11FA2231A00B7A7E0 /* HoccerNSE */ = {
 			isa = PBXGroup;
 			children = (
-				E90B68FB1FA4D80B00F3EF68 /* HoccerNSE.entitlements */,
+				E90B68FB1FA4D80B00F3EF68 /* com.hoccer.Hoccer-XO.entitlements */,
+				6320842C1FAA988800FC0408 /* com.hoccer.whitelabel.uniheld.entitlements */,
+				6320842D1FAA98F200FC0408 /* com.hoccer.Hoccer-XO-Dev.entitlements */,
 				6368FAB21FA2231A00B7A7E0 /* NotificationService.h */,
 				6368FAB31FA2231A00B7A7E0 /* NotificationService.m */,
 				6368FAB51FA2231A00B7A7E0 /* Info.plist */,
@@ -4322,7 +4326,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4349,7 +4353,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "0f5bb706-073b-4baf-b58c-33965e5bd672";
+				PROVISIONING_PROFILE_SPECIFIER = "Hoccer XO NSE Development";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -4376,7 +4381,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4429,12 +4434,12 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = SK64A5FJ3Z;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -4456,7 +4461,8 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE = "bf9dab2c-d320-4576-950a-3fdeb209b6ac";
+				PROVISIONING_PROFILE_SPECIFIER = "Uniheld NSE Development";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -4483,7 +4489,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4537,7 +4543,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4591,7 +4597,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4645,7 +4651,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4699,7 +4705,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4753,7 +4759,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4808,7 +4814,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4860,7 +4866,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4912,7 +4918,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -4964,7 +4970,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -5016,7 +5022,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -5068,7 +5074,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -5120,7 +5126,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -5172,7 +5178,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -5224,7 +5230,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "HoccerNSE/$(HXO_BUNDLE_ID).entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Manual;
@@ -6900,7 +6906,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = UNIHELD;
-				PROVISIONING_PROFILE = "cb4ec86d-b69a-4c9d-bca9-05efb1daba66";
+				PROVISIONING_PROFILE = "396c888c-4940-4b67-9a02-759ff51d89de";
 				PROVISIONING_PROFILE_SPECIFIER = "Uniheld Development";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
