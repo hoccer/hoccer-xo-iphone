@@ -23,7 +23,7 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "DebugClassic"
+      buildConfiguration = "Hoccer Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       language = ""
@@ -63,7 +63,7 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "DebugClassic"
+      buildConfiguration = "Hoccer Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       language = ""
@@ -203,7 +203,7 @@
       </LocationScenarioReference>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "ReleaseClassic"
+      buildConfiguration = "Hoccer Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -220,10 +220,10 @@
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "DebugClassic">
+      buildConfiguration = "Hoccer Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "ReleaseClassic"
+      buildConfiguration = "Hoccer Release"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
