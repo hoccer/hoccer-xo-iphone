@@ -34,6 +34,8 @@ extern NSArray * permanentObjectIds(NSArray* managedObjects);
 extern NSArray * managedObjects(NSArray* objectIds, NSManagedObjectContext * context);
 extern NSArray * existingManagedObjects(NSArray* objectIds, NSManagedObjectContext * context);
 
+AppDelegate * gAppDelegate;
+
 @class ConversationViewController;
 @class MFSideMenuContainerViewController;
 @class HTTPServerController;

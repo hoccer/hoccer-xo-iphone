@@ -924,6 +924,7 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    gAppDelegate = self;
 /*
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"9463c48810f576a586b504ecdf970c0c"];
     [[BITHockeyManager sharedHockeyManager] startManager];
@@ -4272,7 +4273,10 @@ enum {
 }
 
 + (AppDelegate*)instance {
+    return gAppDelegate;
+    /*
     return (AppDelegate*)[[UIApplication sharedApplication] delegate];
+     */
 }
 
 + (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern
