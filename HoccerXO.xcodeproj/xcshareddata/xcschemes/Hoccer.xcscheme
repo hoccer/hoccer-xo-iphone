@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "63AEE2D316CA4D0200522F92"
-               BuildableName = "Hoccer XO.app"
+               BuildableName = "Hoccer.app"
                BlueprintName = "HoccerXO"
                ReferencedContainer = "container:HoccerXO.xcodeproj">
             </BuildableReference>
@@ -54,7 +54,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "63AEE2D316CA4D0200522F92"
-            BuildableName = "Hoccer XO.app"
+            BuildableName = "Hoccer.app"
             BlueprintName = "HoccerXO"
             ReferencedContainer = "container:HoccerXO.xcodeproj">
          </BuildableReference>
@@ -78,7 +78,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "63AEE2D316CA4D0200522F92"
-            BuildableName = "Hoccer XO.app"
+            BuildableName = "Hoccer.app"
             BlueprintName = "HoccerXO"
             ReferencedContainer = "container:HoccerXO.xcodeproj">
          </BuildableReference>
@@ -213,7 +213,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "63AEE2D316CA4D0200522F92"
-            BuildableName = "Hoccer XO.app"
+            BuildableName = "Hoccer.app"
             BlueprintName = "HoccerXO"
             ReferencedContainer = "container:HoccerXO.xcodeproj">
          </BuildableReference>
