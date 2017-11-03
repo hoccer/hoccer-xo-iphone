@@ -6263,12 +6263,13 @@ NSError * makeSendError(NSString * reason) {
     if ([[HXOUserDefaults standardUserDefaults] boolForKey: kHXOAnonymousNotifications]) {
         [self setApnsMode:@"default"];
     } else {
-        //[self setApnsMode:@"background"];
-        [self setApnsMode:@"direct"];
+        if (SYSTEM_VERSION_LESS_THAN(@"10.0")) {
+            [self setApnsMode:@"background"];
+        } else {
+            [self setApnsMode:@"direct"];
+        }
     }
 }
-
-
 
 /*
 - (void) generateToken: (NSString*) purpose validFor: (NSTimeInterval) seconds tokenHandler: (InviteTokenHanlder) handler {
