@@ -91,6 +91,8 @@
 		636492D71711E97900E35514 /* AvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 636492D61711E97900E35514 /* AvatarView.m */; };
 		6365EB2C18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EB2B18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m */; };
 		6365EC8518E7976600B41054 /* avatar_contact.m in Sources */ = {isa = PBXBuildFile; fileRef = 6365EC8418E7976600B41054 /* avatar_contact.m */; };
+		6368FAB41FA2231A00B7A7E0 /* NotificationService.m in Sources */ = {isa = PBXBuildFile; fileRef = 6368FAB31FA2231A00B7A7E0 /* NotificationService.m */; };
+		6368FAB81FA2231A00B7A7E0 /* HoccerNSE.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6368FAB01FA2231A00B7A7E0 /* HoccerNSE.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		636D400317106EC000304EDF /* Environment.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D400217106EC000304EDF /* Environment.m */; };
 		636D4007171072CE00304EDF /* HXOUserDefaults.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D4006171072CD00304EDF /* HXOUserDefaults.m */; };
 		636D40091710770A00304EDF /* HXOUserDefaultsDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 636D40081710770A00304EDF /* HXOUserDefaultsDefaults.plist */; };
@@ -175,6 +177,7 @@
 		63C178C318BF57A600F29BC4 /* UIColor+HSBUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C178C218BF57A600F29BC4 /* UIColor+HSBUtilities.m */; };
 		63C178C618BF79A100F29BC4 /* UIColor+HexUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C178C518BF79A100F29BC4 /* UIColor+HexUtilities.m */; };
 		63C1E88C18EB2B450066D5C6 /* ProfileSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C1E88B18EB2B450066D5C6 /* ProfileSheetController.m */; };
+		63C2ACF01FA7B9F800DAD4B2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 63AE455B1705EE820099F0CB /* Localizable.strings */; };
 		63C413B516E8FD02004E1F6D /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B416E8FD02004E1F6D /* libicucore.dylib */; };
 		63C413B716E8FD0D004E1F6D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B616E8FD0D004E1F6D /* CFNetwork.framework */; };
 		63C413B916E8FD15004E1F6D /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 63C413B816E8FD15004E1F6D /* Security.framework */; };
@@ -293,6 +296,14 @@
 		C5EB3CCC1A824EFC00E236F6 /* com.artcom.Hoccer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */; };
 		C5EB3CD21A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */; };
 		C5EB3CD81A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */; };
+		E90B68ED1FA4ACB500F3EF68 /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB022171457F9005F8FFA /* Crypto.m */; };
+		E90B68EF1FA4ACBD00F3EF68 /* CryptoJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DBE3E21865C0A000880252 /* CryptoJSON.m */; };
+		E90B68F01FA4ACC100F3EF68 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
+		E90B68F11FA4ACC500F3EF68 /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */; };
+		E90B68F31FA4ACCD00F3EF68 /* KeyChainItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E95089221B00D54700CA3952 /* KeyChainItem.m */; };
+		E90B68F81FA4CA1800F3EF68 /* TinyCCRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */; };
+		E90B68F91FA4D09600F3EF68 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03317145AC0005F8FFA /* NSData+Base64.m */; };
+		E90B68FA1FA4D21600F3EF68 /* NSData+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE454C1705ADAF0099F0CB /* NSData+HexString.m */; };
 		E925624F1B1F77BE0002E33F /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E925624E1B1F77BE0002E33F /* QuickLook.framework */; };
 		E92FAEB7186DEB5900D72D79 /* cnt-data.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB5186DEB5900D72D79 /* cnt-data.png */; };
 		E92FAEB8186DEB5900D72D79 /* cnt-data@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E92FAEB6186DEB5900D72D79 /* cnt-data@2x.png */; };
@@ -319,6 +330,7 @@
 		E95176111913EB6100EFD1C6 /* ThrowDetector.m in Sources */ = {isa = PBXBuildFile; fileRef = E951760C1913EB6100EFD1C6 /* ThrowDetector.m */; };
 		E95176141913ECCB00EFD1C6 /* NSObject+DelegateHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E95176131913ECCB00EFD1C6 /* NSObject+DelegateHelper.m */; };
 		E9546CA81B42A642007FE754 /* webinterface_IE.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E9546CA61B42A642007FE754 /* webinterface_IE.rtf */; };
+		E9552D4A1FA4F96B006A1AD9 /* NSString+StringWithData.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB02E17145979005F8FFA /* NSString+StringWithData.m */; };
 		E959F08B1738553C00CD14BB /* TDSemiModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F0881738553C00CD14BB /* TDSemiModalViewController.m */; };
 		E959F08C1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = E959F08A1738553C00CD14BB /* UIViewController+TDSemiModalExtension.m */; };
 		E95A75A218D24C060027AE3E /* OpenSSLCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E95A75A118D24C060027AE3E /* OpenSSLCrypto.m */; };
@@ -551,7 +563,28 @@
 			remoteGlobalIDString = F62417E314D52F3C003CE997;
 			remoteInfo = TestChat;
 		};
+		6368FAB61FA2231A00B7A7E0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 63AEE2CC16CA4D0200522F92 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6368FAAF1FA2231A00B7A7E0;
+			remoteInfo = HoccerNSE;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6368FADD1FA2231A00B7A7E0 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				6368FAB81FA2231A00B7A7E0 /* HoccerNSE.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		1F1C0BF01B039288002B346D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO.strings"; sourceTree = "<group>"; };
@@ -707,6 +740,10 @@
 		6365EB2B18E4D96D00B41054 /* DatasheetHeaderFooterTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DatasheetHeaderFooterTextView.m; sourceTree = "<group>"; };
 		6365EC8318E7976600B41054 /* avatar_contact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = avatar_contact.h; sourceTree = "<group>"; };
 		6365EC8418E7976600B41054 /* avatar_contact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = avatar_contact.m; sourceTree = "<group>"; };
+		6368FAB01FA2231A00B7A7E0 /* HoccerNSE.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = HoccerNSE.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		6368FAB21FA2231A00B7A7E0 /* NotificationService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NotificationService.h; sourceTree = "<group>"; };
+		6368FAB31FA2231A00B7A7E0 /* NotificationService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NotificationService.m; sourceTree = "<group>"; };
+		6368FAB51FA2231A00B7A7E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		636D400117106EC000304EDF /* Environment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Environment.h; sourceTree = "<group>"; };
 		636D400217106EC000304EDF /* Environment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Environment.m; sourceTree = "<group>"; };
 		636D4005171072CD00304EDF /* HXOUserDefaults.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOUserDefaults.h; sourceTree = "<group>"; };
@@ -782,7 +819,7 @@
 		63AE454F1705E1430099F0CB /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		63AE45591705EE770099F0CB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		63AE455C1705EE820099F0CB /* en */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; lineEnding = 0; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
-		63AEE2D416CA4D0200522F92 /* Hoccer XO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hoccer XO.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		63AEE2D416CA4D0200522F92 /* Hoccer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Hoccer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		63AEE2D716CA4D0200522F92 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		63AEE2D916CA4D0200522F92 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		63AEE2DB16CA4D0200522F92 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -1099,6 +1136,9 @@
 		C5EB3CD51A824FF000E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.stroeer.strings; sourceTree = "<group>"; };
 		C5EB3CD91A82646800E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
 		C5EB3CDB1A82646A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
+		E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TinyCCRSA.m; sourceTree = "<group>"; };
+		E90B68F61FA4C32100F3EF68 /* TinyCCRSA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TinyCCRSA.h; sourceTree = "<group>"; };
+		E90B68FB1FA4D80B00F3EF68 /* HoccerNSE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HoccerNSE.entitlements; sourceTree = "<group>"; };
 		E925624E1B1F77BE0002E33F /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
 		E92624281959CB1800C836D0 /* HoccerXO-42.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-42.xcdatamodel"; sourceTree = "<group>"; };
@@ -1119,8 +1159,7 @@
 		E94108F119472C4B00E95A50 /* HoccerXO-40.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-40.xcdatamodel"; sourceTree = "<group>"; };
 		E9480D371CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der */ = {isa = PBXFileReference; lastKnownFileType = file; path = "filecache-2016.talk.hoccer.de.der"; sourceTree = "<group>"; };
 		E9480D381CB67E75007DF488 /* talkserver-2016.talk.hoccer.de.der */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "talkserver-2016.talk.hoccer.de.der"; sourceTree = "<group>"; };
-		E9480EF41EE0598C0047F77E /* Hoccer-production.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "Hoccer-production.entitlements"; sourceTree = "<group>"; };
-		E9480F031EE05A890047F77E /* Hoccer-development.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = "Hoccer-development.entitlements"; sourceTree = "<group>"; };
+		E9480EF41EE0598C0047F77E /* Hoccer.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Hoccer.entitlements; sourceTree = "<group>"; };
 		E9480F051EE061840047F77E /* TCMobileProvision.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TCMobileProvision.h; sourceTree = "<group>"; };
 		E9480F061EE061840047F77E /* TCMobileProvision.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TCMobileProvision.m; sourceTree = "<group>"; };
 		E9480F081EE0682F0047F77E /* DTASN1BitString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DTASN1BitString.h; sourceTree = "<group>"; };
@@ -1444,6 +1483,13 @@
 				6302A9B418DA8A9500B2D04F /* XCTest.framework in Frameworks */,
 				6302A9B618DA8A9500B2D04F /* UIKit.framework in Frameworks */,
 				6302A9B518DA8A9500B2D04F /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6368FAAD1FA2231A00B7A7E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1863,6 +1909,17 @@
 			path = Datasheet;
 			sourceTree = "<group>";
 		};
+		6368FAB11FA2231A00B7A7E0 /* HoccerNSE */ = {
+			isa = PBXGroup;
+			children = (
+				E90B68FB1FA4D80B00F3EF68 /* HoccerNSE.entitlements */,
+				6368FAB21FA2231A00B7A7E0 /* NotificationService.h */,
+				6368FAB31FA2231A00B7A7E0 /* NotificationService.m */,
+				6368FAB51FA2231A00B7A7E0 /* Info.plist */,
+			);
+			path = HoccerNSE;
+			sourceTree = "<group>";
+		};
 		636D40041710724900304EDF /* SettingsConstantsAndEnvironment */ = {
 			isa = PBXGroup;
 			children = (
@@ -2101,6 +2158,7 @@
 				E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */,
 				63AEE2DF16CA4D0200522F92 /* HoccerXO */,
 				6302A9B718DA8A9500B2D04F /* HoccerXO Tests */,
+				6368FAB11FA2231A00B7A7E0 /* HoccerNSE */,
 				63AEE2D616CA4D0200522F92 /* Frameworks */,
 				63AEE2D516CA4D0200522F92 /* Products */,
 				63C413A116E8F9E5004E1F6D /* 3rdParty */,
@@ -2110,8 +2168,9 @@
 		63AEE2D516CA4D0200522F92 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				63AEE2D416CA4D0200522F92 /* Hoccer XO.app */,
+				63AEE2D416CA4D0200522F92 /* Hoccer.app */,
 				6302A9B318DA8A9500B2D04F /* HoccerXO Tests.xctest */,
+				6368FAB01FA2231A00B7A7E0 /* HoccerNSE.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2157,8 +2216,7 @@
 		63AEE2DF16CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXGroup;
 			children = (
-				E9480F031EE05A890047F77E /* Hoccer-development.entitlements */,
-				E9480EF41EE0598C0047F77E /* Hoccer-production.entitlements */,
+				E9480EF41EE0598C0047F77E /* Hoccer.entitlements */,
 				E99886B91725CB3E0089A510 /* Adressbook */,
 				63AEE2E816CA4D0200522F92 /* AppDelegate.h */,
 				63AEE2E916CA4D0200522F92 /* AppDelegate.m */,
@@ -2554,6 +2612,8 @@
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				E90B68F61FA4C32100F3EF68 /* TinyCCRSA.h */,
+				E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */,
 				E96CB027171457F9005F8FFA /* CCRSA.h */,
 				E96CB028171457F9005F8FFA /* CCRSA.m */,
 				E980D445171EF8950060C1B5 /* CryptingInputStream.h */,
@@ -3003,6 +3063,23 @@
 			productReference = 6302A9B318DA8A9500B2D04F /* HoccerXO Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		6368FAAF1FA2231A00B7A7E0 /* HoccerNSE */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6368FADC1FA2231A00B7A7E0 /* Build configuration list for PBXNativeTarget "HoccerNSE" */;
+			buildPhases = (
+				6368FAAC1FA2231A00B7A7E0 /* Sources */,
+				6368FAAD1FA2231A00B7A7E0 /* Frameworks */,
+				6368FAAE1FA2231A00B7A7E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HoccerNSE;
+			productName = HoccerNSE;
+			productReference = 6368FAB01FA2231A00B7A7E0 /* HoccerNSE.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		63AEE2D316CA4D0200522F92 /* HoccerXO */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "HoccerXO" */;
@@ -3014,14 +3091,16 @@
 				633049241701A02B0045E64E /* Increment Patch Level When Archiving */,
 				631A96FA18AB9E84003363F5 /* Inject Debug Settings Pane */,
 				E980A8701E9657E100C2C8A6 /* ShellScript */,
+				6368FADD1FA2231A00B7A7E0 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				6368FAB71FA2231A00B7A7E0 /* PBXTargetDependency */,
 			);
 			name = HoccerXO;
 			productName = Hoccenger;
-			productReference = 63AEE2D416CA4D0200522F92 /* Hoccer XO.app */;
+			productReference = 63AEE2D416CA4D0200522F92 /* Hoccer.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -3036,10 +3115,26 @@
 					6302A9B218DA8A9500B2D04F = {
 						TestTargetID = 63AEE2D316CA4D0200522F92;
 					};
+					6368FAAF1FA2231A00B7A7E0 = {
+						CreatedOnToolsVersion = 9.0.1;
+						DevelopmentTeam = SK64A5FJ3Z;
+						ProvisioningStyle = Manual;
+						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
+							com.apple.Keychain = {
+								enabled = 1;
+							};
+						};
+					};
 					63AEE2D316CA4D0200522F92 = {
 						DevelopmentTeam = SK64A5FJ3Z;
 						ProvisioningStyle = Manual;
 						SystemCapabilities = {
+							com.apple.ApplicationGroups.iOS = {
+								enabled = 1;
+							};
 							com.apple.Keychain = {
 								enabled = 1;
 							};
@@ -3058,7 +3153,6 @@
 				en,
 				de,
 				Base,
-				"zh-Hant",
 				English,
 			);
 			mainGroup = 63AEE2CB16CA4D0200522F92;
@@ -3090,6 +3184,7 @@
 			targets = (
 				63AEE2D316CA4D0200522F92 /* HoccerXO */,
 				6302A9B218DA8A9500B2D04F /* HoccerXO Tests */,
+				6368FAAF1FA2231A00B7A7E0 /* HoccerNSE */,
 			);
 		};
 /* End PBXProject section */
@@ -3194,6 +3289,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				6302A9BC18DA8A9500B2D04F /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6368FAAE1FA2231A00B7A7E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63C2ACF01FA7B9F800DAD4B2 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3339,7 +3442,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# xcode-build-bump.sh\n# @desc Auto-increment the build number every time the project is run.\n# @usage\n# 1. Select: your Target in Xcode\n# 2. Select: Build Phases Tab\n# 3. Select: Add Build Phase -> Add Run Script\n# 4. Paste code below in to new \"Run Script\" section\n# 5. Drag the \"Run Script\" below \"Link Binaries With Libraries\"\n# 6. Insure that your starting build number is set to a whole integer and not a float (e.g. 1, not 1.0)\n\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
+			shellScript = "# xcode-build-bump.sh\n# @desc Auto-increment the build number every time the project is run.\n# @usage\n# 1. Select: your Target in Xcode\n# 2. Select: Build Phases Tab\n# 3. Select: Add Build Phase -> Add Run Script\n# 4. Paste code below in to new \"Run Script\" section\n# 5. Drag the \"Run Script\" below \"Link Binaries With Libraries\"\n# 6. Insure that your starting build number is set to a whole integer and not a float (e.g. 1, not 1.0)\n\nbuildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n#/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"";
 		};
 		633049241701A02B0045E64E /* Increment Patch Level When Archiving */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3353,7 +3456,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 			shellPath = /bin/sh;
-			shellScript = "# xcode-version-bump.sh\n# @desc Auto-increment the version number (only) when a project is archived for export.\n# @usage\n# 1. Select: your Target in Xcode\n# 2. Select: Build Phases Tab\n# 3. Select: Add Build Phase -> Add Run Script\n# 4. Paste code below in to new \"Run Script\" section\n# 5. Check the checkbox \"Run script only when installing\"\n# 6. Drag the \"Run Script\" below \"Link Binaries With Libraries\"\n# 7. Insure your starting version number is in SemVer format (e.g. 1.0.0)\n\n# This splits a two-decimal version string, such as \"0.45.123\", allowing us to increment the third position.\nVERSIONNUM=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nNEWSUBVERSION=`echo $VERSIONNUM | awk -F \".\" '{print $3}'`\nNEWSUBVERSION=$(($NEWSUBVERSION + 1))\nNEWVERSIONSTRING=`echo $VERSIONNUM | awk -F \".\" '{print $1 \".\" $2 \".'$NEWSUBVERSION'\" }'`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString $NEWVERSIONSTRING\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+			shellScript = "# xcode-version-bump.sh\n# @desc Auto-increment the version number (only) when a project is archived for export.\n# @usage\n# 1. Select: your Target in Xcode\n# 2. Select: Build Phases Tab\n# 3. Select: Add Build Phase -> Add Run Script\n# 4. Paste code below in to new \"Run Script\" section\n# 5. Check the checkbox \"Run script only when installing\"\n# 6. Drag the \"Run Script\" below \"Link Binaries With Libraries\"\n# 7. Insure your starting version number is in SemVer format (e.g. 1.0.0)\n\n# This splits a two-decimal version string, such as \"0.45.123\", allowing us to increment the third position.\nVERSIONNUM=$(/usr/libexec/PlistBuddy -c \"Print CFBundleShortVersionString\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nNEWSUBVERSION=`echo $VERSIONNUM | awk -F \".\" '{print $3}'`\nNEWSUBVERSION=$(($NEWSUBVERSION + 1))\nNEWVERSIONSTRING=`echo $VERSIONNUM | awk -F \".\" '{print $1 \".\" $2 \".'$NEWSUBVERSION'\" }'`\n#/usr/libexec/PlistBuddy -c \"Set :CFBundleShortVersionString $NEWVERSIONSTRING\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
 		};
 		E980A8701E9657E100C2C8A6 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3380,6 +3483,23 @@
 				6302A9C918DA8B0700B2D04F /* SRP_FunctionalTest.m in Sources */,
 				6302A9CB18DA98D200B2D04F /* SRP_FuzzyTest.m in Sources */,
 				6302A9C818DA8B0200B2D04F /* SRP_RFC5054Test.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6368FAAC1FA2231A00B7A7E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E90B68F81FA4CA1800F3EF68 /* TinyCCRSA.m in Sources */,
+				E90B68F11FA4ACC500F3EF68 /* NSData+CommonCrypto.m in Sources */,
+				E90B68ED1FA4ACB500F3EF68 /* Crypto.m in Sources */,
+				E90B68F31FA4ACCD00F3EF68 /* KeyChainItem.m in Sources */,
+				E90B68FA1FA4D21600F3EF68 /* NSData+HexString.m in Sources */,
+				E90B68EF1FA4ACBD00F3EF68 /* CryptoJSON.m in Sources */,
+				E90B68F91FA4D09600F3EF68 /* NSData+Base64.m in Sources */,
+				6368FAB41FA2231A00B7A7E0 /* NotificationService.m in Sources */,
+				E9552D4A1FA4F96B006A1AD9 /* NSString+StringWithData.m in Sources */,
+				E90B68F01FA4ACC100F3EF68 /* KeychainItemWrapper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3691,6 +3811,11 @@
 			target = 63AEE2D316CA4D0200522F92 /* HoccerXO */;
 			targetProxy = 6302A9C018DA8A9600B2D04F /* PBXContainerItemProxy */;
 		};
+		6368FAB71FA2231A00B7A7E0 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6368FAAF1FA2231A00B7A7E0 /* HoccerNSE */;
+			targetProxy = 6368FAB61FA2231A00B7A7E0 /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -3867,1178 +3992,329 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		1FE9FA2B1AC972BA00DBE7E3 /* DebugStarmeo */ = {
+		6368FABA1FA2231A00B7A7E0 /* Hoccer Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = DebugStarmeo;
-		};
-		1FE9FA2C1AC972BA00DBE7E3 /* DebugStarmeo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Starmeo";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Starmeo";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
-				HXO_DEFAULT_ENVIRONMENT = starmeo;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
-				HXO_URL_SCHEME = starmeo;
-				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.starmeo;
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "";
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = Starmeo;
-				PROVISIONING_PROFILE = "";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
-				VALID_ARCHS = "armv7 armv7s arm64";
-				WRAPPER_EXTENSION = app;
-			};
-			name = DebugStarmeo;
-		};
-		1FE9FA2D1AC972BA00DBE7E3 /* DebugStarmeo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = DebugStarmeo;
-		};
-		1FE9FA3C1AC972E000DBE7E3 /* ReleaseStarmeo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = ReleaseStarmeo;
-		};
-		1FE9FA3D1AC972E000DBE7E3 /* ReleaseStarmeo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Starmeo";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Starmeo";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.starmeo;
-				HXO_DEFAULT_ENVIRONMENT = starmeo;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
-				HXO_URL_SCHEME = starmeo;
-				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.starmeo;
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = Starmeo;
-				PROVISIONING_PROFILE = "";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
-				VALID_ARCHS = "armv7 armv7s arm64";
-				WRAPPER_EXTENSION = app;
-			};
-			name = ReleaseStarmeo;
-		};
-		1FE9FA3E1AC972E000DBE7E3 /* ReleaseStarmeo */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = ReleaseStarmeo;
-		};
-		6302A9C318DA8A9600B2D04F /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		6302A9C418DA8A9600B2D04F /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
-		63AEE30016CA4D0300522F92 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-					"HOCCER_XO=1",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = Debug;
-		};
-		63AEE30116CA4D0300522F92 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREPROCESSOR_DEFINITIONS = "HOCCER_XO=1";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = Release;
-		};
-		63AEE30316CA4D0300522F92 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-XO";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
-				HXO_DEFAULT_ENVIRONMENT = production;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "26645843-f312-456c-8954-444e435d4ad2";
-				HXO_URL_SCHEME = hxo;
-				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
-				HXO_XFER_URL_SCHEME = hcrexport;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrexport;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "Hoccer XO";
-				PROVISIONING_PROFILE = "5c2f2b10-bc0f-4bd5-a8f3-3798421acd24";
-				PROVISIONING_PROFILE_SPECIFIER = "Hoccer XO Development";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
+				INFOPLIST_FILE = HoccerNSE/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "e6f9d53d-6c89-4028-859e-a8870fbd0736";
+				PROVISIONING_PROFILE_SPECIFIER = "Hoccer NSE Development";
+				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
-				VALID_ARCHS = "armv7 armv7s arm64 armv6";
-				WRAPPER_EXTENSION = app;
 			};
-			name = Debug;
+			name = "Hoccer Debug";
 		};
-		63AEE30416CA4D0300522F92 /* Release */ = {
+		6368FABB1FA2231A00B7A7E0 /* Uniheld Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-XO";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = SK64A5FJ3Z;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
+				INFOPLIST_FILE = HoccerNSE/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "bf9dab2c-d320-4576-950a-3fdeb209b6ac";
+				PROVISIONING_PROFILE_SPECIFIER = "Uniheld NSE Development";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "Uniheld Debug";
+		};
+		6368FAC11FA2231A00B7A7E0 /* HoccerBlue Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = SK64A5FJ3Z;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
+				INFOPLIST_FILE = HoccerNSE/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "b52e9db1-5d1d-4df6-a98b-ed05588d8ae6";
+				PROVISIONING_PROFILE_SPECIFIER = "HoccerBlue NSE Development";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = "HoccerBlue Debug";
+		};
+		6368FAC31FA2231A00B7A7E0 /* Hoccer Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO";
-				HXO_DEFAULT_ENVIRONMENT = production;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "26645843-f312-456c-8954-444e435d4ad2";
-				HXO_URL_SCHEME = hxo;
-				HXO_URL_SCHEME_ID = com.hoccer.hoccerxo;
-				HXO_XFER_URL_SCHEME = hcrexport;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.hcrexport;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "Hoccer XO";
-				PROVISIONING_PROFILE = "fe3f7107-8faf-48f8-9c4c-3bb45b7c2620";
-				PROVISIONING_PROFILE_SPECIFIER = "Hoccer XO Distribution";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
-				VALID_ARCHS = "armv7 armv7s arm64 armv6";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Release;
-		};
-		C59E6FC81A7F91F80068856C /* ReleaseStröer */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = "ReleaseStröer";
-		};
-		C59E6FC91A7F91F80068856C /* ReleaseStröer */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Stroeer";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Stroeer";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.stroeer;
-				HXO_DEFAULT_ENVIRONMENT = stroeer;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
-				HXO_URL_SCHEME = strm;
-				HXO_URL_SCHEME_ID = com.stroeer.messenger;
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "Ströer";
-				PROVISIONING_PROFILE = "";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
-				VALID_ARCHS = "armv7 armv7s arm64 armv6";
-				WRAPPER_EXTENSION = app;
-			};
-			name = "ReleaseStröer";
-		};
-		C59E6FCA1A7F91F80068856C /* ReleaseStröer */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
+				INFOPLIST_FILE = HoccerNSE/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = "ReleaseStröer";
-		};
-		C59E6FD91A7F97160068856C /* DebugStröer */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
+				PROVISIONING_PROFILE = "bde093dd-293c-4027-9e5d-c404ff546fb5";
+				PROVISIONING_PROFILE_SPECIFIER = "Hoccer NSE";
+				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv6";
 			};
-			name = "DebugStröer";
+			name = "Hoccer Release";
 		};
-		C59E6FDA1A7F97160068856C /* DebugStröer */ = {
+		6368FAC41FA2231A00B7A7E0 /* Uniheld Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Stroeer";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Stroeer";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.stroeer;
-				HXO_DEFAULT_ENVIRONMENT = stroeer;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "bd39dc76-c41d-44e2-bf5a-d9bf374a98c9";
-				HXO_URL_SCHEME = strmd;
-				HXO_URL_SCHEME_ID = "com.stroeer.messenger-dev";
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "Ströer";
-				PROVISIONING_PROFILE = "";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
-				VALID_ARCHS = "armv7 armv7s arm64 armv6";
-				WRAPPER_EXTENSION = app;
-			};
-			name = "DebugStröer";
-		};
-		C59E6FDB1A7F97160068856C /* DebugStröer */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = "DebugStröer";
-		};
-		C5E8E3B51A8B586600D3B289 /* DebugSimsme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = DebugSimsme;
-		};
-		C5E8E3B61A8B586600D3B289 /* DebugSimsme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Simsme";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Simsme";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
-				HXO_DEFAULT_ENVIRONMENT = simsme;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
-				HXO_URL_SCHEME = hcrsms;
-				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.simsme;
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = SIMSme;
-				PROVISIONING_PROFILE = "";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
-				VALID_ARCHS = "armv7 armv7s arm64";
-				WRAPPER_EXTENSION = app;
-			};
-			name = DebugSimsme;
-		};
-		C5E8E3B71A8B586600D3B289 /* DebugSimsme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = DebugSimsme;
-		};
-		C5E8E3C61A8B587600D3B289 /* ReleaseSimsme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = ReleaseSimsme;
-		};
-		C5E8E3C71A8B587600D3B289 /* ReleaseSimsme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Simsme";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Simsme";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				"GCC_PREPROCESSOR_DEFINITIONS[arch=*]" = "";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.simsme;
-				HXO_DEFAULT_ENVIRONMENT = simsme;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "5bbd56f8-4ca8-4691-8c87-c8fe52f94304";
-				HXO_URL_SCHEME = hcrsms;
-				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.simsme;
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = SIMSme;
-				PROVISIONING_PROFILE = "";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
-				VALID_ARCHS = "armv7 armv7s arm64";
-				WRAPPER_EXTENSION = app;
-			};
-			name = ReleaseSimsme;
-		};
-		C5E8E3C81A8B587600D3B289 /* ReleaseSimsme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SK64A5FJ3Z;
 				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
+				INFOPLIST_FILE = HoccerNSE/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				PROVISIONING_PROFILE = "6955e00d-2baf-45bc-9f7f-7a5710e536b4";
+				PROVISIONING_PROFILE_SPECIFIER = "Uniheld NSE";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = ReleaseSimsme;
+			name = "Uniheld Release";
 		};
-		C5E8E3FF1A8CEA4400D3B289 /* DebugHoccme */ = {
+		6368FACA1FA2231A00B7A7E0 /* HoccerBlue Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CODE_SIGN_ENTITLEMENTS = HoccerNSE/HoccerNSE.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = DebugHoccme;
-		};
-		C5E8E4001A8CEA4400D3B289 /* DebugHoccme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Hoccme";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Hoccme";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.hoccme;
-				HXO_DEFAULT_ENVIRONMENT = hoccme;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "7a1da194-19ba-47fe-a32e-6d9b3dd8ec3d";
-				HXO_URL_SCHEME = hoccme;
-				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.hoccme;
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "";
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = HOCCme;
-				PROVISIONING_PROFILE = "";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
-				VALID_ARCHS = "armv7 armv7s arm64";
-				WRAPPER_EXTENSION = app;
-			};
-			name = DebugHoccme;
-		};
-		C5E8E4011A8CEA4400D3B289 /* DebugHoccme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = DebugHoccme;
-		};
-		C5E8E4101A8CEA4C00D3B289 /* ReleaseHoccme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				COPY_PHASE_STRIP = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREPROCESSOR_DEFINITIONS = "";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = ReleaseHoccme;
-		};
-		C5E8E4111A8CEA4C00D3B289 /* ReleaseHoccme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Hoccme";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Hoccme";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.hoccme;
-				HXO_DEFAULT_ENVIRONMENT = hoccme;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "7a1da194-19ba-47fe-a32e-6d9b3dd8ec3d";
-				HXO_URL_SCHEME = hoccme;
-				HXO_URL_SCHEME_ID = com.hoccer.whitelabel.hoccme;
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = HOCCme;
-				PROVISIONING_PROFILE = "";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/**";
-				VALID_ARCHS = "armv7 armv7s arm64";
-				WRAPPER_EXTENSION = app;
-			};
-			name = ReleaseHoccme;
-		};
-		C5E8E4121A8CEA4C00D3B289 /* ReleaseHoccme */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = SK64A5FJ3Z;
 				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
+				HEADER_SEARCH_PATHS = "3rdParty/openssl-xcode/openssl/include";
+				INFOPLIST_FILE = HoccerNSE/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IS_EXTENSION = YES;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				PROVISIONING_PROFILE = "beb0f732-e31b-4349-adb9-73962101de52";
+				PROVISIONING_PROFILE_SPECIFIER = "HoccerBlue NSE";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
-			name = ReleaseHoccme;
+			name = "HoccerBlue Release";
 		};
-		E91168D219B61E38003D0C25 /* DebugClassic */ = {
+		E91168D219B61E38003D0C25 /* Hoccer Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -5063,22 +4339,23 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv6";
+				VALID_ARCHS = "armv7 armv6 arm64 x86_64";
 			};
-			name = DebugClassic;
+			name = "Hoccer Debug";
 		};
-		E91168D319B61E38003D0C25 /* DebugClassic */ = {
+		E91168D319B61E38003D0C25 /* Hoccer Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
+				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5091,7 +4368,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -5110,17 +4386,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = Hoccer;
-				PROVISIONING_PROFILE = "c727b716-98e2-485a-8fea-88648459d6a5";
-				PROVISIONING_PROFILE_SPECIFIER = "Hoccer Classic Development";
+				PROVISIONING_PROFILE = "e856a24b-e05c-4d28-9f38-c937ff4205ca";
+				PROVISIONING_PROFILE_SPECIFIER = "Hoccer Development";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
-			name = DebugClassic;
+			name = "Hoccer Debug";
 		};
-		E91168D419B61E38003D0C25 /* DebugClassic */ = {
+		E91168D419B61E38003D0C25 /* Hoccer Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
@@ -5156,12 +4432,13 @@
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
-			name = DebugClassic;
+			name = "Hoccer Debug";
 		};
-		E91168E319B61E4B003D0C25 /* ReleaseClassic */ = {
+		E91168E319B61E4B003D0C25 /* Hoccer Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -5172,29 +4449,31 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = "HOCCER_CLASSIC=1";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv6";
+				VALID_ARCHS = "armv7 armv6 arm64 x86_64";
 			};
-			name = ReleaseClassic;
+			name = "Hoccer Release";
 		};
-		E91168E419B61E4B003D0C25 /* ReleaseClassic */ = {
+		E91168E419B61E4B003D0C25 /* Hoccer Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Classic";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
+				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5207,7 +4486,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = com.artcom.Hoccer;
 				HXO_DEFAULT_ENVIRONMENT = production;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -5226,17 +4504,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = Hoccer;
-				PROVISIONING_PROFILE = "e2354223-54d7-40b5-8af4-a84ae89ac1da";
-				PROVISIONING_PROFILE_SPECIFIER = "Hoccer Classic Distribution";
+				PROVISIONING_PROFILE = "4d413a3a-a98c-4825-a4c7-2e35c97e8ce2";
+				PROVISIONING_PROFILE_SPECIFIER = Hoccer;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
-			name = ReleaseClassic;
+			name = "Hoccer Release";
 		};
-		E91168E519B61E4B003D0C25 /* ReleaseClassic */ = {
+		E91168E519B61E4B003D0C25 /* Hoccer Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
@@ -5269,12 +4547,13 @@
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
-			name = ReleaseClassic;
+			name = "Hoccer Release";
 		};
-		E95175F519112ED600EFD1C6 /* DebugDev */ = {
+		E95175F519112ED600EFD1C6 /* HoccerBlue Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -5299,22 +4578,23 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv6";
+				VALID_ARCHS = "armv7 armv6 arm64 x86_64";
 			};
-			name = DebugDev;
+			name = "HoccerBlue Debug";
 		};
-		E95175F619112ED600EFD1C6 /* DebugDev */ = {
+		E95175F619112ED600EFD1C6 /* HoccerBlue Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-ClassicDev";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
+				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5327,7 +4607,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -5345,18 +4624,18 @@
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "Hoccer Dev";
-				PROVISIONING_PROFILE = "9f5dafa0-b115-4151-b44e-0687570c4f26";
-				PROVISIONING_PROFILE_SPECIFIER = "Hoccer XO Dev Development";
+				PRODUCT_NAME = "Hoccer Blue";
+				PROVISIONING_PROFILE = "b645c491-d75d-4a3a-9016-72f2db45ad1e";
+				PROVISIONING_PROFILE_SPECIFIER = "HoccerBlue Development";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
-			name = DebugDev;
+			name = "HoccerBlue Debug";
 		};
-		E95175F719112ED600EFD1C6 /* DebugDev */ = {
+		E95175F719112ED600EFD1C6 /* HoccerBlue Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
@@ -5392,12 +4671,13 @@
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
-			name = DebugDev;
+			name = "HoccerBlue Debug";
 		};
-		E95175F819112EE700EFD1C6 /* ReleaseDev */ = {
+		E95175F819112EE700EFD1C6 /* HoccerBlue Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -5408,29 +4688,31 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = "HOCCER_DEV=1";
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv6";
+				VALID_ARCHS = "armv7 armv6 arm64 x86_64";
 			};
-			name = ReleaseDev;
+			name = "HoccerBlue Release";
 		};
-		E95175F919112EE700EFD1C6 /* ReleaseDev */ = {
+		E95175F919112EE700EFD1C6 /* HoccerBlue Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-ClassicDev";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
+				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5443,7 +4725,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = "com.hoccer.Hoccer-XO-Dev";
 				HXO_DEFAULT_ENVIRONMENT = development;
 				HXO_EULA_VERSION = "";
 				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
@@ -5461,18 +4742,18 @@
 					"-all_load",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "Hoccer Dev";
-				PROVISIONING_PROFILE = "2670c49a-6618-48fa-8791-3c616ed2b469";
-				PROVISIONING_PROFILE_SPECIFIER = "Hoccer XO Dev Distribution";
+				PRODUCT_NAME = "Hoccer Blue";
+				PROVISIONING_PROFILE = "78816709-3511-44de-b1ea-47d5a90c0b1b";
+				PROVISIONING_PROFILE_SPECIFIER = HoccerBlue;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
-			name = ReleaseDev;
+			name = "HoccerBlue Release";
 		};
-		E95175FA19112EE700EFD1C6 /* ReleaseDev */ = {
+		E95175FA19112EE700EFD1C6 /* HoccerBlue Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
@@ -5505,248 +4786,13 @@
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
-			name = ReleaseDev;
+			name = "HoccerBlue Release";
 		};
-		E9E5CC311D1C16BE003110FD /* DebugHelios */ = {
+		E9F86C981E802DDF004AFE8E /* Uniheld Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				COPY_PHASE_STRIP = NO;
-				ENABLE_BITCODE = NO;
-				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"HOCCER_HELIOS=1",
-					"$(inherited)",
-				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = DebugHelios;
-		};
-		E9E5CC321D1C16BE003110FD /* DebugHelios */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Helios";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Helios";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = SK64A5FJ3Z;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
-				HXO_DEFAULT_ENVIRONMENT = helios;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
-				HXO_URL_SCHEME = heli;
-				HXO_URL_SCHEME_ID = "com.hoccer.whitelabel.helios\n";
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = YES;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "HELIOS Messenger";
-				PROVISIONING_PROFILE = "2b10b465-a0b1-4b20-8281-794f92e0e87c";
-				PROVISIONING_PROFILE_SPECIFIER = "Helios Development";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
-				VALID_ARCHS = "armv7 armv7s arm64 armv6";
-				WRAPPER_EXTENSION = app;
-			};
-			name = DebugHelios;
-		};
-		E9E5CC331D1C16BE003110FD /* DebugHelios */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = DebugHelios;
-		};
-		E9E5CC421D1C16DF003110FD /* ReleaseHelios */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				COPY_PHASE_STRIP = YES;
-				ENABLE_BITCODE = NO;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_PREPROCESSOR_DEFINITIONS = "HOCCER_HELIOS=1";
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv6";
-			};
-			name = ReleaseHelios;
-		};
-		E9E5CC431D1C16DF003110FD /* ReleaseHelios */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				APPLY_RULES_IN_COPY_FILES = YES;
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Helios";
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Helios";
-				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO/HoccerXO-Prefix.pch";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-					"${SDK_DIR}/usr/include/libxml2",
-				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.helios;
-				HXO_DEFAULT_ENVIRONMENT = helios;
-				HXO_EULA_VERSION = "";
-				HXO_EXTRA_ASSETS = HXOExtraAssetsDefault;
-				HXO_TESTFLIGHT_TOKEN = "cb6d8d3a-0c36-4e75-b50c-c6c96cf60675";
-				HXO_URL_SCHEME = heli;
-				HXO_URL_SCHEME_ID = "com.hoccer.whitelabel.helios\n";
-				HXO_XFER_URL_SCHEME = xferdisabled;
-				HXO_XFER_URL_SCHEME_ID = com.hoccer.xferdisabled;
-				INFOPLIST_FILE = "HoccerXO/HoccerXO-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_LDFLAGS = (
-					"-ObjC",
-					"-all_load",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
-				PRODUCT_NAME = "HELIOS Messenger";
-				PROVISIONING_PROFILE = "";
-				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
-				TARGETED_DEVICE_FAMILY = "1,2";
-				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
-				VALID_ARCHS = "armv7 armv7s arm64 armv6";
-				WRAPPER_EXTENSION = app;
-			};
-			name = ReleaseHelios;
-		};
-		E9E5CC441D1C16DF003110FD /* ReleaseHelios */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				ENABLE_NS_ASSERTIONS = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "HoccerXO Tests/HoccerXO Tests-Prefix.pch";
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"3rdParty/openssl-xcode/openssl/include",
-				);
-				INFOPLIST_FILE = "HoccerXO Tests/HoccerXO Tests-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.hoccer.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = ReleaseHelios;
-		};
-		E9F86C981E802DDF004AFE8E /* DebugUniheld */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -5771,22 +4817,23 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALID_ARCHS = "armv7 armv6";
+				VALID_ARCHS = "armv7 armv6 arm64 x86_64";
 			};
-			name = DebugUniheld;
+			name = "Uniheld Debug";
 		};
-		E9F86C991E802DDF004AFE8E /* DebugUniheld */ = {
+		E9F86C991E802DDF004AFE8E /* Uniheld Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Uniheld";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Uniheld";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-development.entitlements";
+				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5799,7 +4846,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
 				HXO_EULA_VERSION = 1.0;
 				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
@@ -5818,7 +4864,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = UNIHELD;
-				PROVISIONING_PROFILE = "cb4ec86d-b69a-4c9d-bca9-05efb1daba66";
+				PROVISIONING_PROFILE = "396c888c-4940-4b67-9a02-759ff51d89de";
 				PROVISIONING_PROFILE_SPECIFIER = "Uniheld Development";
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -5826,9 +4872,9 @@
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
-			name = DebugUniheld;
+			name = "Uniheld Debug";
 		};
-		E9F86C9A1E802DDF004AFE8E /* DebugUniheld */ = {
+		E9F86C9A1E802DDF004AFE8E /* Uniheld Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
@@ -5864,12 +4910,13 @@
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
-			name = DebugUniheld;
+			name = "Uniheld Debug";
 		};
-		E9F86CA91E802E00004AFE8E /* ReleaseUniheld */ = {
+		E9F86CA91E802E00004AFE8E /* Uniheld Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_OBJC_ARC = YES;
@@ -5886,24 +4933,25 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
-				VALID_ARCHS = "armv7 armv6";
+				VALID_ARCHS = "armv7 armv6 arm64 x86_64";
 			};
-			name = ReleaseUniheld;
+			name = "Uniheld Release";
 		};
-		E9F86CAA1E802E00004AFE8E /* ReleaseUniheld */ = {
+		E9F86CAA1E802E00004AFE8E /* Uniheld Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				APPLY_RULES_IN_COPY_FILES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-Uniheld";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "LaunchImage-Uniheld";
 				CLANG_ENABLE_MODULES = NO;
-				CODE_SIGN_ENTITLEMENTS = "HoccerXO/Hoccer-production.entitlements";
+				CODE_SIGN_ENTITLEMENTS = HoccerXO/Hoccer.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEVELOPMENT_TEAM = SK64A5FJ3Z;
@@ -5916,7 +4964,6 @@
 					"3rdParty/openssl-xcode/openssl/include",
 					"${SDK_DIR}/usr/include/libxml2",
 				);
-				HXO_BUNDLE_ID = com.hoccer.whitelabel.uniheld;
 				HXO_DEFAULT_ENVIRONMENT = uniheld;
 				HXO_EULA_VERSION = 1.0;
 				HXO_EXTRA_ASSETS = HXOExtraAssetsUniheld;
@@ -5935,17 +4982,17 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID)";
 				PRODUCT_NAME = UNIHELD;
-				PROVISIONING_PROFILE = "f6d43a56-1637-45a7-ab6d-65148948f343";
-				PROVISIONING_PROFILE_SPECIFIER = "Uniheld Distribution";
+				PROVISIONING_PROFILE = "4edcc69d-0517-457c-9c34-864dd5cd6087";
+				PROVISIONING_PROFILE_SPECIFIER = Uniheld;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "3rdParty/SocketRocket ObjCSRP/3rdParty/csrp 3rdParty/QREncoder/QRCodeEncoderObjectiveCAtGithub 3rdParty/InAppSettingsKit/** 3rdParty/ZipArchive/** 3rdParty/GCDWebServer/GCDWebUploader 3rdParty/GCDWebServer/GCDWebServer";
 				VALID_ARCHS = "armv7 armv7s arm64 armv6";
 				WRAPPER_EXTENSION = app;
 			};
-			name = ReleaseUniheld;
+			name = "Uniheld Release";
 		};
-		E9F86CAB1E802E00004AFE8E /* ReleaseUniheld */ = {
+		E9F86CAB1E802E00004AFE8E /* Uniheld Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Hoccer XO.app/Hoccer XO";
@@ -5978,7 +5025,7 @@
 				TEST_HOST = "$(BUNDLE_LOADER)";
 				WRAPPER_EXTENSION = xctest;
 			};
-			name = ReleaseUniheld;
+			name = "Uniheld Release";
 		};
 /* End XCBuildConfiguration section */
 
@@ -5986,77 +5033,54 @@
 		6302A9C218DA8A9600B2D04F /* Build configuration list for PBXNativeTarget "HoccerXO Tests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				6302A9C318DA8A9600B2D04F /* Debug */,
-				E91168D419B61E38003D0C25 /* DebugClassic */,
-				E9F86C9A1E802DDF004AFE8E /* DebugUniheld */,
-				E9E5CC331D1C16BE003110FD /* DebugHelios */,
-				1FE9FA2D1AC972BA00DBE7E3 /* DebugStarmeo */,
-				C5E8E3B71A8B586600D3B289 /* DebugSimsme */,
-				C5E8E4011A8CEA4400D3B289 /* DebugHoccme */,
-				C59E6FDB1A7F97160068856C /* DebugStröer */,
-				E95175F719112ED600EFD1C6 /* DebugDev */,
-				6302A9C418DA8A9600B2D04F /* Release */,
-				E91168E519B61E4B003D0C25 /* ReleaseClassic */,
-				E9F86CAB1E802E00004AFE8E /* ReleaseUniheld */,
-				E9E5CC441D1C16DF003110FD /* ReleaseHelios */,
-				1FE9FA3E1AC972E000DBE7E3 /* ReleaseStarmeo */,
-				C5E8E3C81A8B587600D3B289 /* ReleaseSimsme */,
-				C5E8E4121A8CEA4C00D3B289 /* ReleaseHoccme */,
-				C59E6FCA1A7F91F80068856C /* ReleaseStröer */,
-				E95175FA19112EE700EFD1C6 /* ReleaseDev */,
+				E91168D419B61E38003D0C25 /* Hoccer Debug */,
+				E9F86C9A1E802DDF004AFE8E /* Uniheld Debug */,
+				E95175F719112ED600EFD1C6 /* HoccerBlue Debug */,
+				E91168E519B61E4B003D0C25 /* Hoccer Release */,
+				E9F86CAB1E802E00004AFE8E /* Uniheld Release */,
+				E95175FA19112EE700EFD1C6 /* HoccerBlue Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Hoccer Debug";
+		};
+		6368FADC1FA2231A00B7A7E0 /* Build configuration list for PBXNativeTarget "HoccerNSE" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6368FABA1FA2231A00B7A7E0 /* Hoccer Debug */,
+				6368FABB1FA2231A00B7A7E0 /* Uniheld Debug */,
+				6368FAC11FA2231A00B7A7E0 /* HoccerBlue Debug */,
+				6368FAC31FA2231A00B7A7E0 /* Hoccer Release */,
+				6368FAC41FA2231A00B7A7E0 /* Uniheld Release */,
+				6368FACA1FA2231A00B7A7E0 /* HoccerBlue Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Hoccer Debug";
 		};
 		63AEE2CF16CA4D0200522F92 /* Build configuration list for PBXProject "HoccerXO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				63AEE30016CA4D0300522F92 /* Debug */,
-				E91168D219B61E38003D0C25 /* DebugClassic */,
-				E9F86C981E802DDF004AFE8E /* DebugUniheld */,
-				E9E5CC311D1C16BE003110FD /* DebugHelios */,
-				1FE9FA2B1AC972BA00DBE7E3 /* DebugStarmeo */,
-				C5E8E3B51A8B586600D3B289 /* DebugSimsme */,
-				C5E8E3FF1A8CEA4400D3B289 /* DebugHoccme */,
-				C59E6FD91A7F97160068856C /* DebugStröer */,
-				E95175F519112ED600EFD1C6 /* DebugDev */,
-				63AEE30116CA4D0300522F92 /* Release */,
-				E91168E319B61E4B003D0C25 /* ReleaseClassic */,
-				E9F86CA91E802E00004AFE8E /* ReleaseUniheld */,
-				E9E5CC421D1C16DF003110FD /* ReleaseHelios */,
-				1FE9FA3C1AC972E000DBE7E3 /* ReleaseStarmeo */,
-				C5E8E3C61A8B587600D3B289 /* ReleaseSimsme */,
-				C5E8E4101A8CEA4C00D3B289 /* ReleaseHoccme */,
-				C59E6FC81A7F91F80068856C /* ReleaseStröer */,
-				E95175F819112EE700EFD1C6 /* ReleaseDev */,
+				E91168D219B61E38003D0C25 /* Hoccer Debug */,
+				E9F86C981E802DDF004AFE8E /* Uniheld Debug */,
+				E95175F519112ED600EFD1C6 /* HoccerBlue Debug */,
+				E91168E319B61E4B003D0C25 /* Hoccer Release */,
+				E9F86CA91E802E00004AFE8E /* Uniheld Release */,
+				E95175F819112EE700EFD1C6 /* HoccerBlue Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Hoccer Debug";
 		};
 		63AEE30216CA4D0300522F92 /* Build configuration list for PBXNativeTarget "HoccerXO" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				63AEE30316CA4D0300522F92 /* Debug */,
-				E91168D319B61E38003D0C25 /* DebugClassic */,
-				E9F86C991E802DDF004AFE8E /* DebugUniheld */,
-				E9E5CC321D1C16BE003110FD /* DebugHelios */,
-				1FE9FA2C1AC972BA00DBE7E3 /* DebugStarmeo */,
-				C5E8E3B61A8B586600D3B289 /* DebugSimsme */,
-				C5E8E4001A8CEA4400D3B289 /* DebugHoccme */,
-				C59E6FDA1A7F97160068856C /* DebugStröer */,
-				E95175F619112ED600EFD1C6 /* DebugDev */,
-				63AEE30416CA4D0300522F92 /* Release */,
-				E91168E419B61E4B003D0C25 /* ReleaseClassic */,
-				E9F86CAA1E802E00004AFE8E /* ReleaseUniheld */,
-				E9E5CC431D1C16DF003110FD /* ReleaseHelios */,
-				1FE9FA3D1AC972E000DBE7E3 /* ReleaseStarmeo */,
-				C5E8E3C71A8B587600D3B289 /* ReleaseSimsme */,
-				C5E8E4111A8CEA4C00D3B289 /* ReleaseHoccme */,
-				C59E6FC91A7F91F80068856C /* ReleaseStröer */,
-				E95175F919112EE700EFD1C6 /* ReleaseDev */,
+				E91168D319B61E38003D0C25 /* Hoccer Debug */,
+				E9F86C991E802DDF004AFE8E /* Uniheld Debug */,
+				E95175F619112ED600EFD1C6 /* HoccerBlue Debug */,
+				E91168E419B61E4B003D0C25 /* Hoccer Release */,
+				E9F86CAA1E802E00004AFE8E /* Uniheld Release */,
+				E95175F919112EE700EFD1C6 /* HoccerBlue Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Hoccer Debug";
 		};
 /* End XCConfigurationList section */
 

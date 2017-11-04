@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="25" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="8195" systemVersion="14F27" minimumToolsVersion="Automatic">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13241" systemVersion="16G29" minimumToolsVersion="Xcode 7.3" sourceLanguage="Objective-C" userDefinedModelVersionIdentifier="25">
     <entity name="Attachment" representedClassName="Attachment" syncable="YES">
-        <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="aspectRatio" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="assetURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="cipheredSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="cipherTransferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="contentSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
-        <attribute name="creationDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="cipheredSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="cipherTransferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="contentSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="creationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="destinationMAC" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="duplicate" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="duration" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="entityTag" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="fileModificationDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="fileModificationDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="fileStatus" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="height" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="height" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="humanReadableFileName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="localURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="mediaType" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="mimeType" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="orderNumber" optional="YES" attributeType="Integer 64" defaultValueString="999999999" syncable="YES"/>
+        <attribute name="orderNumber" optional="YES" attributeType="Integer 64" defaultValueString="999999999" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="origCryptedJsonString" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="ownedURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="playable" attributeType="String" defaultValueString="UNKNOWN" regularExpressionString="UNKNOWN|YES|NO" indexed="YES" syncable="YES"/>
         <attribute name="remoteURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="sourceMAC" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="transferAborted" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="transferFailed" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="transferFailures" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
-        <attribute name="transferPaused" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="transferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="transferAborted" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="transferFailed" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="transferFailures" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="transferPaused" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="transferSize" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="universalType" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="uploadURL" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="width" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="width" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="collectionItems" toMany="YES" deletionRule="Cascade" destinationEntity="CollectionItem" inverseName="attachment" inverseEntity="CollectionItem" syncable="YES"/>
         <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="attachment" inverseEntity="HXOMessage" syncable="YES"/>
         <relationship name="previewStore" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Preview" inverseName="attachment" inverseEntity="Preview" syncable="YES"/>
@@ -42,7 +42,7 @@
         <relationship name="items" toMany="YES" deletionRule="Cascade" destinationEntity="CollectionItem" inverseName="collection" inverseEntity="CollectionItem" syncable="YES"/>
     </entity>
     <entity name="CollectionItem" representedClassName="CollectionItem" syncable="YES">
-        <attribute name="index" attributeType="Integer 32" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="index" attributeType="Integer 32" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="attachment" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Attachment" inverseName="collectionItems" inverseEntity="Attachment" syncable="YES"/>
         <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Collection" inverseName="items" inverseEntity="Collection" syncable="YES"/>
     </entity>
@@ -54,16 +54,16 @@
         <attribute name="clientId" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="connectionStatus" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="isNearbyTag" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastUpdateReceived" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="latestMessageTime" optional="YES" attributeType="Date">
+        <attribute name="lastUpdateReceived" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="latestMessageTime" optional="YES" attributeType="Date" usesScalarValueType="NO">
             <userInfo/>
         </attribute>
         <attribute name="nickName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationPreference" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="presenceLastUpdated" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="presenceLastUpdated" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="publicKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="publicKeyId" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="relationshipLastChanged" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="relationshipLastChanged" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="relationshipState" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="relationshipUnblockState" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="savedAttachments" optional="YES" attributeType="Transformable" syncable="YES"/>
@@ -90,7 +90,7 @@
         <attribute name="keyCiphertext" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="keyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" defaultValueString="new" syncable="YES"/>
-        <attribute name="timeChanged" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="timeChanged" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="group" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="groupDeliveries" inverseEntity="Group" syncable="YES"/>
         <relationship name="message" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="HXOMessage" inverseName="deliveries" inverseEntity="HXOMessage" syncable="YES"/>
         <relationship name="receiver" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="deliveriesReceived" inverseEntity="Contact" syncable="YES"/>
@@ -101,9 +101,9 @@
         <attribute name="groupState" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="groupTag" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="groupType" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="keyDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="keyDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="keySupplier" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastChanged" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastChanged" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="sharedKeyId" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="sharedKeyIdSalt" optional="YES" attributeType="Binary" syncable="YES"/>
         <relationship name="groupDeliveries" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Delivery" inverseName="group" inverseEntity="Delivery" syncable="YES"/>
@@ -114,11 +114,11 @@
         <attribute name="distributedCipheredGroupKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="distributedGroupKey" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="keySupplier" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="lastChanged" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="lastChanged" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="memberKeyId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="notificationPreference" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="role" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="sharedKeyDate" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="sharedKeyDate" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="sharedKeyId" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="sharedKeyIdSalt" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="state" optional="YES" attributeType="String" syncable="YES"/>
@@ -129,14 +129,14 @@
     <entity name="HXOMessage" representedClassName="HXOMessage" syncable="YES">
         <attribute name="attachmentFileId" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="cachedAttachmentAspect" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cachedAttachmentAspect" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="cachedBuildNumber" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="cachedLandscapeCellHeight" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="cachedMessageFontSize" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
-        <attribute name="cachedPortraitCellHeight" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="cachedLandscapeCellHeight" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="cachedMessageFontSize" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="cachedPortraitCellHeight" optional="YES" attributeType="Float" defaultValueString="0.0" usesScalarValueType="NO" syncable="YES"/>
         <attribute name="destinationMAC" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="isOutgoingFlag" attributeType="Boolean" elementID="isOutgoing" syncable="YES"/>
-        <attribute name="isReadFlag" attributeType="Boolean" defaultValueString="NO" elementID="isRead" syncable="YES"/>
+        <attribute name="isOutgoingFlag" attributeType="Boolean" usesScalarValueType="NO" elementID="isOutgoing" syncable="YES"/>
+        <attribute name="isReadFlag" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="NO" elementID="isRead" syncable="YES"/>
         <attribute name="messageId" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="messageTag" optional="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="outgoingCryptoKey" optional="YES" attributeType="Binary" syncable="YES"/>
@@ -146,10 +146,10 @@
         <attribute name="sharedKeyIdSalt" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="signature" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="sourceMAC" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="timeAccepted" optional="YES" attributeType="Date" indexed="YES" syncable="YES"/>
-        <attribute name="timeReceived" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="timeSection" optional="YES" attributeType="Date" syncable="YES"/>
-        <attribute name="timeSent" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="timeAccepted" optional="YES" attributeType="Date" usesScalarValueType="NO" indexed="YES" syncable="YES"/>
+        <attribute name="timeReceived" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="timeSection" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="timeSent" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
         <relationship name="attachment" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Attachment" inverseName="message" inverseEntity="Attachment" syncable="YES"/>
         <relationship name="contact" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Contact" inverseName="messages" inverseEntity="Contact" syncable="YES"/>
         <relationship name="deliveries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Delivery" inverseName="message" inverseEntity="Delivery" syncable="YES"/>
@@ -186,6 +186,8 @@
     <fetchRequest name="GroupMembershipsByGroup" entity="GroupMembership" predicateString="group == $group"/>
     <fetchRequest name="Groups" entity="Group"/>
     <fetchRequest name="GroupsLastUpdatedBefore" entity="Group" predicateString="type == &quot;Group&quot; AND (lastUpdateReceived &lt; $lastUpdatedBefore OR lastUpdateReceived == nil) AND groupState != &quot;kept&quot;"/>
+    <fetchRequest name="LiveContacts" entity="Contact" predicateString="type == &quot;Contact&quot;"/>
+    <fetchRequest name="LiveGroups" entity="Group" predicateString="type == &quot;Group&quot;"/>
     <fetchRequest name="MessageByAttachmentFileId" entity="HXOMessage" predicateString="attachmentFileId == $attachmentFileId"/>
     <fetchRequest name="MessageByMessageId" entity="HXOMessage" predicateString="messageId == $messageId"/>
     <fetchRequest name="MessageByMessageTag" entity="HXOMessage" predicateString="messageTag == $messageTag"/>

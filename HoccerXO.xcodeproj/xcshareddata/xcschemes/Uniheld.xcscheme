@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "63AEE2D316CA4D0200522F92"
-               BuildableName = "Hoccer XO.app"
+               BuildableName = "Hoccer.app"
                BlueprintName = "HoccerXO"
                ReferencedContainer = "container:HoccerXO.xcodeproj">
             </BuildableReference>
@@ -23,9 +23,10 @@
       </BuildActionEntries>
    </BuildAction>
    <TestAction
-      buildConfiguration = "DebugUniheld"
+      buildConfiguration = "Uniheld Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
@@ -33,7 +34,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "63AEE2D316CA4D0200522F92"
-            BuildableName = "Hoccer XO.app"
+            BuildableName = "Hoccer.app"
             BlueprintName = "HoccerXO"
             ReferencedContainer = "container:HoccerXO.xcodeproj">
          </BuildableReference>
@@ -42,9 +43,10 @@
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "DebugUniheld"
+      buildConfiguration = "Uniheld Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      language = ""
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -56,7 +58,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "63AEE2D316CA4D0200522F92"
-            BuildableName = "Hoccer XO.app"
+            BuildableName = "Hoccer.app"
             BlueprintName = "HoccerXO"
             ReferencedContainer = "container:HoccerXO.xcodeproj">
          </BuildableReference>
@@ -65,7 +67,7 @@
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
-      buildConfiguration = "ReleaseUniheld"
+      buildConfiguration = "Uniheld Release"
       shouldUseLaunchSchemeArgsEnv = "YES"
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
@@ -75,17 +77,17 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "63AEE2D316CA4D0200522F92"
-            BuildableName = "Hoccer XO.app"
+            BuildableName = "Hoccer.app"
             BlueprintName = "HoccerXO"
             ReferencedContainer = "container:HoccerXO.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
-      buildConfiguration = "DebugUniheld">
+      buildConfiguration = "Uniheld Debug">
    </AnalyzeAction>
    <ArchiveAction
-      buildConfiguration = "ReleaseUniheld"
+      buildConfiguration = "Uniheld Release"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

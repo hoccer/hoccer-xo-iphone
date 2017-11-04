@@ -1,14 +1,12 @@
-
 //
-//  RSA.m
-//  Hoccer
+//  TinyCCRSA.m
+//  HoccerNSE
 //
-//  Created by Robert Palmer on 23.06.11.
-//  Copyright 2011 Hoccer GmbH. All rights reserved.
-//
+//  Created by Pavel Mayer on 28.10.17.
+//  Copyright © 2017 Hoccer GmbH. All rights reserved.
 //
 
-#import "CCRSA.h"
+#import "TinyCCRSA.h"
 #import "NSData+Base64.h"
 #import "NSData+HexString.h"
 #import "NSString+RandomString.h"
@@ -16,11 +14,11 @@
 
 #import "HXOUserDefaults.h"
 
-#import "OpenSSLCrypto.h"
+//#import "OpenSSLCrypto.h"
 
 #define RSA_DEBUG YES
 
-@implementation CCRSA
+@implementation TinyCCRSA
 
 static const uint32_t PADDING = kSecPaddingPKCS1;
 
@@ -28,17 +26,17 @@ static const uint8_t publicKeyIdentifier[]  = "com.hoccertalk.client.publickey";
 static const uint8_t privateKeyIdentifier[] = "com.hoccertalk.client.privatekey";
 static const uint8_t publicPeerKeyIdentifier[]  = "com.hoccertalk.peer.publickey";
 
-static CCRSA *instance;
+static TinyCCRSA *instance;
 
 static NSObject * instanceLock;
 
-+ (CCRSA*)sharedInstance {
++ (TinyCCRSA*)sharedInstance {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        instance = [[CCRSA alloc] init];
+        instance = [[TinyCCRSA alloc] init];
     });
     if (instance == nil) {
-        NSLog(@"#ERROR: CCRSA instance is nil");
+        NSLog(@"#ERROR: TinyCCRSA instance is nil");
     }
     return instance;
 }
@@ -62,18 +60,18 @@ static NSObject * instanceLock;
 
 - (BOOL)hasKeyPair {
     @synchronized(instanceLock) {
-        return [instance getPublicKeyRef] != nil && [instance getPrivateKeyRef] != nil && ([CCRSA getPublicKeySize:[instance getPublicKeyBits]] > 1000);
+        return [instance getPublicKeyRef] != nil && [instance getPrivateKeyRef] != nil && ([TinyCCRSA getPublicKeySize:[instance getPublicKeyBits]] > 1000);
     }
 }
-
+/*
 -(BOOL)generateKeyPairKeysWithOpenSSLandSize:(int)bits {
     @synchronized(instanceLock) {
         NSString * pubkey;
         NSString * privkey;
         if ([OpenSSLCrypto makeRSAKeyPairPEMWithSize:bits withPublicKey:&pubkey withPrivateKey:&privkey]) {
             
-            NSData * pubBits = [CCRSA extractPublicKeyBitsFromPEM:pubkey];
-            NSData * privBits = [CCRSA extractPrivateKeyBitsFromPEM:privkey];
+            NSData * pubBits = [TinyCCRSA extractPublicKeyBitsFromPEM:pubkey];
+            NSData * privBits = [TinyCCRSA extractPrivateKeyBitsFromPEM:privkey];
             
             if (privBits != nil && pubBits != nil) {
                 [self deleteKeyPairKeys];
@@ -85,11 +83,11 @@ static NSObject * instanceLock;
         return NO;
     }
 }
-
 - (BOOL)generateKeyPairKeysWithBits:(NSNumber *) bits {
     NSLog(@"Generating RSA Keys with %@ bits", bits);
     return [self generateKeyPairKeysWithOpenSSLandSize:[bits intValue]];
 }
+ */
 
 - (void)testEncryption {
     NSString *plainText = @"This is just a string";
@@ -255,10 +253,16 @@ static NSObject * instanceLock;
 
 - (SecKeyRef)getPrivateKeyRefForPublicKeyIdString:(NSString*) publicKeyIdString {
     @synchronized(instanceLock) {
+        NSLog(@"TinyRSA: getPrivateKeyRefForPublicKeyIdString %@",publicKeyIdString);
         if (publicKeyIdString == nil) {
             return nil;
         }
-        if ([publicKeyIdString isEqualToString:[CCRSA keyIdString:[CCRSA calcKeyId:[self getPublicKeyBits]]]]) {
+        NSData * mypubkey = [self getPublicKeyBits];
+        NSData * mykeyid = [TinyCCRSA calcKeyId:mypubkey];
+        NSString * mykeyidstring = [TinyCCRSA keyIdString:mykeyid];
+        NSLog(@"TinyRSA: getPrivateKeyRefForPublicKeyIdString mykeyidstring %@",mykeyidstring);
+
+        if ([publicKeyIdString isEqualToString:mykeyidstring]) {
             return [self getPrivateKeyRef];
         }
         return [self getPrivateKeyRefForTag:[self privateTagForKeyIdString:publicKeyIdString]];
@@ -271,10 +275,10 @@ static NSObject * instanceLock;
         if (publicKeyId == nil) {
             return nil;
         }
-        if ([publicKeyId isEqualToData:[CCRSA calcKeyId:[self getPublicKeyBits]]]) {
+        if ([publicKeyId isEqualToData:[TinyCCRSA calcKeyId:[self getPublicKeyBits]]]) {
             return [self getPrivateKeyRef];
         }
-        return [self getPrivateKeyRefForTag:[self privateTagForKeyIdString:[CCRSA keyIdString:publicKeyId]]];
+        return [self getPrivateKeyRefForTag:[self privateTagForKeyIdString:[TinyCCRSA keyIdString:publicKeyId]]];
     }
 }
 
@@ -336,7 +340,7 @@ static NSObject * instanceLock;
         } else {
             privateKeyBits = (__bridge_transfer NSData *)privateKeyBitsCF;
         }
-    	
+        
         return privateKeyBits;
     }
 }
@@ -359,7 +363,7 @@ static NSObject * instanceLock;
         [privateKey setObject:(__bridge id) kSecAttrKeyClassPrivate forKey:(__bridge id)kSecAttrKeyClass];
         [privateKey setObject:[NSNumber numberWithBool:YES] forKey:(__bridge id)kSecReturnPersistentRef];
         [privateKey setObject:(__bridge id)kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly forKey:(__bridge id)kSecAttrAccessible];
-
+        
         OSStatus secStatus = SecItemAdd((__bridge CFDictionaryRef)privateKey, &persistKey);
         
         if (persistKey != nil) CFRelease(persistKey);
@@ -401,7 +405,7 @@ static NSObject * instanceLock;
             return NO;
         }
         
-        NSString * publicKeyIdString = [CCRSA keyIdString:[CCRSA calcKeyId:publicBits]];
+        NSString * publicKeyIdString = [TinyCCRSA keyIdString:[TinyCCRSA calcKeyId:publicBits]];
         NSData * publicTagSpec = [self publicTagForKeyIdString:publicKeyIdString];
         NSData * privateTagSpec = [self privateTagForKeyIdString:publicKeyIdString];
         
@@ -832,9 +836,9 @@ static NSString *pemPrivateFooter = @"-----END RSA PRIVATE KEY-----";
     [data appendBytes:length length:4];
     char version[3] = {1,0,1};
     [data appendBytes:version length:3];
-    length[3] = [[CCRSA getPublicKeyMod:publicKeyBits] length];
+    length[3] = [[TinyCCRSA getPublicKeyMod:publicKeyBits] length];
     [data appendBytes:length length:4];
-    [data appendData:[CCRSA getPublicKeyMod:publicKeyBits]];
+    [data appendData:[TinyCCRSA getPublicKeyMod:publicKeyBits]];
     
     stringToWriteInFile = @"ssh-rsa ";
     stringToWriteInFile = [stringToWriteInFile stringByAppendingString:[data asBase64EncodedString:1]];
@@ -1012,12 +1016,12 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 }
 
 -(BOOL)importPrivateKeyBits:(NSString *)pemPrivateKeyString {
-    NSData * myBits = [CCRSA extractPrivateKeyBitsFromPEM:pemPrivateKeyString];
+    NSData * myBits = [TinyCCRSA extractPrivateKeyBitsFromPEM:pemPrivateKeyString];
     return myBits != nil && [self addPrivateKeyBits:myBits withTag:privateTag];
 }
 
 - (BOOL) importPublicKeyBits: (NSString*) pemText withTag: (NSData*) tag {
-    NSData * myBits = [CCRSA extractPublicKeyBitsFromPEM: pemText];
+    NSData * myBits = [TinyCCRSA extractPublicKeyBitsFromPEM: pemText];
     return [self addPublicKeyBits: myBits withTag: tag];
 }
 
@@ -1080,7 +1084,7 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 
 + (NSInteger)getPublicKeySize:(NSData*)keyBits {
     @try {
-        NSData * modulus = [CCRSA getPublicKeyMod:keyBits];
+        NSData * modulus = [TinyCCRSA getPublicKeyMod:keyBits];
         return modulus.length * 8;
     } @catch (NSException* ex) {
         NSLog(@"#ERROR: getPublicKeySize exception: %@", ex);
@@ -1116,3 +1120,4 @@ size_t encodeLength(unsigned char * buf, size_t length) {
 }
 
 @end
+

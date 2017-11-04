@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Hoccer GmbH. All rights reserved.
 //
 
-#import "MyHTTPConnection.h"
+#import "MyHttpConnection.h"
 //#import "HTTPDynamicFileResponse.h"
 #import "TypedHTTPDataResponse.h"
 #import "TypedHTTPFileResponse.h"

@@ -11,6 +11,7 @@
 "NSMicrophoneUsageDescription"="um Audioaufnahmen zu machen und zu versenden";
 "NSMotionUsageDescription"="um Gesten im Nahebei-Modus zum Senden und Empfangen zu nutzen";
 "NSPhotoLibraryUsageDescription"="um Fotos auswählen und versenden zu können";
+"NSPhotoLibraryAddUsageDescription"="um empfangene Fotos und Filme in der Bibliothek speichern zu können";
 
 "NSLocationWhenInUseUsageDescription" = "Dein Standort wird benötigt, um mit Leuten in der Nähe zu chatten oder Ortsmarken zu verschicken";
 /*

@@ -32,6 +32,9 @@
 #import "PasscodeViewController.h"
 #import "WebViewController.h"
 
+#import "Contact.h"
+#import "Group.h"
+
 #if HOCCER_UNIHELD
 #import "tab_benefits.h"
 #endif
@@ -921,6 +924,7 @@ BOOL sameObjects(id obj1, id obj2) {
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    gAppDelegate = self;
 /*
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"9463c48810f576a586b504ecdf970c0c"];
     [[BITHockeyManager sharedHockeyManager] startManager];
@@ -1087,7 +1091,8 @@ BOOL sameObjects(id obj1, id obj2) {
                                                                                          }
                                                                                          messageText = message.body;
                                                                                          if (message.attachment != nil) {
-                                                                                             NSString * typeString = NSLocalizedString(message.attachment.mediaType, nil);
+                                                                                             NSString * typeStringName = [NSString stringWithFormat:@"attachment_type_%@",message.attachment.mediaType];
+                                                                                             NSString * typeString = NSLocalizedString(typeStringName, nil);
                                                                                              messageText = [NSString stringWithFormat:@"[%@] %@",typeString,messageText];
                                                                                          }
                                                                                          messageText = [NSString stringWithFormat:@"%@:%@",message.contact.nickNameOrAlias,messageText];
@@ -1298,7 +1303,9 @@ BOOL sameObjects(id obj1, id obj2) {
         [self setLastLogOffDate];
         self.isLoggedOn = NO;
     }
-    
+
+
+    [self updateNotificationServiceExtensionNickNameTables];
     [self updateUnreadMessageCountAndStop];
 }
 
@@ -4266,7 +4273,10 @@ enum {
 }
 
 + (AppDelegate*)instance {
+    return gAppDelegate;
+    /*
     return (AppDelegate*)[[UIApplication sharedApplication] delegate];
+     */
 }
 
 + (BOOL)validateString:(NSString *)string withPattern:(NSString *)pattern
@@ -4725,6 +4735,67 @@ enum {
     UIImage *image = [UIImage imageNamed:imageName];
     NSLog(@"image = %@", image);
     return image;
+}
+typedef bool(^contactPredicate)(id contactOrGroup);
+
+- (void) updateNickNamesFromRequestTemplate: (NSString*) fetchRequestName
+                           withUserDefaults: (NSUserDefaults*) sharedData
+                                  usingKeyPattern: (NSString*) keyPattern
+                                    oldKeys: (NSMutableArray*) staleKeys
+                                  predicate: (contactPredicate) predicate
+{
+    NSFetchRequest * fetchRequest = [self.managedObjectModel fetchRequestFromTemplateWithName: fetchRequestName
+                                                                        substitutionVariables: @{}];
+    NSError * error = nil;
+    NSArray * contacts = [self.mainObjectContext executeFetchRequest: fetchRequest error: &error];
+    if (contacts == nil) {
+        NSLog(@"Fetch request '%@' failed: %@", fetchRequestName, error);
+        abort();
+    }
+    for (id contact in contacts) {
+        if (predicate(contact)) {
+            NSString * key = [NSString stringWithFormat: keyPattern, [contact clientId]];
+            if ([staleKeys indexOfObject: key] != NSNotFound) {
+                [staleKeys removeObject: key];
+            }
+            [sharedData setObject: [contact nickName] forKey: key];
+        }
+    }
+}
+
+- (void) updateNotificationServiceExtensionNickNameTables {
+    NSUserDefaults * sharedData = [[NSUserDefaults alloc] initWithSuiteName: [self appGroupId]];
+    NSMutableArray * staleKeys = [[sharedData dictionaryRepresentation].allKeys mutableCopy];
+
+    [self updateNickNamesFromRequestTemplate: @"LiveContacts"
+                            withUserDefaults: sharedData
+                             usingKeyPattern: @"nickName.contact.%@"
+                                     oldKeys: staleKeys
+                                   predicate: ^bool(Contact * contact) {
+                                       return [contact.relationshipState isEqualToString: kRelationStateFriend] ||
+                                              [contact.relationshipState isEqualToString: kRelationStateGroupFriend] ||
+                                              [contact.relationshipState isEqualToString: kRelationStateInvited];
+                                   }];
+
+    [self updateNickNamesFromRequestTemplate: @"LiveGroups"
+                            withUserDefaults: sharedData
+                             usingKeyPattern: @"nickName.group.%@"
+                                     oldKeys: staleKeys
+                                   predicate: ^bool(Group * group) {
+                                       return [group.groupState isEqualToString: kGroupStateExists];
+                                   }];
+
+    for (NSString * key in staleKeys) {
+        [sharedData removeObjectForKey: key];
+    }
+}
+
+- (NSString*) appGroupId {
+    NSString * groupIdSetting = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"HXOAppGroupId"];
+    if (groupIdSetting != nil) {
+        return groupIdSetting;
+    }
+    return [NSString stringWithFormat: @"group.%@", [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"]];
 }
 
 @end
