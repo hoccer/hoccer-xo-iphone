@@ -57,15 +57,22 @@ decryptMessage(NSDictionary* userInfo) {
     NSLog(@"keyCiphertext=%@, keyId=%@",keyCiphertext,keyId);
     NSData * keyCipherData = [NSData dataWithBase64EncodedString:keyCiphertext];
     NSData * theAESKey = decipherKey(keyCipherData, keyId, salt);
-    NSData * bodyData = [NSData dataWithBase64EncodedString:body];
+    NSData * bodyData = [NSData dataWithBase64EncodedString: body];
     NSLog(@"bodyData=%@",bodyData.hexadecimalString);
     NSLog(@"theAESKey=%@",theAESKey.hexadecimalString);
 
-    NSData * bodyDecrypted = [bodyData decryptedAES256DataUsingKey:theAESKey error:nil];
-    NSLog(@"bodyDecrypted=%@",bodyDecrypted.hexadecimalString);
-
-    NSString * bodyCleartext = [NSString stringWithData:bodyDecrypted usingEncoding:NSUTF8StringEncoding];
-    NSLog(@"bodyCleartext=%@",bodyCleartext);
+    NSError * error = nil;
+    NSData * bodyDecrypted = [bodyData decryptedAES256DataUsingKey:theAESKey error: &error];
+    if (bodyDecrypted != nil) {
+        NSLog(@"bodyDecrypted=%@",bodyDecrypted.hexadecimalString);
+    } else {
+        NSLog(@"decrypt ERROR=%@", error);
+    }
+    NSString * bodyCleartext;
+    if (bodyDecrypted) {
+        bodyCleartext = [NSString stringWithData: bodyDecrypted usingEncoding:NSUTF8StringEncoding];
+    }
+    NSLog(@"bodyCleartext=%@", bodyCleartext);
     
     if (attachment != nil) {
         NSLog(@"attachment=%@",attachment);
@@ -73,7 +80,7 @@ decryptMessage(NSDictionary* userInfo) {
         NSData * attachmentDecrypted = [attachmentData decryptedAES256DataUsingKey:theAESKey error:nil];
         NSString * attachmentCleartext = [NSString stringWithData:attachmentDecrypted usingEncoding:NSUTF8StringEncoding];
         NSLog(@"attachmentCleartext=%@",attachmentCleartext);
-       NSError * error;
+        NSError * error;
         @try {
             id json = [NSJSONSerialization JSONObjectWithData: [attachmentCleartext dataUsingEncoding:NSUTF8StringEncoding] options: 0 error: &error];
             if (json == nil) {
