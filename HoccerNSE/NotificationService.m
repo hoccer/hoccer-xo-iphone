@@ -13,7 +13,7 @@
 #import "NSData+HexString.h"
 #import "NSData+CommonCrypto.h"
 #import "NSString+StringWithData.h"
-#import "TinyCCRSA.h"
+#import "CCRSA.h"
 
 @interface NotificationService ()
 
@@ -24,7 +24,7 @@
 
 NSData * decipherKey(NSData * keyCipherdata, NSString* keyId, NSString* saltString) {
     
-    TinyCCRSA * rsa = [TinyCCRSA sharedInstance];
+    CCRSA * rsa = [CCRSA sharedInstance];
     [rsa findKeyPairs];
 
     SecKeyRef myPrivateKeyRef = [rsa getPrivateKeyRefForPublicKeyIdString:keyId];

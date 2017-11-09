@@ -504,7 +504,8 @@ static NSTimer * _stateNotificationDelayTimer;
 }
 
 + (HXOBackend*)instance {
-    return ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
+    //return ((AppDelegate*)[[UIApplication sharedApplication] delegate]).chatBackend;
+    return gAppDelegate.chatBackend;
 }
 
 - (NSString*) stateString {
@@ -2051,7 +2052,7 @@ NSError * makeSendError(NSString * reason) {
 }
 
 + (NSArray *) messagesByContactInInterval:(NSDictionary *) vars withTemplateName:(NSString*)name {
-    AppDelegate* myDelegate = ((AppDelegate*)[[UIApplication sharedApplication] delegate]);
+    AppDelegate* myDelegate = AppDelegate.instance;
     NSFetchRequest *fetchRequest = [myDelegate.managedObjectModel fetchRequestFromTemplateWithName:name substitutionVariables: vars];
 
     NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeAccepted" ascending: YES];

@@ -15,10 +15,11 @@
 #import "NSData+CommonCrypto.h"
 
 #import "HXOUserDefaults.h"
-
+#ifdef HXO_HAVE_OPEN_SSL
 #import "OpenSSLCrypto.h"
+#endif
 
-#define RSA_DEBUG YES
+#define RSA_DEBUG NO
 
 @implementation CCRSA
 
@@ -66,6 +67,7 @@ static NSObject * instanceLock;
     }
 }
 
+#ifdef HXO_HAVE_OPEN_SSL
 -(BOOL)generateKeyPairKeysWithOpenSSLandSize:(int)bits {
     @synchronized(instanceLock) {
         NSString * pubkey;
@@ -90,6 +92,7 @@ static NSObject * instanceLock;
     NSLog(@"Generating RSA Keys with %@ bits", bits);
     return [self generateKeyPairKeysWithOpenSSLandSize:[bits intValue]];
 }
+#endif
 
 - (void)testEncryption {
     NSString *plainText = @"This is just a string";
@@ -227,6 +230,8 @@ static NSObject * instanceLock;
 
 - (SecKeyRef)getPrivateKeyRefForTag:(NSData*)tag {
     @synchronized(instanceLock) {
+        if (RSA_DEBUG) NSLog(@"CCRSA: getPrivateKeyRefForTag %@", tag);
+
         OSStatus resultCode = noErr;
         SecKeyRef privateKeyReference = NULL;
         
@@ -245,6 +250,8 @@ static NSObject * instanceLock;
         {
             privateKeyReference = NULL;
         }
+        if (RSA_DEBUG) NSLog(@"CCRSA: getPrivateKeyRefForTag got privateKeyReference %@", privateKeyReference);
+
         return privateKeyReference;
     }
 }
@@ -255,10 +262,19 @@ static NSObject * instanceLock;
 
 - (SecKeyRef)getPrivateKeyRefForPublicKeyIdString:(NSString*) publicKeyIdString {
     @synchronized(instanceLock) {
+        if (RSA_DEBUG) NSLog(@"CCRSA: getPrivateKeyRefForPublicKeyIdString %@",publicKeyIdString);
         if (publicKeyIdString == nil) {
             return nil;
         }
-        if ([publicKeyIdString isEqualToString:[CCRSA keyIdString:[CCRSA calcKeyId:[self getPublicKeyBits]]]]) {
+        NSData * mypubkey = [self getPublicKeyBits];
+        NSData * mykeyid = [CCRSA calcKeyId:mypubkey];
+        if (RSA_DEBUG) NSLog(@"CCRSA: getPrivateKeyRefForPublicKeyIdString mypubkey %@",mypubkey);
+
+        NSString * mykeyidstring = [CCRSA keyIdString:mykeyid];
+        if (RSA_DEBUG) NSLog(@"CCRSA: getPrivateKeyRefForPublicKeyIdString mykeyidstring %@",mykeyidstring);
+        
+        //if ([publicKeyIdString isEqualToString:[CCRSA keyIdString:[CCRSA calcKeyId:[self getPublicKeyBits]]]]) {
+        if ([publicKeyIdString isEqualToString:mykeyidstring]) {
             return [self getPrivateKeyRef];
         }
         return [self getPrivateKeyRefForTag:[self privateTagForKeyIdString:publicKeyIdString]];
@@ -281,6 +297,9 @@ static NSObject * instanceLock;
 
 - (NSData *)getPublicKeyBitsForTag:(NSData*)tag {
     @synchronized(instanceLock) {
+        
+        if (RSA_DEBUG) NSLog(@"CCRSA: getPublicKeyBitsForTag %@", tag);
+        
         OSStatus sanityCheck = noErr;
         NSData * publicKeyBits = nil;
         
@@ -708,17 +727,27 @@ static NSObject * instanceLock;
             NSString * privatePrefixString = [NSString stringWithUTF8String:[privatePrefix bytes]];
             NSString * publicPrefixString = [NSString stringWithUTF8String:[publicPrefix bytes]];
             for (int i = 0; i < results;++i ) {
-                //NSLog(@"result %d = %@",i,resultObj[i]);
+                if (RSA_DEBUG) NSLog(@"result %d = %@",i,resultObj[i]);
                 NSData * atag = resultObj[i][@"atag"];
                 if (atag != nil ) {
                     NSString * tag;
+                    //tag = atag.hexadecimalString;
+                    
                     if ([atag isKindOfClass:[NSData class]]) {
                         tag = [[NSString alloc] initWithData:atag encoding:NSUTF8StringEncoding];
+                        if (tag == nil || tag.length == 0) {
+                            if (RSA_DEBUG) NSLog(@"INFO: tag class is data but invalid utf8, showing as hex");
+                            tag = atag.hexadecimalString;
+                        }
+                        if (RSA_DEBUG) NSLog(@"INFO: tag class is data");
                     } else if ([atag isKindOfClass:[NSString class]]){
+                        if (RSA_DEBUG) NSLog(@"INFO: tag class is string");
                         tag = (NSString*)atag;
                     } else {
-                        break;
+                        NSLog(@"ERROR: findKeypairsWithPrivatePrefix: unexpected tag class");
+                        continue;
                     }
+                    
                     //NSString * prefixString = [[NSString alloc] initWithData:prefix encoding:NSUTF8StringEncoding];
                     //NSLog(@"result %d = %@",i,resultObj[i]);
                     if (RSA_DEBUG) NSLog(@"tag %d = ‘%@‘",i,tag);
@@ -742,11 +771,10 @@ static NSObject * instanceLock;
                             found[postFix][@"public"] = tag;
                         }
                     } else {
-                        // NSLog(@"no postfix");
+                        if (RSA_DEBUG) NSLog(@"no postfix");
                     }
                 } else {
                     NSLog(@"Error no atag for item %d = %@",i,resultObj[i]);
-                    
                 }
             }
             if (RSA_DEBUG) NSLog(@"found=%@",found);

@@ -194,7 +194,14 @@ typedef void (^ImageHandler)(UIImage* image);
 }
 
 -(BOOL) runningInBackground {
-    UIApplicationState state = [UIApplication sharedApplication].applicationState;
+    __block UIApplicationState state;
+    if ([NSThread isMainThread]) {
+        state = [UIApplication sharedApplication].applicationState;
+    } else {
+        dispatch_sync(dispatch_get_main_queue(),^{
+            state = [UIApplication sharedApplication].applicationState;
+        });
+    }
     BOOL result =  state == UIApplicationStateBackground;
     if (TRACE_BACKGROUND_FINALIZER) NSLog(@"runningInBackground %d, applicationState = %ld",result, (long)state);
     return result;
@@ -925,14 +932,13 @@ BOOL sameObjects(id obj1, id obj2) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     gAppDelegate = self;
-/*
-    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"9463c48810f576a586b504ecdf970c0c"];
-    [[BITHockeyManager sharedHockeyManager] startManager];
-    [[BITHockeyManager sharedHockeyManager].authenticator
-     authenticateInstallation];
-*/    
+
     [self cleanupTmpDirectory];
     NSLog(@"Running with environment %@", [Environment sharedEnvironment].currentEnvironment);
+
+    //CCRSA * rsa = [CCRSA sharedInstance];
+    //[rsa findKeyPairs];
+
 #ifdef DEBUG
     [self testFSSize];
 #endif

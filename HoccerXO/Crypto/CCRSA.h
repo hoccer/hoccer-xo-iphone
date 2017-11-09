@@ -21,7 +21,9 @@
 + (CCRSA*)sharedInstance;
 
 - (BOOL)hasKeyPair;
+#ifdef HXO_HAVE_OPEN_SSL
 - (BOOL)generateKeyPairKeysWithBits:(NSNumber *) bits;
+#endif
 - (BOOL)deleteKeyPairKeys;
 - (BOOL)cloneKeyPairKeys;
 - (BOOL)deleteAllRSAKeys;

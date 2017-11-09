@@ -301,7 +301,6 @@
 		E90B68F01FA4ACC100F3EF68 /* KeychainItemWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 63E0B2161721FF75006058C6 /* KeychainItemWrapper.m */; };
 		E90B68F11FA4ACC500F3EF68 /* NSData+CommonCrypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB024171457F9005F8FFA /* NSData+CommonCrypto.m */; };
 		E90B68F31FA4ACCD00F3EF68 /* KeyChainItem.m in Sources */ = {isa = PBXBuildFile; fileRef = E95089221B00D54700CA3952 /* KeyChainItem.m */; };
-		E90B68F81FA4CA1800F3EF68 /* TinyCCRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */; };
 		E90B68F91FA4D09600F3EF68 /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03317145AC0005F8FFA /* NSData+Base64.m */; };
 		E90B68FA1FA4D21600F3EF68 /* NSData+HexString.m in Sources */ = {isa = PBXBuildFile; fileRef = 63AE454C1705ADAF0099F0CB /* NSData+HexString.m */; };
 		E925624F1B1F77BE0002E33F /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E925624E1B1F77BE0002E33F /* QuickLook.framework */; };
@@ -346,6 +345,7 @@
 		E96CB03517145AC0005F8FFA /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB03317145AC0005F8FFA /* NSData+Base64.m */; };
 		E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */; };
 		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
+		E97100681FB4CCDF00B93C22 /* CCRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB028171457F9005F8FFA /* CCRSA.m */; };
 		E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */; };
 		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
@@ -1136,8 +1136,6 @@
 		C5EB3CD51A824FF000E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.stroeer.strings; sourceTree = "<group>"; };
 		C5EB3CD91A82646800E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
 		C5EB3CDB1A82646A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
-		E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TinyCCRSA.m; sourceTree = "<group>"; };
-		E90B68F61FA4C32100F3EF68 /* TinyCCRSA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TinyCCRSA.h; sourceTree = "<group>"; };
 		E90B68FB1FA4D80B00F3EF68 /* HoccerNSE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HoccerNSE.entitlements; sourceTree = "<group>"; };
 		E925624E1B1F77BE0002E33F /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		E926240A1951713500C836D0 /* HoccerXO-41.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-41.xcdatamodel"; sourceTree = "<group>"; };
@@ -2612,8 +2610,6 @@
 		E96CB01D1714572C005F8FFA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
-				E90B68F61FA4C32100F3EF68 /* TinyCCRSA.h */,
-				E90B68F41FA4C2F700F3EF68 /* TinyCCRSA.m */,
 				E96CB027171457F9005F8FFA /* CCRSA.h */,
 				E96CB028171457F9005F8FFA /* CCRSA.m */,
 				E980D445171EF8950060C1B5 /* CryptingInputStream.h */,
@@ -3490,11 +3486,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E90B68F81FA4CA1800F3EF68 /* TinyCCRSA.m in Sources */,
 				E90B68F11FA4ACC500F3EF68 /* NSData+CommonCrypto.m in Sources */,
 				E90B68ED1FA4ACB500F3EF68 /* Crypto.m in Sources */,
 				E90B68F31FA4ACCD00F3EF68 /* KeyChainItem.m in Sources */,
 				E90B68FA1FA4D21600F3EF68 /* NSData+HexString.m in Sources */,
+				E97100681FB4CCDF00B93C22 /* CCRSA.m in Sources */,
 				E90B68EF1FA4ACBD00F3EF68 /* CryptoJSON.m in Sources */,
 				E90B68F91FA4D09600F3EF68 /* NSData+Base64.m in Sources */,
 				6368FAB41FA2231A00B7A7E0 /* NotificationService.m in Sources */,
@@ -4039,7 +4035,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "e6f9d53d-6c89-4028-859e-a8870fbd0736";
+				PROVISIONING_PROFILE = "71affc0b-dbb3-42ea-a6ad-0ed67cba955b";
 				PROVISIONING_PROFILE_SPECIFIER = "Hoccer NSE Development";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -4199,7 +4195,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(HXO_BUNDLE_ID).HoccerNSE";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "bde093dd-293c-4027-9e5d-c404ff546fb5";
+				PROVISIONING_PROFILE = "e2135c29-3c55-4bac-9bd1-7495b26f4d90";
 				PROVISIONING_PROFILE_SPECIFIER = "Hoccer NSE";
 				SKIP_INSTALL = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
