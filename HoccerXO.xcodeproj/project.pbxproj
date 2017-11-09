@@ -7,9 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1F1C0BF11B039288002B346D /* com.hoccer.Hoccer-XO.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1F1C0BEF1B039288002B346D /* com.hoccer.Hoccer-XO.strings */; };
 		1FA4DE52195D9B400008C9DD /* MediaAttachmentListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C576EBDB1934CC9E00C0D254 /* MediaAttachmentListViewController.m */; };
-		1FE9FA581AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */; };
 		6302A98618DA870400B2D04F /* BigInteger.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97118DA870400B2D04F /* BigInteger.m */; };
 		6302A98718DA870400B2D04F /* BigNumUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97318DA870400B2D04F /* BigNumUtilities.m */; };
 		6302A98818DA870400B2D04F /* Digest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6302A97518DA870400B2D04F /* Digest.m */; };
@@ -290,11 +288,8 @@
 		C5C359FF196EC72F00D835F3 /* HXOArrayPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C359FE196EC72F00D835F3 /* HXOArrayPlaylist.m */; };
 		C5C35A03196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C35A02196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m */; };
 		C5C3BD18194065100072AE5F /* AttachmentMigration.m in Sources */ = {isa = PBXBuildFile; fileRef = C5C3BD17194065100072AE5F /* AttachmentMigration.m */; };
-		C5E8E3CB1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5E8E3CD1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings */; };
-		C5E8E4151A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5E8E4171A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings */; };
 		C5EB3CBB1A81186D00E236F6 /* HXOLocalization.m in Sources */ = {isa = PBXBuildFile; fileRef = C5EB3CB91A81186D00E236F6 /* HXOLocalization.m */; };
 		C5EB3CCC1A824EFC00E236F6 /* com.artcom.Hoccer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */; };
-		C5EB3CD21A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */; };
 		C5EB3CD81A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings in Resources */ = {isa = PBXBuildFile; fileRef = C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */; };
 		E90B68ED1FA4ACB500F3EF68 /* Crypto.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB022171457F9005F8FFA /* Crypto.m */; };
 		E90B68EF1FA4ACBD00F3EF68 /* CryptoJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = E9DBE3E21865C0A000880252 /* CryptoJSON.m */; };
@@ -346,6 +341,7 @@
 		E96CB0481716DB8D005F8FFA /* NSDictionary+CSURLParams.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */; };
 		E96CB0491716DB8D005F8FFA /* NSString+URLHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */; };
 		E97100681FB4CCDF00B93C22 /* CCRSA.m in Sources */ = {isa = PBXBuildFile; fileRef = E96CB028171457F9005F8FFA /* CCRSA.m */; };
+		E971006B1FB4D0DE00B93C22 /* eula-com.artcom.Hoccer.rtf in Resources */ = {isa = PBXBuildFile; fileRef = E97100691FB4D0DE00B93C22 /* eula-com.artcom.Hoccer.rtf */; };
 		E9756189177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel in Sources */ = {isa = PBXBuildFile; fileRef = E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */; };
 		E9756199177E5585000B6381 /* HoccerXO.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E9756196177E5585000B6381 /* HoccerXO.xcdatamodeld */; };
 		E980D447171EF8950060C1B5 /* CryptingInputStream.m in Sources */ = {isa = PBXBuildFile; fileRef = E980D446171EF8950060C1B5 /* CryptingInputStream.m */; };
@@ -461,7 +457,6 @@
 		E9E92F9918760B05007B8042 /* TypedHTTPFileResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E92F9818760B05007B8042 /* TypedHTTPFileResponse.m */; };
 		E9F592D7171F460A00E2FFAC /* CryptoEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = E9F592D6171F460A00E2FFAC /* CryptoEngine.m */; };
 		E9F86CAE1E804927004AFE8E /* com.hoccer.whitelabel.uniheld.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9F86CAC1E804927004AFE8E /* com.hoccer.whitelabel.uniheld.strings */; };
-		E9FC0FA11D1C50490055A9CE /* com.hoccer.whitelabel.helios.strings in Resources */ = {isa = PBXBuildFile; fileRef = E9FC0F9F1D1C50490055A9CE /* com.hoccer.whitelabel.helios.strings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -587,10 +582,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1F1C0BF01B039288002B346D /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO.strings"; sourceTree = "<group>"; };
-		1F1C0BF21B039293002B346D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO.strings"; sourceTree = "<group>"; };
-		1FE9FA571AC9822F00DBE7E3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.hoccer.whitelabel.starmeo.strings; sourceTree = "<group>"; };
-		1FE9FA591AC9823C00DBE7E3 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.starmeo.strings; sourceTree = "<group>"; };
 		6302A97018DA870400B2D04F /* BigInteger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigInteger.h; sourceTree = "<group>"; };
 		6302A97118DA870400B2D04F /* BigInteger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BigInteger.m; sourceTree = "<group>"; };
 		6302A97218DA870400B2D04F /* BigNumUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BigNumUtilities.h; sourceTree = "<group>"; };
@@ -1124,16 +1115,10 @@
 		C5C35A02196ED22700D835F3 /* HXOAudioAttachmentDataSourcePlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOAudioAttachmentDataSourcePlaylist.m; sourceTree = "<group>"; };
 		C5C3BD16194065100072AE5F /* AttachmentMigration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachmentMigration.h; sourceTree = "<group>"; };
 		C5C3BD17194065100072AE5F /* AttachmentMigration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachmentMigration.m; sourceTree = "<group>"; };
-		C5E8E3CC1A8B5B3400D3B289 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.hoccer.whitelabel.simsme.strings; sourceTree = "<group>"; };
-		C5E8E3CE1A8B5B3A00D3B289 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.simsme.strings; sourceTree = "<group>"; };
-		C5E8E4161A8CEBE600D3B289 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.hoccer.whitelabel.hoccme.strings; sourceTree = "<group>"; };
-		C5E8E4181A8CEBE700D3B289 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.hoccme.strings; sourceTree = "<group>"; };
 		C5EB3CB91A81186D00E236F6 /* HXOLocalization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HXOLocalization.m; sourceTree = "<group>"; };
 		C5EB3CBA1A81186D00E236F6 /* HXOLocalization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HXOLocalization.h; sourceTree = "<group>"; };
 		C5EB3CCD1A824EFC00E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.artcom.Hoccer.strings; sourceTree = "<group>"; };
 		C5EB3CCF1A824F0300E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.artcom.Hoccer.strings; sourceTree = "<group>"; };
-		C5EB3CD31A824FEE00E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.hoccer.whitelabel.stroeer.strings; sourceTree = "<group>"; };
-		C5EB3CD51A824FF000E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.stroeer.strings; sourceTree = "<group>"; };
 		C5EB3CD91A82646800E236F6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "en.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
 		C5EB3CDB1A82646A00E236F6 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "de.lproj/com.hoccer.Hoccer-XO-Dev.strings"; sourceTree = "<group>"; };
 		E90B68FB1FA4D80B00F3EF68 /* HoccerNSE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = HoccerNSE.entitlements; sourceTree = "<group>"; };
@@ -1238,6 +1223,8 @@
 		E96CB0451716DB8D005F8FFA /* NSDictionary+CSURLParams.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+CSURLParams.m"; sourceTree = "<group>"; };
 		E96CB0461716DB8D005F8FFA /* NSString+URLHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLHelper.h"; sourceTree = "<group>"; };
 		E96CB0471716DB8D005F8FFA /* NSString+URLHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLHelper.m"; sourceTree = "<group>"; };
+		E971006A1FB4D0DE00B93C22 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = "HoccerXO/Localizations/en.lproj/eula-com.artcom.Hoccer.rtf"; sourceTree = "<group>"; };
+		E971006C1FB4D11F00B93C22 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = de; path = "HoccerXO/Localizations/de.lproj/eula-com.artcom.Hoccer.rtf"; sourceTree = "<group>"; };
 		E9756188177E19AE000B6381 /* MappingModel-17-18.xcmappingmodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcmappingmodel; name = "MappingModel-17-18.xcmappingmodel"; path = "HoccerXO/Models/MappingModel-17-18.xcmappingmodel"; sourceTree = "<group>"; };
 		E9756197177E5585000B6381 /* HoccerXO-18.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-18.xcdatamodel"; sourceTree = "<group>"; };
 		E9756198177E5585000B6381 /* HoccerXO-19.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "HoccerXO-19.xcdatamodel"; sourceTree = "<group>"; };
@@ -1469,8 +1456,6 @@
 		E9F592D6171F460A00E2FFAC /* CryptoEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CryptoEngine.m; sourceTree = "<group>"; };
 		E9F86CAD1E804927004AFE8E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.uniheld.strings; sourceTree = "<group>"; };
 		E9F86CAF1E804937004AFE8E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.hoccer.whitelabel.uniheld.strings; sourceTree = "<group>"; };
-		E9FC0FA01D1C50490055A9CE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/com.hoccer.whitelabel.helios.strings; sourceTree = "<group>"; };
-		E9FC0FB01D1C505D0055A9CE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/com.hoccer.whitelabel.helios.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -2125,24 +2110,19 @@
 		63AE45571705EE030099F0CB /* Localizations */ = {
 			isa = PBXGroup;
 			children = (
-				E9F86CAC1E804927004AFE8E /* com.hoccer.whitelabel.uniheld.strings */,
-				E9FC0F9F1D1C50490055A9CE /* com.hoccer.whitelabel.helios.strings */,
-				1F1C0BEF1B039288002B346D /* com.hoccer.Hoccer-XO.strings */,
 				C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */,
 				C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */,
-				C5E8E4171A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings */,
-				C5E8E3CD1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings */,
-				1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */,
-				C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */,
+				E9F86CAC1E804927004AFE8E /* com.hoccer.whitelabel.uniheld.strings */,
+				E97100691FB4D0DE00B93C22 /* eula-com.artcom.Hoccer.rtf */,
+				63E9EFCD1F0F21DC0068547D /* eula-com.hoccer.whitelabel.uniheld.rtf */,
 				63AE45581705EE770099F0CB /* InfoPlist.strings */,
 				63AE455B1705EE820099F0CB /* Localizable.strings */,
 				635127B21ABB65FD00FA0C2B /* webdav_mac.rtf */,
 				635127BE1ABB706D00FA0C2B /* webdav_win7.rtf */,
 				635127B81ABB6FFD00FA0C2B /* webdav_win8.rtf */,
 				635127C71ABB70F100FA0C2B /* webdav_winxp.rtf */,
-				63C0F82C1AD5A9FB00709B0C /* webinterface.rtf */,
 				E9546CA61B42A642007FE754 /* webinterface_IE.rtf */,
-				63E9EFCD1F0F21DC0068547D /* eula-com.hoccer.whitelabel.uniheld.rtf */,
+				63C0F82C1AD5A9FB00709B0C /* webinterface.rtf */,
 			);
 			path = Localizations;
 			sourceTree = "<group>";
@@ -3319,7 +3299,6 @@
 				E9A85D9F184FD1AD00EB9B68 /* chatbar-attachment-icon-location@2x.png in Resources */,
 				E9A85D9C184FD1AD00EB9B68 /* chatbar-attachment-icon-contact.png in Resources */,
 				63AE45511705E1440099F0CB /* Main.storyboard in Resources */,
-				C5EB3CD21A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings in Resources */,
 				63AE455A1705EE770099F0CB /* InfoPlist.strings in Resources */,
 				6A568B8B18BA8F0400584A04 /* Images.xcassets in Resources */,
 				63AE455D1705EE820099F0CB /* Localizable.strings in Resources */,
@@ -3357,9 +3336,9 @@
 				C576EC611934CCB200C0D254 /* slider-thumb.png in Resources */,
 				E99886F517282C950089A510 /* throw_sound.wav in Resources */,
 				63DEC02019B0A720003804E8 /* AlbumArtPlaceholderLarge.png in Resources */,
+				E971006B1FB4D0DE00B93C22 /* eula-com.artcom.Hoccer.rtf in Resources */,
 				63DEC02C19B0A720003804E8 /* JGAlbumViewController.xib in Resources */,
 				E9480D391CB67E75007DF488 /* filecache-2016.talk.hoccer.de.der in Resources */,
-				1FE9FA581AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings in Resources */,
 				6383FF761729DC2200835C91 /* Settings.bundle in Resources */,
 				631070EB1730106900D3936F /* new_message.aif in Resources */,
 				63DEC02419B0A720003804E8 /* Artists.png in Resources */,
@@ -3380,13 +3359,10 @@
 				E9A85DA5184FD1AD00EB9B68 /* chatbar-attachment-icon-record@2x.png in Resources */,
 				63DEC02319B0A720003804E8 /* Albums@2x.png in Resources */,
 				C576EC291934CCB200C0D254 /* button-pause@2x.png in Resources */,
-				C5E8E4151A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings in Resources */,
 				6382545117503531000347CD /* server_production.der in Resources */,
 				E9A85DA3184FD1AD00EB9B68 /* chatbar-attachment-icon-photo@2x.png in Resources */,
-				1F1C0BF11B039288002B346D /* com.hoccer.Hoccer-XO.strings in Resources */,
 				63B1C9EB1843FA3800B75CD8 /* cnt-contact.png in Resources */,
 				E991E6721A0E975000015BEE /* Documentation.html in Resources */,
-				C5E8E3CB1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings in Resources */,
 				C576EC331934CCB200C0D254 /* fullscreen-button-pause@2x.png in Resources */,
 				E9A85DA1184FD1AD00EB9B68 /* chatbar-attachment-icon-music@2x.png in Resources */,
 				635127B61ABB6FFD00FA0C2B /* webdav_win8.rtf in Resources */,
@@ -3403,7 +3379,6 @@
 				63DEC02219B0A720003804E8 /* Albums.png in Resources */,
 				E9A85DA6184FD1AD00EB9B68 /* chatbar-attachment-icon-video.png in Resources */,
 				E991E6F01A0E975000015BEE /* README.txt in Resources */,
-				E9FC0FA11D1C50490055A9CE /* com.hoccer.whitelabel.helios.strings in Resources */,
 				E9A85DA0184FD1AD00EB9B68 /* chatbar-attachment-icon-music.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3815,24 +3790,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		1F1C0BEF1B039288002B346D /* com.hoccer.Hoccer-XO.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1F1C0BF01B039288002B346D /* de */,
-				1F1C0BF21B039293002B346D /* en */,
-			);
-			name = "com.hoccer.Hoccer-XO.strings";
-			sourceTree = "<group>";
-		};
-		1FE9FA561AC9822F00DBE7E3 /* com.hoccer.whitelabel.starmeo.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				1FE9FA571AC9822F00DBE7E3 /* en */,
-				1FE9FA591AC9823C00DBE7E3 /* de */,
-			);
-			name = com.hoccer.whitelabel.starmeo.strings;
-			sourceTree = "<group>";
-		};
 		6302A9BA18DA8A9500B2D04F /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3913,24 +3870,6 @@
 			name = "eula-com.hoccer.whitelabel.uniheld.rtf";
 			sourceTree = "<group>";
 		};
-		C5E8E3CD1A8B5B3400D3B289 /* com.hoccer.whitelabel.simsme.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C5E8E3CC1A8B5B3400D3B289 /* en */,
-				C5E8E3CE1A8B5B3A00D3B289 /* de */,
-			);
-			name = com.hoccer.whitelabel.simsme.strings;
-			sourceTree = "<group>";
-		};
-		C5E8E4171A8CEBE600D3B289 /* com.hoccer.whitelabel.hoccme.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C5E8E4161A8CEBE600D3B289 /* en */,
-				C5E8E4181A8CEBE700D3B289 /* de */,
-			);
-			name = com.hoccer.whitelabel.hoccme.strings;
-			sourceTree = "<group>";
-		};
 		C5EB3CCE1A824EFC00E236F6 /* com.artcom.Hoccer.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3938,15 +3877,6 @@
 				C5EB3CCF1A824F0300E236F6 /* de */,
 			);
 			name = com.artcom.Hoccer.strings;
-			sourceTree = "<group>";
-		};
-		C5EB3CD41A824FEE00E236F6 /* com.hoccer.whitelabel.stroeer.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				C5EB3CD31A824FEE00E236F6 /* en */,
-				C5EB3CD51A824FF000E236F6 /* de */,
-			);
-			name = com.hoccer.whitelabel.stroeer.strings;
 			sourceTree = "<group>";
 		};
 		C5EB3CDA1A82646800E236F6 /* com.hoccer.Hoccer-XO-Dev.strings */ = {
@@ -3967,6 +3897,15 @@
 			name = webinterface_IE.rtf;
 			sourceTree = "<group>";
 		};
+		E97100691FB4D0DE00B93C22 /* eula-com.artcom.Hoccer.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				E971006A1FB4D0DE00B93C22 /* en */,
+				E971006C1FB4D11F00B93C22 /* de */,
+			);
+			name = "eula-com.artcom.Hoccer.rtf";
+			sourceTree = "<group>";
+		};
 		E9F86CAC1E804927004AFE8E /* com.hoccer.whitelabel.uniheld.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -3974,15 +3913,6 @@
 				E9F86CAF1E804937004AFE8E /* en */,
 			);
 			name = com.hoccer.whitelabel.uniheld.strings;
-			sourceTree = "<group>";
-		};
-		E9FC0F9F1D1C50490055A9CE /* com.hoccer.whitelabel.helios.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				E9FC0FA01D1C50490055A9CE /* en */,
-				E9FC0FB01D1C505D0055A9CE /* de */,
-			);
-			name = com.hoccer.whitelabel.helios.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
