@@ -71,7 +71,7 @@
 // Abuse
 //==============================================================================
 
-//"abuse_address"         = "abuse@hoccer.com";
+"abuse_address"         = "abuse@hoccer.com";
 "abuse_menu_item"       = "Missbrauch melden...";
 "abuse_no_mail_title"   = "Mail Einrichten";
 "abuse_no_mail_message" = "Mail wird benötigt um Missbrauch zu melden.";
