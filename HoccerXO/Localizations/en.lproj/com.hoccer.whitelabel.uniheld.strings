@@ -6,9 +6,9 @@
 "server_nav_title" = "UNIHELD-Box";
 "server_user" = "uniheld";
 
-"invite_mail_body" = "Hey dude, download now the new UNIHELD App. Just register, verify as a student and get awesome student benefits:\n%@";
+"invite_mail_body" = "Hey dude, download now the new %@ App. Just register, verify as a student and get awesome student benefits:\n%@";
 
-"invite_sms_text" = "Hey dude, download now the new UNIHELD App. Just register, verify as a student and get awesome student benefits:\n%@";
+"invite_sms_text" = "Hey dude, download now the new %@ App. Just register, verify as a student and get awesome student benefits:\n%@";
 
 "hoccer_tutorial_url" = "http://faq.uniheld.com/tutorial";
 "hoccer_faq_url" = "http://faq.uniheld.com/";

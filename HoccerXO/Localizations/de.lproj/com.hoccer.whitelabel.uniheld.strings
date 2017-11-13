@@ -5,9 +5,9 @@
 "server_nav_title" = "UNIHELD-Box";
 "server_user" = "uniheld";
 
-"invite_mail_body" = "Moin, lad dir mal schnell die UNIHELD App runter, dein neuer digitaler Studentenausweis! Einfach Anmelden, als Student verifizieren und dir die geilsten Studentenangebote gönnen!\n%@\n";
+"invite_mail_body" = "Moin, lad dir mal schnell die %@ App runter, dein neuer digitaler Studentenausweis! Einfach Anmelden, als Student verifizieren und dir die geilsten Studentenangebote gönnen!\n%@\n";
 
-"invite_sms_text" = "Moin, lad dir mal die UNIHELD-App runter! Anmelden, als Student verifizieren und dir die geilsten Studentenangebote gönnen: %@\n%@";
+"invite_sms_text" = "Moin, lad dir mal die %@-App runter! Anmelden, als Student verifizieren und dir die geilsten Studentenangebote gönnen: %@\n%@";
 
 "hoccer_tutorial_url" = "http://faq.uniheld.com/de/tutorial/";
 "hoccer_faq_url" = "http://faq.uniheld.com/de/";
