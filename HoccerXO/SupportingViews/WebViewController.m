@@ -33,6 +33,8 @@
 @synthesize webView = _webView;
 
 - (void) viewDidLoad {
+    if (DEBUG_WEBVIEW)NSLog(@"WebViewController:viewDidLoad");
+
     [super viewDidLoad];
     
     _requestsRunning = 0;
@@ -53,17 +55,18 @@
 
 - (void)viewDidUnload
 {
+    if (DEBUG_WEBVIEW)NSLog(@"WebViewController:viewDidUnload");
     [self setWebView:nil];
     [super viewDidUnload];
 }
 
 - (void) viewWillAppear:(BOOL)animated  {
+    if (DEBUG_WEBVIEW) NSLog(@"WebViewController:viewWillAppear");
     [super viewWillAppear: animated];
     
     NSString * myLocalizedUrlString = HXOLabelledFullyLocalizedString(self.homeUrl,@"webview");
 
     if (DEBUG_WEBVIEW) NSLog(@"webview url: %@, localized url: %@", self.homeUrl, myLocalizedUrlString);
-
 
     self.navigationItem.rightBarButtonItems = @[self.forwardButton, self.backButton];
     if (self.presentingViewController) {
@@ -72,14 +75,18 @@
         self.navigationItem.leftBarButtonItem = nil;
     }
 
-    if (![[self.webView.request.URL absoluteString] isEqualToString:myLocalizedUrlString] ) {
-        // in case the user has navigated somewhere else
+    if (DEBUG_WEBVIEW) NSLog(@"webview current url: %@, localized url: %@", [self.webView.request.URL absoluteString], myLocalizedUrlString);
+
+    if (![[self.webView.request.URL absoluteString] hasPrefix:myLocalizedUrlString] ) {
+        // in case the user has navigated away from the original site
+        // Don't releoad when user is still somewhere on the site, otherwise things like uploading images will fail
         [self startFirstLoading];
     }
     [HXOBackend broadcastConnectionInfo];
 }
 
 - (void) startFirstLoading {
+    if (DEBUG_WEBVIEW) NSLog(@"WebViewController:startFirstLoading");
     [self.activityIndicator startAnimating];
     self.loadingOverlay.hidden = false;
     self.loadingLabel.text = NSLocalizedString(@"Loading", @"webview");
@@ -99,6 +106,7 @@
 }
 
 - (void) loadingFinished {
+    if (DEBUG_WEBVIEW) NSLog(@"WebViewController:loadingFinished");
     [self.activityIndicator stopAnimating];
     self.loadingOverlay.hidden = true;
 #ifdef USE_CACHING
@@ -120,6 +128,7 @@
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
+    if (DEBUG_WEBVIEW) NSLog(@"WebViewController:webViewDidStartLoad");
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     ++_requestsRunning;
     self.navigationItem.title = NSLocalizedString(@"loading", nil);
@@ -127,6 +136,7 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+    if (DEBUG_WEBVIEW) NSLog(@"WebViewController:webViewDidFinishLoad");
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     if (_requestsRunning && --_requestsRunning == 0) {
         [self loadingFinished];
@@ -136,6 +146,7 @@
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+    if (DEBUG_WEBVIEW) NSLog(@"WebViewController:didFailLoadWithError");
     [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     [NSURLProtocol unregisterClass:[RNCachingURLProtocol class]];
     if (_requestsRunning && --_requestsRunning == 0) {
@@ -145,15 +156,18 @@
 }
 
 - (void) done: (id) sender {
-    [self dismissViewControllerAnimated: YES completion: nil];
+    if (DEBUG_WEBVIEW) NSLog(@"WebViewController:done");
+   [self dismissViewControllerAnimated: YES completion: nil];
 }
 
 - (void) forward: (id) sender {
+    if (DEBUG_WEBVIEW) NSLog(@"WebViewController:forward");
     [self.webView goForward];
 
 }
 
 - (void) back: (id) sender {
+    if (DEBUG_WEBVIEW) NSLog(@"WebViewController:back");
     [self.webView goBack];
 }
 
